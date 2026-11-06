@@ -15,6 +15,7 @@ de qué temas y de quién. Todo se queda en tu móvil.
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack_Compose-11100E?style=flat-square&logo=jetpackcompose&logoColor=EDE8DF)
 ![Sin internet](https://img.shields.io/badge/permiso_INTERNET-no-FF5A1F?style=flat-square)
 ![Tests](https://img.shields.io/badge/tests-761-11100E?style=flat-square)
+[![Invítame a un café](https://img.shields.io/badge/Buy_Me_a_Coffee-invítame_a_un_café-FF5A1F?style=flat-square&logo=buymeacoffee&logoColor=11100E)](https://www.buymeacoffee.com/Lopuzno)
 
 <br>
 
