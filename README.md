@@ -180,6 +180,12 @@ te apetece, puedes invitarle a un café.
 
 <a href="https://www.buymeacoffee.com/Lopuzno"><img src="https://img.shields.io/badge/Buy_Me_a_Coffee-invítame_a_un_café-FF5A1F?style=flat-square&logo=buymeacoffee&logoColor=11100E" alt="Invítame a un café en Buy Me a Coffee"></a>
 
+## Licencia
+
+Todos los derechos reservados. Puedes ver el código para entender cómo funciona la app, pero no copiarlo,
+modificarlo ni usarlo en otros proyectos sin permiso del autor. Detalles en [LICENSE](LICENSE). Las tipografías
+tienen su propia licencia (SIL Open Font License 1.1).
+
 ## Aviso
 
 Reelómetro es un proyecto independiente. No está afiliado, patrocinado ni respaldado por TikTok, Instagram,

@@ -1,0 +1,26 @@
+Copyright (c) 2026 Sergio (https://github.com/SergioRE2007). Todos los derechos reservados.
+
+El código de este repositorio se publica para que puedas verlo y entender cómo funciona Reelómetro.
+No es software libre ni de código abierto: no se concede ningún permiso para copiarlo, modificarlo,
+distribuirlo, sublicenciarlo ni usarlo en otros proyectos, total o parcialmente, sin permiso por
+escrito del autor.
+
+Las Condiciones de servicio de GitHub permiten ver este repositorio y hacer un fork dentro de GitHub;
+eso no da ningún otro derecho sobre el código.
+
+Las tipografías de app/src/main/res/font (Bricolage Grotesque, JetBrains Mono e Instrument Serif)
+no son del autor y tienen su propia licencia: SIL Open Font License 1.1.
+
+---
+
+Copyright (c) 2026 Sergio (https://github.com/SergioRE2007). All rights reserved.
+
+The source code in this repository is published so you can read it and see how Reelómetro works.
+It is not free or open-source software: no permission is granted to copy, modify, distribute,
+sublicense or use it in other projects, in whole or in part, without the author's written permission.
+
+GitHub's Terms of Service allow viewing this repository and forking it within GitHub; that grants
+no other rights to the code.
+
+The fonts in app/src/main/res/font (Bricolage Grotesque, JetBrains Mono and Instrument Serif) are not
+the author's and are licensed separately under the SIL Open Font License 1.1.
