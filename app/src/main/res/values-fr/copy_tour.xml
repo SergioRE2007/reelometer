@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Recorrido guiado de la primera vez (copy/TourCopy.kt): marcas sobre las pantallas reales con un
+  título y una frase corta. Poco sitio: las frases tienen que caber con la letra al 130 % encima o
+  debajo del elemento señalado. Siempre dice lo mismo (sin variantes).
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="fr">
+
+    <!-- Botones en MAYÚSCULAS, muy cortos. -->
+    <string name="tour_skip">PASSER</string>
+    <string name="tour_done">TERMINÉ</string>
+    <!-- Contador en MAYÚSCULAS: «PASO 2 DE 6». %1$s el paso, %2$s el total. -->
+    <string name="tour_step">ÉTAPE %1$s SUR %2$s</string>
+
+    <!-- TalkBack: título del panel y de los botones. -->
+    <string name="tour_pane_title">Visite de Reelómetro</string>
+    <string name="tour_skip_description">Passer la visite</string>
+    <string name="tour_next_description">Étape suivante de la visite</string>
+    <string name="tour_done_description">Terminer la visite</string>
+
+    <!-- Título corto de cada paso (sin punto final). -->
+    <!-- El marcador grande de Hoy con los vídeos del día. -->
+    <string name="tour_counter_title">Le compteur</string>
+    <!-- La comparación con el día medio a la misma hora. -->
+    <string name="tour_comparison_title">À cette heure</string>
+    <!-- Las barras de Estadísticas. -->
+    <string name="tour_stats_bars_title">Un jour, une barre</string>
+    <!-- La pestaña del resumen (semana, mes, año). -->
+    <string name="tour_wrapped_title">Le bilan</string>
+    <!-- La pestaña del pasaporte (Flap es la mascota: no se traduce). -->
+    <string name="tour_passport_title">Le passeport</string>
+    <string name="tour_settings_title">Réglages et calibrage</string>
+
+    <!-- Frase de cada paso. -->
+    <string name="tour_counter_text">Tes vidéos du jour. Le compteur monte à chaque vidéo et revient à zéro à minuit.</string>
+    <string name="tour_comparison_text">Où tu en es par rapport à ton jour moyen à cette même heure. Sans jugement, rien que des chiffres.</string>
+    <!-- Lo mismo cuando aún no hay comparación (faltan días): no señala nada. -->
+    <string name="tour_comparison_text_empty">Quand quelques jours seront comptés, tu verras ici où tu en es par rapport à ton jour moyen à cette même heure.</string>
+    <string name="tour_stats_bars_text">Maintiens le doigt sur une barre et fais glisser pour voir le chiffre exact de chaque jour.</string>
+    <string name="tour_wrapped_text">Ta semaine, ton mois et ton année, racontés comme une histoire. Avec ticket à partager, si tu oses.</string>
+    <string name="tour_passport_text">Flap et tes tampons. Ici, l’expérience se gagne en regardant moins, jamais plus.</string>
+    <string name="tour_settings_text">Objectif, alertes et thème, ici en haut. Sept appuis sur la version ouvrent le calibrage.</string>
+
+    <!-- Lo que anuncia TalkBack al llegar a cada paso: «Paso 2 de 6. A esta hora. Cómo vas…».
+         %1$s el paso, %2$s el total, %3$s el título del paso (sin punto), %4$s su frase (con punto). -->
+    <string name="tour_announcement">Étape %1$s sur %2$s. %3$s. %4$s</string>
+</resources>

@@ -1,5 +1,7 @@
 package com.reelometro.app.ui.components.charts
 
+import com.reelometro.app.copy.str
+import com.reelometro.app.R
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -113,8 +115,8 @@ fun CalendarHeatmap(
     val description = contentDescription ?: remember(grid, valueOf, today) {
         val best = grid.cells.filter { !it.date.isAfter(today) }.maxByOrNull { valueOf[it.date] ?: 0f }
         val bestValue = best?.let { valueOf[it.date] ?: 0f } ?: 0f
-        if (best == null || bestValue <= 0f) "Calendario: sin datos"
-        else "Calendario. Día más alto: ${spoken(tooltip(HeatDay(best.date, bestValue)))}"
+        if (best == null || bestValue <= 0f) str(R.string.ui_calendar_description_empty)
+        else str(R.string.ui_calendar_description, spoken(tooltip(HeatDay(best.date, bestValue))))
     }
 
     val labelStyle = type.label.copy(color = colors.textMuted)

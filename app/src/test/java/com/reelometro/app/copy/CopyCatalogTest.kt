@@ -146,14 +146,56 @@ class CopyCatalogTest {
             WidgetCopy::class.java, CalibrationCopy::class.java, QuickSendCopy::class.java,
         )
         return objects.flatMap { cls ->
-            cls.declaredFields
+            val upper = cls == Labels::class.java || cls == Buttons::class.java
+            // Constantes (`const val`, campos estáticos) y propiedades con getter que leen los recursos.
+            val fields = cls.declaredFields
                 .filter { Modifier.isStatic(it.modifiers) && it.type == String::class.java }
                 .map { f ->
                     f.isAccessible = true
-                    val name = "${cls.simpleName}.${f.name}"
-                    val upper = cls == Labels::class.java || cls == Buttons::class.java
-                    Sample(name, f.get(null) as String, upper = upper, checkNumbers = name !in VERSION_NUMBERS)
+                    f.name to (f.get(null) as String)
                 }
+            val instance = cls.declaredFields.firstOrNull { it.name == "INSTANCE" }?.get(null)
+            val getters = cls.declaredMethods
+                .filter {
+                    it.name.startsWith("get") && it.name.length > 3 && it.parameterCount == 0 &&
+                        it.returnType == String::class.java && Modifier.isPublic(it.modifiers)
+                }
+                .map { m -> m.name.removePrefix("get") to (m.invoke(if (Modifier.isStatic(m.modifiers)) null else instance) as String) }
+            (fields + getters).distinctBy { it.first }.map { (field, value) ->
+                val name = "${cls.simpleName}.$field"
+                Sample(name, value, upper = upper, checkNumbers = name !in VERSION_NUMBERS)
+            }
+        }
+    }
+
+    /**
+     * Foto de todos los textos en español (constantes, funciones y variantes con 60 semillas) en
+     * `src/test/resources/i18n/copy-golden.txt`. Si cambia un texto a propósito, regenera la foto con
+     * `REELOMETRO_GOLDEN_UPDATE=1 ./gradlew testDebugUnitTest --tests '*CopyCatalogTest*'`.
+     */
+    @Test
+    fun `los textos en español no cambian (foto)`() {
+        val lines = (
+            samples().map { "${it.source} → ${it.text}" } +
+                situations().flatMap { sit -> (0L until 60L).map { "${sit.name}[$it] → ${sit.text(it)}" } }
+            ).map { it.replace("\n", "⏎") }.distinct().sorted()
+        val root = listOf(File("src/test"), File("app/src/test")).first { it.exists() }
+        val golden = File(root, "resources/i18n/copy-golden.txt")
+        val actual = lines.joinToString("\n", postfix = "\n")
+        if (System.getenv("REELOMETRO_GOLDEN_UPDATE") == "1" || !golden.exists()) {
+            golden.parentFile.mkdirs()
+            golden.writeText(actual)
+            return
+        }
+        val expected = golden.readLines().filter { it.isNotEmpty() }
+        val missing = expected - lines.toSet()
+        val extra = lines - expected.toSet()
+        if (missing.isNotEmpty() || extra.isNotEmpty()) {
+            File(root.parentFile.parentFile, "build/copy-golden-actual.txt").apply { parentFile.mkdirs() }.writeText(actual)
+            fail(
+                "Los textos han cambiado (${missing.size} antes, ${extra.size} ahora; todo en build/copy-golden-actual.txt):\n" +
+                    missing.take(15).joinToString("\n") { "− $it" } + "\n" + extra.take(15).joinToString("\n") { "+ $it" },
+            )
         }
     }
 

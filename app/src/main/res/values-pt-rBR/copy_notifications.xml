@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Notificaciones (copy/NotificationCopy.kt). Los títulos son CORTOS (la cortina corta a unas 30
+  letras); el texto, una o dos frases. Tono: informa sin culpa ni sermones.
+  Cada <string-array> es una situación y cada <item>, una frase alternativa (se elige una por día).
+  Los arrays con sufijo (_one, _noeq) son la misma situación en otro caso: mismo número de frases y
+  mismo sentido en cada posición.
+  Los nombres de los dos primeros canales («Resumen diario», «Resumen del mes») están en strings.xml.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="pt-BR">
+
+    <!-- ============================================================ aviso diario -->
+
+    <!-- Título del aviso diario (corto): %1$s son los vídeos del día («212 vídeos»). -->
+    <string name="notif_daily_title">%1$s hoje</string>
+    <!-- Igual, cuando el aviso llega pasada la medianoche (móvil apagado) y resume el día anterior. -->
+    <string name="notif_daily_title_late">%1$s ontem</string>
+
+    <!-- Aviso que llega tarde, cero vídeos el día anterior. -->
+    <string-array name="notif_daily_late_zero">
+        <item>Ontem, nem um. Fica registrado.</item>
+        <item>Ontem o placar ficou em zero.</item>
+        <item>Zero vídeos ontem. O resumo chegou atrasado, mas chegou.</item>
+    </string-array>
+    <!-- Aviso que llega tarde: %1$s el tiempo del día anterior («47 minutos»), %2$s lo mismo con
+         mayúscula inicial (para empezar la frase). No hables de «mañana»: ya es el día siguiente. -->
+    <string-array name="notif_daily_late">
+        <item>%2$s de vídeos. O resumo chegou atrasado, mas chegou.</item>
+        <item>Com atraso: %1$s no total.</item>
+        <item>%2$s no total. Hoje o placar já voltou a zero.</item>
+    </string-array>
+
+    <!-- Hoy, cero vídeos. -->
+    <string-array name="notif_daily_zero">
+        <item>Dia limpo. Fica registrado.</item>
+        <item>Nem um. O placar não tem nada a acrescentar.</item>
+        <item>Hoje o algoritmo ficou com vontade.</item>
+    </string-array>
+
+    <!-- Con objetivo, pasado: %1$s el objetivo («150»), %2$s los vídeos de hoy («212»), %3$s el
+         tiempo («47 minutos»), %4$s lo que se ha pasado («62 vídeos»). -->
+    <string-array name="notif_daily_over">
+        <item>Meta: %1$s. Hoje: %2$s. No total, %3$s.</item>
+        <item>%4$s acima da meta, em %3$s.</item>
+        <item>Você passou da meta em %4$s. Amanhã, começa do zero.</item>
+    </string-array>
+    <!-- Con objetivo, por debajo o justo: %1$s los vídeos de hoy («90»), %2$s el objetivo («150»),
+         %3$s el tiempo («30 minutos»). -->
+    <string-array name="notif_daily_under">
+        <item>Dentro da meta: %1$s de %2$s.</item>
+        <item>%1$s de %2$s, com folga. No total, %3$s.</item>
+        <item>Abaixo de %2$s. Assim, sem mais.</item>
+    </string-array>
+
+    <!-- Día flojo (1–9 vídeos): %1$s el tiempo («2 minutos»), %2$s el tiempo con mayúscula inicial. -->
+    <string-array name="notif_daily_first">
+        <item>%2$s. Quase nem conta. Mas conta.</item>
+        <item>Pouca coisa: %1$s. Amanhã a gente vê.</item>
+        <item>%2$s no total. Dia tranquilo.</item>
+    </string-array>
+
+    <!-- Día normal: %1$s el tiempo («47 minutos»), %2$s el tiempo con mayúscula inicial.
+         _one: el tiempo es singular («una hora y 12 minutos», «un minuto»). -->
+    <string-array name="notif_daily_normal">
+        <item>%2$s de vídeos. Amanhã, o placar volta a zero.</item>
+        <item>%2$s. Um dia normal, e isso já é dizer muito.</item>
+        <item>Isso são %1$s que ninguém vai te devolver.</item>
+    </string-array>
+    <string-array name="notif_daily_normal_one">
+        <item>%2$s de vídeos. Amanhã, o placar volta a zero.</item>
+        <item>%2$s. Um dia normal, e isso já é dizer muito.</item>
+        <item>Isso é %1$s que ninguém vai te devolver.</item>
+    </string-array>
+
+    <!-- Día alto: %1$s el tiempo con mayúscula inicial («Una hora y 40 minutos»), %2$s una
+         equivalencia en infinitivo («leer 14 libros»). _noeq: sin equivalencia (no uses %2$s). -->
+    <string-array name="notif_daily_high">
+        <item>%1$s. Com isso dava para %2$s.</item>
+        <item>%1$s de tela. O algoritmo está encantado.</item>
+        <item>%1$s. Um bom dia para o algoritmo.</item>
+    </string-array>
+    <string-array name="notif_daily_high_noeq">
+        <item>%1$s. Um bom tempo.</item>
+        <item>%1$s de tela. O algoritmo está encantado.</item>
+        <item>%1$s. Um bom dia para o algoritmo.</item>
+    </string-array>
+
+    <!-- Día extremo: igual que el alto (%1$s el tiempo con mayúscula, %2$s la equivalencia). -->
+    <string-array name="notif_daily_extreme">
+        <item>%1$s. Isso já é um turno de trabalho.</item>
+        <item>%1$s de vídeos. Dava para %2$s.</item>
+        <item>%1$s. Amanhã, começa do zero.</item>
+    </string-array>
+    <string-array name="notif_daily_extreme_noeq">
+        <item>%1$s. Isso já é um turno de trabalho.</item>
+        <item>%1$s de vídeos. E subindo.</item>
+        <item>%1$s. Amanhã, começa do zero.</item>
+    </string-array>
+
+    <!-- Versión pública (pantalla de bloqueo con «ocultar contenido sensible»): sin cifras. -->
+    <string name="notif_daily_public_title">Resumo diário</string>
+    <string name="notif_daily_public_text">Sua conta do dia está pronta.</string>
+
+    <!-- ============================================================ resumen del mes -->
+
+    <!-- Título del resumen mensual (corto; llega el día 1): %1$s el mes («octubre»), %2$s el mes
+         con mayúscula inicial («Octubre»). -->
+    <string-array name="notif_monthly_title">
+        <item>Seu %1$s, contado.</item>
+        <item>%2$s, em números.</item>
+        <item>%2$s já tem resumo.</item>
+    </string-array>
+    <!-- Mes sin vídeos: %1$s el mes, %2$s el mes con mayúscula inicial. -->
+    <string-array name="notif_monthly_zero">
+        <item>%2$s, zerado. Não há muito o que resumir, e talvez esse seja o resumo.</item>
+        <item>Nenhum vídeo em %1$s. O resumo mais curto da história.</item>
+        <item>Zero vídeos em %1$s. Fica registrado.</item>
+    </string-array>
+    <!-- Texto del resumen mensual: %1$s los vídeos («4.812 vídeos»), %2$s el tiempo («29 horas»).
+         Tocar abre el resumen del mes. -->
+    <string-array name="notif_monthly">
+        <item>%1$s e %2$s. Toque para ver tudo.</item>
+        <item>%1$s, %2$s e um criador favorito. Toque para ver o resumo.</item>
+        <item>O resumo está pronto: %1$s em %2$s.</item>
+    </string-array>
+
+    <!-- Versión pública del resumen mensual: sin cifras. -->
+    <string name="notif_monthly_public_title">Resumo do mês</string>
+    <string name="notif_monthly_public_text">O resumo do mês está pronto.</string>
+
+    <!-- Si Android desconecta el servicio de accesibilidad (aún sin usar). -->
+    <string name="notif_service_lost_title">O Reelómetro parou de contar</string>
+    <string name="notif_service_lost_text">O Android desconectou o serviço de acessibilidade. Toque para conectá-lo de novo.</string>
+
+    <!-- ============================================================ aviso al pasar el objetivo -->
+
+    <!-- Título (corto) del aviso en directo, una vez al día, al pasar el objetivo. -->
+    <string name="notif_goal_title">Acima da meta</string>
+    <!-- Texto: %1$s los vídeos de hoy («151»), %2$s el objetivo («150»). Sin culpa. -->
+    <string-array name="notif_goal_live">
+        <item>Você já está em %1$s. Sua meta era %2$s.</item>
+        <item>Você já está em %1$s. Sua meta era %2$s. O que resta de hoje quem decide é você.</item>
+        <item>Você já está em %1$s. Sua meta era %2$s. O placar continua contando, sem rancor.</item>
+    </string-array>
+    <!-- Versión pública: sin cifras. -->
+    <string name="notif_goal_public_text">Você passou da sua meta de hoje.</string>
+
+    <!-- ============================================================ nivel nuevo del pasaporte -->
+
+    <!-- Título (corto): %1$s el nombre del nivel, ya en mayúsculas («PLATA»). -->
+    <string name="notif_level_title">Novo nível: %1$s</string>
+    <!-- Texto. Flap es la mascota del Pasaporte (nombre propio, no se traduce). -->
+    <string-array name="notif_level">
+        <item>Seu passaporte subiu de categoria. Ganhou vendo menos, fica registrado.</item>
+        <item>O Flap espera você no Passaporte com o cartão novo.</item>
+        <item>Mais experiência com menos vídeos. O cartão novo está no Passaporte.</item>
+    </string-array>
+    <!-- Versión pública: sin cifras. «Pasaporte» es el nombre de la pestaña. -->
+    <string name="notif_level_public_title">Passaporte</string>
+    <string name="notif_level_public_text">Você tem um novo nível no passaporte.</string>
+
+    <!-- ============================================================ canales (ajustes del sistema) -->
+
+    <!-- Nombre y descripción de los canales nuevos, en el grupo «Resúmenes» de los ajustes de
+         notificaciones de Android. -->
+    <string name="notif_channel_goal_name">Aviso ao passar da meta</string>
+    <string name="notif_channel_goal_description">Um só aviso por dia, no momento em que você passar da sua meta de vídeos.</string>
+    <string name="notif_channel_level_name">Nível do passaporte</string>
+    <string name="notif_channel_level_description">Aviso quando você sobe de nível no modo passaporte.</string>
+</resources>

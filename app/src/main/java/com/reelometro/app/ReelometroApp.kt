@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.core.content.ContextCompat
+import com.reelometro.app.copy.AppTexts
+import com.reelometro.app.copy.ResourceTexts
 import com.reelometro.app.data.AppDatabase
 import com.reelometro.app.data.ReelRepository
 import com.reelometro.app.data.game.PassportRepository
@@ -44,6 +46,8 @@ class ReelometroApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        // Antes que nada: todos los textos (pantallas, avisos, widget) salen de los recursos.
+        AppTexts.install(ResourceTexts(this))
         // Todo fuera del hilo principal: el arranque no espera a canales, WorkManager ni widgets.
         appScope.launch { runCatching { Notifications.createChannels(this@ReelometroApp) } }
         NotificationScheduler.start(this)

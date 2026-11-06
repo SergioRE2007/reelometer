@@ -1,0 +1,836 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Equivalencias: «Con ese tiempo podrías leer 14 libros.» (stats/Equivalences.kt). El cálculo es el
+  mismo en todos los idiomas; aquí solo están las palabras. Salen en el Wrapped, en el detalle del
+  día, en el resumen de Hoy, en los avisos y en la imagen compartible.
+
+  Cada equivalencia tiene las mismas piezas (cambia «xxx» por su nombre):
+    eq_xxx_do       infinitivo con la cantidad: «leer %1$s» (%1$s es una de las cantidades de abajo).
+                    Va dentro de otras frases («Te daba para leer 14 libros.»): sin mayúscula ni punto.
+    eq_xxx_n        cantidad exacta: «un libro», «14 libros» (%1$s es la cifra ya formateada; también 0).
+    eq_xxx_more     «más de un libro», «más de 3 libros» (de n,1 a n,3 unidades).
+    eq_xxx_and_half «un libro y medio», «3 libros y medio» (de n,4 a n,6).
+    eq_xxx_almost   «casi un libro», «casi 4 libros» (de n,7 a n,9). En obras y trayectos, la forma
+                    «one» es «casi el Quijote entero» (casi una vez entera).
+    eq_xxx_percent  menos de una unidad: «el 40 % de un libro» (%1$s es el porcentaje, «40 %»).
+    eq_xxx_less     muy poco: «menos del 0,1 % de un libro» (%1$s es «0,1 %»).
+    eq_xxx_quarter, eq_xxx_half, eq_xxx_three_quarters: «un cuarto de libro», «medio libro»,
+                    «tres cuartos de libro».
+    eq_xxx_label    etiqueta en MAYÚSCULAS de la línea de ticket de la imagen compartible («LIBROS»).
+    eq_xxx_basis    base de cálculo, nota pequeña bajo la equivalencia. Empieza por «Base: ».
+  Las obras y trayectos (el Quijote, Juego de Tronos, Madrid–Toledo…) se cuentan en veces: «ver
+  Juego de Tronos entera 2 veces». Si una referencia no se conoce en tu idioma o país (el AVE, el
+  cocido, el Camino de Santiago, Madrid–Toledo, el Plan Bolonia…), puedes cambiarla por algo que se
+  conozca y dure lo mismo, pero NO cambies las horas de la base: el cálculo es igual en todos los idiomas.
+  \u00A0 es un espacio duro: la cifra y su palabra no se separan al partir la línea.
+-->
+<!-- ImpliedQuantity: aquí la cifra nunca es 0 (solo se muestran equivalencias que llegan a 1); «one» = 1. -->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="fr" tools:ignore="ImpliedQuantity">
+
+    <!-- Frase de titular: %1$s es el infinitivo con la cantidad («leer 14 libros»). Se elige una por día. -->
+    <string-array name="eq_sentence">
+        <item>Avec ce temps, tu pourrais %1$s.</item>
+        <item>Ça te donnait de quoi %1$s.</item>
+        <item>Ça fait de quoi %1$s.</item>
+        <item>Avec ça, tu aurais pu %1$s.</item>
+    </string-array>
+    <!-- Titular cuando aún no hay tiempo que comparar (menos de un segundo). -->
+    <string name="eq_headline_none">Il n’y a pas encore de temps à comparer.</string>
+
+    <!-- ============================================================ estudio -->
+
+    <!-- GRADOS UNIVERSITARIOS: se cuenta por unidades (grado universitario / grados universitarios). -->
+    <string name="eq_degree_do">décrocher %1$s</string>
+    <plurals name="eq_degree_n">
+        <item quantity="one">une licence</item>
+        <item quantity="many">%1$s\u00A0de licences</item>
+        <item quantity="other">%1$s\u00A0licences</item>
+    </plurals>
+    <plurals name="eq_degree_more">
+        <item quantity="one">plus d’une licence</item>
+        <item quantity="many">plus de %1$s\u00A0de licences</item>
+        <item quantity="other">plus de %1$s\u00A0licences</item>
+    </plurals>
+    <plurals name="eq_degree_and_half">
+        <item quantity="one">une licence et demie</item>
+        <item quantity="many">%1$s\u00A0de licences et demie</item>
+        <item quantity="other">%1$s\u00A0licences et demie</item>
+    </plurals>
+    <plurals name="eq_degree_almost">
+        <item quantity="one">presque une licence</item>
+        <item quantity="many">presque %1$s\u00A0de licences</item>
+        <item quantity="other">presque %1$s\u00A0licences</item>
+    </plurals>
+    <string name="eq_degree_percent">le %1$s d’une licence</string>
+    <string name="eq_degree_less">moins du %1$s d’une licence</string>
+    <string name="eq_degree_quarter">un quart de licence</string>
+    <string name="eq_degree_half">une demi-licence</string>
+    <string name="eq_degree_three_quarters">trois quarts de licence</string>
+    <string name="eq_degree_label">LICENCES</string>
+    <string name="eq_degree_basis">Base: 240\u00A0ECTS × 25\u00A0h (système LMD)</string>
+
+    <!-- MÁSTERES: se cuenta por unidades (máster / másteres). -->
+    <string name="eq_master_do">faire %1$s</string>
+    <plurals name="eq_master_n">
+        <item quantity="one">un master</item>
+        <item quantity="many">%1$s\u00A0de masters</item>
+        <item quantity="other">%1$s\u00A0masters</item>
+    </plurals>
+    <plurals name="eq_master_more">
+        <item quantity="one">plus d’un master</item>
+        <item quantity="many">plus de %1$s\u00A0de masters</item>
+        <item quantity="other">plus de %1$s\u00A0masters</item>
+    </plurals>
+    <plurals name="eq_master_and_half">
+        <item quantity="one">un master et demi</item>
+        <item quantity="many">%1$s\u00A0de masters et demi</item>
+        <item quantity="other">%1$s\u00A0masters et demi</item>
+    </plurals>
+    <plurals name="eq_master_almost">
+        <item quantity="one">presque un master</item>
+        <item quantity="many">presque %1$s\u00A0de masters</item>
+        <item quantity="other">presque %1$s\u00A0masters</item>
+    </plurals>
+    <string name="eq_master_percent">le %1$s d’un master</string>
+    <string name="eq_master_less">moins du %1$s d’un master</string>
+    <string name="eq_master_quarter">un quart de master</string>
+    <string name="eq_master_half">un demi-master</string>
+    <string name="eq_master_three_quarters">trois quarts de master</string>
+    <string name="eq_master_label">MASTERS</string>
+    <string name="eq_master_basis">Base: 60\u00A0ECTS × 25\u00A0h (master d’un an)</string>
+
+    <!-- IDIOMAS: se cuenta por unidades (idioma / idiomas). -->
+    <string name="eq_language_do">apprendre %1$s</string>
+    <plurals name="eq_language_n">
+        <item quantity="one">une langue</item>
+        <item quantity="many">%1$s\u00A0de langues</item>
+        <item quantity="other">%1$s\u00A0langues</item>
+    </plurals>
+    <plurals name="eq_language_more">
+        <item quantity="one">plus d’une langue</item>
+        <item quantity="many">plus de %1$s\u00A0de langues</item>
+        <item quantity="other">plus de %1$s\u00A0langues</item>
+    </plurals>
+    <plurals name="eq_language_and_half">
+        <item quantity="one">une langue et demie</item>
+        <item quantity="many">%1$s\u00A0de langues et demie</item>
+        <item quantity="other">%1$s\u00A0langues et demie</item>
+    </plurals>
+    <plurals name="eq_language_almost">
+        <item quantity="one">presque une langue</item>
+        <item quantity="many">presque %1$s\u00A0de langues</item>
+        <item quantity="other">presque %1$s\u00A0langues</item>
+    </plurals>
+    <string name="eq_language_percent">le %1$s d’une langue</string>
+    <string name="eq_language_less">moins du %1$s d’une langue</string>
+    <string name="eq_language_quarter">un quart de langue</string>
+    <string name="eq_language_half">une demi-langue</string>
+    <string name="eq_language_three_quarters">trois quarts de langue</string>
+    <string name="eq_language_label">LANGUES</string>
+    <string name="eq_language_basis">Base: FSI, ~600–750\u00A0h pour les langues de catégorie I</string>
+
+    <!-- BOOTCAMPS DE PROGRAMACIÓN: se cuenta por unidades (bootcamp / bootcamps). -->
+    <string name="eq_coding_do">faire %1$s</string>
+    <plurals name="eq_coding_n">
+        <item quantity="one">un bootcamp de programmation</item>
+        <item quantity="many">%1$s\u00A0de bootcamps de programmation</item>
+        <item quantity="other">%1$s\u00A0bootcamps de programmation</item>
+    </plurals>
+    <plurals name="eq_coding_more">
+        <item quantity="one">plus d’un bootcamp de programmation</item>
+        <item quantity="many">plus de %1$s\u00A0de bootcamps de programmation</item>
+        <item quantity="other">plus de %1$s\u00A0bootcamps de programmation</item>
+    </plurals>
+    <plurals name="eq_coding_and_half">
+        <item quantity="one">un bootcamp et demi de programmation</item>
+        <item quantity="many">%1$s\u00A0de bootcamps et demi de programmation</item>
+        <item quantity="other">%1$s\u00A0bootcamps et demi de programmation</item>
+    </plurals>
+    <plurals name="eq_coding_almost">
+        <item quantity="one">presque un bootcamp de programmation</item>
+        <item quantity="many">presque %1$s\u00A0de bootcamps de programmation</item>
+        <item quantity="other">presque %1$s\u00A0bootcamps de programmation</item>
+    </plurals>
+    <string name="eq_coding_percent">le %1$s d’un bootcamp de programmation</string>
+    <string name="eq_coding_less">moins du %1$s d’un bootcamp de programmation</string>
+    <string name="eq_coding_quarter">un quart de bootcamp de programmation</string>
+    <string name="eq_coding_half">un demi-bootcamp de programmation</string>
+    <string name="eq_coding_three_quarters">trois quarts de bootcamp de programmation</string>
+    <string name="eq_coding_label">BOOTCAMPS DE PROGRAMMATION</string>
+    <string name="eq_coding_basis">Base: bootcamp intensif de programmation, ~400\u00A0h</string>
+
+    <!-- ============================================================ lectura -->
+
+    <!-- LIBROS: se cuenta por unidades (libro / libros). -->
+    <string name="eq_book_do">lire %1$s</string>
+    <plurals name="eq_book_n">
+        <item quantity="one">un livre</item>
+        <item quantity="many">%1$s\u00A0de livres</item>
+        <item quantity="other">%1$s\u00A0livres</item>
+    </plurals>
+    <plurals name="eq_book_more">
+        <item quantity="one">plus d’un livre</item>
+        <item quantity="many">plus de %1$s\u00A0de livres</item>
+        <item quantity="other">plus de %1$s\u00A0livres</item>
+    </plurals>
+    <plurals name="eq_book_and_half">
+        <item quantity="one">un livre et demi</item>
+        <item quantity="many">%1$s\u00A0de livres et demi</item>
+        <item quantity="other">%1$s\u00A0livres et demi</item>
+    </plurals>
+    <plurals name="eq_book_almost">
+        <item quantity="one">presque un livre</item>
+        <item quantity="many">presque %1$s\u00A0de livres</item>
+        <item quantity="other">presque %1$s\u00A0livres</item>
+    </plurals>
+    <string name="eq_book_percent">le %1$s d’un livre</string>
+    <string name="eq_book_less">moins du %1$s d’un livre</string>
+    <string name="eq_book_quarter">un quart de livre</string>
+    <string name="eq_book_half">un demi-livre</string>
+    <string name="eq_book_three_quarters">trois quarts de livre</string>
+    <string name="eq_book_label">LIVRES</string>
+    <string name="eq_book_basis">Base: roman d’environ 90\u00A0000 mots à 250 mots/min ≈ 6\u00A0h</string>
+
+    <!-- EL QUIJOTE: obra o trayecto que se repite («el Quijote entero», contado en veces). -->
+    <string name="eq_quijote_do">lire %1$s</string>
+    <plurals name="eq_quijote_n">
+        <item quantity="one">Don Quichotte en entier</item>
+        <item quantity="many">Don Quichotte en entier %1$s\u00A0de fois</item>
+        <item quantity="other">Don Quichotte en entier %1$s\u00A0fois</item>
+    </plurals>
+    <plurals name="eq_quijote_more">
+        <item quantity="one">Don Quichotte en entier plus d’une fois</item>
+        <item quantity="many">Don Quichotte en entier plus de %1$s\u00A0de fois</item>
+        <item quantity="other">Don Quichotte en entier plus de %1$s\u00A0fois</item>
+    </plurals>
+    <plurals name="eq_quijote_and_half">
+        <item quantity="one">Don Quichotte en entier une fois et demie</item>
+        <item quantity="many">Don Quichotte en entier %1$s\u00A0de fois et demie</item>
+        <item quantity="other">Don Quichotte en entier %1$s\u00A0fois et demie</item>
+    </plurals>
+    <plurals name="eq_quijote_almost">
+        <item quantity="one">presque Don Quichotte en entier</item>
+        <item quantity="many">Don Quichotte en entier presque %1$s\u00A0de fois</item>
+        <item quantity="other">Don Quichotte en entier presque %1$s\u00A0fois</item>
+    </plurals>
+    <string name="eq_quijote_percent">le %1$s de Don Quichotte</string>
+    <string name="eq_quijote_less">moins du %1$s de Don Quichotte</string>
+    <string name="eq_quijote_quarter">un quart de Don Quichotte</string>
+    <string name="eq_quijote_half">la moitié de Don Quichotte</string>
+    <string name="eq_quijote_three_quarters">trois quarts de Don Quichotte</string>
+    <string name="eq_quijote_label">DON QUICHOTTE</string>
+    <string name="eq_quijote_basis">Base: les deux parties, ~380\u00A0000 mots à 250 mots/min ≈ 25\u00A0h</string>
+
+    <!-- EN BUSCA DEL TIEMPO PERDIDO: obra o trayecto que se repite («En busca del tiempo perdido», contado en veces). -->
+    <string name="eq_proust_do">lire %1$s</string>
+    <plurals name="eq_proust_n">
+        <item quantity="one">À la recherche du temps perdu</item>
+        <item quantity="many">À la recherche du temps perdu %1$s\u00A0de fois</item>
+        <item quantity="other">À la recherche du temps perdu %1$s\u00A0fois</item>
+    </plurals>
+    <plurals name="eq_proust_more">
+        <item quantity="one">À la recherche du temps perdu plus d’une fois</item>
+        <item quantity="many">À la recherche du temps perdu plus de %1$s\u00A0de fois</item>
+        <item quantity="other">À la recherche du temps perdu plus de %1$s\u00A0fois</item>
+    </plurals>
+    <plurals name="eq_proust_and_half">
+        <item quantity="one">À la recherche du temps perdu une fois et demie</item>
+        <item quantity="many">À la recherche du temps perdu %1$s\u00A0de fois et demie</item>
+        <item quantity="other">À la recherche du temps perdu %1$s\u00A0fois et demie</item>
+    </plurals>
+    <plurals name="eq_proust_almost">
+        <item quantity="one">presque À la recherche du temps perdu</item>
+        <item quantity="many">À la recherche du temps perdu presque %1$s\u00A0de fois</item>
+        <item quantity="other">À la recherche du temps perdu presque %1$s\u00A0fois</item>
+    </plurals>
+    <string name="eq_proust_percent">le %1$s d’À la recherche du temps perdu</string>
+    <string name="eq_proust_less">moins du %1$s d’À la recherche du temps perdu</string>
+    <string name="eq_proust_quarter">un quart d’À la recherche du temps perdu</string>
+    <string name="eq_proust_half">la moitié d’À la recherche du temps perdu</string>
+    <string name="eq_proust_three_quarters">trois quarts d’À la recherche du temps perdu</string>
+    <string name="eq_proust_label">À LA RECHERCHE DU TEMPS PERDU</string>
+    <string name="eq_proust_basis">Base: 7\u00A0tomes, ~1\u00A0270\u00A0000 mots à 250 mots/min ≈ 85\u00A0h</string>
+
+    <!-- ============================================================ pantalla (de la grande) -->
+
+    <!-- JUEGO DE TRONOS: obra o trayecto que se repite («Juego de Tronos entera», contado en veces). -->
+    <string name="eq_got_do">voir %1$s</string>
+    <plurals name="eq_got_n">
+        <item quantity="one">Game of Thrones en entier</item>
+        <item quantity="many">Game of Thrones en entier %1$s\u00A0de fois</item>
+        <item quantity="other">Game of Thrones en entier %1$s\u00A0fois</item>
+    </plurals>
+    <plurals name="eq_got_more">
+        <item quantity="one">Game of Thrones en entier plus d’une fois</item>
+        <item quantity="many">Game of Thrones en entier plus de %1$s\u00A0de fois</item>
+        <item quantity="other">Game of Thrones en entier plus de %1$s\u00A0fois</item>
+    </plurals>
+    <plurals name="eq_got_and_half">
+        <item quantity="one">Game of Thrones en entier une fois et demie</item>
+        <item quantity="many">Game of Thrones en entier %1$s\u00A0de fois et demie</item>
+        <item quantity="other">Game of Thrones en entier %1$s\u00A0fois et demie</item>
+    </plurals>
+    <plurals name="eq_got_almost">
+        <item quantity="one">presque Game of Thrones en entier</item>
+        <item quantity="many">Game of Thrones en entier presque %1$s\u00A0de fois</item>
+        <item quantity="other">Game of Thrones en entier presque %1$s\u00A0fois</item>
+    </plurals>
+    <string name="eq_got_percent">le %1$s de Game of Thrones</string>
+    <string name="eq_got_less">moins du %1$s de Game of Thrones</string>
+    <string name="eq_got_quarter">un quart de Game of Thrones</string>
+    <string name="eq_got_half">la moitié de Game of Thrones</string>
+    <string name="eq_got_three_quarters">trois quarts de Game of Thrones</string>
+    <string name="eq_got_label">GAME OF THRONES</string>
+    <string name="eq_got_basis">Base: 8\u00A0saisons, 73\u00A0épisodes ≈ 70\u00A0h</string>
+
+    <!-- SAGA DE HARRY POTTER: obra o trayecto que se repite («la saga de Harry Potter entera», contado en veces). -->
+    <string name="eq_harry_potter_do">voir %1$s</string>
+    <plurals name="eq_harry_potter_n">
+        <item quantity="one">la saga Harry Potter en entier</item>
+        <item quantity="many">la saga Harry Potter en entier %1$s\u00A0de fois</item>
+        <item quantity="other">la saga Harry Potter en entier %1$s\u00A0fois</item>
+    </plurals>
+    <plurals name="eq_harry_potter_more">
+        <item quantity="one">la saga Harry Potter en entier plus d’une fois</item>
+        <item quantity="many">la saga Harry Potter en entier plus de %1$s\u00A0de fois</item>
+        <item quantity="other">la saga Harry Potter en entier plus de %1$s\u00A0fois</item>
+    </plurals>
+    <plurals name="eq_harry_potter_and_half">
+        <item quantity="one">la saga Harry Potter en entier une fois et demie</item>
+        <item quantity="many">la saga Harry Potter en entier %1$s\u00A0de fois et demie</item>
+        <item quantity="other">la saga Harry Potter en entier %1$s\u00A0fois et demie</item>
+    </plurals>
+    <plurals name="eq_harry_potter_almost">
+        <item quantity="one">presque la saga Harry Potter en entier</item>
+        <item quantity="many">la saga Harry Potter en entier presque %1$s\u00A0de fois</item>
+        <item quantity="other">la saga Harry Potter en entier presque %1$s\u00A0fois</item>
+    </plurals>
+    <string name="eq_harry_potter_percent">le %1$s de la saga Harry Potter</string>
+    <string name="eq_harry_potter_less">moins du %1$s de la saga Harry Potter</string>
+    <string name="eq_harry_potter_quarter">un quart de la saga Harry Potter</string>
+    <string name="eq_harry_potter_half">la moitié de la saga Harry Potter</string>
+    <string name="eq_harry_potter_three_quarters">trois quarts de la saga Harry Potter</string>
+    <string name="eq_harry_potter_label">SAGA HARRY POTTER</string>
+    <string name="eq_harry_potter_basis">Base: 8\u00A0films, 1\u00A0179\u00A0min ≈ 19\u00A0h 40\u00A0min</string>
+
+    <!-- EL SEÑOR DE LOS ANILLOS: obra o trayecto que se repite («El Señor de los Anillos en versión extendida», contado en veces). -->
+    <string name="eq_lotr_do">voir %1$s</string>
+    <plurals name="eq_lotr_n">
+        <item quantity="one">Le Seigneur des anneaux version longue</item>
+        <item quantity="many">Le Seigneur des anneaux version longue %1$s\u00A0de fois</item>
+        <item quantity="other">Le Seigneur des anneaux version longue %1$s\u00A0fois</item>
+    </plurals>
+    <plurals name="eq_lotr_more">
+        <item quantity="one">Le Seigneur des anneaux version longue plus d’une fois</item>
+        <item quantity="many">Le Seigneur des anneaux version longue plus de %1$s\u00A0de fois</item>
+        <item quantity="other">Le Seigneur des anneaux version longue plus de %1$s\u00A0fois</item>
+    </plurals>
+    <plurals name="eq_lotr_and_half">
+        <item quantity="one">Le Seigneur des anneaux version longue une fois et demie</item>
+        <item quantity="many">Le Seigneur des anneaux version longue %1$s\u00A0de fois et demie</item>
+        <item quantity="other">Le Seigneur des anneaux version longue %1$s\u00A0fois et demie</item>
+    </plurals>
+    <plurals name="eq_lotr_almost">
+        <item quantity="one">presque Le Seigneur des anneaux version longue</item>
+        <item quantity="many">Le Seigneur des anneaux version longue presque %1$s\u00A0de fois</item>
+        <item quantity="other">Le Seigneur des anneaux version longue presque %1$s\u00A0fois</item>
+    </plurals>
+    <string name="eq_lotr_percent">le %1$s du Seigneur des anneaux version longue</string>
+    <string name="eq_lotr_less">moins du %1$s du Seigneur des anneaux version longue</string>
+    <string name="eq_lotr_quarter">un quart du Seigneur des anneaux version longue</string>
+    <string name="eq_lotr_half">la moitié du Seigneur des anneaux version longue</string>
+    <string name="eq_lotr_three_quarters">trois quarts du Seigneur des anneaux version longue</string>
+    <string name="eq_lotr_label">LE SEIGNEUR DES ANNEAUX</string>
+    <string name="eq_lotr_basis">Base: trilogie en version longue, 726\u00A0min ≈ 12\u00A0h</string>
+
+    <!-- PELÍCULAS: se cuenta por unidades (película / películas, femenino). -->
+    <string name="eq_movie_do">voir %1$s</string>
+    <plurals name="eq_movie_n">
+        <item quantity="one">un film</item>
+        <item quantity="many">%1$s\u00A0de films</item>
+        <item quantity="other">%1$s\u00A0films</item>
+    </plurals>
+    <plurals name="eq_movie_more">
+        <item quantity="one">plus d’un film</item>
+        <item quantity="many">plus de %1$s\u00A0de films</item>
+        <item quantity="other">plus de %1$s\u00A0films</item>
+    </plurals>
+    <plurals name="eq_movie_and_half">
+        <item quantity="one">un film et demi</item>
+        <item quantity="many">%1$s\u00A0de films et demi</item>
+        <item quantity="other">%1$s\u00A0films et demi</item>
+    </plurals>
+    <plurals name="eq_movie_almost">
+        <item quantity="one">presque un film</item>
+        <item quantity="many">presque %1$s\u00A0de films</item>
+        <item quantity="other">presque %1$s\u00A0films</item>
+    </plurals>
+    <string name="eq_movie_percent">le %1$s d’un film</string>
+    <string name="eq_movie_less">moins du %1$s d’un film</string>
+    <string name="eq_movie_quarter">un quart de film</string>
+    <string name="eq_movie_half">un demi-film</string>
+    <string name="eq_movie_three_quarters">trois quarts de film</string>
+    <string name="eq_movie_label">FILMS</string>
+    <string name="eq_movie_basis">Base: film moyen ≈ 2\u00A0h</string>
+
+    <!-- PARTIDOS DE FÚTBOL: se cuenta por unidades (partido / partidos). -->
+    <string name="eq_football_do">voir %1$s</string>
+    <plurals name="eq_football_n">
+        <item quantity="one">un match de football</item>
+        <item quantity="many">%1$s\u00A0de matchs de football</item>
+        <item quantity="other">%1$s\u00A0matchs de football</item>
+    </plurals>
+    <plurals name="eq_football_more">
+        <item quantity="one">plus d’un match de football</item>
+        <item quantity="many">plus de %1$s\u00A0de matchs de football</item>
+        <item quantity="other">plus de %1$s\u00A0matchs de football</item>
+    </plurals>
+    <plurals name="eq_football_and_half">
+        <item quantity="one">un match et demi de football</item>
+        <item quantity="many">%1$s\u00A0de matchs et demi de football</item>
+        <item quantity="other">%1$s\u00A0matchs et demi de football</item>
+    </plurals>
+    <plurals name="eq_football_almost">
+        <item quantity="one">presque un match de football</item>
+        <item quantity="many">presque %1$s\u00A0de matchs de football</item>
+        <item quantity="other">presque %1$s\u00A0matchs de football</item>
+    </plurals>
+    <string name="eq_football_percent">le %1$s d’un match de football</string>
+    <string name="eq_football_less">moins du %1$s d’un match de football</string>
+    <string name="eq_football_quarter">un quart de match de football</string>
+    <string name="eq_football_half">un demi-match de football</string>
+    <string name="eq_football_three_quarters">trois quarts de match de football</string>
+    <string name="eq_football_label">MATCHS DE FOOTBALL</string>
+    <string name="eq_football_basis">Base: 90\u00A0min + 15\u00A0min de pause ≈ 1\u00A0h 45\u00A0min</string>
+
+    <!-- ============================================================ deporte y viajes -->
+
+    <!-- MARATONES: se cuenta por unidades (maratón / maratones, femenino). -->
+    <string name="eq_marathon_do">courir %1$s</string>
+    <plurals name="eq_marathon_n">
+        <item quantity="one">un marathon</item>
+        <item quantity="many">%1$s\u00A0de marathons</item>
+        <item quantity="other">%1$s\u00A0marathons</item>
+    </plurals>
+    <plurals name="eq_marathon_more">
+        <item quantity="one">plus d’un marathon</item>
+        <item quantity="many">plus de %1$s\u00A0de marathons</item>
+        <item quantity="other">plus de %1$s\u00A0marathons</item>
+    </plurals>
+    <plurals name="eq_marathon_and_half">
+        <item quantity="one">un marathon et demi</item>
+        <item quantity="many">%1$s\u00A0de marathons et demi</item>
+        <item quantity="other">%1$s\u00A0marathons et demi</item>
+    </plurals>
+    <plurals name="eq_marathon_almost">
+        <item quantity="one">presque un marathon</item>
+        <item quantity="many">presque %1$s\u00A0de marathons</item>
+        <item quantity="other">presque %1$s\u00A0marathons</item>
+    </plurals>
+    <string name="eq_marathon_percent">le %1$s d’un marathon</string>
+    <string name="eq_marathon_less">moins du %1$s d’un marathon</string>
+    <string name="eq_marathon_quarter">un quart de marathon</string>
+    <string name="eq_marathon_half">un semi-marathon</string>
+    <string name="eq_marathon_three_quarters">trois quarts de marathon</string>
+    <string name="eq_marathon_label">MARATHONS</string>
+    <string name="eq_marathon_basis">Base: 42,195\u00A0km à allure populaire ≈ 4\u00A0h 30\u00A0min</string>
+
+    <!-- CAMINO DE SANTIAGO: obra o trayecto que se repite («el Camino de Santiago entero», contado en veces). -->
+    <string name="eq_camino_do">faire %1$s</string>
+    <plurals name="eq_camino_n">
+        <item quantity="one">le chemin de Compostelle en entier</item>
+        <item quantity="many">le chemin de Compostelle en entier %1$s\u00A0de fois</item>
+        <item quantity="other">le chemin de Compostelle en entier %1$s\u00A0fois</item>
+    </plurals>
+    <plurals name="eq_camino_more">
+        <item quantity="one">le chemin de Compostelle en entier plus d’une fois</item>
+        <item quantity="many">le chemin de Compostelle en entier plus de %1$s\u00A0de fois</item>
+        <item quantity="other">le chemin de Compostelle en entier plus de %1$s\u00A0fois</item>
+    </plurals>
+    <plurals name="eq_camino_and_half">
+        <item quantity="one">le chemin de Compostelle en entier une fois et demie</item>
+        <item quantity="many">le chemin de Compostelle en entier %1$s\u00A0de fois et demie</item>
+        <item quantity="other">le chemin de Compostelle en entier %1$s\u00A0fois et demie</item>
+    </plurals>
+    <plurals name="eq_camino_almost">
+        <item quantity="one">presque le chemin de Compostelle en entier</item>
+        <item quantity="many">le chemin de Compostelle en entier presque %1$s\u00A0de fois</item>
+        <item quantity="other">le chemin de Compostelle en entier presque %1$s\u00A0fois</item>
+    </plurals>
+    <string name="eq_camino_percent">le %1$s du chemin de Compostelle</string>
+    <string name="eq_camino_less">moins du %1$s du chemin de Compostelle</string>
+    <string name="eq_camino_quarter">un quart du chemin de Compostelle</string>
+    <string name="eq_camino_half">la moitié du chemin de Compostelle</string>
+    <string name="eq_camino_three_quarters">trois quarts du chemin de Compostelle</string>
+    <string name="eq_camino_label">CHEMIN DE COMPOSTELLE</string>
+    <string name="eq_camino_basis">Base: voie française, ~780\u00A0km à 4\u00A0km/h ≈ 195\u00A0h de marche</string>
+
+    <!-- MADRID–TOLEDO A PIE: obra o trayecto que se repite («de Madrid a Toledo», contado en veces). -->
+    <string name="eq_toledo_do">marcher %1$s</string>
+    <plurals name="eq_toledo_n">
+        <item quantity="one">de Paris à Fontainebleau</item>
+        <item quantity="many">de Paris à Fontainebleau %1$s\u00A0de fois</item>
+        <item quantity="other">de Paris à Fontainebleau %1$s\u00A0fois</item>
+    </plurals>
+    <plurals name="eq_toledo_more">
+        <item quantity="one">de Paris à Fontainebleau plus d’une fois</item>
+        <item quantity="many">de Paris à Fontainebleau plus de %1$s\u00A0de fois</item>
+        <item quantity="other">de Paris à Fontainebleau plus de %1$s\u00A0fois</item>
+    </plurals>
+    <plurals name="eq_toledo_and_half">
+        <item quantity="one">de Paris à Fontainebleau une fois et demie</item>
+        <item quantity="many">de Paris à Fontainebleau %1$s\u00A0de fois et demie</item>
+        <item quantity="other">de Paris à Fontainebleau %1$s\u00A0fois et demie</item>
+    </plurals>
+    <plurals name="eq_toledo_almost">
+        <item quantity="one">presque de Paris à Fontainebleau</item>
+        <item quantity="many">de Paris à Fontainebleau presque %1$s\u00A0de fois</item>
+        <item quantity="other">de Paris à Fontainebleau presque %1$s\u00A0fois</item>
+    </plurals>
+    <string name="eq_toledo_percent">le %1$s du chemin de Paris à Fontainebleau</string>
+    <string name="eq_toledo_less">moins du %1$s du chemin de Paris à Fontainebleau</string>
+    <string name="eq_toledo_quarter">un quart du chemin de Paris à Fontainebleau</string>
+    <string name="eq_toledo_half">la moitié du chemin de Paris à Fontainebleau</string>
+    <string name="eq_toledo_three_quarters">trois quarts du chemin de Paris à Fontainebleau</string>
+    <string name="eq_toledo_label">PARIS–FONTAINEBLEAU À PIED</string>
+    <string name="eq_toledo_basis">Base: ~72\u00A0km à 5\u00A0km/h ≈ 14,4\u00A0h</string>
+
+    <!-- AVE MADRID–BARCELONA: obra o trayecto que se repite («de Madrid a Barcelona», contado en veces). -->
+    <string name="eq_ave_do">prendre l’Eurostar %1$s</string>
+    <plurals name="eq_ave_n">
+        <item quantity="one">de Paris à Londres</item>
+        <item quantity="many">de Paris à Londres %1$s\u00A0de fois</item>
+        <item quantity="other">de Paris à Londres %1$s\u00A0fois</item>
+    </plurals>
+    <plurals name="eq_ave_more">
+        <item quantity="one">de Paris à Londres plus d’une fois</item>
+        <item quantity="many">de Paris à Londres plus de %1$s\u00A0de fois</item>
+        <item quantity="other">de Paris à Londres plus de %1$s\u00A0fois</item>
+    </plurals>
+    <plurals name="eq_ave_and_half">
+        <item quantity="one">de Paris à Londres une fois et demie</item>
+        <item quantity="many">de Paris à Londres %1$s\u00A0de fois et demie</item>
+        <item quantity="other">de Paris à Londres %1$s\u00A0fois et demie</item>
+    </plurals>
+    <plurals name="eq_ave_almost">
+        <item quantity="one">presque de Paris à Londres</item>
+        <item quantity="many">de Paris à Londres presque %1$s\u00A0de fois</item>
+        <item quantity="other">de Paris à Londres presque %1$s\u00A0fois</item>
+    </plurals>
+    <string name="eq_ave_percent">le %1$s du trajet de Paris à Londres</string>
+    <string name="eq_ave_less">moins du %1$s du trajet de Paris à Londres</string>
+    <string name="eq_ave_quarter">un quart du trajet de Paris à Londres</string>
+    <string name="eq_ave_half">la moitié du trajet de Paris à Londres</string>
+    <string name="eq_ave_three_quarters">trois quarts du trajet de Paris à Londres</string>
+    <string name="eq_ave_label">PARIS–LONDRES EN EUROSTAR</string>
+    <string name="eq_ave_basis">Base: Eurostar direct, contrôles compris ≈ 2\u00A0h 30\u00A0min</string>
+
+    <!-- VUELO MADRID–NUEVA YORK: obra o trayecto que se repite («de Madrid a Nueva York», contado en veces). -->
+    <string name="eq_flight_do">voler %1$s</string>
+    <plurals name="eq_flight_n">
+        <item quantity="one">de Paris à New York</item>
+        <item quantity="many">de Paris à New York %1$s\u00A0de fois</item>
+        <item quantity="other">de Paris à New York %1$s\u00A0fois</item>
+    </plurals>
+    <plurals name="eq_flight_more">
+        <item quantity="one">de Paris à New York plus d’une fois</item>
+        <item quantity="many">de Paris à New York plus de %1$s\u00A0de fois</item>
+        <item quantity="other">de Paris à New York plus de %1$s\u00A0fois</item>
+    </plurals>
+    <plurals name="eq_flight_and_half">
+        <item quantity="one">de Paris à New York une fois et demie</item>
+        <item quantity="many">de Paris à New York %1$s\u00A0de fois et demie</item>
+        <item quantity="other">de Paris à New York %1$s\u00A0fois et demie</item>
+    </plurals>
+    <plurals name="eq_flight_almost">
+        <item quantity="one">presque de Paris à New York</item>
+        <item quantity="many">de Paris à New York presque %1$s\u00A0de fois</item>
+        <item quantity="other">de Paris à New York presque %1$s\u00A0fois</item>
+    </plurals>
+    <string name="eq_flight_percent">le %1$s du vol de Paris à New York</string>
+    <string name="eq_flight_less">moins du %1$s du vol de Paris à New York</string>
+    <string name="eq_flight_quarter">un quart du vol de Paris à New York</string>
+    <string name="eq_flight_half">la moitié du vol de Paris à New York</string>
+    <string name="eq_flight_three_quarters">trois quarts du vol de Paris à New York</string>
+    <string name="eq_flight_label">VOL PARIS–NEW YORK</string>
+    <string name="eq_flight_basis">Base: vol direct ≈ 8\u00A0h</string>
+
+    <!-- KILÓMETROS A PIE: distancia a pie, en kilómetros o, por debajo de uno, en metros. -->
+    <string name="eq_walk_do">marcher %1$s</string>
+    <plurals name="eq_walk_n">
+        <item quantity="one">un kilomètre</item>
+        <item quantity="many">%1$s\u00A0de kilomètres</item>
+        <item quantity="other">%1$s\u00A0kilomètres</item>
+    </plurals>
+    <plurals name="eq_walk_more">
+        <item quantity="one">plus d’un kilomètre</item>
+        <item quantity="many">plus de %1$s\u00A0de kilomètres</item>
+        <item quantity="other">plus de %1$s\u00A0kilomètres</item>
+    </plurals>
+    <plurals name="eq_walk_and_half">
+        <item quantity="one">un kilomètre et demi</item>
+        <item quantity="many">%1$s\u00A0de kilomètres et demi</item>
+        <item quantity="other">%1$s\u00A0kilomètres et demi</item>
+    </plurals>
+    <plurals name="eq_walk_almost">
+        <item quantity="one">presque un kilomètre</item>
+        <item quantity="many">presque %1$s\u00A0de kilomètres</item>
+        <item quantity="other">presque %1$s\u00A0kilomètres</item>
+    </plurals>
+    <!-- Menos de un kilómetro, en metros redondeados a la decena: %1$s es la cifra («830»). -->
+    <plurals name="eq_walk_metres">
+        <item quantity="one">%1$s\u00A0mètre</item>
+        <item quantity="many">%1$s\u00A0de mètres</item>
+        <item quantity="other">%1$s\u00A0mètres</item>
+    </plurals>
+    <!-- Menos de 10 metros: %1$s es la cifra («10»). -->
+    <plurals name="eq_walk_under_metres">
+        <item quantity="one">moins de %1$s\u00A0mètre</item>
+        <item quantity="many">moins de %1$s\u00A0de mètres</item>
+        <item quantity="other">moins de %1$s\u00A0mètres</item>
+    </plurals>
+    <string name="eq_walk_label">KILOMÈTRES À PIED</string>
+    <string name="eq_walk_basis">Base: 5\u00A0km/h, pas normal</string>
+
+    <!-- ============================================================ cocina, música y sofá -->
+
+    <!-- TORTILLAS DE PATATAS: se cuenta por unidades (tortilla / tortillas, femenino). -->
+    <string name="eq_tortilla_do">faire %1$s</string>
+    <plurals name="eq_tortilla_n">
+        <item quantity="one">une quiche lorraine</item>
+        <item quantity="many">%1$s\u00A0de quiches lorraines</item>
+        <item quantity="other">%1$s\u00A0quiches lorraines</item>
+    </plurals>
+    <plurals name="eq_tortilla_more">
+        <item quantity="one">plus d’une quiche lorraine</item>
+        <item quantity="many">plus de %1$s\u00A0de quiches lorraines</item>
+        <item quantity="other">plus de %1$s\u00A0quiches lorraines</item>
+    </plurals>
+    <plurals name="eq_tortilla_and_half">
+        <item quantity="one">une quiche lorraine et demie</item>
+        <item quantity="many">%1$s\u00A0de quiches lorraines et demie</item>
+        <item quantity="other">%1$s\u00A0quiches lorraines et demie</item>
+    </plurals>
+    <plurals name="eq_tortilla_almost">
+        <item quantity="one">presque une quiche lorraine</item>
+        <item quantity="many">presque %1$s\u00A0de quiches lorraines</item>
+        <item quantity="other">presque %1$s\u00A0quiches lorraines</item>
+    </plurals>
+    <string name="eq_tortilla_percent">le %1$s d’une quiche lorraine</string>
+    <string name="eq_tortilla_less">moins du %1$s d’une quiche lorraine</string>
+    <string name="eq_tortilla_quarter">un quart de quiche lorraine</string>
+    <string name="eq_tortilla_half">une demi-quiche lorraine</string>
+    <string name="eq_tortilla_three_quarters">trois quarts de quiche lorraine</string>
+    <string name="eq_tortilla_label">QUICHES LORRAINES</string>
+    <string name="eq_tortilla_basis">Base: pâte, garniture et cuisson ≈ 45\u00A0min</string>
+
+    <!-- COCIDOS: se cuenta por unidades (cocido madrileño / cocidos madrileños). -->
+    <string name="eq_cocido_do">faire %1$s</string>
+    <plurals name="eq_cocido_n">
+        <item quantity="one">un pot-au-feu</item>
+        <item quantity="many">%1$s\u00A0de pots-au-feu</item>
+        <item quantity="other">%1$s\u00A0pots-au-feu</item>
+    </plurals>
+    <plurals name="eq_cocido_more">
+        <item quantity="one">plus d’un pot-au-feu</item>
+        <item quantity="many">plus de %1$s\u00A0de pots-au-feu</item>
+        <item quantity="other">plus de %1$s\u00A0pots-au-feu</item>
+    </plurals>
+    <plurals name="eq_cocido_and_half">
+        <item quantity="one">un pot-au-feu et demi</item>
+        <item quantity="many">%1$s\u00A0de pots-au-feu et demi</item>
+        <item quantity="other">%1$s\u00A0pots-au-feu et demi</item>
+    </plurals>
+    <plurals name="eq_cocido_almost">
+        <item quantity="one">presque un pot-au-feu</item>
+        <item quantity="many">presque %1$s\u00A0de pots-au-feu</item>
+        <item quantity="other">presque %1$s\u00A0pots-au-feu</item>
+    </plurals>
+    <string name="eq_cocido_percent">le %1$s d’un pot-au-feu</string>
+    <string name="eq_cocido_less">moins du %1$s d’un pot-au-feu</string>
+    <string name="eq_cocido_quarter">un quart de pot-au-feu</string>
+    <string name="eq_cocido_half">un demi-pot-au-feu</string>
+    <string name="eq_cocido_three_quarters">trois quarts de pot-au-feu</string>
+    <string name="eq_cocido_label">POT-AU-FEU</string>
+    <string name="eq_cocido_basis">Base: 3\u00A0h 30\u00A0min à petit feu (le trempage ne compte pas)</string>
+
+    <!-- HUEVOS DUROS: se cuenta por unidades (huevo duro / huevos duros). -->
+    <string name="eq_egg_do">cuire %1$s</string>
+    <plurals name="eq_egg_n">
+        <item quantity="one">un œuf dur</item>
+        <item quantity="many">%1$s\u00A0d’œufs durs</item>
+        <item quantity="other">%1$s\u00A0œufs durs</item>
+    </plurals>
+    <plurals name="eq_egg_more">
+        <item quantity="one">plus d’un œuf dur</item>
+        <item quantity="many">plus de %1$s\u00A0d’œufs durs</item>
+        <item quantity="other">plus de %1$s\u00A0œufs durs</item>
+    </plurals>
+    <plurals name="eq_egg_and_half">
+        <item quantity="one">un œuf dur et demi</item>
+        <item quantity="many">%1$s\u00A0d’œufs durs et demi</item>
+        <item quantity="other">%1$s\u00A0œufs durs et demi</item>
+    </plurals>
+    <plurals name="eq_egg_almost">
+        <item quantity="one">presque un œuf dur</item>
+        <item quantity="many">presque %1$s\u00A0d’œufs durs</item>
+        <item quantity="other">presque %1$s\u00A0œufs durs</item>
+    </plurals>
+    <string name="eq_egg_percent">le %1$s d’un œuf dur</string>
+    <string name="eq_egg_less">moins du %1$s d’un œuf dur</string>
+    <string name="eq_egg_quarter">un quart d’œuf dur</string>
+    <string name="eq_egg_half">un demi-œuf dur</string>
+    <string name="eq_egg_three_quarters">trois quarts d’œuf dur</string>
+    <string name="eq_egg_label">ŒUFS DURS</string>
+    <string name="eq_egg_basis">Base: 10\u00A0min de cuisson</string>
+
+    <!-- VASOS DE LECHE AL MICROONDAS: se cuenta por unidades (vaso / vasos). -->
+    <string name="eq_milk_do">réchauffer %1$s</string>
+    <plurals name="eq_milk_n">
+        <item quantity="one">un verre de lait au micro-ondes</item>
+        <item quantity="many">%1$s\u00A0de verres de lait au micro-ondes</item>
+        <item quantity="other">%1$s\u00A0verres de lait au micro-ondes</item>
+    </plurals>
+    <plurals name="eq_milk_more">
+        <item quantity="one">plus d’un verre de lait au micro-ondes</item>
+        <item quantity="many">plus de %1$s\u00A0de verres de lait au micro-ondes</item>
+        <item quantity="other">plus de %1$s\u00A0verres de lait au micro-ondes</item>
+    </plurals>
+    <plurals name="eq_milk_and_half">
+        <item quantity="one">un verre et demi de lait au micro-ondes</item>
+        <item quantity="many">%1$s\u00A0de verres et demi de lait au micro-ondes</item>
+        <item quantity="other">%1$s\u00A0verres et demi de lait au micro-ondes</item>
+    </plurals>
+    <plurals name="eq_milk_almost">
+        <item quantity="one">presque un verre de lait au micro-ondes</item>
+        <item quantity="many">presque %1$s\u00A0de verres de lait au micro-ondes</item>
+        <item quantity="other">presque %1$s\u00A0verres de lait au micro-ondes</item>
+    </plurals>
+    <string name="eq_milk_percent">le %1$s d’un verre de lait au micro-ondes</string>
+    <string name="eq_milk_less">moins du %1$s d’un verre de lait au micro-ondes</string>
+    <string name="eq_milk_quarter">un quart de verre de lait au micro-ondes</string>
+    <string name="eq_milk_half">un demi-verre de lait au micro-ondes</string>
+    <string name="eq_milk_three_quarters">trois quarts de verre de lait au micro-ondes</string>
+    <string name="eq_milk_label">VERRES DE LAIT AU MICRO-ONDES</string>
+    <string name="eq_milk_basis">Base: 1\u00A0min à pleine puissance</string>
+
+    <!-- BOHEMIAN RHAPSODY: obra o trayecto que se repite («Bohemian Rhapsody», contado en veces). -->
+    <string name="eq_bohemian_do">écouter %1$s</string>
+    <plurals name="eq_bohemian_n">
+        <item quantity="one">Bohemian Rhapsody</item>
+        <item quantity="many">Bohemian Rhapsody %1$s\u00A0de fois</item>
+        <item quantity="other">Bohemian Rhapsody %1$s\u00A0fois</item>
+    </plurals>
+    <plurals name="eq_bohemian_more">
+        <item quantity="one">Bohemian Rhapsody plus d’une fois</item>
+        <item quantity="many">Bohemian Rhapsody plus de %1$s\u00A0de fois</item>
+        <item quantity="other">Bohemian Rhapsody plus de %1$s\u00A0fois</item>
+    </plurals>
+    <plurals name="eq_bohemian_and_half">
+        <item quantity="one">Bohemian Rhapsody une fois et demie</item>
+        <item quantity="many">Bohemian Rhapsody %1$s\u00A0de fois et demie</item>
+        <item quantity="other">Bohemian Rhapsody %1$s\u00A0fois et demie</item>
+    </plurals>
+    <plurals name="eq_bohemian_almost">
+        <item quantity="one">presque Bohemian Rhapsody</item>
+        <item quantity="many">Bohemian Rhapsody presque %1$s\u00A0de fois</item>
+        <item quantity="other">Bohemian Rhapsody presque %1$s\u00A0fois</item>
+    </plurals>
+    <string name="eq_bohemian_percent">le %1$s de Bohemian Rhapsody</string>
+    <string name="eq_bohemian_less">moins du %1$s de Bohemian Rhapsody</string>
+    <string name="eq_bohemian_quarter">un quart de Bohemian Rhapsody</string>
+    <string name="eq_bohemian_half">la moitié de Bohemian Rhapsody</string>
+    <string name="eq_bohemian_three_quarters">trois quarts de Bohemian Rhapsody</string>
+    <string name="eq_bohemian_label">BOHEMIAN RHAPSODY</string>
+    <string name="eq_bohemian_basis">Base: 5\u00A0min 55\u00A0s, version studio</string>
+
+    <!-- SIESTAS: se cuenta por unidades (siesta / siestas, femenino). -->
+    <string name="eq_nap_do">faire %1$s</string>
+    <plurals name="eq_nap_n">
+        <item quantity="one">une sieste</item>
+        <item quantity="many">%1$s\u00A0de siestes</item>
+        <item quantity="other">%1$s\u00A0siestes</item>
+    </plurals>
+    <plurals name="eq_nap_more">
+        <item quantity="one">plus d’une sieste</item>
+        <item quantity="many">plus de %1$s\u00A0de siestes</item>
+        <item quantity="other">plus de %1$s\u00A0siestes</item>
+    </plurals>
+    <plurals name="eq_nap_and_half">
+        <item quantity="one">une sieste et demie</item>
+        <item quantity="many">%1$s\u00A0de siestes et demie</item>
+        <item quantity="other">%1$s\u00A0siestes et demie</item>
+    </plurals>
+    <plurals name="eq_nap_almost">
+        <item quantity="one">presque une sieste</item>
+        <item quantity="many">presque %1$s\u00A0de siestes</item>
+        <item quantity="other">presque %1$s\u00A0siestes</item>
+    </plurals>
+    <string name="eq_nap_percent">le %1$s d’une sieste</string>
+    <string name="eq_nap_less">moins du %1$s d’une sieste</string>
+    <string name="eq_nap_quarter">un quart de sieste</string>
+    <string name="eq_nap_half">une demi-sieste</string>
+    <string name="eq_nap_three_quarters">trois quarts de sieste</string>
+    <string name="eq_nap_label">SIESTES</string>
+    <string name="eq_nap_basis">Base: sieste de 30\u00A0min (sans pyjama)</string>
+
+    <!-- NOCHES DEL TIRÓN: se cuenta por unidades (noche / noches, femenino). -->
+    <string name="eq_sleep_do">dormir %1$s</string>
+    <plurals name="eq_sleep_n">
+        <item quantity="one">une nuit d’une traite</item>
+        <item quantity="many">%1$s\u00A0de nuits d’une traite</item>
+        <item quantity="other">%1$s\u00A0nuits d’une traite</item>
+    </plurals>
+    <plurals name="eq_sleep_more">
+        <item quantity="one">plus d’une nuit d’une traite</item>
+        <item quantity="many">plus de %1$s\u00A0de nuits d’une traite</item>
+        <item quantity="other">plus de %1$s\u00A0nuits d’une traite</item>
+    </plurals>
+    <plurals name="eq_sleep_and_half">
+        <item quantity="one">une nuit et demie d’une traite</item>
+        <item quantity="many">%1$s\u00A0de nuits et demie d’une traite</item>
+        <item quantity="other">%1$s\u00A0nuits et demie d’une traite</item>
+    </plurals>
+    <plurals name="eq_sleep_almost">
+        <item quantity="one">presque une nuit d’une traite</item>
+        <item quantity="many">presque %1$s\u00A0de nuits d’une traite</item>
+        <item quantity="other">presque %1$s\u00A0nuits d’une traite</item>
+    </plurals>
+    <string name="eq_sleep_percent">le %1$s d’une nuit d’une traite</string>
+    <string name="eq_sleep_less">moins du %1$s d’une nuit d’une traite</string>
+    <string name="eq_sleep_quarter">un quart de nuit d’une traite</string>
+    <string name="eq_sleep_half">une demi-nuit d’une traite</string>
+    <string name="eq_sleep_three_quarters">trois quarts de nuit d’une traite</string>
+    <string name="eq_sleep_label">NUITS D’UNE TRAITE</string>
+    <string name="eq_sleep_basis">Base: 8\u00A0h par nuit</string>
+
+    <!-- JORNADAS LABORALES: se cuenta por unidades (jornada laboral / jornadas laborales, femenino). -->
+    <string name="eq_workday_do">faire %1$s</string>
+    <plurals name="eq_workday_n">
+        <item quantity="one">une journée de travail</item>
+        <item quantity="many">%1$s\u00A0de journées de travail</item>
+        <item quantity="other">%1$s\u00A0journées de travail</item>
+    </plurals>
+    <plurals name="eq_workday_more">
+        <item quantity="one">plus d’une journée de travail</item>
+        <item quantity="many">plus de %1$s\u00A0de journées de travail</item>
+        <item quantity="other">plus de %1$s\u00A0journées de travail</item>
+    </plurals>
+    <plurals name="eq_workday_and_half">
+        <item quantity="one">une journée et demie de travail</item>
+        <item quantity="many">%1$s\u00A0de journées et demie de travail</item>
+        <item quantity="other">%1$s\u00A0journées et demie de travail</item>
+    </plurals>
+    <plurals name="eq_workday_almost">
+        <item quantity="one">presque une journée de travail</item>
+        <item quantity="many">presque %1$s\u00A0de journées de travail</item>
+        <item quantity="other">presque %1$s\u00A0journées de travail</item>
+    </plurals>
+    <string name="eq_workday_percent">le %1$s d’une journée de travail</string>
+    <string name="eq_workday_less">moins du %1$s d’une journée de travail</string>
+    <string name="eq_workday_quarter">un quart de journée de travail</string>
+    <string name="eq_workday_half">une demi-journée de travail</string>
+    <string name="eq_workday_three_quarters">trois quarts de journée de travail</string>
+    <string name="eq_workday_label">JOURNÉES DE TRAVAIL</string>
+    <string name="eq_workday_basis">Base: journée complète de 8\u00A0h</string>
+</resources>

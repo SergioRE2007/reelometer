@@ -1,5 +1,7 @@
 package com.reelometro.app.ui.components.charts
 
+import com.reelometro.app.copy.str
+import com.reelometro.app.R
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -100,9 +102,9 @@ fun DailyBars(
         derivedStateOf { selection.intValue.takeIf { it in values.indices }?.let { currentTooltip(it) } }
     }
     val description = contentDescription ?: remember(values) {
-        if (top < 0) "Barras por día: sin datos" else "Barras por día. Máximo: ${spoken(tooltip(top))}"
+        if (top < 0) str(R.string.ui_daily_bars_description_empty) else str(R.string.ui_daily_bars_description, spoken(tooltip(top)))
     }
-    val avgText = averageLabel ?: average?.let { "MEDIA ${Format.integer(it.roundToInt())}" }
+    val avgText = averageLabel ?: average?.let { str(R.string.ui_daily_bars_average, Format.integer(it.roundToInt())) }
 
     /** La barra [i] ya crecida, como la dibuja `drawWithCache` (mismas cuentas): origen del gancho. */
     fun Density.barRect(i: Int, w: Float, h: Float): Rect {

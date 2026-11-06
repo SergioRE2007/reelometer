@@ -1,5 +1,6 @@
 package com.reelometro.app.copy
 
+import com.reelometro.app.R
 import com.reelometro.app.stats.Format
 
 /**
@@ -80,30 +81,51 @@ internal object Deltas {
 
     /**
      * Línea para una proporción [ratio] (valor / base) frente a [ref] en minúsculas
-     * («tu martes medio a esta hora», «la semana anterior»).
+     * («tu martes medio a esta hora», «la semana anterior»). Las frases están en
+     * `res/values/copy_today.xml` (`today_delta_*`).
      */
     fun ratioLine(ratio: Double, ref: String): DeltaLine {
         val refUpper = Format.upper(ref)
         return when {
             ratio >= 1.95 -> when (val times = Format.decimal(ratio)) {
-                "2" -> DeltaLine("EL DOBLE QUE $refUpper", "El doble que $ref.", Direction.UP)
-                "3" -> DeltaLine("EL TRIPLE QUE $refUpper", "El triple que $ref.", Direction.UP)
-                else -> DeltaLine("$times VECES $refUpper", "$times veces $ref.", Direction.UP)
+                Format.integer(2) -> DeltaLine(
+                    str(R.string.today_delta_double, refUpper),
+                    str(R.string.today_delta_double_description, ref),
+                    Direction.UP,
+                )
+                Format.integer(3) -> DeltaLine(
+                    str(R.string.today_delta_triple, refUpper),
+                    str(R.string.today_delta_triple_description, ref),
+                    Direction.UP,
+                )
+                else -> DeltaLine(
+                    str(R.string.today_delta_times, times, refUpper),
+                    str(R.string.today_delta_times_description, times, ref),
+                    Direction.UP,
+                )
             }
 
             ratio > 1 + SAME_BAND -> DeltaLine(
-                "${Format.signedPercent(ratio - 1)} QUE $refUpper",
-                "Un ${Format.percent(ratio - 1)} más que $ref.",
+                str(R.string.today_delta_more, Format.signedPercent(ratio - 1), refUpper),
+                str(R.string.today_delta_more_description, Format.percent(ratio - 1), ref),
                 Direction.UP,
             )
 
-            ratio >= 1 - SAME_BAND -> DeltaLine("COMO $refUpper", "Como $ref.", Direction.SAME)
+            ratio >= 1 - SAME_BAND -> DeltaLine(
+                str(R.string.today_delta_same, refUpper),
+                str(R.string.today_delta_same_description, ref),
+                Direction.SAME,
+            )
 
-            ratio >= 0.45 && ratio < 0.55 -> DeltaLine("LA MITAD QUE $refUpper", "La mitad que $ref.", Direction.DOWN)
+            ratio >= 0.45 && ratio < 0.55 -> DeltaLine(
+                str(R.string.today_delta_half, refUpper),
+                str(R.string.today_delta_half_description, ref),
+                Direction.DOWN,
+            )
 
             else -> DeltaLine(
-                "${Format.signedPercent(ratio - 1)} QUE $refUpper",
-                "Un ${Format.percent(1 - ratio)} menos que $ref.",
+                str(R.string.today_delta_less, Format.signedPercent(ratio - 1), refUpper),
+                str(R.string.today_delta_less_description, Format.percent(1 - ratio), ref),
                 Direction.DOWN,
             )
         }

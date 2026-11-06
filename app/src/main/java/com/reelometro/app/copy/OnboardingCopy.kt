@@ -1,5 +1,6 @@
 package com.reelometro.app.copy
 
+import com.reelometro.app.R
 import com.reelometro.app.stats.Format
 
 /**
@@ -7,26 +8,26 @@ import com.reelometro.app.stats.Format
  *  1. Qué hace · 2. Privacidad · 3. Permiso de accesibilidad ([DisclosureCopy] + guía + «Ajuste
  *  restringido») · 4. Avisos y objetivo diario opcional.
  *
- * Los nombres de menús de Android van entre comillas latinas y tal como salen en español
- * (AOSP/Pixel; los fabricantes a veces los cambian, por eso se dan alternativas).
+ * Las palabras están en `res/values/copy_onboarding.xml`. Los nombres de menús de Android van entre
+ * comillas latinas y tal como salen en cada idioma (AOSP/Pixel; los fabricantes a veces los cambian,
+ * por eso se dan alternativas).
  */
 object OnboardingCopy {
 
     const val STEPS = 4
 
     /** «PASO 1 DE 4». */
-    fun stepLabel(index: Int, total: Int = STEPS): String = "PASO $index DE $total"
+    fun stepLabel(index: Int, total: Int = STEPS): String =
+        str(R.string.onboarding_step_label, Format.integer(index), Format.integer(total))
 
     /** Para los pasos 1–2. Nunca debe saltarse la divulgación del paso 3. */
-    const val SKIP = "SALTAR"
+    val SKIP: String get() = str(R.string.onboarding_skip)
 
     // ------------------------------------------------------------------ 1. Qué hace
 
-    const val WHAT_TITLE = "Cuenta lo que no cuentas."
+    val WHAT_TITLE: String get() = str(R.string.onboarding_what_title)
 
-    const val WHAT_BODY =
-        "Reelómetro cuenta los vídeos cortos que ves en TikTok, Instagram Reels y YouTube Shorts: " +
-            "cuántos, cuánto tiempo, de qué temas y de qué creadores. El dato es tuyo; las conclusiones, también."
+    val WHAT_BODY: String get() = str(R.string.onboarding_what_body)
 
     /** Hasta dónde cuenta solo el marcador de demostración. */
     const val WHAT_DEMO_COUNT = 212
@@ -35,163 +36,147 @@ object OnboardingCopy {
     const val WHAT_DEMO_MS = 47 * 60_000L
 
     /** Línea bajo el marcador de demostración: «47 MIN DE PANTALLA». */
-    fun demoTime(ms: Long): String = "${Words.durationLabel(ms)} DE PANTALLA"
+    fun demoTime(ms: Long): String = str(R.string.onboarding_demo_time, Words.durationLabel(ms))
 
     /** contentDescription del marcador de demostración: «Un marcador que cuenta hasta 212 vídeos.». */
-    fun demoDescription(count: Int): String = "Un marcador que cuenta hasta ${Words.videos(count)}."
+    fun demoDescription(count: Int): String = str(R.string.onboarding_demo_description, Words.videos(count))
 
     // ------------------------------------------------------------------ 2. Privacidad
 
-    const val PRIVACY_TITLE = "Lo que ves se queda aquí."
+    val PRIVACY_TITLE: String get() = str(R.string.onboarding_privacy_title)
 
-    val PRIVACY_POINTS: List<LabeledText> = listOf(
-        LabeledText("SIN CUENTAS", "Ni registro, ni correo, ni contraseña."),
-        LabeledText("SIN SERVIDORES", "Todo se guarda en este móvil. No hay copia en ningún otro sitio."),
-        LabeledText("SIN ANUNCIOS", "Ni anuncios ni rastreadores. Nadie más mira tus datos."),
-        LabeledText("SIN INTERNET", "La app no tiene permiso para conectarse. Aunque quisiera, no podría enviar nada."),
-    )
+    val PRIVACY_POINTS: List<LabeledText>
+        get() = listOf(
+            LabeledText(str(R.string.onboarding_privacy_accounts_label), str(R.string.onboarding_privacy_accounts_text)),
+            LabeledText(str(R.string.onboarding_privacy_servers_label), str(R.string.onboarding_privacy_servers_text)),
+            LabeledText(str(R.string.onboarding_privacy_ads_label), str(R.string.onboarding_privacy_ads_text)),
+            LabeledText(str(R.string.onboarding_privacy_internet_label), str(R.string.onboarding_privacy_internet_text)),
+        )
 
-    const val PRIVACY_STAMP = Labels.LOCAL_STAMP
+    val PRIVACY_STAMP: String get() = Labels.LOCAL_STAMP
 
     /** Segunda línea del sello. */
-    const val PRIVACY_STAMP_SUBTEXT = "SOLO EN ESTE MÓVIL"
+    val PRIVACY_STAMP_SUBTEXT: String get() = str(R.string.onboarding_privacy_stamp_subtext)
 
-    const val PRIVACY_FOOTNOTE = "Si desinstalas la app, todo se va con ella."
+    val PRIVACY_FOOTNOTE: String get() = str(R.string.onboarding_privacy_footnote)
 
     // ------------------------------------------------------------------ 3. Permiso (guía)
     // La divulgación destacada está en DisclosureCopy y va ANTES de esta guía.
 
-    const val GUIDE_TITLE = "Un interruptor y un «Permitir»."
+    val GUIDE_TITLE: String get() = str(R.string.onboarding_guide_title)
 
-    val GUIDE_STEPS: List<Step> = listOf(
-        Step(1, "Pulsa ABRIR ACCESIBILIDAD: te llevo a los ajustes de Android."),
-        Step(
-            2,
-            "Busca «Reelómetro» en «Aplicaciones descargadas». En algunos móviles está dentro de " +
-                "«Aplicaciones instaladas» o «Servicios instalados».",
-        ),
-        Step(3, "Toca «Reelómetro» y activa «Usar Reelómetro»."),
-        Step(
-            4,
-            "Android preguntará si permites que Reelómetro «pueda controlar totalmente tu dispositivo». " +
-                "Es el aviso estándar de cualquier servicio de accesibilidad: Reelómetro mira y cuenta, y solo " +
-                "pulsa por ti si usas el envío rápido de Instagram. Toca «Permitir».",
-        ),
-        Step(5, "Vuelve aquí. Si el marcador dice OK, ya está."),
-    )
+    val GUIDE_STEPS: List<Step>
+        get() = listOf(
+            Step(1, str(R.string.onboarding_guide_step_1)),
+            Step(2, str(R.string.onboarding_guide_step_2)),
+            Step(3, str(R.string.onboarding_guide_step_3)),
+            Step(4, str(R.string.onboarding_guide_step_4)),
+            Step(5, str(R.string.onboarding_guide_step_5)),
+        )
 
-    const val GUIDE_BUTTON = Buttons.OPEN_ACCESSIBILITY
+    val GUIDE_BUTTON: String get() = Buttons.OPEN_ACCESSIBILITY
 
     /** Etiqueta mientras se espera a que el servicio se conecte. */
-    const val GUIDE_WAITING = "ESPERANDO AL SERVICIO"
+    val GUIDE_WAITING: String get() = str(R.string.onboarding_guide_waiting)
 
-    const val GUIDE_CONNECTED_LABEL = Labels.CONNECTED
+    val GUIDE_CONNECTED_LABEL: String get() = Labels.CONNECTED
 
     /** Lo que muestra el marcador al conectar (voltea a «OK» + háptico CONFIRM). */
-    const val GUIDE_CONNECTED_COUNTER = "OK"
+    val GUIDE_CONNECTED_COUNTER: String get() = str(R.string.onboarding_guide_connected_counter)
 
     /** Al volver con el servicio activo. */
-    fun connected(seed: Long): String = pick(
-        seed, "onboarding.connected",
-        "Conectado. Desde ahora, cada vídeo cuenta.",
-        "Listo. A partir de aquí, todo lo que veas queda contado.",
-        "Conectado. El marcador ya está mirando.",
-    )
+    fun connected(seed: Long): String = pick(seed, "onboarding.connected", R.array.onboarding_connected)
 
     /** Al volver sin haberlo activado. */
-    fun notYet(seed: Long): String = pick(
-        seed, "onboarding.notYet",
-        "Todavía no está activado. Sin prisa: los pasos siguen aquí.",
-        "Aún no veo el servicio. Repasa los pasos; suele faltar el último interruptor.",
-        "El servicio sigue apagado. Si Android dice «Ajuste restringido», mira justo debajo.",
-    )
+    fun notYet(seed: Long): String = pick(seed, "onboarding.notYet", R.array.onboarding_not_yet)
 
     /** Bajo el «OK»: qué pasa ahora. */
-    const val GUIDE_CONNECTED_BODY =
-        "Usa TikTok, Instagram o YouTube como siempre. Yo voy sumando en Hoy."
+    val GUIDE_CONNECTED_BODY: String get() = str(R.string.onboarding_guide_connected_body)
 
     /** Con el servicio ya activo, en la pantalla de conectar (fuera del onboarding). */
-    const val GUIDE_DONE = Buttons.DONE
+    val GUIDE_DONE: String get() = Buttons.DONE
 
     /** Seguir sin activar el servicio (solo en el onboarding: la divulgación ya se ha visto). */
-    const val GUIDE_SKIP = Buttons.NEXT
+    val GUIDE_SKIP: String get() = Buttons.NEXT
 
     /** contentDescription del marcador de estado: conectado o esperando. */
     fun guideStatusDescription(connected: Boolean): String =
-        if (connected) "Servicio conectado" else "Servicio todavía sin conectar"
+        if (connected) str(R.string.onboarding_guide_status_connected) else str(R.string.onboarding_guide_status_waiting)
 
     /** Enlace a la ayuda de «Ajuste restringido». */
-    const val RESTRICTED_LINK = "¿TE SALE «AJUSTE RESTRINGIDO»?"
+    val RESTRICTED_LINK: String get() = str(R.string.onboarding_restricted_link)
 
     // ------------------------------------------------------------------ 3b. «Ajuste restringido» (Android 13+)
 
-    const val RESTRICTED_TITLE = "¿Android dice «Ajuste restringido»?"
+    val RESTRICTED_TITLE: String get() = str(R.string.onboarding_restricted_title)
 
-    const val RESTRICTED_BODY =
-        "Es una protección de Android para las apps instaladas fuera de Google Play, no un fallo. Se quita así:"
+    val RESTRICTED_BODY: String get() = str(R.string.onboarding_restricted_body)
 
-    val RESTRICTED_STEPS: List<Step> = listOf(
-        Step(1, "Pulsa ABRIR INFORMACIÓN DE LA APP."),
-        Step(2, "En «Información de la aplicación», toca el menú ⋮ de arriba a la derecha."),
-        Step(3, "Toca «Permitir ajustes restringidos» y confirma con tu PIN, patrón o huella."),
-        Step(4, "Vuelve a Accesibilidad y activa «Usar Reelómetro»."),
-    )
+    val RESTRICTED_STEPS: List<Step>
+        get() = listOf(
+            Step(1, str(R.string.onboarding_restricted_step_1)),
+            Step(2, str(R.string.onboarding_restricted_step_2)),
+            Step(3, str(R.string.onboarding_restricted_step_3)),
+            Step(4, str(R.string.onboarding_restricted_step_4)),
+        )
 
-    const val RESTRICTED_NOTE =
-        "«Permitir ajustes restringidos» solo aparece después de que Android te haya bloqueado una vez. " +
-            "Si no lo ves, intenta activar el servicio primero y vuelve aquí."
+    val RESTRICTED_NOTE: String get() = str(R.string.onboarding_restricted_note)
 
-    const val RESTRICTED_BUTTON = Buttons.OPEN_APP_INFO
+    val RESTRICTED_BUTTON: String get() = Buttons.OPEN_APP_INFO
 
     // ------------------------------------------------------------------ 4. Avisos y objetivo
 
-    const val FINAL_TITLE = "Un aviso al día. Y un límite, si quieres."
+    val FINAL_TITLE: String get() = str(R.string.onboarding_final_title)
 
-    const val NOTIFY_DAILY_LABEL = "Aviso diario"
+    val NOTIFY_DAILY_LABEL: String get() = str(R.string.onboarding_notify_daily_label)
 
     /** «A las 21:30, tu cuenta del día.». */
-    fun notifyDaily(hour: Int, minute: Int): String = "${Format.capitalize(Words.atTime(hour, minute))}, tu cuenta del día."
+    fun notifyDaily(hour: Int, minute: Int): String =
+        str(R.string.onboarding_notify_daily, Format.capitalize(Words.atTime(hour, minute)))
 
-    const val NOTIFY_MONTHLY_LABEL = "Resumen mensual"
+    val NOTIFY_MONTHLY_LABEL: String get() = str(R.string.onboarding_notify_monthly_label)
 
-    const val NOTIFY_MONTHLY = "El día 1 de cada mes, el mes anterior, contado."
+    val NOTIFY_MONTHLY: String get() = str(R.string.onboarding_notify_monthly)
 
     /** Antes de pedir POST_NOTIFICATIONS (Android 13+). */
-    const val NOTIFY_RATIONALE = "Para avisarte, Android necesita tu permiso. Solo lo uso para esto."
+    val NOTIFY_RATIONALE: String get() = str(R.string.onboarding_notify_rationale)
 
-    const val NOTIFY_BUTTON = Buttons.ALLOW_NOTIFICATIONS
+    val NOTIFY_BUTTON: String get() = Buttons.ALLOW_NOTIFICATIONS
 
-    const val NOTIFY_DENIED = "Sin avisos, entonces. Puedes activarlos cuando quieras en Ajustes."
+    val NOTIFY_DENIED: String get() = str(R.string.onboarding_notify_denied)
 
-    const val GOAL_LABEL = "OBJETIVO DIARIO · OPCIONAL"
+    val GOAL_LABEL: String get() = str(R.string.onboarding_goal_label)
 
-    const val GOAL_BODY =
-        "Un máximo de vídeos al día. Con él, el marcador te dice cuánto te queda y lleva la cuenta de tus " +
-            "rachas. Sin él, solo cuenta."
+    val GOAL_BODY: String get() = str(R.string.onboarding_goal_body)
 
-    const val GOAL_NONE = "SIN OBJETIVO"
+    val GOAL_NONE: String get() = str(R.string.onboarding_goal_none)
 
-    const val GOAL_OTHER = "OTRO"
+    val GOAL_OTHER: String get() = str(R.string.onboarding_goal_other)
 
     /** Botones del selector «OTRO» (TalkBack). */
-    const val GOAL_DECREASE = "Bajar el objetivo"
-    const val GOAL_INCREASE = "Subir el objetivo"
+    val GOAL_DECREASE: String get() = str(R.string.onboarding_goal_decrease)
+    val GOAL_INCREASE: String get() = str(R.string.onboarding_goal_increase)
 
     /** Opción numérica: «150». */
     fun goalOption(goal: Int): String = Format.integer(goal)
 
     /** Ayuda del campo «OTRO»: «Entre 5 y 2.000 vídeos al día.». */
-    fun goalRange(min: Int, max: Int): String = "Entre ${Format.integer(min)} y ${Format.integer(max)} vídeos al día."
+    fun goalRange(min: Int, max: Int): String = str(R.string.onboarding_goal_range, Format.integer(min), Format.integer(max))
 
     /** Confirmación de la elección: «Como mucho, 150 al día.» / «Sin objetivo: solo contar.». */
     fun goalChosen(goal: Int?): String =
-        if (goal == null || goal <= 0) "Sin objetivo: solo contar." else "Como mucho, ${Format.integer(goal)} al día."
+        if (goal == null || goal <= 0) {
+            str(R.string.onboarding_goal_chosen_none)
+        } else {
+            str(R.string.onboarding_goal_chosen, Format.integer(goal))
+        }
 
-    const val FINAL_BUTTON = Buttons.START
+    val FINAL_BUTTON: String get() = Buttons.START
 
     /** Cabeceras de los dos bloques del paso 4. */
-    const val NOTIFY_SECTION = "AVISOS"
+    val NOTIFY_SECTION: String get() = str(R.string.onboarding_notify_section)
 
     /** contentDescription del indicador de pasos: «Paso 2 de 4». */
-    fun stepDescription(index: Int, total: Int = STEPS): String = "Paso $index de $total"
+    fun stepDescription(index: Int, total: Int = STEPS): String =
+        str(R.string.onboarding_step_description, Format.integer(index), Format.integer(total))
 }

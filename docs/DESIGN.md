@@ -229,6 +229,9 @@ el usuario saca sus conclusiones. Referencia: _«Hoy llevas 212. Eso son 47 minu
 - Las equivalencias llevan su **base de cálculo** en una nota discreta (`dataS`, `textMuted`):
   «Base: 240 ECTS × 25 h (Plan Bolonia)».
 - Etiquetas en mayúsculas cortas: «VÍDEOS», «TIEMPO», «HORA PUNTA», «DÍA DÉBIL», «RACHA».
+- **Idiomas**: los textos viven en `res/values/` (español de España, el idioma por defecto) y cada traducción en su
+  `values-xx/`; las variantes son `<string-array>` (cada idioma, las suyas). En otro idioma, la misma voz en su
+  lengua: registro informal, frases cortas, ironía seca, sin exclamaciones ni emojis.
 
 ## 9. Pantallas (maquetas de referencia)
 

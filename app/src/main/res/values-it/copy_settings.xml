@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Pantalla de Ajustes (copy/SettingsCopy.kt): una lista editorial de 8 secciones numeradas
+  («01  OBJETIVO ─────» + descripción). Habla la app en primera persona («te aviso», «cuento»).
+  Los textos en MAYÚSCULAS se ven así en pantalla (etiquetas y botones): escríbelos en mayúsculas.
+  Los botones y etiquetas tienen poco sitio: mejor cortos.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="it">
+
+    <!-- Título de la pantalla (barra de arriba). -->
+    <string name="settings_title">Impostazioni</string>
+
+    <!-- Secciones: título en MAYÚSCULAS (cabecera numerada, poco sitio) y descripción bajo él. -->
+    <string name="settings_section_goal_title">OBIETTIVO</string>
+    <string name="settings_section_goal_description">Un massimo di video al giorno. Serve per il «ti restano» di Oggi e per le serie.</string>
+    <string name="settings_section_notifications_title">AVVISI</string>
+    <string name="settings_section_notifications_description">Un riepilogo al giorno, all’ora che scegli, e uno al mese.</string>
+    <string name="settings_section_apps_title">COSA CONTO</string>
+    <string name="settings_section_apps_description">Quello che spegni qui smette di essere contato all’istante. Quello già contato resta.</string>
+    <!-- Sección del tema (claro, oscuro o el del sistema); también lleva la fila del idioma. -->
+    <string name="settings_section_theme_title">TEMA</string>
+    <string name="settings_section_theme_description">Il tabellone si vede meglio al buio, ma decidi tu.</string>
+    <string name="settings_section_data_title">I TUOI DATI</string>
+    <string name="settings_section_data_description">Tutto quello che ho contato sta su questo telefono. Puoi portartelo via o cancellarlo.</string>
+    <string name="settings_section_service_title">SERVIZIO</string>
+    <string name="settings_section_service_description">Il permesso di accessibilità è quello che mi fa contare. Qui vedi se è attivo.</string>
+    <string name="settings_section_privacy_title">PRIVACY</string>
+    <string name="settings_section_privacy_description">Cosa succede ai tuoi dati, senza caratteri piccoli.</string>
+    <string name="settings_section_about_title">INFO</string>
+    <string name="settings_section_about_description">Reelómetro non ha niente a che vedere con TikTok, Instagram o YouTube. Conta solo quello che vedi lì.</string>
+
+    <!-- Antetítulo de los diálogos que salen de una sección: «05 · TUS DATOS». %1$s el número de la
+         sección («05»), %2$s su título (ya en MAYÚSCULAS). -->
+    <string name="settings_dialog_kicker">%1$s · %2$s</string>
+
+    <!-- ============================================================ 01 objetivo -->
+
+    <!-- Valor a la derecha de la línea del objetivo, en MAYÚSCULAS: «150 AL DÍA». %1$s el objetivo («150»). -->
+    <string name="settings_goal_value">%1$s AL GIORNO</string>
+    <!-- Línea del selector: «Vídeos al día ······ [ − 150 + ]». -->
+    <string name="settings_goal_line">Video al giorno</string>
+    <!-- Interruptor del modo Pasaporte (un juego que premia ver menos; «Flap» es su mascota, no se traduce). -->
+    <string name="settings_passport_label">Modalità passaporto</string>
+    <string name="settings_passport_description">Una scheda in più con Flap, livelli e timbri che si guadagnano guardando meno. Se la spegni, sparisce del tutto: la scheda, il suo avviso e Flap nel widget.</string>
+
+    <!-- ============================================================ 02 avisos -->
+
+    <string name="settings_daily_label">Riepilogo giornaliero</string>
+    <!-- Bajo el resumen diario: «Tu cuenta del día, a las 21:30.». %1$s la hora con su preposición («a las 21:30»). -->
+    <string name="settings_daily_description">Il tuo conteggio del giorno, %1$s.</string>
+    <!-- Línea que abre el selector de hora (a la derecha va la hora, «21:30»). -->
+    <string name="settings_time_label">Orario dell’avviso</string>
+    <string name="settings_monthly_label">Riepilogo mensile</string>
+    <string name="settings_monthly_description">Il giorno 1, il mese precedente conteggiato, con il suo riepilogo.</string>
+    <!-- Aviso en directo al pasar el objetivo (apagado por defecto). -->
+    <string name="settings_goal_live_label">Avviso al superamento dell’obiettivo</string>
+    <!-- %1$s el objetivo con su palabra («150 vídeos»). -->
+    <string name="settings_goal_live_description">Un solo avviso al giorno, appena superi %1$s.</string>
+    <!-- Lo mismo sin objetivo: explica por qué no se puede encender. -->
+    <string name="settings_goal_live_needs_goal">Serve un obiettivo. Impostalo sopra e ti avviso appena lo superi.</string>
+
+    <!-- Selector de la hora del aviso (una hoja). HORA y MINUTOS son etiquetas en MAYÚSCULAS sobre cada rueda. -->
+    <string name="settings_time_dialog_title">A che ora ti avviso?</string>
+    <string name="settings_time_hour">ORA</string>
+    <string name="settings_time_minute">MINUTI</string>
+    <!-- TalkBack: botones de las ruedas (las horas van de una en una y los minutos, de cinco en cinco). -->
+    <string name="settings_time_hour_down">Un’ora in meno</string>
+    <string name="settings_time_hour_up">Un’ora in più</string>
+    <string name="settings_time_minute_down">Cinque minuti in meno</string>
+    <string name="settings_time_minute_up">Cinque minuti in più</string>
+
+    <!-- Con los avisos bloqueados en Android (va con el botón ABRIR AJUSTES). -->
+    <string name="settings_notifications_blocked">Android ha disattivato gli avvisi di Reelómetro. Attivali nelle impostazioni del sistema per riceverli.</string>
+
+    <!-- ============================================================ 03 apps -->
+
+    <!-- Con todas las apps apagadas. -->
+    <string name="settings_all_apps_off">Le hai spente tutte. Così non c’è niente da contare.</string>
+
+    <!-- Interruptor «A quién envías» (solo Instagram). «Estadísticas» es la pestaña de la app. -->
+    <string name="settings_recipients_label">A chi invii</string>
+    <string name="settings_recipients_description">Solo su Instagram. Quando condividi un video, segno il nome della persona o del gruppo che scegli, e in Statistiche vedi a chi invii di più. Non leggo la chat né quello che scrivi, e resta su questo telefono.</string>
+
+    <!-- Interruptor «Envío rápido» (solo Instagram): unas burbujas sobre los reels que comparten el reel
+         con un toque. «Compartir» y «Enviar» citan los botones de Instagram tal cual: en cada idioma,
+         como los muestre Instagram en ese idioma. «X» es la zona donde se sueltan las burbujas. -->
+    <string name="settings_quick_send_label">Invio rapido</string>
+    <string name="settings_quick_send_description">Solo su Instagram. Mentre guardi i reel compare una bolla per ogni persona o gruppo che fissi. Quando la tocchi, premo per te «Condividi», quel nome e «Invia»; se non lo vedo, scrivo il suo nome nella ricerca del foglio. Niente di più. Se qualcosa non torna, mi fermo e finisci tu. Per mostrare la sua foto nella bolla, la ritaglio dal foglio di condivisione quando compare, oppure scegli tu una foto dalla galleria; resta su questo telefono. Trascinale dove vuoi (in basso, sopra il nome del reel, si mettono in fila) o rilasciale sulla «X» per nasconderle fino al reel successivo.</string>
+    <!-- El gesto para enviar a dos personas a la vez. -->
+    <string name="settings_quick_send_pair_hint">Per mandarlo a due persone insieme, tieni premuta una bolla finché non si stacca e rilasciala sopra l’altra. Se ne tocchi un’altra mentre invia, la aggiungo allo stesso foglio.</string>
+    <!-- Con «A quién envías» apagado, el envío rápido no se puede encender. -->
+    <string name="settings_quick_send_needs_recipients">Per usarlo, attiva prima «A chi invii»: l’invio rapido cerca nel foglio il nome che fissi.</string>
+    <!-- Sin historial de envíos todavía: no hay nada que fijar. -->
+    <string name="settings_quick_send_empty">Non c’è ancora nessuno da fissare. Condividi a mano un reel con «A chi invii» attivo: qui compariranno le persone e i gruppi a cui invii.</string>
+    <!-- Encima de la lista de personas y grupos para fijar. -->
+    <string name="settings_quick_send_list_label">A chi invii di più</string>
+    <!-- Botones de cada fila, en MAYÚSCULAS y con poco sitio: fijar a alguien / ya fijado. -->
+    <string name="settings_quick_send_pin">FISSA</string>
+    <string name="settings_quick_send_pinned">FISSATO</string>
+    <!-- Botón en MAYÚSCULAS: devuelve las burbujas a su sitio (borde derecho, a media altura). -->
+    <string name="settings_quick_send_relocate">RIPOSIZIONA</string>
+    <string name="settings_quick_send_relocate_hint">Le bolle tornano sul bordo destro, a metà altezza.</string>
+    <string name="settings_quick_send_relocated">Fatto. Le vedrai al loro posto nel prossimo reel.</string>
+    <!-- Ya hay el máximo de fijados. %1$s el máximo («3»). -->
+    <plurals name="settings_quick_send_full">
+        <item quantity="one">Hai già %1$s fissato. Rimuovilo per fissarne un altro.</item>
+        <item quantity="many">Hai già %1$s fissati. Rimuovine uno per fissarne un altro.</item>
+        <item quantity="other">Hai già %1$s fissati. Rimuovine uno per fissarne un altro.</item>
+    </plurals>
+    <!-- TalkBack, en cada fila. %1$s el nombre de la persona o el grupo. -->
+    <string name="settings_quick_send_pin_description">Fissa %1$s nell’invio rapido</string>
+    <string name="settings_quick_send_unpin_description">Rimuovi %1$s dall’invio rapido</string>
+    <!-- Botones en MAYÚSCULAS bajo cada fijado: elegir de la galería la foto de su burbuja, cambiarla o quitarla. -->
+    <string name="settings_quick_send_photo_pick">SCEGLI FOTO</string>
+    <string name="settings_quick_send_photo_change">CAMBIA FOTO</string>
+    <string name="settings_quick_send_photo_clear">RIMUOVI FOTO</string>
+    <string name="settings_quick_send_photo_set">Foto impostata. La vedrai nella sua bolla; resta solo su questo telefono.</string>
+    <string name="settings_quick_send_photo_cleared">Foto rimossa. Torna quella automatica o, se non c’è, le iniziali.</string>
+    <string name="settings_quick_send_photo_failed">Non sono riuscito ad aprire quella foto. Prova con un’altra.</string>
+    <!-- TalkBack de esos botones. %1$s el nombre de la persona o el grupo. -->
+    <string name="settings_quick_send_photo_pick_description">Scegli dalla galleria la foto della bolla di %1$s</string>
+    <string name="settings_quick_send_photo_change_description">Cambia la foto della bolla di %1$s con un’altra della galleria</string>
+    <string name="settings_quick_send_photo_clear_description">Rimuovi la foto scelta per %1$s e torna a quella automatica</string>
+
+    <!-- ============================================================ 04 tema e idioma -->
+
+    <!-- Selector de tema: tres pestañas en MAYÚSCULAS, muy poco sitio. -->
+    <string name="settings_theme_system">SISTEMA</string>
+    <string name="settings_theme_dark">SCURO</string>
+    <string name="settings_theme_light">CHIARO</string>
+
+    <!-- Fila «Idioma» (Android 13 o más): a la derecha, el nombre del idioma actual en su propio idioma
+         («Español»); al tocarla se abren los ajustes de idioma de la app en Android. -->
+    <string name="settings_language_label">Lingua</string>
+    <!-- Línea de ayuda bajo la fila. -->
+    <string name="settings_language_hint">Si cambia nelle impostazioni del sistema.</string>
+    <!-- TalkBack: lo que hace tocar la fila («Toca dos veces para …»). -->
+    <string name="settings_language_open">cambiare la lingua dell’app</string>
+
+    <!-- ============================================================ 05 tus datos -->
+
+    <!-- Resumen de lo guardado, en líneas de ticket (a la derecha, la cifra). -->
+    <string name="settings_data_count_label">Video salvati</string>
+    <string name="settings_data_time_label">Tempo salvato</string>
+    <string name="settings_export_description">Tutta la cronologia in un file che apre qualunque foglio di calcolo.</string>
+    <!-- %1$s los vídeos exportados con su palabra («12.408 vídeos»). -->
+    <string name="settings_export_done">Esportato: %1$s.</string>
+    <string name="settings_export_empty">Non c’è ancora niente da esportare.</string>
+    <string name="settings_export_failed">Non è stato possibile esportare. Riprova o scegli un’altra cartella.</string>
+    <string name="settings_delete_description">Cancella tutti i video contati. Non c’è cestino.</string>
+    <string name="settings_delete_dialog_title">Cancellare tutto?</string>
+    <!-- Cuerpo del diálogo de borrado, sin nada que borrar. -->
+    <string name="settings_delete_dialog_body_empty">Non ci sono video da cancellare. Le tue impostazioni restano come sono.</string>
+    <!-- Cuerpo del diálogo de borrado. %1$s los vídeos con su palabra («212 vídeos»), %2$s el tiempo
+         («3 horas y 12 minutos»). El plural va por el número de vídeos. -->
+    <plurals name="settings_delete_dialog_body">
+        <item quantity="one">Verrà cancellato %1$s e %2$s di cronologia. Non si può annullare, e non c’è nessuna copia da nessun’altra parte, perché non c’è nessun’altra parte. Le tue impostazioni restano come sono.</item>
+        <item quantity="many">Verranno cancellati %1$s e %2$s di cronologia. Non si può annullare, e non c’è nessuna copia da nessun’altra parte, perché non c’è nessun’altra parte. Le tue impostazioni restano come sono.</item>
+        <item quantity="other">Verranno cancellati %1$s e %2$s di cronologia. Non si può annullare, e non c’è nessuna copia da nessun’altra parte, perché non c’è nessun’altra parte. Le tue impostazioni restano come sono.</item>
+    </plurals>
+    <string name="settings_delete_done">Cancellato. Contatore a zero.</string>
+    <string name="settings_delete_failed">Non è stato possibile cancellare. Riprova.</string>
+
+    <!-- ============================================================ 06 servicio -->
+
+    <!-- Línea de estado: «Permiso de accesibilidad ······ CONECTADO». -->
+    <string name="settings_service_line">Permesso di accessibilità</string>
+    <!-- %1$s la lista de apps activadas («TikTok, Reels y Shorts»). -->
+    <string name="settings_service_connected">Conto su %1$s.</string>
+    <!-- «Accesibilidad» es el menú de los ajustes de Android, tal como lo llama Android en ese idioma. -->
+    <string name="settings_service_disconnected">Senza il servizio non conto niente. Attivalo in Accessibilità.</string>
+    <!-- Enlace en MAYÚSCULAS para volver a leer qué lee la app y para qué. -->
+    <string name="settings_service_disclosure_link">COSA LEGGE E PERCHÉ</string>
+
+    <!-- ============================================================ 07 privacidad -->
+
+    <!-- Explicación de privacidad: un párrafo corto por <item>, en este orden. -->
+    <string-array name="settings_privacy_paragraphs">
+        <item>Reelómetro conta quello che vedi su TikTok, Instagram e YouTube con il servizio di accessibilità di Android. Di ogni video salva l’app, l’ora, quanto l’hai visto, il creatore e la descrizione.</item>
+        <item>Tutto viene salvato su questo telefono. Niente account, niente server, niente pubblicità, niente analisi. L’app non ha il permesso di usare internet.</item>
+        <item>I tuoi dati escono da qui solo se li porti fuori tu: esportando il CSV o condividendo il tuo ticket.</item>
+        <item>Se disattivi il servizio, smette di contare. Se cancelli i dati o disinstalli l’app, spariscono.</item>
+    </string-array>
+    <!-- Enlace en MAYÚSCULAS. -->
+    <string name="settings_privacy_policy_link">INFORMATIVA SULLA PRIVACY COMPLETA</string>
+
+    <!-- ============================================================ 08 acerca de -->
+
+    <!-- En MAYÚSCULAS: «VERSIÓN 1.0.0». %1$s el número de versión. -->
+    <string name="settings_version_label">VERSIONE %1$s</string>
+    <!-- Cuenta atrás discreta de los 7 toques en la versión que desbloquean la calibración (una pantalla
+         oculta). %1$s los toques que faltan (de 2 a 6); «one» solo sale con 1. -->
+    <plurals name="settings_calibration_taps_left">
+        <item quantity="one">A un tocco dalla calibrazione.</item>
+        <item quantity="many">A %1$s tocchi dalla calibrazione.</item>
+        <item quantity="other">A %1$s tocchi dalla calibrazione.</item>
+    </plurals>
+    <string name="settings_calibration_unlocked">Calibrazione sbloccata. Si trova in fondo a Impostazioni.</string>
+    <string name="settings_calibration_already">La calibrazione era già sbloccata.</string>
+    <!-- Botón en MAYÚSCULAS que abre la calibración. -->
+    <string name="settings_calibration_entry">CALIBRAZIONE</string>
+    <!-- Línea de la versión (a la derecha, el número). -->
+    <string name="settings_version_line">Versione</string>
+    <!-- Línea que abre las licencias de las tipografías; a la derecha, «SIL OFL» (nombre de la licencia: no se traduce). -->
+    <string name="settings_fonts_line">Font</string>
+    <string name="settings_fonts_value">SIL OFL</string>
+    <string name="settings_licenses_title">Licenze</string>
+    <!-- Botones en MAYÚSCULAS: volver a ver la introducción y el recorrido guiado. -->
+    <string name="settings_replay_onboarding">RIVEDI L’INTRODUZIONE</string>
+    <string name="settings_replay_tour">RIVEDI IL GIRO GUIDATO</string>
+    <string name="settings_licenses_label">LICENZE</string>
+    <!-- Los nombres de las tipografías y de la licencia no se traducen. -->
+    <string name="settings_fonts_license">Font: Bricolage Grotesque, JetBrains Mono e Instrument Serif, con licenza SIL Open Font License 1.1.</string>
+    <!-- Firma al pie de Ajustes (un guiño: los vídeos cortos duran unos quince segundos). -->
+    <string name="settings_signature">Fatto a ritagli da quindici secondi.</string>
+    <!-- El proyecto en GitHub. El botón va en MAYÚSCULAS. -->
+    <string name="settings_project_text">Reelómetro è gratis, non ha pubblicità e lo fa una sola persona. Il progetto è su GitHub.</string>
+    <string name="settings_project_button">VEDI SU GITHUB</string>
+    <string name="settings_project_note">Si apre nel browser. L’app continua a non avere internet.</string>
+    <string name="settings_project_no_browser">Non c’è nessun browser per aprire il link.</string>
+
+    <!-- ============================================================ depuración (solo en la versión de pruebas) -->
+
+    <string name="settings_debug_title">DEBUG</string>
+    <string name="settings_debug_description">Solo nella versione di prova. Sostituisce i tuoi dati con una cronologia inventata di dieci settimane.</string>
+    <string name="settings_debug_seed">GENERA DATI DI ESEMPIO</string>
+    <string name="settings_debug_failed">Non è stato possibile generare i dati di esempio.</string>
+    <!-- %1$s los vídeos inventados con su palabra («12.408 vídeos»). -->
+    <string name="settings_debug_seeded">Fatto: %1$s di esempio.</string>
+</resources>

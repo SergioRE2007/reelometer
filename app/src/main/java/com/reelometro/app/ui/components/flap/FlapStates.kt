@@ -1,5 +1,7 @@
 package com.reelometro.app.ui.components.flap
 
+import com.reelometro.app.copy.str
+import com.reelometro.app.R
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,7 +37,7 @@ fun EmptyState(
             value = value,
             style = counterStyle,
             haptic = false,
-            contentDescription = if (value == null) "Sin datos" else Format.integer(value),
+            contentDescription = if (value == null) str(R.string.ui_no_data) else Format.integer(value),
         )
         Spacer(Modifier.height(Space.x6))
         Text(title, style = type.quote, color = colors.text, modifier = Modifier.semantics { heading() })
@@ -65,7 +67,7 @@ fun ErrorState(
     val colors = ReelTheme.colors
     val type = ReelTheme.type
     Column(modifier.fillMaxWidth()) {
-        SplitFlapCounter(value = null, style = counterStyle, haptic = false, contentDescription = "Sin datos")
+        SplitFlapCounter(value = null, style = counterStyle, haptic = false, contentDescription = str(R.string.ui_no_data))
         Spacer(Modifier.height(Space.x6))
         if (label != null) {
             Text(Format.upper(label), style = type.label, color = colors.signalText)

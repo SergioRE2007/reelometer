@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Divulgación destacada del permiso de accesibilidad (copy/DisclosureCopy.kt): una pantalla propia
+  que explica qué lee la app, para qué y dónde lo guarda, antes de pedir el permiso. Lo exige la
+  política de Google Play: el texto tiene que coincidir con lo que se declara en la ficha de la
+  tienda en ese idioma. Tradúcelo con exactitud, sin quitar ni suavizar nada.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
+
+    <!-- Antetítulo en MAYÚSCULAS. -->
+    <string name="disclosure_label">ACCESSIBILITY PERMISSION</string>
+    <!-- Título grande. -->
+    <string name="disclosure_title">To count, I have to look.</string>
+    <!-- Párrafo principal: qué se lee, para qué y dónde se guarda. -->
+    <string name="disclosure_summary">Reelómetro uses Android\'s accessibility service to read the screen of TikTok, Instagram and YouTube while you use them. That way it detects each short video you watch and stores, only on this phone, which app you watched it in, when, for how long, who posted it and its description, so it can show you your statistics.</string>
+
+    <!-- Bloques con etiqueta en MAYÚSCULAS (poco sitio) y su texto, en este orden. -->
+    <!-- «Compartir» cita el botón de Instagram/TikTok/YouTube tal cual (en cada idioma, como lo muestren
+         esas apps en ese idioma). «A quién envías» es el nombre del ajuste de la app (settings_recipients_label). -->
+    <string name="disclosure_reads_label">WHAT IT READS</string>
+    <string name="disclosure_reads_text">On TikTok, Instagram and YouTube: when you move on to the next short video and the visible text of that video (the creator\'s name, the description and the hashtags). Also when you tap “Share” and, only on Instagram and if you turn on “Who you send to” in Settings, the name of the person or group you send it to. If you also use quick send, it reads the names on the share sheet to find the person you have pinned.</string>
+    <!-- «Compartir» y «Enviar» citan los botones de Instagram tal cual (en cada idioma, como los muestre
+         Instagram en ese idioma). -->
+    <string name="disclosure_not_reads_label">WHAT IT DOES NOT READ</string>
+    <string name="disclosure_not_reads_text">Anything in other apps: from them it only knows that you have left, so it can stop counting. It does not store what you type or your messages. It only taps for you if you use Instagram quick send, and then only “Share”, the person or group you have pinned and “Send”, by tapping their button; if it can\'t see them, it types their name into the search box on the sheet. Only with quick send does it crop the profile photos of the people or groups you pin from the share sheet, to show them on their button; it keeps them only on this phone and takes no other screenshots.</string>
+    <string name="disclosure_purpose_label">WHAT FOR</string>
+    <string name="disclosure_purpose_text">Only to count how many videos you watch, for how long, on which topics and from which creators. It is not used for advertising or to build profiles.</string>
+    <string name="disclosure_storage_label">WHERE IT ENDS UP</string>
+    <string name="disclosure_storage_text">On this phone and nowhere else. It is not sent to any server or shared with anyone: the app does not even have permission to use the internet.</string>
+    <!-- «Ajustes > Accesibilidad» cita los menús de Android tal cual; en cada idioma, los que muestre
+         Android en ese idioma. -->
+    <string name="disclosure_control_label">YOU ARE IN CONTROL</string>
+    <string name="disclosure_control_text">You can turn off the permission whenever you like in Settings &gt; Accessibility, and delete all the data from within the app.</string>
+
+    <!-- Frase junto a los botones: qué pasa si aceptas y si no. «Hoy» y «Ajustes» son pantallas de la app. -->
+    <string name="disclosure_consent">If you accept, I\'ll take you to Android\'s settings to turn on the permission. If you don\'t, the app won\'t be able to count anything; you can turn it on later from Today or from Settings.</string>
+    <!-- Confirmación discreta tras pulsar AHORA NO. -->
+    <string name="disclosure_declined">No permission, no count. Whenever you like, it is in Today and in Settings.</string>
+</resources>

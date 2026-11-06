@@ -1,5 +1,6 @@
 package com.reelometro.app.ui.components.flap
 
+import com.reelometro.app.copy.A11y
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
@@ -25,7 +26,7 @@ fun FlapLoader(
     columns: Int = 3,
     style: TextStyle = ReelTheme.type.counter,
     alignment: Alignment.Horizontal = Alignment.Start,
-    contentDescription: String = "Cargando",
+    contentDescription: String = A11y.LOADING,
 ) {
     val colors = ReelTheme.colors
     val cells = remember(columns) { flapCells(FlapContent.Blank, columns, FlapPad.Zeros) }

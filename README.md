@@ -11,7 +11,7 @@
 Cuenta los vídeos que ves en TikTok, Instagram Reels y YouTube Shorts: cuántos, cuánto tiempo,
 de qué temas y de quién. Todo se queda en tu móvil.
 
-![Versión 1.4.4](https://img.shields.io/badge/versión-1.4.4-11100E?style=flat-square)
+![Versión 1.5.0](https://img.shields.io/badge/versión-1.5.0-11100E?style=flat-square)
 ![Android 8.0+](https://img.shields.io/badge/Android-8.0%2B-11100E?style=flat-square&logo=android&logoColor=EDE8DF)
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.4-11100E?style=flat-square&logo=kotlin&logoColor=EDE8DF)
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack_Compose-11100E?style=flat-square&logo=jetpackcompose&logoColor=EDE8DF)
@@ -122,7 +122,8 @@ No está en Google Play (todavía). Descarga la APK de la última versión en
    y vuelve a activarlo. La propia app te guía.
 3. Las versiones nuevas se instalan encima y conservan tus datos.
 
-Requisitos: Android 8.0 (API 26) o superior. Solo en español de España.
+Requisitos: Android 8.0 (API 26) o superior. Idiomas: español de España, inglés, portugués de Brasil, francés e
+italiano (sigue el del móvil; en Android 13 o superior se puede elegir en Ajustes › Apps › Reelómetro › Idioma).
 
 ## Compilar
 
@@ -160,7 +161,7 @@ app/src/main/java/com/reelometro/app/
 
 ## Estado
 
-Versión **1.4.4**. Con honestidad:
+Versión **1.5.0**. Con honestidad:
 
 - **Probado en un móvil real** (un Pixel con Android 17): TikTok e Instagram cuentan bien. El envío rápido de
   Instagram está medido envío a envío: entre 0,5 y 0,93 s a una persona y 1,4–1,6 s a un grupo que hay que buscar
@@ -173,6 +174,9 @@ Versión **1.4.4**. Con honestidad:
 - **Sin comprobar todavía**: el Pasaporte y el recorrido guiado no han tenido una revisión visual completa en
   pantalla; el envío rápido con Instagram en otro idioma (la app reconoce «Enviar» por su identificador y por la
   palabra en varios idiomas, pero solo se ha probado en español); y otros móviles y versiones de Android.
+- **Traducciones nuevas** (inglés, portugués de Brasil, francés e italiano): revisadas en pantalla en el emulador,
+  pero todavía no las ha leído enteras un hablante nativo, y los textos que citan menús de Android o botones de
+  Instagram pueden no coincidir palabra por palabra con lo que muestra tu móvil. Las correcciones son bienvenidas.
 - Compila y pasa sus 761 tests JVM. Las capturas de este README usan datos de ejemplo.
 
 ## Apoyar el proyecto

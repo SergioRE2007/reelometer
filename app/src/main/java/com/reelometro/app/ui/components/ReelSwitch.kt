@@ -1,5 +1,6 @@
 package com.reelometro.app.ui.components
 
+import com.reelometro.app.copy.Labels
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Box
@@ -114,8 +115,8 @@ fun ReelSwitch(
                     val scale = maxLabel / natural.size.width
                     return measurer.measure(text, labelStyle.copy(color = color, fontSize = labelStyle.fontSize * scale))
                 }
-                val yes = fit("SÍ", onLabel)
-                val no = fit("NO", offLabel)
+                val yes = fit(Labels.YES, onLabel)
+                val no = fit(Labels.NO, offLabel)
                 // Las etiquetas se centran en la mitad que queda libre en cada estado.
                 val yesAt = Offset(inset + (free - yes.size.width) / 2f, (size.height - yes.size.height) / 2f)
                 val noAt = Offset(inset + knobW + (free - no.size.width) / 2f, (size.height - no.size.height) / 2f)

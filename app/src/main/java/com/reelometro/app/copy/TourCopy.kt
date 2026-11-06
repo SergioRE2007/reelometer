@@ -1,37 +1,39 @@
 package com.reelometro.app.copy
 
+import com.reelometro.app.R
 import com.reelometro.app.stats.Format
 import com.reelometro.app.ui.tour.TourStep
 
 /**
- * Textos del **recorrido guiado** de la primera vez (marcas sobre las pantallas reales).
- * Frases cortas: caben con la fuente al 130 % encima o debajo del hueco. Sin variantes: el recorrido
- * se lee una vez (o cuando se pide otra vez desde Ajustes) y debe decir siempre lo mismo.
+ * Textos del **recorrido guiado** de la primera vez (marcas sobre las pantallas reales), en
+ * `res/values/copy_tour.xml`. Frases cortas: caben con la fuente al 130 % encima o debajo del hueco.
+ * Sin variantes: el recorrido se lee una vez (o cuando se pide otra vez desde Ajustes) y debe decir
+ * siempre lo mismo.
  */
 object TourCopy {
-    const val SKIP = "SALTAR"
-    const val NEXT = Buttons.NEXT
-    const val DONE = "LISTO"
+    val SKIP: String get() = str(R.string.tour_skip)
+    val NEXT: String get() = Buttons.NEXT
+    val DONE: String get() = str(R.string.tour_done)
 
     /** «PASO 2 DE 6». */
-    fun step(index: Int, total: Int): String = "PASO ${Format.integer(index)} DE ${Format.integer(total)}"
+    fun step(index: Int, total: Int): String = str(R.string.tour_step, Format.integer(index), Format.integer(total))
 
     /** Título del panel para TalkBack (`paneTitle`). */
-    const val PANE_TITLE = "Recorrido por Reelómetro"
+    val PANE_TITLE: String get() = str(R.string.tour_pane_title)
 
     /** TalkBack de los botones. */
-    const val SKIP_DESCRIPTION = "Saltar el recorrido"
-    const val NEXT_DESCRIPTION = "Paso siguiente del recorrido"
-    const val DONE_DESCRIPTION = "Terminar el recorrido"
+    val SKIP_DESCRIPTION: String get() = str(R.string.tour_skip_description)
+    val NEXT_DESCRIPTION: String get() = str(R.string.tour_next_description)
+    val DONE_DESCRIPTION: String get() = str(R.string.tour_done_description)
 
     /** Título corto de cada paso («El marcador»). */
     fun title(step: TourStep): String = when (step) {
-        TourStep.COUNTER -> "El marcador"
-        TourStep.COMPARISON -> "A esta hora"
-        TourStep.STATS_BARS -> "Cada día, una barra"
-        TourStep.WRAPPED -> "El resumen"
-        TourStep.PASSPORT -> "El pasaporte"
-        TourStep.SETTINGS -> "Ajustes y calibración"
+        TourStep.COUNTER -> str(R.string.tour_counter_title)
+        TourStep.COMPARISON -> str(R.string.tour_comparison_title)
+        TourStep.STATS_BARS -> str(R.string.tour_stats_bars_title)
+        TourStep.WRAPPED -> str(R.string.tour_wrapped_title)
+        TourStep.PASSPORT -> str(R.string.tour_passport_title)
+        TourStep.SETTINGS -> str(R.string.tour_settings_title)
     }
 
     /**
@@ -39,25 +41,16 @@ object TourCopy {
      * comparación «a esta hora» porque faltan días): el texto lo explica sin señalar nada.
      */
     fun text(step: TourStep, hasTarget: Boolean = true): String = when (step) {
-        TourStep.COUNTER ->
-            "Tus vídeos de hoy. El marcador sube solo con cada uno y vuelve a cero a medianoche."
+        TourStep.COUNTER -> str(R.string.tour_counter_text)
         TourStep.COMPARISON ->
-            if (hasTarget) {
-                "Cómo vas frente a tu día medio a esta misma hora. Sin juicios, solo cifras."
-            } else {
-                "Con unos días contados, aquí verás cómo vas frente a tu día medio a esta misma hora."
-            }
-        TourStep.STATS_BARS ->
-            "Mantén el dedo sobre una barra y desliza para ver la cifra exacta de cada día."
-        TourStep.WRAPPED ->
-            "Tu semana, tu mes y tu año, contados como una historia. Con ticket para compartir, si te atreves."
-        TourStep.PASSPORT ->
-            "Flap y tus sellos. Aquí la experiencia se gana viendo menos, nunca más."
-        TourStep.SETTINGS ->
-            "Objetivo, avisos y tema, aquí arriba. Siete toques en la versión abren la calibración."
+            if (hasTarget) str(R.string.tour_comparison_text) else str(R.string.tour_comparison_text_empty)
+        TourStep.STATS_BARS -> str(R.string.tour_stats_bars_text)
+        TourStep.WRAPPED -> str(R.string.tour_wrapped_text)
+        TourStep.PASSPORT -> str(R.string.tour_passport_text)
+        TourStep.SETTINGS -> str(R.string.tour_settings_text)
     }
 
     /** Lo que anuncia TalkBack al llegar a cada paso: «Paso 2 de 6. A esta hora. …». */
     fun announcement(step: TourStep, index: Int, total: Int, hasTarget: Boolean = true): String =
-        "Paso ${Format.integer(index)} de ${Format.integer(total)}. ${title(step)}. ${text(step, hasTarget)}"
+        str(R.string.tour_announcement, Format.integer(index), Format.integer(total), title(step), text(step, hasTarget))
 }

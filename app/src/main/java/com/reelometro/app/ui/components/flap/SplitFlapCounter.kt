@@ -1,5 +1,7 @@
 package com.reelometro.app.ui.components.flap
 
+import com.reelometro.app.copy.str
+import com.reelometro.app.R
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
@@ -162,6 +164,6 @@ fun SplitFlapText(
 
 internal fun defaultFlapDescription(content: FlapContent): String = when (content) {
     is FlapContent.Number -> Format.integer(content.value)
-    FlapContent.Blank -> "Sin datos"
+    FlapContent.Blank -> str(R.string.ui_no_data)
     is FlapContent.Text -> content.text
 }

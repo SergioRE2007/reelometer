@@ -1,5 +1,7 @@
 package com.reelometro.app.ui.components
 
+import com.reelometro.app.copy.str
+import com.reelometro.app.R
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.rememberTransition
@@ -71,7 +73,7 @@ fun ReelDialog(
     modifier: Modifier = Modifier,
     kicker: String? = null,
     text: String? = null,
-    dismissLabel: String? = "Cancelar",
+    dismissLabel: String? = str(R.string.ui_dialog_cancel),
     destructive: Boolean = false,
     confirmIcon: ImageVector? = if (destructive) ReelIcons.Trash else null,
     content: (@Composable ColumnScope.() -> Unit)? = null,

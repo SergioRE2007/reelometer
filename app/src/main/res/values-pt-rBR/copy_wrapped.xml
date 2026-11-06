@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Resumen (copy/WrappedCopy.kt): el hub con las tiras de cada periodo y el «Wrapped», una historia
+  a pantalla completa de diapositivas (portada, total, tiempo, equivalencias, creador, categoría,
+  peor día, hora punta y plataformas, cierre). Las frases de las diapositivas van en letra grande:
+  mejor cortas. Cada <string-array> de frases es una situación y cada <item>, una frase
+  alternativa (se elige una por periodo). Puedes poner las que quieras (mínimo 2). Los arrays con
+  sufijo (_noeq, _one_day…) son la misma situación en otro caso: mismo sentido en cada posición.
+  \u00A0 es un espacio duro: mantenlo.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="pt-BR">
+
+    <!-- Títulos de las tiras del hub (MAYÚSCULAS, cortos). -->
+    <string name="wrapped_hub_last_month">MÊS PASSADO</string>
+    <string name="wrapped_hub_this_month">ESTE MÊS</string>
+    <string name="wrapped_hub_this_week">ESTA SEMANA</string>
+    <string name="wrapped_hub_this_year">ESTE ANO</string>
+    <string name="wrapped_hub_all">SEMPRE</string>
+    <!-- Tira de un periodo sin vídeos (MAYÚSCULAS). -->
+    <string name="wrapped_hub_no_data">SEM DADOS</string>
+    <!-- Marca de los periodos que siguen abiertos (MAYÚSCULAS). -->
+    <string name="wrapped_hub_in_progress">EM CURSO</string>
+    <!-- Detalle de una tira, junto a la cifra de vídeos (MAYÚSCULAS, una línea): «VÍDEOS · 3,2 H».
+         %1$s el tiempo («3,2 H»). _in_progress: el periodo sigue abierto. -->
+    <string name="wrapped_hub_detail">VÍDEOS · %1$s</string>
+    <string name="wrapped_hub_detail_in_progress">VÍDEOS · %1$s · EM CURSO</string>
+    <!-- La tira para TalkBack: %1$s título («Este mes»), %2$s fechas («1 – 30 nov»),
+         %3$s vídeos («1.204 vídeos»), %4$s tiempo («9 horas y 12 minutos»). -->
+    <string name="wrapped_hub_strip_description">%1$s, %2$s: %3$s, %4$s.</string>
+    <string name="wrapped_hub_strip_description_no_data">%1$s, %2$s: sem dados.</string>
+
+    <!-- Hub sin ningún periodo con datos. -->
+    <string-array name="wrapped_hub_empty">
+        <item>Ainda não há nada para resumir. Volte quando tiver passado alguns dias.</item>
+        <item>Sem dados não há resumo. E por enquanto não há dados.</item>
+        <item>O primeiro resumo chega assim que houver algo para contar.</item>
+    </string-array>
+
+    <!-- Etiqueta de la portada (MAYÚSCULAS): «REELÓMETRO · OCTUBRE 2026». %1$s el nombre de la app,
+         %2$s el periodo («OCTUBRE 2026», «27 OCT – 2 NOV», «2026», «DESDE 3 MAR 2026»). -->
+    <string name="wrapped_cover_label">%1$s · %2$s</string>
+    <!-- Pista discreta de la portada (MAYÚSCULAS, una línea en letra pequeña). -->
+    <string name="wrapped_cover_hint">TOQUE PARA AVANÇAR · MANTENHA PARA PAUSAR</string>
+
+    <!-- Titular de portada de un mes (también titular del hub): %1$s el mes («octubre»),
+         %2$s el mes con mayúscula («Octubre»). «Lo que octubre se llevó» juega con la película
+         «Lo que el viento se llevó» (en portugués, «E o vento levou»). -->
+    <string-array name="wrapped_cover_month">
+        <item>Seu %1$s, contado.</item>
+        <item>%2$s, em números.</item>
+        <item>E %1$s levou.</item>
+        <item>%2$s, vídeo a vídeo.</item>
+    </string-array>
+    <string-array name="wrapped_cover_week">
+        <item>Sua semana, contada.</item>
+        <item>Sete dias, vídeo a vídeo.</item>
+        <item>A semana, em números.</item>
+    </string-array>
+    <!-- %1$s el año («2026»). -->
+    <string-array name="wrapped_cover_year">
+        <item>Seu %1$s, contado.</item>
+        <item>%1$s, vídeo a vídeo.</item>
+        <item>Um ano inteiro, em números.</item>
+    </string-array>
+    <string-array name="wrapped_cover_all">
+        <item>Tudo, contado.</item>
+        <item>Seu histórico completo, em números.</item>
+        <item>Desde o começo, vídeo a vídeo.</item>
+    </string-array>
+
+    <!-- Diapositiva del total, sin vídeos. -->
+    <string-array name="wrapped_total_zero">
+        <item>Nem um vídeo. Este resumo vai ser curto.</item>
+        <item>Zero vídeos. Pouco para contar, e isso já diz muito.</item>
+        <item>Nada. Nenhum. O resumo mais curto da história.</item>
+    </string-array>
+    <!-- Menos de 5 vídeos: %1$s los vídeos («3 vídeos»). -->
+    <string-array name="wrapped_total_tiny">
+        <item>Só %1$s. Este resumo passa rápido.</item>
+        <item>%1$s. Nem o algoritmo acredita.</item>
+        <item>%1$s e pronto.</item>
+    </string-array>
+    <!-- Total: %1$s los vídeos («4.812 vídeos»), %2$s las veces que deslizó («4.812 veces»),
+         %3$s la media al día («155»), %4$s los días del periodo («31 días»).
+         _one_day: el periodo es de un solo día (la tercera frase no habla de media). -->
+    <string-array name="wrapped_total">
+        <item>%1$s. Um atrás do outro.</item>
+        <item>Você deslizou para cima %2$s.</item>
+        <item>Uma média de %3$s por dia, feriados incluídos.</item>
+        <item>%1$s em %4$s. Contas claras.</item>
+    </string-array>
+    <string-array name="wrapped_total_one_day">
+        <item>%1$s. Um atrás do outro.</item>
+        <item>Você deslizou para cima %2$s.</item>
+        <item>%1$s em um dia só. Não é pouca coisa.</item>
+        <item>%1$s em %4$s. Contas claras.</item>
+    </string-array>
+
+    <!-- Días enteros que suma el tiempo (va en wrapped_time_days): «un día entero» con 1;
+         con más, el plural con su cifra («2 días enteros»). -->
+    <string name="wrapped_time_one_whole_day">um dia inteiro</string>
+    <plurals name="wrapped_time_whole_days">
+        <item quantity="one">%1$s\u00A0dia inteiro</item>
+        <item quantity="many">%1$s\u00A0dias inteiros</item>
+        <item quantity="other">%1$s\u00A0dias inteiros</item>
+    </plurals>
+    <!-- Diapositiva del tiempo, 24 horas o más: %1$s el tiempo con mayúscula («29 horas»),
+         %2$s los días enteros («un día entero»), %3$s jornadas de trabajo («3,6 jornadas de 8 horas»),
+         %4$s el tiempo en minutos («1.740 minutos»). -->
+    <string-array name="wrapped_time_days">
+        <item>%1$s. Mais de %2$s, sem dormir nem comer.</item>
+        <item>%1$s de tela ou, o que é o mesmo, %3$s.</item>
+        <item>%1$s. Ou, dizendo de outro jeito, %4$s.</item>
+    </string-array>
+    <!-- De 1 a 24 horas: %1$s el tiempo con mayúscula («5 horas»), %2$s una equivalencia en
+         infinitivo («leer 14 libros»), %3$s el tiempo en minutos. _noeq: sin equivalencia (no
+         uses %2$s). «de quince en quince segundos»: lo que dura un vídeo corto. -->
+    <string-array name="wrapped_time_hours">
+        <item>%1$s. Dava para %2$s.</item>
+        <item>%1$s. Ou, dizendo de outro jeito, %3$s.</item>
+        <item>%1$s, de quinze em quinze segundos.</item>
+    </string-array>
+    <string-array name="wrapped_time_hours_noeq">
+        <item>%1$s. Um bom tempo.</item>
+        <item>%1$s. Ou, dizendo de outro jeito, %3$s.</item>
+        <item>%1$s, de quinze em quinze segundos.</item>
+    </string-array>
+    <!-- Menos de una hora: %1$s el tiempo con mayúscula («47 minutos»). -->
+    <string-array name="wrapped_time_minutes">
+        <item>%1$s. Pouca coisa, para o que poderia ser.</item>
+        <item>%1$s. Nem para um filme.</item>
+        <item>%1$s, de quinze em quinze segundos.</item>
+    </string-array>
+
+    <!-- Diapositiva de equivalencias (MAYÚSCULAS): debajo van frases en infinitivo
+         («Leer 14 libros.»), así que la etiqueta tiene que pedir un infinitivo. -->
+    <string name="wrapped_equivalences_label">COM ESSE TEMPO VOCÊ PODERIA</string>
+    <string name="wrapped_equivalences_empty">Tempo tão pouco que não há com o que comparar.</string>
+
+    <!-- Creador n.º 1: %1$s el usuario con arroba («@pepito»), %2$s los vídeos («312 vídeos»),
+         %3$s solo la cifra («312»). -->
+    <string-array name="wrapped_creator">
+        <item>%1$s: %2$s. Já é da família.</item>
+        <item>%2$s de %1$s. Mais tempo do que com alguns primos.</item>
+        <item>Ninguém colocou mais vídeos na sua frente do que %1$s: %3$s.</item>
+        <item>Seu nº 1: %1$s, com %2$s. Esse perfil nem sabe que você existe.</item>
+    </string-array>
+    <!-- No se pudo leer ningún creador en el periodo. -->
+    <string-array name="wrapped_creator_none">
+        <item>Sem criador em destaque: não consegui ler quem publicava os vídeos.</item>
+        <item>Desta vez não há criador nº 1. Os apps nem sempre deixam ver quem assina.</item>
+        <item>Nenhum criador em destaque. O anonimato, às vezes, ganha.</item>
+    </string-array>
+
+    <!-- Diapositiva de categoría (MAYÚSCULAS). -->
+    <string name="wrapped_category_label">O QUE MAIS VIU</string>
+    <!-- La mayoría de vídeos sin categoría: %1$s el porcentaje («60 %»). -->
+    <string-array name="wrapped_category_otros">
+        <item>A maioria, sem classificação. Seu gosto é um mistério até para mim.</item>
+        <item>Quase tudo sem categoria. Nem o classificador se entende.</item>
+        <item>%1$s sem classificação. Há feeds que não se deixam etiquetar.</item>
+    </string-array>
+    <!-- Categoría principal: %1$s la categoría («Humor»), %2$s su porcentaje («34 %»),
+         %3$s la categoría con minúscula inicial («humor»). A estas frases se suma una más, propia
+         de cada categoría (wrapped_category_zinger_*). -->
+    <string-array name="wrapped_category">
+        <item>O que mais você viu: %1$s. %2$s de tudo.</item>
+        <item>%1$s, com %2$s. Já sabemos do que é o seu feed.</item>
+        <item>Seu feed fala de %3$s: %2$s.</item>
+    </string-array>
+    <!-- Remate propio de cada categoría (la frase extra de wrapped_category). -->
+    <!-- «echar aire por la nariz»: la risa mínima. -->
+    <string name="wrapped_category_zinger_humor">Você riu bastante. Ou, no mínimo, deu uma risadinha pelo nariz.</string>
+    <string name="wrapped_category_zinger_deporte">Muito esporte. Visto, mas esporte.</string>
+    <string name="wrapped_category_zinger_fitness">Treinos de academia, vistos do sofá. Conta como aquecimento.</string>
+    <string name="wrapped_category_zinger_comida">Receitas, muitas. Cozinhadas, aí já é outra conta.</string>
+    <string name="wrapped_category_zinger_musica">Seu feed tem trilha sonora própria.</string>
+    <!-- «ya si eso, otro día»: coletilla coloquial para algo que no se va a hacer. -->
+    <string name="wrapped_category_zinger_baile">Muita dança. Os passos ficam para outro dia.</string>
+    <string name="wrapped_category_zinger_gaming">Partidas dos outros, horas suas.</string>
+    <string name="wrapped_category_zinger_aprendizaje">Vídeos para aprender. Alguma coisa deve ter ficado.</string>
+    <string name="wrapped_category_zinger_tecnologia">Muito gadget. Este celular, aliás, aguenta bem.</string>
+    <string name="wrapped_category_zinger_belleza">Rotinas de dez passos, vistas em dez segundos.</string>
+    <string name="wrapped_category_zinger_animales">Bichos. O melhor da internet, para que negar.</string>
+    <string name="wrapped_category_zinger_viajes">Você viu meio mundo. Do sofá, mas meio mundo.</string>
+    <!-- Juego de palabras: «caballos» de potencia del motor. -->
+    <string name="wrapped_category_zinger_motor">Muitos cavalos. Dos de motor.</string>
+    <!-- Alude a «el tiempo es dinero». -->
+    <string name="wrapped_category_zinger_dinero">Dicas de dinheiro, a montes. O tempo, aliás, também é.</string>
+    <string name="wrapped_category_zinger_noticias">Notícias na vertical e em trinta segundos. Em dia, do seu jeito.</string>
+    <string name="wrapped_category_zinger_relaciones">Dicas de relacionamento, muitas. Aplicadas, aí já não conto.</string>
+
+    <!-- El día con más vídeos del periodo: %1$s la fecha larga («martes 14 de octubre»),
+         %2$s la misma con mayúscula, %3$s los vídeos («612 vídeos»). -->
+    <string-array name="wrapped_worst_day">
+        <item>Seu pior dia: %1$s, com %3$s.</item>
+        <item>%2$s: %3$s. Nesse dia quem ganhou foi o algoritmo.</item>
+        <item>O recorde do período: %3$s, em %1$s. O que aconteceu? Não sei; só conto.</item>
+        <item>%3$s num único dia: %1$s. Tem dias assim.</item>
+    </string-array>
+
+    <!-- Reparto por plataformas (nombres cortos: TikTok, Reels, Shorts; no se traducen). -->
+    <string name="wrapped_platforms_none">Nenhuma plataforma para dividir.</string>
+    <!-- Una sola plataforma: %1$s su nombre. -->
+    <string-array name="wrapped_platforms_single">
+        <item>Tudo no %1$s. Fidelidade absoluta.</item>
+        <item>%1$s, e mais nada. Monogamia de plataforma.</item>
+        <item>Um só app: %1$s. Para que complicar.</item>
+    </string-array>
+    <!-- Una se lleva la mitad o más: %1$s la ganadora, %2$s su porcentaje («61 %»), %3$s las
+         demás («Reels y Shorts»). _one_rest: solo queda otra («Reels»). -->
+    <string-array name="wrapped_platforms_top">
+        <item>%1$s ficou com %2$s. %3$s dividiram o resto.</item>
+        <item>Venceu %1$s, com %2$s.</item>
+        <item>%1$s, com %2$s, e o resto para %3$s.</item>
+    </string-array>
+    <string-array name="wrapped_platforms_top_one_rest">
+        <item>%1$s ficou com %2$s. %3$s ficou com o resto.</item>
+        <item>Venceu %1$s, com %2$s.</item>
+        <item>%1$s, com %2$s, e o resto para %3$s.</item>
+    </string-array>
+    <!-- Ninguna pasa de la mitad: %1$s el reparto («TikTok 40 %, Reels 35 % y Shorts 25 %»),
+         %2$s la mitad («50 %»). -->
+    <string-array name="wrapped_platforms_balanced">
+        <item>Dividido: %1$s. Você não é fiel a ninguém.</item>
+        <item>Nenhum app passa de %2$s. Seu forte é dividir.</item>
+        <item>Divisão quase democrática: %1$s.</item>
+    </string-array>
+    <!-- Una pieza del reparto: %1$s la plataforma, %2$s su porcentaje («TikTok 40 %»). -->
+    <string name="wrapped_platform_share">%1$s %2$s</string>
+    <!-- Fila de la gráfica de plataformas: %1$s porcentaje, %2$s vídeos (solo la cifra). -->
+    <string name="wrapped_platform_row_value">%1$s · %2$s</string>
+    <!-- Días con vídeos en la diapositiva del total (columna estrecha): «26/31». -->
+    <string name="wrapped_active_days_value">%1$s/%2$s</string>
+
+    <!-- Cierre de un periodo que sigue abierto (o de «siempre»). «El marcador» es la cifra grande
+         de la app, como el marcador de un partido. -->
+    <string-array name="wrapped_closing_open_week">
+        <item>Isto é o que vai da semana. O marcador continua contando.</item>
+        <item>Resumo provisório: a semana ainda não acabou.</item>
+        <item>Fim do resumo, por enquanto. O que você faz com ele é com você.</item>
+    </string-array>
+    <string-array name="wrapped_closing_open_month">
+        <item>Isto é o que vai do mês. O marcador continua contando.</item>
+        <item>Resumo provisório: o mês ainda não acabou.</item>
+        <item>Fim do resumo, por enquanto. O que você faz com ele é com você.</item>
+    </string-array>
+    <string-array name="wrapped_closing_open_year">
+        <item>Isto é o que vai do ano. O marcador continua contando.</item>
+        <item>Resumo provisório: o ano ainda não acabou.</item>
+        <item>Fim do resumo, por enquanto. O que você faz com ele é com você.</item>
+    </string-array>
+    <string-array name="wrapped_closing_open_all">
+        <item>Isto é tudo, por enquanto. O marcador continua contando.</item>
+        <item>Resumo provisório: isto ainda não acabou.</item>
+        <item>Fim do resumo, por enquanto. O que você faz com ele é com você.</item>
+    </string-array>
+    <!-- Cierre de un mes terminado: %1$s el mes («octubre»), %2$s el mes siguiente con mayúscula
+         («Noviembre»), %3$s el mes con mayúscula («Octubre»). «Sin devoluciones»: como en una tienda. -->
+    <string-array name="wrapped_closing_month">
+        <item>Esse foi %1$s. %2$s já começou a contar.</item>
+        <item>Até aqui, %1$s. O marcador continua.</item>
+        <item>%3$s, encerrado. Sem devoluções.</item>
+        <item>Fim do resumo. O que você faz com ele é com você.</item>
+    </string-array>
+    <string-array name="wrapped_closing_week">
+        <item>Essa foi a sua semana. A próxima já começou a contar.</item>
+        <item>Semana encerrada. Sem devoluções.</item>
+        <item>Até aqui a semana. O marcador continua.</item>
+    </string-array>
+    <!-- Cierre de un año terminado: %1$s el año («2025»), %2$s el siguiente («2026»). -->
+    <string-array name="wrapped_closing_year">
+        <item>Esse foi %1$s. %2$s já começou a contar.</item>
+        <item>Até aqui, %1$s. O marcador continua.</item>
+        <item>%1$s, encerrado. Sem devoluções.</item>
+    </string-array>
+
+    <!-- Avisos tras guardar o compartir la imagen final (el «ticket», como un recibo). -->
+    <string name="wrapped_saved">Recibo salvo.</string>
+    <string name="wrapped_save_failed">Não foi possível salvar a imagem. Tente de novo.</string>
+    <string name="wrapped_share_failed">Não foi possível preparar a imagem. Tente de novo.</string>
+</resources>

@@ -1,6 +1,7 @@
 package com.reelometro.app.ui.settings
 
 import android.graphics.Bitmap
+import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -75,6 +76,7 @@ import com.reelometro.app.ui.components.flap.FlapLoader
 import com.reelometro.app.AppLinks
 import com.reelometro.app.ui.icons.ReelIcons
 import com.reelometro.app.ui.onboarding.InlineNotice
+import com.reelometro.app.ui.onboarding.SystemScreens
 import com.reelometro.app.ui.onboarding.goalStep
 import com.reelometro.app.ui.onboarding.revealIn
 import com.reelometro.app.ui.onboarding.revealOut
@@ -196,6 +198,7 @@ private fun SettingsList(s: SettingsState, actions: SettingsActions) {
                     selectedIndex = THEME_MODES.indexOf(s.themeMode).coerceAtLeast(0),
                     onSelect = { actions.onTheme(THEME_MODES[it]) },
                 )
+                LanguageLine()
             }
         }
         item(key = "data") { Section(SettingsCopy.DATA) { DataSection(s, actions, onDelete = { deleteDialog = true }) } }
@@ -243,7 +246,7 @@ private fun SettingsList(s: SettingsState, actions: SettingsActions) {
     ReelDialog(
         visible = deleteDialog,
         onDismiss = { deleteDialog = false },
-        kicker = "${SettingsCopy.DATA.index} · ${SettingsCopy.DATA.title}",
+        kicker = SettingsCopy.dialogKicker(SettingsCopy.DATA),
         title = SettingsCopy.DELETE_DIALOG_TITLE,
         text = SettingsCopy.deleteDialogBody(s.totals.count.toLong(), s.totals.totalMs),
         confirmLabel = SettingsCopy.DELETE_CONFIRM,
@@ -292,6 +295,26 @@ private fun Feedback(text: String?, modifier: Modifier = Modifier) {
                 .semantics { liveRegion = LiveRegionMode.Polite },
         )
     }
+}
+
+// ====================================================================== 04 tema: fila «Idioma»
+
+/**
+ * Fila «Idioma» bajo el tema (solo Android 13+, donde cada app puede tener su idioma): a la derecha,
+ * el idioma de los textos en su propio idioma; al tocarla, la pantalla de idioma de la app en Android.
+ */
+@Composable
+private fun LanguageLine() {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+    val context = LocalContext.current
+    Spacer(Modifier.height(Space.x4))
+    ReceiptLine(
+        label = SettingsCopy.languageLabel(),
+        value = SettingsCopy.languageValue(),
+        onClick = { SystemScreens.openAppLanguage(context) },
+        onClickLabel = SettingsCopy.languageOpen(),
+    )
+    Text(SettingsCopy.languageHint(), style = ReelTheme.type.bodySmall, color = ReelTheme.colors.textMuted)
 }
 
 // ====================================================================== 01 objetivo
@@ -807,7 +830,7 @@ private fun NotifyTimeDialog(
     ReelDialog(
         visible = visible,
         onDismiss = onDismiss,
-        kicker = "${SettingsCopy.NOTIFICATIONS.index} · ${SettingsCopy.NOTIFICATIONS.title}",
+        kicker = SettingsCopy.dialogKicker(SettingsCopy.NOTIFICATIONS),
         title = SettingsCopy.TIME_DIALOG_TITLE,
         confirmLabel = SettingsCopy.TIME_CONFIRM,
         dismissLabel = SettingsCopy.TIME_CANCEL,
@@ -875,4 +898,5 @@ private const val LAST_MINUTE = 55
 private fun twoDigits(value: Int): String = String.format(Locale.ROOT, "%02d", value)
 
 private val THEME_MODES = listOf(ThemeMode.SYSTEM, ThemeMode.DARK, ThemeMode.LIGHT)
-private val THEME_OPTIONS = listOf(SettingsCopy.THEME_SYSTEM, SettingsCopy.THEME_DARK, SettingsCopy.THEME_LIGHT)
+private val THEME_OPTIONS: List<String>
+    get() = listOf(SettingsCopy.THEME_SYSTEM, SettingsCopy.THEME_DARK, SettingsCopy.THEME_LIGHT)

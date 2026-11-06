@@ -1,53 +1,43 @@
 package com.reelometro.app.copy
 
+import com.reelometro.app.R
 import com.reelometro.app.game.FlapMood
+import com.reelometro.app.stats.Format
 
-/** Estados genéricos **cargando / vacío / error** (`FlapLoader`, `EmptyState`, `ErrorState`). */
+/**
+ * Estados genéricos **cargando / vacío / error** (`FlapLoader`, `EmptyState`, `ErrorState`).
+ * Las palabras de este archivo están en `res/values/copy_state.xml`.
+ */
 object StateCopy {
 
     /** Etiqueta del `FlapLoader`. */
-    const val LOADING_LABEL = "CONTANDO"
+    val LOADING_LABEL: String get() = str(R.string.state_loading_label)
 
     /** contentDescription mientras carga. */
-    const val LOADING_DESCRIPTION = A11y.LOADING
+    val LOADING_DESCRIPTION: String get() = A11y.LOADING
 
-    /** Fichas en blanco del marcador. */
+    /** Fichas en blanco del marcador (símbolos, no palabras: igual en todos los idiomas). */
     const val PLACEHOLDER = "– – –"
 
-    const val RETRY = Buttons.RETRY
+    val RETRY: String get() = Buttons.RETRY
 
     /** Frase opcional bajo el `FlapLoader`. */
-    fun loading(seed: Long): String = pick(
-        seed, "state.loading",
-        "Haciendo cuentas.",
-        "Sumando.",
-        "Contando, que es lo mío.",
-    )
+    fun loading(seed: Long): String = pick(seed, "state.loading", R.array.state_loading)
 
     /** Vacío genérico (cuando la pantalla no tiene uno propio). */
-    fun empty(seed: Long): String = pick(
-        seed, "state.empty",
-        "Nada por aquí. De momento.",
-        "Todavía no hay nada que contar.",
-        "Aquí no hay nada. Que conste en acta.",
-    )
+    fun empty(seed: Long): String = pick(seed, "state.empty", R.array.state_empty)
 
     /** Error genérico (va con [RETRY]). */
-    fun error(seed: Long): String = pick(
-        seed, "state.error",
-        "Algo ha fallado al hacer las cuentas.",
-        "No he podido cargar esto. A la segunda suele ir.",
-        "Error al leer los datos. Vuelve a intentarlo.",
-    )
+    fun error(seed: Long): String = pick(seed, "state.error", R.array.state_error)
 }
 
 /** Textos del **widget** de Hoy (Glance). El nombre y la descripción del selector están en strings.xml. */
 object WidgetCopy {
 
-    const val LABEL = Labels.TODAY
+    val LABEL: String get() = Labels.TODAY
 
     /** Con el servicio desconectado. */
-    const val NO_SIGNAL = Labels.NO_SIGNAL
+    val NO_SIGNAL: String get() = Labels.NO_SIGNAL
 
     /** Dígitos en blanco mientras no hay datos. */
     const val PLACEHOLDER = StateCopy.PLACEHOLDER
@@ -56,122 +46,114 @@ object WidgetCopy {
     fun time(totalMs: Long): String = Words.durationLabel(totalMs)
 
     /** contentDescription: «Hoy: 212 vídeos, 47 minutos.». */
-    fun description(count: Int, totalMs: Long): String = "Hoy: ${Words.videos(count)}, ${Words.duration(totalMs)}."
+    fun description(count: Int, totalMs: Long): String =
+        str(R.string.state_widget_description, Words.videos(count), Words.duration(totalMs))
 
     /** Con objetivo: «Hoy: 212 vídeos, 47 minutos. 62 vídeos por encima del objetivo de 150.». */
     fun description(count: Int, totalMs: Long, goal: Int?): String =
         if (goal == null || goal <= 0) {
             description(count, totalMs)
         } else {
-            "${description(count, totalMs)} ${TodayCopy.goalStatusDescription(count, goal)}."
+            str(R.string.state_widget_description_goal, description(count, totalMs), TodayCopy.goalStatusDescription(count, goal))
         }
 
     /** Frente al objetivo, igual que en Hoy: «QUEDAN 38», «EN EL LÍMITE», «+62 PASADO». */
     fun goalStatus(count: Int, goal: Int): String = TodayCopy.goalStatus(count, goal)
 
-    const val DESCRIPTION_OFF = "Reelómetro, sin señal: el servicio está desconectado."
+    val DESCRIPTION_OFF: String get() = str(R.string.state_widget_description_off)
 
     /** Con Flap a la vista (tamaño grande, modo pasaporte): «Hoy: 12 vídeos, 9 minutos. Flap: en forma.». */
     fun withFlap(description: String, mood: FlapMood): String =
-        "$description Flap: ${PassportCopy.moodLabel(mood).lowercase()}."
+        str(R.string.state_widget_with_flap, description, PassportCopy.moodLabel(mood).lowercase())
 }
 
 /** Textos mínimos de la pantalla oculta de **Calibración** (consola en mono). */
 object CalibrationCopy {
 
-    const val TITLE = "CALIBRACIÓN"
+    val TITLE: String get() = str(R.string.state_calibration_title)
 
     /** Titular de la pantalla. */
-    const val HEADLINE = "Calibración"
+    val HEADLINE: String get() = str(R.string.state_calibration_headline)
 
     /** Botones de la consola (TalkBack). */
-    const val COPY_DESCRIPTION = "Copiar el log al portapapeles"
-    const val SHARE_DESCRIPTION = "Compartir el log de calibración"
-    const val CLEAR_DESCRIPTION = "Vaciar el log"
+    val COPY_DESCRIPTION: String get() = str(R.string.state_calibration_copy_description)
+    val SHARE_DESCRIPTION: String get() = str(R.string.state_calibration_share_description)
+    val CLEAR_DESCRIPTION: String get() = str(R.string.state_calibration_clear_description)
 
-    const val INTRO =
-        "Herramienta para ajustar la detección. Lo que se captura aquí se queda en este móvil y se borra al limpiar."
+    val INTRO: String get() = str(R.string.state_calibration_intro)
 
-    const val SERVICE = "SERVICIO"
-    const val CAPTURE = "CAPTURAR"
-    const val FILTER_PLATFORM = "PLATAFORMA"
-    const val FILTER_TYPE = "TIPO"
+    val SERVICE: String get() = str(R.string.state_calibration_service)
+    val CAPTURE: String get() = str(R.string.state_calibration_capture)
+    val FILTER_PLATFORM: String get() = str(R.string.state_calibration_filter_platform)
+    val FILTER_TYPE: String get() = str(R.string.state_calibration_filter_type)
 
     /** «TODAS» (plataformas). */
-    const val ALL_PLATFORMS = "TODAS"
+    val ALL_PLATFORMS: String get() = str(R.string.state_calibration_all_platforms)
 
     /** «TODOS» (tipos de evento). */
-    const val ALL_TYPES = "TODOS"
+    val ALL_TYPES: String get() = str(R.string.state_calibration_all_types)
 
-    const val FEED_YES = "FEED ✓"
-    const val FEED_NO = "FEED ✗"
+    val FEED_YES: String get() = str(R.string.state_calibration_feed_yes)
+    val FEED_NO: String get() = str(R.string.state_calibration_feed_no)
 
-    /** Decisión de las demás reglas (botón de compartir…). */
+    /** Decisión de las demás reglas (botón de compartir…). Símbolos: iguales en todos los idiomas. */
     const val MARK_YES = "✓"
     const val MARK_NO = "✗"
 
     /** Regla que decidió: «[id (clips_viewer)]». */
     fun rule(rule: String): String = "[$rule]"
-    const val VIDEO_DETECTED = "VÍDEO"
+    val VIDEO_DETECTED: String get() = str(R.string.state_calibration_video_detected)
 
-    const val EMPTY = "Sin eventos. Abre una de las apps y desliza."
-    const val PAUSED = "Captura en pausa. Activa CAPTURAR para ver eventos."
+    val EMPTY: String get() = str(R.string.state_calibration_empty)
+    val PAUSED: String get() = str(R.string.state_calibration_paused)
 
-    const val COPY = Buttons.COPY
-    const val SHARE_LOG = Buttons.SHARE_LOG
-    const val CLEAR = Buttons.CLEAR
+    val COPY: String get() = Buttons.COPY
+    val SHARE_LOG: String get() = Buttons.SHARE_LOG
+    val CLEAR: String get() = Buttons.CLEAR
 
-    const val COPIED = "Log copiado."
-    const val CLEARED = "Log vacío."
-    const val SHARE_TITLE = "Compartir log de calibración"
+    val COPIED: String get() = str(R.string.state_calibration_copied)
+    val CLEARED: String get() = str(R.string.state_calibration_cleared)
+    val SHARE_TITLE: String get() = str(R.string.state_calibration_share_title)
 
     /** «128 EVENTOS», «1 EVENTO». */
-    fun events(count: Int): String = Words.upper(Words.count(count, "evento", "eventos"))
+    fun events(count: Int): String = plural(R.plurals.state_calibration_events, count, Format.integer(count))
 
     /** Activado en Android pero aún sin conectar (el sistema tarda un momento tras arrancar la app). */
-    const val SERVICE_WAITING = "ACTIVADO, SIN CONECTAR"
+    val SERVICE_WAITING: String get() = str(R.string.state_calibration_service_waiting)
 
-    const val LAST_EVENT = "ÚLTIMO EVENTO"
-    const val LAST_VIDEO = Labels.LAST_VIDEO
+    val LAST_EVENT: String get() = str(R.string.state_calibration_last_event)
+    val LAST_VIDEO: String get() = Labels.LAST_VIDEO
 
-    /** Sin dato todavía. */
+    /** Sin dato todavía (símbolo). */
     const val NONE = "—"
 
     /** Filtro de tipo: grupos de eventos. */
-    const val TYPE_SCROLL = "SCROLL"
-    const val TYPE_WINDOW = "VENTANA"
-    const val TYPE_VIDEO = VIDEO_DETECTED
-    const val TYPE_SHARE = "COMPARTIR"
+    val TYPE_SCROLL: String get() = str(R.string.state_calibration_type_scroll)
+    val TYPE_WINDOW: String get() = str(R.string.state_calibration_type_window)
+    val TYPE_VIDEO: String get() = VIDEO_DETECTED
+    val TYPE_SHARE: String get() = str(R.string.state_calibration_type_share)
 
     /** contentDescription del interruptor. */
-    const val CAPTURE_DESCRIPTION = "Capturar eventos"
+    val CAPTURE_DESCRIPTION: String get() = str(R.string.state_calibration_capture_description)
 
     /** Con filtros que no dejan nada. */
-    const val FILTER_EMPTY = "Ningún evento con estos filtros."
+    val FILTER_EMPTY: String get() = str(R.string.state_calibration_filter_empty)
 
     /** Estado vacío: cómo se usa en un móvil de verdad (en el emulador no hay TikTok). */
-    const val HOW_TO_TITLE = "Cómo se usa"
+    val HOW_TO_TITLE: String get() = str(R.string.state_calibration_how_to_title)
 
-    val HOW_TO: List<Step> = listOf(
-        Step(1, "Deja esta pantalla abierta, con CAPTURAR activado, y sal con el botón de inicio."),
-        Step(
-            2,
-            "Abre TikTok, Instagram o YouTube y haz el recorrido despacio: cinco vídeos seguidos, un rebote, " +
-                "los comentarios, un perfil, el feed normal y salir.",
-        ),
-        Step(3, "Vuelve aquí. En el feed de vídeos cortos, cada deslizamiento debe salir con FEED ✓ y un VIDEO_START."),
-        Step(4, "Fuera del feed, FEED ✗. Si algo no cuadra, comparte el log: la guía de ajuste está al final de FeedRules."),
-    )
+    val HOW_TO: List<Step>
+        get() = strArray(R.array.state_calibration_how_to).mapIndexed { i, text -> Step(i + 1, text) }
 
     /** Vídeo que todavía se está viendo (sin duración). */
-    const val ON_SCREEN = "en pantalla"
+    val ON_SCREEN: String get() = str(R.string.state_calibration_on_screen)
 
     /** Lista en vivo, cabecera. */
-    const val LIVE = "EN VIVO"
+    val LIVE: String get() = str(R.string.state_calibration_live)
 
     /** Línea de un vídeo guardado en la base de datos: «VÍDEO #123045». */
-    fun videoTitle(shortId: String): String = "$VIDEO_DETECTED $shortId"
+    fun videoTitle(shortId: String): String = str(R.string.state_calibration_video_title, shortId)
 
     /** «1 compartido», «3 compartidos». */
-    fun shares(count: Int): String = Words.count(count, "compartido", "compartidos")
+    fun shares(count: Int): String = plural(R.plurals.state_calibration_shares, count, Format.integer(count))
 }

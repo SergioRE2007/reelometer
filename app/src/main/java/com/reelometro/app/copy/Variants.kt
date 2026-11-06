@@ -97,6 +97,20 @@ object Variants {
     private const val FNV_PRIME = 0x100000001B3L
 }
 
-/** Atajo interno: `pick(seed, "clave", "frase 1", "frase 2", …)`. */
-internal fun pick(seed: Long, key: String, vararg options: String): String =
-    Variants.pick(options.asList(), seed, key)
+/**
+ * Variante de una situación: elige una frase del `<string-array>` [arrayId] para [seed] y [key]
+ * y rellena sus huecos con [args]: `pick(seed, "day.zero", R.array.day_zero)`.
+ *
+ * Cada idioma puede tener un número distinto de variantes: la elección usa el tamaño del array
+ * que se está leyendo, así que lo determinista (misma semilla, misma frase; no repetir dos días
+ * seguidos) se cumple en todos. Las claves ([key]) no se cambian: de ellas sale qué frase toca
+ * cada día, y en español tiene que seguir saliendo la misma que antes de los recursos.
+ *
+ * Si una frase cambia por concordancia (singular o plural, con o sin tiempo…), hay un array por
+ * caso con la misma [key]: con el mismo tamaño, sale la misma posición en todos.
+ */
+fun pick(seed: Long, key: String, arrayId: Int, vararg args: Any): String {
+    val texts = AppTexts.current
+    val chosen = Variants.pick(texts.array(arrayId), seed, key)
+    return if (args.isEmpty()) chosen else texts.format(chosen, *args)
+}

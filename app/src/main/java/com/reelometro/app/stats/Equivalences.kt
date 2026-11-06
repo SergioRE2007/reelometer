@@ -1,12 +1,20 @@
 package com.reelometro.app.stats
 
+import com.reelometro.app.R
 import com.reelometro.app.copy.Variants
+import com.reelometro.app.copy.pick
+import com.reelometro.app.copy.plural
+import com.reelometro.app.copy.str
 import kotlin.math.roundToLong
 
 /**
  * «Con ese tiempo podrías…»: el tiempo viendo vídeos cortos traducido a cosas que llevan un
  * número conocido de horas. Cada equivalencia lleva su **base de cálculo** ([Equivalence.basis])
  * para la nota discreta de la interfaz (`dataS`, `textMuted`).
+ *
+ * Los cálculos (horas por unidad, cómo se lee una cantidad) son los mismos en todos los idiomas;
+ * las palabras salen de `res/values/copy_equivalences.xml`, con una frase entera por caso
+ * («más de 3 libros», «un libro y medio», «el 40 % de un libro»…).
  *
  * Uso típico:
  * ```
@@ -21,147 +29,246 @@ object Equivalences {
     // ------------------------------------------------------------------ estudio
 
     val DEGREE = Equivalence(
-        "grado", "🎓", 240 * 25.0, "Base: 240 ECTS × 25 h (Plan Bolonia)", "GRADOS UNIVERSITARIOS",
+        "grado", "🎓", 240 * 25.0, R.string.eq_degree_basis, R.string.eq_degree_label,
         EquivalenceGroup.ESTUDIO, absurd = false,
-        Wording.Units("sacarte", "grado universitario", "grados universitarios"),
+        Wording.Units(
+            R.string.eq_degree_do,
+            Counted(R.plurals.eq_degree_n, R.plurals.eq_degree_more, R.plurals.eq_degree_and_half, R.plurals.eq_degree_almost),
+            Parts(R.string.eq_degree_percent, R.string.eq_degree_less, R.string.eq_degree_quarter, R.string.eq_degree_half, R.string.eq_degree_three_quarters),
+        ),
     )
     val MASTER = Equivalence(
-        "master", "📜", 60 * 25.0, "Base: 60 ECTS × 25 h (máster de un curso)", "MÁSTERES",
+        "master", "📜", 60 * 25.0, R.string.eq_master_basis, R.string.eq_master_label,
         EquivalenceGroup.ESTUDIO, absurd = false,
-        Wording.Units("hacer", "máster", "másteres"),
+        Wording.Units(
+            R.string.eq_master_do,
+            Counted(R.plurals.eq_master_n, R.plurals.eq_master_more, R.plurals.eq_master_and_half, R.plurals.eq_master_almost),
+            Parts(R.string.eq_master_percent, R.string.eq_master_less, R.string.eq_master_quarter, R.string.eq_master_half, R.string.eq_master_three_quarters),
+        ),
     )
     val LANGUAGE = Equivalence(
-        "idioma", "🌍", 600.0, "Base: FSI, ~600–750 h para idiomas de categoría I", "IDIOMAS",
+        "idioma", "🌍", 600.0, R.string.eq_language_basis, R.string.eq_language_label,
         EquivalenceGroup.ESTUDIO, absurd = false,
-        Wording.Units("aprender", "idioma", "idiomas"),
+        Wording.Units(
+            R.string.eq_language_do,
+            Counted(R.plurals.eq_language_n, R.plurals.eq_language_more, R.plurals.eq_language_and_half, R.plurals.eq_language_almost),
+            Parts(R.string.eq_language_percent, R.string.eq_language_less, R.string.eq_language_quarter, R.string.eq_language_half, R.string.eq_language_three_quarters),
+        ),
     )
     val CODING = Equivalence(
-        "bootcamp", "💻", 400.0, "Base: bootcamp intensivo de programación, ~400 h", "BOOTCAMPS DE PROGRAMACIÓN",
+        "bootcamp", "💻", 400.0, R.string.eq_coding_basis, R.string.eq_coding_label,
         EquivalenceGroup.ESTUDIO, absurd = false,
-        Wording.Units("hacer", "bootcamp", "bootcamps", tail = "de programación"),
+        Wording.Units(
+            R.string.eq_coding_do,
+            Counted(R.plurals.eq_coding_n, R.plurals.eq_coding_more, R.plurals.eq_coding_and_half, R.plurals.eq_coding_almost),
+            Parts(R.string.eq_coding_percent, R.string.eq_coding_less, R.string.eq_coding_quarter, R.string.eq_coding_half, R.string.eq_coding_three_quarters),
+        ),
     )
-
     // ------------------------------------------------------------------ lectura
 
     val BOOK = Equivalence(
-        "libro", "📚", 90_000 / 250.0 / 60, "Base: novela de ~90.000 palabras a 250 palabras/min ≈ 6 h", "LIBROS",
+        "libro", "📚", 90_000 / 250.0 / 60, R.string.eq_book_basis, R.string.eq_book_label,
         EquivalenceGroup.LECTURA, absurd = false,
-        Wording.Units("leer", "libro", "libros"),
+        Wording.Units(
+            R.string.eq_book_do,
+            Counted(R.plurals.eq_book_n, R.plurals.eq_book_more, R.plurals.eq_book_and_half, R.plurals.eq_book_almost),
+            Parts(R.string.eq_book_percent, R.string.eq_book_less, R.string.eq_book_quarter, R.string.eq_book_half, R.string.eq_book_three_quarters),
+        ),
     )
     val QUIJOTE = Equivalence(
-        "quijote", "🐴", 380_000 / 250.0 / 60, "Base: las dos partes, ~380.000 palabras a 250 palabras/min ≈ 25 h", "EL QUIJOTE",
+        "quijote", "🐴", 380_000 / 250.0 / 60, R.string.eq_quijote_basis, R.string.eq_quijote_label,
         EquivalenceGroup.LECTURA, absurd = false,
-        Wording.Whole("leer", "el Quijote entero", "del Quijote"),
+        Wording.Whole(
+            R.string.eq_quijote_do,
+            Counted(R.plurals.eq_quijote_n, R.plurals.eq_quijote_more, R.plurals.eq_quijote_and_half, R.plurals.eq_quijote_almost),
+            Parts(R.string.eq_quijote_percent, R.string.eq_quijote_less, R.string.eq_quijote_quarter, R.string.eq_quijote_half, R.string.eq_quijote_three_quarters),
+        ),
     )
     val PROUST = Equivalence(
-        "proust", "⏳", 1_270_000 / 250.0 / 60,
-        "Base: 7 tomos, ~1.270.000 palabras a 250 palabras/min ≈ 85 h", "EN BUSCA DEL TIEMPO PERDIDO",
+        "proust", "⏳", 1_270_000 / 250.0 / 60, R.string.eq_proust_basis, R.string.eq_proust_label,
         EquivalenceGroup.LECTURA, absurd = false,
-        Wording.Whole("leer", "En busca del tiempo perdido", "de En busca del tiempo perdido"),
+        Wording.Whole(
+            R.string.eq_proust_do,
+            Counted(R.plurals.eq_proust_n, R.plurals.eq_proust_more, R.plurals.eq_proust_and_half, R.plurals.eq_proust_almost),
+            Parts(R.string.eq_proust_percent, R.string.eq_proust_less, R.string.eq_proust_quarter, R.string.eq_proust_half, R.string.eq_proust_three_quarters),
+        ),
     )
-
     // ------------------------------------------------------------------ pantalla (de la grande)
 
     val GOT = Equivalence(
-        "juego-de-tronos", "🐉", 70.0, "Base: 8 temporadas, 73 episodios ≈ 70 h", "JUEGO DE TRONOS",
+        "juego-de-tronos", "🐉", 70.0, R.string.eq_got_basis, R.string.eq_got_label,
         EquivalenceGroup.PANTALLA, absurd = false,
-        Wording.Whole("ver", "Juego de Tronos entera", "de Juego de Tronos"),
+        Wording.Whole(
+            R.string.eq_got_do,
+            Counted(R.plurals.eq_got_n, R.plurals.eq_got_more, R.plurals.eq_got_and_half, R.plurals.eq_got_almost),
+            Parts(R.string.eq_got_percent, R.string.eq_got_less, R.string.eq_got_quarter, R.string.eq_got_half, R.string.eq_got_three_quarters),
+        ),
     )
     val HARRY_POTTER = Equivalence(
-        "harry-potter", "⚡", 1_179 / 60.0, "Base: 8 películas, 1.179 min ≈ 19 h 40 min", "SAGA DE HARRY POTTER",
+        "harry-potter", "⚡", 1_179 / 60.0, R.string.eq_harry_potter_basis, R.string.eq_harry_potter_label,
         EquivalenceGroup.PANTALLA, absurd = false,
-        Wording.Whole("ver", "la saga de Harry Potter entera", "de la saga de Harry Potter"),
+        Wording.Whole(
+            R.string.eq_harry_potter_do,
+            Counted(R.plurals.eq_harry_potter_n, R.plurals.eq_harry_potter_more, R.plurals.eq_harry_potter_and_half, R.plurals.eq_harry_potter_almost),
+            Parts(R.string.eq_harry_potter_percent, R.string.eq_harry_potter_less, R.string.eq_harry_potter_quarter, R.string.eq_harry_potter_half, R.string.eq_harry_potter_three_quarters),
+        ),
     )
     val LOTR = Equivalence(
-        "senor-de-los-anillos", "💍", 726 / 60.0, "Base: trilogía en versión extendida, 726 min ≈ 12 h", "EL SEÑOR DE LOS ANILLOS",
+        "senor-de-los-anillos", "💍", 726 / 60.0, R.string.eq_lotr_basis, R.string.eq_lotr_label,
         EquivalenceGroup.PANTALLA, absurd = false,
-        Wording.Whole("ver", "El Señor de los Anillos en versión extendida", "de El Señor de los Anillos en versión extendida"),
+        Wording.Whole(
+            R.string.eq_lotr_do,
+            Counted(R.plurals.eq_lotr_n, R.plurals.eq_lotr_more, R.plurals.eq_lotr_and_half, R.plurals.eq_lotr_almost),
+            Parts(R.string.eq_lotr_percent, R.string.eq_lotr_less, R.string.eq_lotr_quarter, R.string.eq_lotr_half, R.string.eq_lotr_three_quarters),
+        ),
     )
     val MOVIE = Equivalence(
-        "pelicula", "🎬", 2.0, "Base: película media ≈ 2 h", "PELÍCULAS",
+        "pelicula", "🎬", 2.0, R.string.eq_movie_basis, R.string.eq_movie_label,
         EquivalenceGroup.PANTALLA, absurd = false,
-        Wording.Units("ver", "película", "películas", feminine = true),
+        Wording.Units(
+            R.string.eq_movie_do,
+            Counted(R.plurals.eq_movie_n, R.plurals.eq_movie_more, R.plurals.eq_movie_and_half, R.plurals.eq_movie_almost),
+            Parts(R.string.eq_movie_percent, R.string.eq_movie_less, R.string.eq_movie_quarter, R.string.eq_movie_half, R.string.eq_movie_three_quarters),
+        ),
     )
     val FOOTBALL = Equivalence(
-        "partido", "⚽", 1.75, "Base: 90 min + 15 de descanso ≈ 1 h 45 min", "PARTIDOS DE FÚTBOL",
+        "partido", "⚽", 1.75, R.string.eq_football_basis, R.string.eq_football_label,
         EquivalenceGroup.PANTALLA, absurd = false,
-        Wording.Units("ver", "partido", "partidos", tail = "de fútbol"),
+        Wording.Units(
+            R.string.eq_football_do,
+            Counted(R.plurals.eq_football_n, R.plurals.eq_football_more, R.plurals.eq_football_and_half, R.plurals.eq_football_almost),
+            Parts(R.string.eq_football_percent, R.string.eq_football_less, R.string.eq_football_quarter, R.string.eq_football_half, R.string.eq_football_three_quarters),
+        ),
     )
-
     // ------------------------------------------------------------------ deporte y viajes
 
     val MARATHON = Equivalence(
-        "maraton", "🏃", 4.5, "Base: 42,195 km a ritmo popular ≈ 4 h 30 min", "MARATONES",
+        "maraton", "🏃", 4.5, R.string.eq_marathon_basis, R.string.eq_marathon_label,
         EquivalenceGroup.DEPORTE, absurd = false,
-        Wording.Units("correr", "maratón", "maratones", feminine = true),
+        Wording.Units(
+            R.string.eq_marathon_do,
+            Counted(R.plurals.eq_marathon_n, R.plurals.eq_marathon_more, R.plurals.eq_marathon_and_half, R.plurals.eq_marathon_almost),
+            Parts(R.string.eq_marathon_percent, R.string.eq_marathon_less, R.string.eq_marathon_quarter, R.string.eq_marathon_half, R.string.eq_marathon_three_quarters),
+        ),
     )
     val CAMINO = Equivalence(
-        "camino-de-santiago", "🐚", 780 / 4.0, "Base: Camino Francés, ~780 km a 4 km/h ≈ 195 h andando", "CAMINO DE SANTIAGO",
+        "camino-de-santiago", "🐚", 780 / 4.0, R.string.eq_camino_basis, R.string.eq_camino_label,
         EquivalenceGroup.VIAJE, absurd = false,
-        Wording.Whole("hacer", "el Camino de Santiago entero", "del Camino de Santiago"),
+        Wording.Whole(
+            R.string.eq_camino_do,
+            Counted(R.plurals.eq_camino_n, R.plurals.eq_camino_more, R.plurals.eq_camino_and_half, R.plurals.eq_camino_almost),
+            Parts(R.string.eq_camino_percent, R.string.eq_camino_less, R.string.eq_camino_quarter, R.string.eq_camino_half, R.string.eq_camino_three_quarters),
+        ),
     )
     val TOLEDO = Equivalence(
-        "madrid-toledo", "🥾", 72 / 5.0, "Base: ~72 km a 5 km/h ≈ 14,4 h", "MADRID–TOLEDO A PIE",
+        "madrid-toledo", "🥾", 72 / 5.0, R.string.eq_toledo_basis, R.string.eq_toledo_label,
         EquivalenceGroup.VIAJE, absurd = false,
-        Wording.Whole("ir andando", "de Madrid a Toledo", "del camino de Madrid a Toledo"),
+        Wording.Whole(
+            R.string.eq_toledo_do,
+            Counted(R.plurals.eq_toledo_n, R.plurals.eq_toledo_more, R.plurals.eq_toledo_and_half, R.plurals.eq_toledo_almost),
+            Parts(R.string.eq_toledo_percent, R.string.eq_toledo_less, R.string.eq_toledo_quarter, R.string.eq_toledo_half, R.string.eq_toledo_three_quarters),
+        ),
     )
     val AVE = Equivalence(
-        "ave", "🚄", 2.5, "Base: AVE directo ≈ 2 h 30 min", "AVE MADRID–BARCELONA",
+        "ave", "🚄", 2.5, R.string.eq_ave_basis, R.string.eq_ave_label,
         EquivalenceGroup.VIAJE, absurd = false,
-        Wording.Whole("ir en AVE", "de Madrid a Barcelona", "del trayecto de Madrid a Barcelona"),
+        Wording.Whole(
+            R.string.eq_ave_do,
+            Counted(R.plurals.eq_ave_n, R.plurals.eq_ave_more, R.plurals.eq_ave_and_half, R.plurals.eq_ave_almost),
+            Parts(R.string.eq_ave_percent, R.string.eq_ave_less, R.string.eq_ave_quarter, R.string.eq_ave_half, R.string.eq_ave_three_quarters),
+        ),
     )
     val FLIGHT = Equivalence(
-        "vuelo-nueva-york", "✈️", 8.0, "Base: vuelo directo ≈ 8 h", "VUELO MADRID–NUEVA YORK",
+        "vuelo-nueva-york", "✈️", 8.0, R.string.eq_flight_basis, R.string.eq_flight_label,
         EquivalenceGroup.VIAJE, absurd = false,
-        Wording.Whole("volar", "de Madrid a Nueva York", "del vuelo de Madrid a Nueva York"),
+        Wording.Whole(
+            R.string.eq_flight_do,
+            Counted(R.plurals.eq_flight_n, R.plurals.eq_flight_more, R.plurals.eq_flight_and_half, R.plurals.eq_flight_almost),
+            Parts(R.string.eq_flight_percent, R.string.eq_flight_less, R.string.eq_flight_quarter, R.string.eq_flight_half, R.string.eq_flight_three_quarters),
+        ),
     )
     val WALK = Equivalence(
-        "km-a-pie", "🚶", 1 / 5.0, "Base: 5 km/h, paso normal", "KILÓMETROS A PIE",
+        "km-a-pie", "🚶", 1 / 5.0, R.string.eq_walk_basis, R.string.eq_walk_label,
         EquivalenceGroup.VIAJE, absurd = false,
-        Wording.Distance("ir andando"),
+        Wording.Distance(
+            R.string.eq_walk_do,
+            Counted(R.plurals.eq_walk_n, R.plurals.eq_walk_more, R.plurals.eq_walk_and_half, R.plurals.eq_walk_almost),
+            R.plurals.eq_walk_metres, R.plurals.eq_walk_under_metres,
+        ),
     )
-
     // ------------------------------------------------------------------ cocina, música y sofá
 
     val TORTILLA = Equivalence(
-        "tortilla", "🥔", 0.75, "Base: pelar, freír y cuajar ≈ 45 min", "TORTILLAS DE PATATAS",
+        "tortilla", "🥔", 0.75, R.string.eq_tortilla_basis, R.string.eq_tortilla_label,
         EquivalenceGroup.COCINA, absurd = true,
-        Wording.Units("hacer", "tortilla", "tortillas", feminine = true, tail = "de patatas"),
+        Wording.Units(
+            R.string.eq_tortilla_do,
+            Counted(R.plurals.eq_tortilla_n, R.plurals.eq_tortilla_more, R.plurals.eq_tortilla_and_half, R.plurals.eq_tortilla_almost),
+            Parts(R.string.eq_tortilla_percent, R.string.eq_tortilla_less, R.string.eq_tortilla_quarter, R.string.eq_tortilla_half, R.string.eq_tortilla_three_quarters),
+        ),
     )
     val COCIDO = Equivalence(
-        "cocido", "🍲", 3.5, "Base: 3 h 30 min a fuego lento (el remojo no cuenta)", "COCIDOS",
+        "cocido", "🍲", 3.5, R.string.eq_cocido_basis, R.string.eq_cocido_label,
         EquivalenceGroup.COCINA, absurd = true,
-        Wording.Units("hacer", "cocido madrileño", "cocidos madrileños"),
+        Wording.Units(
+            R.string.eq_cocido_do,
+            Counted(R.plurals.eq_cocido_n, R.plurals.eq_cocido_more, R.plurals.eq_cocido_and_half, R.plurals.eq_cocido_almost),
+            Parts(R.string.eq_cocido_percent, R.string.eq_cocido_less, R.string.eq_cocido_quarter, R.string.eq_cocido_half, R.string.eq_cocido_three_quarters),
+        ),
     )
     val EGG = Equivalence(
-        "huevo-duro", "🥚", 10 / 60.0, "Base: 10 min de cocción", "HUEVOS DUROS",
+        "huevo-duro", "🥚", 10 / 60.0, R.string.eq_egg_basis, R.string.eq_egg_label,
         EquivalenceGroup.COCINA, absurd = true,
-        Wording.Units("cocer", "huevo duro", "huevos duros"),
+        Wording.Units(
+            R.string.eq_egg_do,
+            Counted(R.plurals.eq_egg_n, R.plurals.eq_egg_more, R.plurals.eq_egg_and_half, R.plurals.eq_egg_almost),
+            Parts(R.string.eq_egg_percent, R.string.eq_egg_less, R.string.eq_egg_quarter, R.string.eq_egg_half, R.string.eq_egg_three_quarters),
+        ),
     )
     val MILK = Equivalence(
-        "vaso-de-leche", "🥛", 1 / 60.0, "Base: 1 min a máxima potencia", "VASOS DE LECHE AL MICROONDAS",
+        "vaso-de-leche", "🥛", 1 / 60.0, R.string.eq_milk_basis, R.string.eq_milk_label,
         EquivalenceGroup.COCINA, absurd = true,
-        Wording.Units("calentar", "vaso", "vasos", tail = "de leche en el microondas"),
+        Wording.Units(
+            R.string.eq_milk_do,
+            Counted(R.plurals.eq_milk_n, R.plurals.eq_milk_more, R.plurals.eq_milk_and_half, R.plurals.eq_milk_almost),
+            Parts(R.string.eq_milk_percent, R.string.eq_milk_less, R.string.eq_milk_quarter, R.string.eq_milk_half, R.string.eq_milk_three_quarters),
+        ),
     )
     val BOHEMIAN = Equivalence(
-        "bohemian-rhapsody", "🎸", (5 * 60 + 55) / 3600.0, "Base: 5 min 55 s, versión de estudio", "BOHEMIAN RHAPSODY",
+        "bohemian-rhapsody", "🎸", (5 * 60 + 55) / 3600.0, R.string.eq_bohemian_basis, R.string.eq_bohemian_label,
         EquivalenceGroup.MUSICA, absurd = true,
-        Wording.Whole("escuchar", "Bohemian Rhapsody", "de Bohemian Rhapsody"),
+        Wording.Whole(
+            R.string.eq_bohemian_do,
+            Counted(R.plurals.eq_bohemian_n, R.plurals.eq_bohemian_more, R.plurals.eq_bohemian_and_half, R.plurals.eq_bohemian_almost),
+            Parts(R.string.eq_bohemian_percent, R.string.eq_bohemian_less, R.string.eq_bohemian_quarter, R.string.eq_bohemian_half, R.string.eq_bohemian_three_quarters),
+        ),
     )
     val NAP = Equivalence(
-        "siesta", "😴", 0.5, "Base: siesta de 30 min (sin pijama)", "SIESTAS",
+        "siesta", "😴", 0.5, R.string.eq_nap_basis, R.string.eq_nap_label,
         EquivalenceGroup.DESCANSO, absurd = true,
-        Wording.Units("echarte", "siesta", "siestas", feminine = true),
+        Wording.Units(
+            R.string.eq_nap_do,
+            Counted(R.plurals.eq_nap_n, R.plurals.eq_nap_more, R.plurals.eq_nap_and_half, R.plurals.eq_nap_almost),
+            Parts(R.string.eq_nap_percent, R.string.eq_nap_less, R.string.eq_nap_quarter, R.string.eq_nap_half, R.string.eq_nap_three_quarters),
+        ),
     )
     val SLEEP = Equivalence(
-        "noche", "🛌", 8.0, "Base: 8 h por noche", "NOCHES DEL TIRÓN",
+        "noche", "🛌", 8.0, R.string.eq_sleep_basis, R.string.eq_sleep_label,
         EquivalenceGroup.DESCANSO, absurd = false,
-        Wording.Units("dormir", "noche", "noches", feminine = true, tail = "del tirón"),
+        Wording.Units(
+            R.string.eq_sleep_do,
+            Counted(R.plurals.eq_sleep_n, R.plurals.eq_sleep_more, R.plurals.eq_sleep_and_half, R.plurals.eq_sleep_almost),
+            Parts(R.string.eq_sleep_percent, R.string.eq_sleep_less, R.string.eq_sleep_quarter, R.string.eq_sleep_half, R.string.eq_sleep_three_quarters),
+        ),
     )
     val WORKDAY = Equivalence(
-        "jornada", "💼", 8.0, "Base: jornada completa de 8 h", "JORNADAS LABORALES",
+        "jornada", "💼", 8.0, R.string.eq_workday_basis, R.string.eq_workday_label,
         EquivalenceGroup.TRABAJO, absurd = false,
-        Wording.Units("echar", "jornada laboral", "jornadas laborales", feminine = true),
+        Wording.Units(
+            R.string.eq_workday_do,
+            Counted(R.plurals.eq_workday_n, R.plurals.eq_workday_more, R.plurals.eq_workday_and_half, R.plurals.eq_workday_almost),
+            Parts(R.string.eq_workday_percent, R.string.eq_workday_less, R.string.eq_workday_quarter, R.string.eq_workday_half, R.string.eq_workday_three_quarters),
+        ),
     )
 
     /** Todas, de más a menos horas por unidad. */
@@ -243,7 +350,7 @@ object Equivalences {
      * Determinista por [seed]. Con menos de un segundo: «Todavía no hay tiempo que comparar.».
      */
     fun headline(ms: Long, seed: Long): String {
-        if (ms < 1_000) return "Todavía no hay tiempo que comparar."
+        if (ms < 1_000) return str(R.string.eq_headline_none)
         return pick(ms, 1, seed).first().sentence(seed)
     }
 
@@ -265,32 +372,50 @@ object Equivalences {
     }
 }
 
-/** Une cifra y unidad con espacio duro en las notas de base («25 h», «780 km»). */
+/**
+ * Une cifra y unidad con espacio duro en las notas de base («25 h», «780 km»). Los recursos ya lo
+ * traen; esto solo cubre una traducción que lo haya olvidado.
+ */
 private fun nbsp(text: String): String = text.replace(Regex("(\\d) "), "$1${Format.NBSP}")
 
 /** Familia temática, para no repetir dos del mismo tipo en un titular. */
 enum class EquivalenceGroup { ESTUDIO, LECTURA, PANTALLA, DEPORTE, VIAJE, COCINA, MUSICA, DESCANSO, TRABAJO }
 
-/** Cómo se dice una equivalencia en español. */
+/**
+ * Cantidades que llegan al menos a una unidad, cada una un `<plurals>` con la cifra en `%1$s`:
+ * [exactly] «un libro», «14 libros» (y «0 libros»); [moreThan] «más de 3 libros»;
+ * [andHalf] «3 libros y medio»; [almost] «casi 4 libros» (y, con 1, «casi un libro»).
+ */
+class Counted(val exactly: Int, val moreThan: Int, val andHalf: Int, val almost: Int)
+
+/**
+ * Fracciones de una unidad (`<string>`): [percent] «el 40 % de un máster» y [less] «menos del
+ * 0,1 % de un máster» (`%1$s` es el porcentaje), [quarter] «un cuarto de máster», [half] «medio
+ * máster», [threeQuarters] «tres cuartos de máster».
+ */
+class Parts(val percent: Int, val less: Int, val quarter: Int, val half: Int, val threeQuarters: Int)
+
+/**
+ * Cómo se dice una equivalencia: ids de `copy_equivalences.xml`. [infinitiveId] es el verbo con
+ * la cantidad en `%1$s` («leer %1$s»).
+ */
 sealed interface Wording {
+    val infinitiveId: Int
+
     /**
-     * Lo que se cuenta por unidades: «14 libros», «medio grado universitario», «el 40 % de un máster».
-     * [tail] es el complemento con preposición, que va detrás del «y medio»:
-     * «una tortilla y media **de patatas**», «un vaso y medio **de leche en el microondas**».
+     * Lo que se cuenta por unidades: «14 libros», «medio grado universitario», «el 40 % de un máster»,
+     * «una tortilla y media de patatas».
      */
-    data class Units(
-        val verb: String,
-        val singular: String,
-        val plural: String,
-        val feminine: Boolean = false,
-        val tail: String = "",
-    ) : Wording
+    data class Units(override val infinitiveId: Int, val counted: Counted, val parts: Parts) : Wording
 
     /** Una obra o un trayecto concreto que se repite: «ver Juego de Tronos entera 2 veces». */
-    data class Whole(val verb: String, val once: String, val of: String) : Wording
+    data class Whole(override val infinitiveId: Int, val counted: Counted, val parts: Parts) : Wording
 
-    /** Distancias a pie: «ir andando 5 kilómetros», «ir andando 830 metros». */
-    data class Distance(val verb: String) : Wording
+    /**
+     * Distancias a pie: «ir andando 5 kilómetros» ([km]), «ir andando 830 metros» ([metresId]),
+     * «ir andando menos de 10 metros» ([underMetresId]); los dos últimos, `<plurals>` con la cifra.
+     */
+    data class Distance(override val infinitiveId: Int, val km: Counted, val metresId: Int, val underMetresId: Int) : Wording
 }
 
 /**
@@ -305,13 +430,15 @@ class Equivalence(
     val id: String,
     val emoji: String,
     val hoursEach: Double,
-    basis: String,
-    val label: String,
+    private val basisId: Int,
+    private val labelId: Int,
     val group: EquivalenceGroup,
     val absurd: Boolean,
     val wording: Wording,
 ) {
-    val basis: String = nbsp(basis)
+    val basis: String get() = nbsp(str(basisId))
+
+    val label: String get() = str(labelId)
 
     fun value(hours: Double): EquivalenceValue = EquivalenceValue(this, hours / hoursEach)
 
@@ -336,20 +463,20 @@ data class EquivalenceValue(val equivalence: Equivalence, val amount: Double) {
     val amountText: String get() = Amounts.text(amount, equivalence.wording)
 
     /** Con su verbo, para encadenar en frases: «leer 14 libros», «sacarte medio grado universitario». */
-    val infinitive: String get() = "${verb(equivalence.wording)} $amountText"
+    val infinitive: String get() = str(equivalence.wording.infinitiveId, amountText)
 
     /** Frase completa, con variantes por [seed]: «Con ese tiempo podrías leer 14 libros.». */
-    fun sentence(seed: Long): String = Variants.pick(SENTENCES, seed, "eq.sentence")(infinitive)
+    fun sentence(seed: Long): String = pick(seed, "eq.sentence", R.array.eq_sentence, infinitive)
 
     /** Valor para una línea de ticket: «14», «0,5», «0,04»; con «×» delante si es una obra o trayecto («×2»). */
     val ticketValue: String
         get() {
             val v = when {
-                amount <= 0.0 -> "0"
+                amount <= 0.0 -> Format.integer(0)
                 reachesOne -> Format.decimal(amount)
                 amount >= 0.1 -> Format.decimal(amount, 1)
                 amount >= 0.01 -> Format.decimal(amount, 2)
-                else -> "<0,01"
+                else -> "<${Format.decimal(0.01, 2)}"
             }
             return if (equivalence.wording is Wording.Whole) "×$v" else v
         }
@@ -359,20 +486,6 @@ data class EquivalenceValue(val equivalence: Equivalence, val amount: Double) {
 
     /** Compatibilidad: la cantidad con mayúscula inicial («14 libros», «Medio grado universitario»). */
     val text: String get() = Format.capitalize(amountText)
-
-    private companion object {
-        val SENTENCES: List<(String) -> String> = listOf(
-            { "Con ese tiempo podrías $it." },
-            { "Te daba para $it." },
-            { "Eso da para $it." },
-        )
-
-        fun verb(w: Wording): String = when (w) {
-            is Wording.Units -> w.verb
-            is Wording.Whole -> w.verb
-            is Wording.Distance -> w.verb
-        }
-    }
 }
 
 /**
@@ -381,8 +494,6 @@ data class EquivalenceValue(val equivalence: Equivalence, val amount: Double) {
  * Las cifras exactas quedan para el ticket ([EquivalenceValue.ticketValue]).
  */
 internal object Amounts {
-    private val NB = Format.NBSP
-
     /** Desde aquí ya se lee «una unidad» (0,95 libros = «un libro»). */
     const val ONE = 0.95
 
@@ -418,69 +529,41 @@ internal object Amounts {
     }
 
     fun text(u: Double, w: Wording): String = when (w) {
-        is Wording.Units -> units(u, w)
-        is Wording.Whole -> whole(u, w)
-        is Wording.Distance -> distance(u)
+        is Wording.Units -> counted(u, w.counted, w.parts)
+        is Wording.Whole -> counted(u, w.counted, w.parts)
+        is Wording.Distance -> distance(u, w)
     }
 
-    private fun units(u: Double, w: Wording.Units): String {
-        val un = if (w.feminine) "una" else "un"
-        val medio = if (w.feminine) "media" else "medio"
-        val tail = if (w.tail.isEmpty()) "" else " ${w.tail}"
-        fun count(k: Long) = if (k == 1L) "$un ${w.singular}" else "${Format.integer(k)}$NB${w.plural}"
-        return when {
-            u <= 0.0 -> "0$NB${w.plural}$tail"
-            u >= ONE -> when (val r = read(u)) {
-                is Reading.Exactly -> "${count(r.n)}$tail"
-                is Reading.MoreThan -> "más de ${count(r.n)}$tail"
-                is Reading.AndHalf -> "${count(r.n)} y $medio$tail"
-                is Reading.Almost -> "casi ${count(r.n)}$tail"
-            }
-            u >= 0.85 -> "casi $un ${w.singular}$tail"
-            else -> fraction(
-                u,
-                articleOf = "de $un ${w.singular}$tail",
-                bareOf = "de ${w.singular}$tail",
-                half = "$medio ${w.singular}$tail",
-            )
-        }
+    /** Unidades, obras y trayectos: la frase de cada caso sale de [c] (≥ 1) o de [p] (fracciones). */
+    private fun counted(u: Double, c: Counted, p: Parts): String = when {
+        u <= 0.0 -> count(c.exactly, 0)
+        u >= ONE -> reading(read(u), c)
+        u >= 0.85 -> count(c.almost, 1)
+        else -> fraction(u, p)
     }
 
-    private fun whole(u: Double, w: Wording.Whole): String {
-        fun times(k: Long) = if (k == 1L) "una vez" else "${Format.integer(k)}${NB}veces"
-        return when {
-            u <= 0.0 -> "${w.once} 0${NB}veces"
-            u >= ONE -> when (val r = read(u)) {
-                is Reading.Exactly -> if (r.n == 1L) w.once else "${w.once} ${times(r.n)}"
-                is Reading.MoreThan -> "${w.once} más de ${times(r.n)}"
-                is Reading.AndHalf -> "${w.once} ${times(r.n)} y media"
-                is Reading.Almost -> "${w.once} casi ${times(r.n)}"
-            }
-            u >= 0.85 -> "casi ${w.once}"
-            else -> fraction(u, articleOf = w.of, bareOf = w.of, half = "la mitad ${w.of}")
-        }
+    private fun reading(r: Reading, c: Counted): String = when (r) {
+        is Reading.Exactly -> count(c.exactly, r.n)
+        is Reading.MoreThan -> count(c.moreThan, r.n)
+        is Reading.AndHalf -> count(c.andHalf, r.n)
+        is Reading.Almost -> count(c.almost, r.n)
     }
 
-    private fun distance(u: Double): String {
-        fun km(k: Long) = if (k == 1L) "un kilómetro" else "${Format.integer(k)}${NB}kilómetros"
-        if (u >= ONE) {
-            return when (val r = read(u)) {
-                is Reading.Exactly -> km(r.n)
-                is Reading.MoreThan -> "más de ${km(r.n)}"
-                is Reading.AndHalf -> "${km(r.n)} y medio"
-                is Reading.Almost -> "casi ${km(r.n)}"
-            }
-        }
+    /** `<plurals>` [id] para [n], con la cifra formateada en `%1$s`. */
+    private fun count(id: Int, n: Long): String = plural(id, n, Format.integer(n))
+
+    private fun distance(u: Double, w: Wording.Distance): String {
+        if (u >= ONE) return reading(read(u), w.km)
         val metres = Math.round(u * 100) * 10
-        return if (metres < 10) "menos de 10${NB}metros" else "${Format.integer(metres)}${NB}metros"
+        return if (metres < 10) count(w.underMetresId, 10) else count(w.metresId, metres)
     }
 
     /** «el 40 % de un máster», «un cuarto de máster», «medio máster», «tres cuartos de máster». */
-    private fun fraction(u: Double, articleOf: String, bareOf: String, half: String): String = when {
-        u < 0.001 -> "menos del 0,1$NB% $articleOf"
-        u >= 0.23 && u < 0.27 -> "un cuarto $bareOf"
-        u >= 0.45 && u < 0.55 -> half
-        u >= 0.73 && u < 0.77 -> "tres cuartos $bareOf"
-        else -> "el ${Format.percent(u)} $articleOf"
+    private fun fraction(u: Double, p: Parts): String = when {
+        u < 0.001 -> str(p.less, Format.percent(0.001))
+        u >= 0.23 && u < 0.27 -> str(p.quarter)
+        u >= 0.45 && u < 0.55 -> str(p.half)
+        u >= 0.73 && u < 0.77 -> str(p.threeQuarters)
+        else -> str(p.percent, Format.percent(u))
     }
 }

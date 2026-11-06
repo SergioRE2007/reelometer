@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Modo Pasaporte (copy/PassportCopy.kt): pestaña con Flap (la mascota), la tarjeta de embarque
+  (niveles y millas), los sellos, el reto semanal contra «tu fantasma» (tú la semana pasada), las
+  celebraciones y el ticket de nivel que se comparte como imagen.
+  Tono: aeropuerto, tarjeta de embarque, ironía amable. Premia ver menos y nunca culpa.
+  Las millas salen de ver MENOS vídeos (días bajo la referencia, rachas, retos y sellos), nunca de verlos.
+  Nombres propios: «Flap» (la mascota) y «Reelómetro» (la app) no se traducen.
+  Cada <string-array> es una situación y cada <item>, una frase alternativa (se elige una por día).
+  Puedes poner las que quieras (mínimo 2). \u00A0 es un espacio duro: la cifra y su palabra no se separan.
+  «Se pasa a mayúsculas sola» quiere decir que el código la convierte en MAYÚSCULAS: escríbela normal.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="it">
+
+    <!-- ============================================================ cabecera -->
+
+    <!-- Titular de la pestaña y nombre del modo (palabra normal: tradúcela). -->
+    <string name="passport_title">Passaporto</string>
+
+    <!-- Cabeceras de sección, en MAYÚSCULAS. «FLAP» es el nombre de la mascota (no se traduce). -->
+    <string name="passport_section_flap">FLAP</string>
+    <string name="passport_section_level">CARTA D\'IMBARCO</string>
+    <string name="passport_section_challenge">SFIDA DELLA SETTIMANA</string>
+    <string name="passport_section_stamps">TIMBRI</string>
+    <string name="passport_section_past">SFIDE PRECEDENTI</string>
+
+    <!-- Kicker de la cabecera: «63 DÍAS A BORDO». %1$s son los días («63 días»). Se pasa a mayúsculas sola. -->
+    <string name="passport_on_board">%1$s a bordo</string>
+
+    <!-- ============================================================ Flap (la mascota) -->
+
+    <!-- Estado de Flap, en MAYÚSCULAS y corto (etiqueta junto al dibujo). En TalkBack se lee en minúsculas. -->
+    <string name="passport_mood_fit">IN FORMA</string>
+    <string name="passport_mood_normal">NORMALE</string>
+    <string name="passport_mood_tired">STANCO</string>
+    <string name="passport_mood_zombie">ZOMBIE DA SCROLL</string>
+    <!-- Estado mientras Flap no tiene con qué comparar (ni objetivo ni historial). MAYÚSCULAS. -->
+    <string name="passport_warming_up">RISCALDAMENTO</string>
+
+    <!-- Frase de Flap en forma (la semana va bien). -->
+    <string-array name="passport_phrase_fit">
+        <item>Flap va alla grande questa settimana.</item>
+        <item>Flap è in gran forma. Anche tu, anche se non sembra.</item>
+        <item>Flap non si ricorda più cosa fosse lo scroll.</item>
+        <item>Flap ha ricominciato a guardare dal finestrino.</item>
+        <item>Flap si è iscritto a correre. Per ora regge.</item>
+    </string-array>
+    <!-- Frase de Flap normal. -->
+    <string-array name="passport_phrase_normal">
+        <item>Flap tira avanti.</item>
+        <item>Flap, così così.</item>
+        <item>Flap regge il colpo.</item>
+        <item>Flap è come la tua settimana: nella norma.</item>
+        <item>Flap né bene né male. Flap e basta.</item>
+    </string-array>
+    <!-- Frase de Flap cansado (la semana va regular). -->
+    <string-array name="passport_phrase_tired">
+        <item>Flap ha le occhiaie.</item>
+        <item>Flap ha dormito poco e si vede.</item>
+        <item>Flap chiede una pausa. Gli basta un giorno tranquillo.</item>
+        <item>Flap sbadiglia tra un video e l\'altro.</item>
+        <item>Flap è stanco, ma non molla.</item>
+    </string-array>
+    <!-- Frase de Flap zombi (mucho scroll). Sin culpa: siempre se puede recuperar. -->
+    <string-array name="passport_phrase_zombie">
+        <item>Flap cammina con le braccia in avanti.</item>
+        <item>Flap ormai dice solo «ancora uno».</item>
+        <item>Flap è uno zombie dello scroll. Guarisce con un giorno tranquillo.</item>
+        <item>Flap non muore. Sta solo attraversando una brutta serie.</item>
+        <item>Flap si riprende appena passa un giorno.</item>
+    </string-array>
+    <!-- Frase mientras Flap calienta (sin objetivo ni historial suficiente). -->
+    <string-array name="passport_phrase_warming">
+        <item>Flap sta ancora imparando a conoscerti. Dagli qualche giorno.</item>
+        <item>Senza obiettivo né storico, Flap non giudica. Ancora no.</item>
+        <item>Flap sta facendo stretching. Tra qualche giorno ti dirà qualcosa.</item>
+        <item>Primi giorni: Flap osserva e prende appunti.</item>
+    </string-array>
+    <!-- Frase cuando Flap vuelve de zombi a normal o mejor. -->
+    <string-array name="passport_phrase_recovered">
+        <item>Flap è tornato dal mondo dei vivi.</item>
+        <item>Né zombie né niente: Flap si è ripreso.</item>
+        <item>Flap ha ricominciato a sbattere le palpebre normalmente.</item>
+        <item>Flap è tornato. Dice di non ricordare nulla.</item>
+    </string-array>
+
+    <!-- Registro de la semana bajo Flap, en MAYÚSCULAS (sin días contados esta semana). -->
+    <string name="passport_record_none">NESSUN DATO QUESTA SETTIMANA</string>
+    <!-- «5 DE 7 DÍAS BAJO TU OBJETIVO»: %1$s días bajo el objetivo, %2$s días contados (la forma va
+         según %2$s). Se pasa a mayúsculas sola. -->
+    <plurals name="passport_record_goal">
+        <item quantity="one">%1$s su %2$s\u00A0giorno sotto il tuo obiettivo</item>
+        <item quantity="many">%1$s su %2$s\u00A0giorni sotto il tuo obiettivo</item>
+        <item quantity="other">%1$s su %2$s\u00A0giorni sotto il tuo obiettivo</item>
+    </plurals>
+    <!-- Igual sin objetivo: la referencia es la media del usuario. -->
+    <plurals name="passport_record_average">
+        <item quantity="one">%1$s su %2$s\u00A0giorno sotto la tua media</item>
+        <item quantity="many">%1$s su %2$s\u00A0giorni sotto la tua media</item>
+        <item quantity="other">%1$s su %2$s\u00A0giorni sotto la tua media</item>
+    </plurals>
+    <!-- «TU OBJETIVO: 150 AL DÍA» / «TU MEDIA: 140 AL DÍA». %1$s vídeos al día. Se pasa a mayúsculas sola. -->
+    <string name="passport_reference_goal">il tuo obiettivo: %1$s al giorno</string>
+    <string name="passport_reference_average">la tua media: %1$s al giorno</string>
+
+    <!-- TalkBack: Flap entero. %1$s el estado en minúsculas («cansado»), %2$s el registro como frase
+         («5 de 7 días bajo tu objetivo.»), %3$s la frase de Flap. -->
+    <string name="passport_flap_description">Flap, la tua mascotte del passaporto: %1$s. %2$s %3$s</string>
+    <!-- TalkBack: Flap mientras calienta. %1$s la frase de Flap. -->
+    <string name="passport_flap_description_warming">Flap, la tua mascotte del passaporto: in riscaldamento. %1$s</string>
+    <!-- TalkBack, acción al tocar a Flap: «toca dos veces para saludar a Flap». Empieza en minúscula. -->
+    <string name="passport_flap_tap">salutare Flap</string>
+
+    <!-- ============================================================ niveles y millas -->
+
+    <!-- Nombres de los 5 niveles de viajero frecuente, de menor a mayor, en MAYÚSCULAS y cortos (van
+         enormes en la tarjeta y el ticket). En frases se usan en minúsculas con inicial mayúscula («Plata»). -->
+    <string name="passport_level_pasajero">PASSEGGERO</string>
+    <string name="passport_level_frecuente">FREQUENTE</string>
+    <string name="passport_level_plata">ARGENTO</string>
+    <string name="passport_level_oro">ORO</string>
+    <string name="passport_level_platino">PLATINO</string>
+
+    <!-- Código de TRES letras de cada nivel, como el de un aeropuerto («PAS → FRE»). Exactamente 3 letras, MAYÚSCULAS. -->
+    <string name="passport_level_code_pasajero">PAS</string>
+    <string name="passport_level_code_frecuente">FRE</string>
+    <string name="passport_level_code_plata">ARG</string>
+    <string name="passport_level_code_oro">ORO</string>
+    <string name="passport_level_code_platino">PLT</string>
+
+    <!-- Lema irónico de cada nivel (bajo el nombre en la tarjeta de embarque). -->
+    <string name="passport_level_tagline_pasajero">Appena imbarcato. Tutto il viaggio davanti.</string>
+    <string name="passport_level_tagline_frecuente">Ti salutano già al gate.</string>
+    <string name="passport_level_tagline_plata">Sala VIP con vista sulla pista e senza schermi.</string>
+    <string name="passport_level_tagline_oro">Imbarco prioritario, lontano dallo scroll.</string>
+    <string name="passport_level_tagline_platino">Il livello più alto del programma. Lo scroll ti vede passare dalla pista.</string>
+
+    <!-- «NIVEL 2 DE 5». %1$s el nivel, %2$s el total. MAYÚSCULAS. -->
+    <string name="passport_level_index">LIVELLO %1$s DI %2$s</string>
+
+    <!-- Rótulos de la ruta de la tarjeta de embarque (ORIGEN → DESTINO). MAYÚSCULAS, poco sitio. -->
+    <string name="passport_label_origin">ORIGINE</string>
+    <string name="passport_label_destination">DESTINAZIONE</string>
+    <string name="passport_label_final">FINE DEL PERCORSO</string>
+
+    <!-- Millas (la experiencia del juego, como un programa de viajero frecuente): «1 milla», «520 millas».
+         En la tarjeta se pasa a mayúsculas sola. -->
+    <plurals name="passport_miles">
+        <item quantity="one">%1$s\u00A0miglio</item>
+        <item quantity="many">%1$s\u00A0miglia</item>
+        <item quantity="other">%1$s\u00A0miglia</item>
+    </plurals>
+    <!-- «FALTAN 30 MILLAS PARA PLATA»: %1$s las millas que faltan, %2$s el nivel siguiente (ya en
+         MAYÚSCULAS). Se pasa a mayúsculas sola. -->
+    <plurals name="passport_miles_to_next">
+        <item quantity="one">manca %1$s\u00A0miglio per %2$s</item>
+        <item quantity="many">mancano %1$s\u00A0miglia per %2$s</item>
+        <item quantity="other">mancano %1$s\u00A0miglia per %2$s</item>
+    </plurals>
+    <!-- En el último nivel no hay siguiente. MAYÚSCULAS. -->
+    <string name="passport_top_level">LIVELLO MASSIMO: QUI FINISCE IL PROGRAMMA</string>
+
+    <!-- Etiquetas del desglose de millas (líneas de ticket: etiqueta a la izquierda, cifra a la derecha). -->
+    <string name="passport_line_days_goal">Giorni sotto l\'obiettivo</string>
+    <string name="passport_line_days_average">Giorni sotto la tua media</string>
+    <string name="passport_line_streaks">Serie</string>
+    <string name="passport_line_challenges">Sfide vinte</string>
+    <string name="passport_line_stamps">Timbri</string>
+    <!-- MAYÚSCULAS. -->
+    <string name="passport_line_total">TOTALE</string>
+    <string name="passport_line_streak">Serie attuale</string>
+    <!-- Valor de una línea del desglose: «+260». %1$s las millas. -->
+    <string name="passport_miles_value">+%1$s</string>
+
+    <!-- La regla del juego, a la vista bajo la tarjeta. -->
+    <string name="passport_no_miles_for_videos">Guardare video non dà miglia. Smettere di guardarli, sì.</string>
+
+    <!-- TalkBack: la tarjeta de embarque entera. %1$s el nivel («Plata»), %2$s su número, %3$s cuántos hay,
+         %4$s las millas («520 millas»), %5$s las millas que faltan (la forma va según %5$s), %6$s el nivel
+         siguiente («Oro»), %7$s la racha («4 días»). -->
+    <plurals name="passport_level_description">
+        <item quantity="one">Carta d\'imbarco: livello %1$s, %2$s di %3$s. %4$s. Manca %5$s\u00A0miglio per %6$s. Serie attuale: %7$s.</item>
+        <item quantity="many">Carta d\'imbarco: livello %1$s, %2$s di %3$s. %4$s. Mancano %5$s\u00A0miglia per %6$s. Serie attuale: %7$s.</item>
+        <item quantity="other">Carta d\'imbarco: livello %1$s, %2$s di %3$s. %4$s. Mancano %5$s\u00A0miglia per %6$s. Serie attuale: %7$s.</item>
+    </plurals>
+    <!-- Igual en el último nivel: %1$s nivel, %2$s su número, %3$s cuántos hay, %4$s millas, %5$s racha. -->
+    <string name="passport_level_description_top">Carta d\'imbarco: livello %1$s, %2$s di %3$s. %4$s. Livello massimo. Serie attuale: %5$s.</string>
+
+    <!-- ============================================================ sellos -->
+
+    <!-- Nombre de cada sello: MAYÚSCULAS y MUY corto (va dentro de un sello redondo, en una o dos
+         líneas; unos 16 caracteres como mucho). En frases se usa en minúsculas con inicial mayúscula. -->
+    <!-- Primer día en el objetivo o por debajo. -->
+    <string name="passport_stamp_primer_dia">PRIMO GIORNO</string>
+    <!-- Un día por debajo de la mitad del objetivo. -->
+    <string name="passport_stamp_medio_dia">A METÀ</string>
+    <!-- Un día entero sin vídeos. -->
+    <string name="passport_stamp_dia_en_blanco">GIORNO IN BIANCO</string>
+    <!-- Sábado y domingo bajo el objetivo («finde» = fin de semana, coloquial). -->
+    <string name="passport_stamp_fin_de_semana">WEEKEND PULITO</string>
+    <!-- Rachas de días seguidos bajo el objetivo. -->
+    <string name="passport_stamp_racha_3">SERIE DI 3</string>
+    <string name="passport_stamp_racha_7">SERIE DI 7</string>
+    <string name="passport_stamp_racha_14">SERIE DI 14</string>
+    <string name="passport_stamp_racha_30">SERIE DI 30</string>
+    <!-- Una semana un 20 % por debajo de la anterior. %1$s es «−20 %». -->
+    <string name="passport_stamp_semana_menos_20">SETTIMANA %1$s</string>
+    <!-- Un mes con menos vídeos que el anterior. -->
+    <string name="passport_stamp_mes_a_la_baja">MESE IN CALO</string>
+    <string name="passport_stamp_primer_reto">PRIMA SFIDA</string>
+    <string name="passport_stamp_cuatro_retos">QUATTRO SFIDE</string>
+    <!-- Flap pasa de zombi a normal. -->
+    <string name="passport_stamp_regreso">TORNATO</string>
+    <!-- Una semana entera contando. -->
+    <string name="passport_stamp_primera_semana">SETTIMANA COMPLETA</string>
+    <string name="passport_stamp_wrapped_compartido">RIEPILOGO INVIATO</string>
+    <string name="passport_stamp_ticket_guardado">SCONTRINO SALVATO</string>
+    <!-- Primer ascenso de nivel (despegar, como un avión). -->
+    <string name="passport_stamp_primer_ascenso">DECOLLO</string>
+    <!-- Irónico: vídeos de madrugada. -->
+    <string name="passport_stamp_madrugador">MATTINIERO</string>
+    <!-- Irónicos por acumular vídeos. %1$s es la cifra («1.000», «10.000»). -->
+    <string name="passport_stamp_mil_videos">%1$s VIDEO</string>
+    <string name="passport_stamp_diez_mil_videos">%1$s VIDEO</string>
+    <!-- Irónico: TikTok, Reels y Shorts el mismo día. -->
+    <string name="passport_stamp_tres_plataformas">TRIS</string>
+    <!-- Irónico: cinco categorías en una semana. -->
+    <string name="passport_stamp_cinco_categorias">MENÙ VARIO</string>
+    <!-- Irónico: más de 100 vídeos en una hora. -->
+    <string name="passport_stamp_maraton">MARATONA</string>
+
+    <!-- Rótulo pequeño del sello según su familia, en MAYÚSCULAS y muy corto (vocabulario de aeropuerto).
+         Familias: objetivo (llegadas), racha (conexión), reto (aduana), hito (salidas); los irónicos
+         dicen que no dan millas. «SIN MILLAS» también sale como valor de un sello que no da millas. -->
+    <string name="passport_stamp_kind_objetivo">ARRIVI</string>
+    <string name="passport_stamp_kind_racha">COINCIDENZA</string>
+    <string name="passport_stamp_kind_reto">DOGANA</string>
+    <string name="passport_stamp_kind_hito">PARTENZE</string>
+    <string name="passport_stamp_kind_ironico">SENZA MIGLIA</string>
+
+    <!-- Pista de cada sello: cómo se consigue (también explica el que ya tienes). -->
+    <string name="passport_stamp_hint_primer_dia">Chiudi un giorno in linea con il tuo obiettivo o sotto.</string>
+    <string name="passport_stamp_hint_medio_dia">Chiudi un giorno sotto la metà del tuo obiettivo.</string>
+    <string name="passport_stamp_hint_dia_en_blanco">Passa un giorno intero senza video brevi, con il servizio attivo.</string>
+    <string name="passport_stamp_hint_fin_de_semana">Sabato e domenica della stessa settimana, entrambi sotto il tuo obiettivo.</string>
+    <string name="passport_stamp_hint_racha_3">Tre giorni di fila sotto il tuo obiettivo.</string>
+    <string name="passport_stamp_hint_racha_7">Sette giorni di fila sotto il tuo obiettivo.</string>
+    <string name="passport_stamp_hint_racha_14">Quattordici giorni di fila sotto il tuo obiettivo.</string>
+    <string name="passport_stamp_hint_racha_30">Trenta giorni di fila sotto il tuo obiettivo. Senza fretta.</string>
+    <!-- %1$s es «20 %». -->
+    <string name="passport_stamp_hint_semana_menos_20">Una settimana con un %1$s di video in meno rispetto alla precedente.</string>
+    <string name="passport_stamp_hint_mes_a_la_baja">Un mese con meno video del mese precedente.</string>
+    <!-- «El fantasma» es el usuario la semana pasada (contra quien compite en el reto semanal). -->
+    <string name="passport_stamp_hint_primer_reto">Vinci la tua prima sfida settimanale contro il fantasma.</string>
+    <string name="passport_stamp_hint_cuatro_retos">Vinci quattro sfide settimanali. Non devono essere di fila.</string>
+    <string name="passport_stamp_hint_regreso">Fai tornare Flap da zombie a normale o meglio.</string>
+    <string name="passport_stamp_hint_primera_semana">Una settimana intera con il servizio attivo.</string>
+    <!-- «Resumen» es el nombre de una pestaña de la app: usa el mismo que en la barra de navegación. -->
+    <string name="passport_stamp_hint_wrapped_compartido">Condividi un riepilogo dalla scheda Riepilogo.</string>
+    <string name="passport_stamp_hint_ticket_guardado">Salva sul telefono lo scontrino di un riepilogo.</string>
+    <string name="passport_stamp_hint_primer_ascenso">Passa da passeggero a frequente.</string>
+    <string name="passport_stamp_hint_madrugador">Scatta se guardi video tra le 3 e le 5 del mattino. Meglio non cercarlo.</string>
+    <!-- %1$s es «1.000 vídeos». -->
+    <string name="passport_stamp_hint_mil_videos">Arriva a %1$s in totale. Ci arriverà da solo.</string>
+    <!-- %1$s es «10.000 vídeos». -->
+    <string name="passport_stamp_hint_diez_mil_videos">Arriva a %1$s in totale. Non c\'è fretta.</string>
+    <!-- TikTok, Reels y Shorts son marcas: no se traducen. -->
+    <string name="passport_stamp_hint_tres_plataformas">TikTok, Reels e Shorts nello stesso giorno. Non dà miglia.</string>
+    <string name="passport_stamp_hint_cinco_categorias">Cinque categorie diverse in una settimana. Vario, almeno.</string>
+    <!-- %1$s es «100 vídeos». -->
+    <string name="passport_stamp_hint_maraton">Più di %1$s in una sola ora. Speriamo che tu non lo veda mai.</string>
+
+    <!-- Nota bajo la pista cuando no hay objetivo: la referencia es la media. -->
+    <string name="passport_reference_note">Senza obiettivo, conta la tua media delle 4 settimane precedenti.</string>
+
+    <!-- Estado y kickers del detalle de un sello, en MAYÚSCULAS. -->
+    <string name="passport_stamp_pending">IN ATTESA</string>
+    <string name="passport_kicker_hint">INDIZIO</string>
+    <string name="passport_kicker_earned">TIMBRO OTTENUTO</string>
+    <!-- «CONSEGUIDO EL 12 OCT 2026». %1$s la fecha corta ya en MAYÚSCULAS. -->
+    <string name="passport_stamp_earned_on">OTTENUTO IL %1$s</string>
+    <!-- «50 % HECHO». %1$s el porcentaje. MAYÚSCULAS. -->
+    <string name="passport_stamp_progress">%1$s FATTO</string>
+    <!-- Millas que da un sello: «+60 MILLAS». %1$s las millas ya en MAYÚSCULAS. -->
+    <string name="passport_stamp_xp">+%1$s</string>
+    <!-- «9 DE 23» sellos conseguidos. %1$s conseguidos, %2$s total. MAYÚSCULAS. -->
+    <string name="passport_stamps_count">%1$s DI %2$s</string>
+
+    <!-- TalkBack de un sello conseguido: %1$s el sello («Racha de 7»), %2$s la fecha larga
+         («12 de octubre de 2026»), %3$s si da millas (passport_stamp_gives_miles o passport_stamp_no_miles). -->
+    <string name="passport_stamp_description_earned">Timbro %1$s, ottenuto il %2$s. %3$s</string>
+    <!-- TalkBack de un sello pendiente: %1$s el sello, %2$s la pista. -->
+    <string name="passport_stamp_description_pending">Timbro %1$s, in attesa. Indizio: %2$s</string>
+    <!-- Igual con progreso: %1$s el sello, %2$s el porcentaje («50 %»), %3$s la pista. -->
+    <string name="passport_stamp_description_progress">Timbro %1$s, in attesa. %2$s completato. Indizio: %3$s</string>
+    <!-- TalkBack: «Da 60 millas.». %1$s las millas. -->
+    <plurals name="passport_stamp_gives_miles">
+        <item quantity="one">Dà %1$s\u00A0miglio.</item>
+        <item quantity="many">Dà %1$s\u00A0miglia.</item>
+        <item quantity="other">Dà %1$s\u00A0miglia.</item>
+    </plurals>
+    <string name="passport_stamp_no_miles">Non dà miglia.</string>
+    <!-- TalkBack, acción al tocar un sello: «toca dos veces para ver la pista del sello». Empieza en minúscula. -->
+    <string name="passport_stamp_open">vedere l\'indizio del timbro</string>
+
+    <!-- ============================================================ reto semanal -->
+    <!-- El reto: gastar esta semana menos vídeos que la anterior (el «fantasma», tú la semana pasada). -->
+
+    <!-- Título del reto, MAYÚSCULAS. Sin porcentaje: -->
+    <string name="passport_challenge_title_less">QUESTA SETTIMANA, MENO DELLA PRECEDENTE</string>
+    <!-- Con porcentaje: «ESTA SEMANA, UN 10 % MENOS». %1$s el porcentaje. -->
+    <string name="passport_challenge_title_percent">QUESTA SETTIMANA, IL %1$s IN MENO</string>
+
+    <!-- Estado del reto, MAYÚSCULAS y corto. «NO ESTA VEZ» (perdido) suena amable, no a fracaso. -->
+    <string name="passport_challenge_status_running">IN CORSO</string>
+    <string name="passport_challenge_status_won">COMPLETATA</string>
+    <string name="passport_challenge_status_lost">NON QUESTA VOLTA</string>
+
+    <!-- Etiquetas de las líneas del reto (etiqueta a la izquierda, cifra a la derecha). -->
+    <string name="passport_line_so_far">Finora</string>
+    <string name="passport_line_target">Tetto della settimana</string>
+    <string name="passport_line_ghost_so_far">Il tuo fantasma, a questo punto</string>
+    <string name="passport_line_remaining">Ti restano</string>
+    <string name="passport_line_ghost_total">La settimana scorsa, intera</string>
+
+    <!-- «DE UN TOPE DE 1.098» bajo la cifra grande del reto. %1$s el tope de vídeos. MAYÚSCULAS. -->
+    <string name="passport_challenge_caption">SU UN TETTO DI %1$s</string>
+
+    <!-- Reto cumplido: %1$s vídeos de la semana, %2$s el tope. -->
+    <string-array name="passport_challenge_won">
+        <item>Sfida completata: %1$s su un tetto di %2$s.</item>
+        <item>Il fantasma resta a terra: %1$s su %2$s.</item>
+        <item>Settimana vinta. %1$s su %2$s, senza sudare.</item>
+    </string-array>
+    <!-- Reto no cumplido (sin culpa): %1$s vídeos de la semana, %2$s el tope. -->
+    <string-array name="passport_challenge_lost">
+        <item>Questa volta ha vinto il fantasma. Lunedì, rivincita.</item>
+        <item>Non è andata: %1$s su un tetto di %2$s. Capita nelle migliori famiglie.</item>
+        <item>Il fantasma si prende questa. Nessuno tiene il conto, tranne questa app.</item>
+    </string-array>
+    <!-- En curso, pero ya por encima del tope (ya no se puede ganar). -->
+    <string-array name="passport_challenge_over">
+        <item>Questa sfida non è più possibile. Lunedì ce n\'è un\'altra e il fantasma non impara.</item>
+        <item>Il tetto è rimasto indietro. Capita nelle migliori famiglie.</item>
+        <item>Questa settimana se la prende il fantasma. Non abituarti.</item>
+    </string-array>
+    <!-- En curso, empatado con el fantasma a estas alturas de la semana. -->
+    <string-array name="passport_challenge_tie">
+        <item>Sei in pareggio con il tuo fantasma. Nemmeno un video di differenza.</item>
+        <item>Tu e il tuo fantasma, testa a testa. C\'è tempo per decidere.</item>
+        <item>Pareggio tecnico con la settimana scorsa.</item>
+    </string-array>
+    <!-- En curso, por delante (menos vídeos que el fantasma): %1$s la diferencia («85 vídeos»). -->
+    <string-array name="passport_challenge_ahead">
+        <item>Sei %1$s sotto il tuo fantasma a questo punto.</item>
+        <item>A questo punto il tuo fantasma aveva %1$s in più di te.</item>
+        <item>Per ora il fantasma è indietro: lo stai staccando di %1$s.</item>
+    </string-array>
+    <!-- En curso, por detrás (más vídeos que el fantasma): %1$s la diferencia («85 vídeos»). -->
+    <string-array name="passport_challenge_behind">
+        <item>Il tuo fantasma era %1$s sotto a questo punto. Resta tutta la settimana.</item>
+        <item>Il fantasma ti stacca di %1$s. Ci sono giorni per ribaltarla.</item>
+        <item>Per ora vince il fantasma, di %1$s. Niente che un giorno tranquillo non sistemi.</item>
+    </string-array>
+    <!-- Sin reto: aún no hay una semana anterior completa con la que comparar. -->
+    <string-array name="passport_challenge_warmup">
+        <item>La sfida parte quando ci sarà una settimana intera con cui confrontarsi.</item>
+        <item>Il tuo fantasma non esiste ancora: gli serve una settimana completa di storico.</item>
+        <item>Senza settimana precedente non c\'è fantasma. Il lunedì dopo, sì.</item>
+    </string-array>
+
+    <!-- Leyenda de la gráfica del reto, MAYÚSCULAS y en una línea. -->
+    <string name="passport_chart_legend">BARRE: QUESTA SETTIMANA · LINEA: LA PRECEDENTE</string>
+
+    <!-- TalkBack de un día de la gráfica: «Lunes: 130 vídeos; la semana pasada, 160.». %1$s el día de
+         la semana, %2$s los vídeos de ese día, %3$s los de la semana pasada. -->
+    <string name="passport_ghost_day">%1$s: %2$s; la settimana scorsa, %3$s.</string>
+    <!-- Igual sin dato de la semana pasada: %1$s día, %2$s vídeos. -->
+    <string name="passport_ghost_day_no_past">%1$s: %2$s; la settimana scorsa, nessun dato.</string>
+    <!-- Igual para un día que aún no ha llegado: %1$s día, %2$s los de la semana pasada. -->
+    <string name="passport_ghost_day_pending">%1$s: non è ancora arrivato; la settimana scorsa, %2$s.</string>
+    <!-- Día que aún no ha llegado y sin dato de la semana pasada: %1$s día. -->
+    <string name="passport_ghost_day_pending_no_past">%1$s: non è ancora arrivato; la settimana scorsa, nessun dato.</string>
+
+    <!-- TalkBack de la gráfica entera: %1$s vídeos de esta semana («405 vídeos»), %2$s los del fantasma. -->
+    <string name="passport_chart_description">Questa settimana rispetto alla precedente, giorno per giorno. Hai fatto %1$s; a questo punto il tuo fantasma ne aveva %2$s.</string>
+
+    <!-- Etiqueta de un reto pasado: «Semana del 26 oct». %1$s la fecha corta del lunes. -->
+    <string name="passport_past_label">Settimana del %1$s</string>
+    <!-- Valor de un reto pasado ganado (el perdido usa passport_challenge_status_lost). MAYÚSCULAS. -->
+    <string name="passport_past_won">VINTA</string>
+    <!-- TalkBack de un reto pasado: %1$s la fecha del lunes («26 de octubre»), %2$s vídeos, %3$s el tope. -->
+    <string name="passport_past_description_won">Settimana del %1$s: %2$s su un tetto di %3$s, vinta.</string>
+    <string name="passport_past_description_lost">Settimana del %1$s: %2$s su un tetto di %3$s, questa volta no.</string>
+
+    <!-- TalkBack del reto en curso: %1$s el título en minúsculas, %2$s el estado («En curso»), %3$s los
+         vídeos que lleva («405 vídeos»), %4$s el tope, %5$s la frase del reto. -->
+    <string name="passport_challenge_description">Sfida della settimana: %1$s. %2$s. Hai fatto %3$s su un tetto di %4$s. %5$s</string>
+
+    <!-- ============================================================ celebraciones -->
+
+    <!-- Kicker de la celebración a pantalla completa, MAYÚSCULAS. -->
+    <string name="passport_celebrate_stamp">NUOVO TIMBRO</string>
+    <string name="passport_celebrate_level">NUOVO LIVELLO</string>
+    <string name="passport_celebrate_challenge">SFIDA COMPLETATA</string>
+
+    <!-- Botones de la celebración, MAYÚSCULAS. -->
+    <string name="passport_share_ticket">CONDIVIDI IL BIGLIETTO</string>
+    <!-- TalkBack del botón de compartir. -->
+    <string name="passport_share_ticket_description">Condividi il biglietto del tuo livello</string>
+    <string name="passport_see_passport">VAI AL PASSAPORTO</string>
+    <string name="passport_continue">CONTINUA</string>
+
+    <!-- Bajo un sello nuevo irónico (no da millas, y lo dice). -->
+    <string-array name="passport_caption_ironic">
+        <item>Questo non dà miglia. Ma sta bene nel passaporto.</item>
+        <item>Timbro ironico: non somma, ma conta.</item>
+        <item>Va nella collezione. Senza miglia, come deve essere.</item>
+    </string-array>
+    <!-- Bajo un sello nuevo que no da millas (sin ser irónico). -->
+    <string-array name="passport_caption_free">
+        <item>Va dritto nella collezione.</item>
+        <item>Inchiostro fresco nel passaporto.</item>
+        <item>Uno in più per la collezione.</item>
+    </string-array>
+    <!-- Bajo un sello nuevo que da millas: %1$s las millas («60 millas»). -->
+    <string-array name="passport_caption_stamp">
+        <item>Va dritto nel passaporto: %1$s in più.</item>
+        <item>Inchiostro fresco e %1$s per la carta d\'imbarco.</item>
+        <item>Uno in più nella collezione, e questo somma: %1$s.</item>
+    </string-array>
+    <!-- Bajo un nivel nuevo: %1$s el nivel («Plata»). -->
+    <string-array name="passport_caption_level">
+        <item>Sali di livello guardando meno. Così funziona questo aeroporto.</item>
+        <item>Nuova carta d\'imbarco: %1$s. Neanche un miglio è uscito dal guardare video.</item>
+        <item>%1$s. Lo scroll resta al gate.</item>
+    </string-array>
+    <!-- Titular de un reto cumplido: «Semana del 26 de octubre». %1$s la fecha del lunes. -->
+    <string name="passport_challenge_won_title">Settimana del %1$s</string>
+    <!-- Bajo un reto cumplido: %1$s vídeos de la semana, %2$s el tope. -->
+    <string-array name="passport_caption_challenge">
+        <item>%1$s su un tetto di %2$s. Il fantasma resta a terra.</item>
+        <item>Settimana vinta sul fantasma: %1$s su %2$s.</item>
+        <item>Meno della settimana precedente, che era l\'idea: %1$s su %2$s.</item>
+    </string-array>
+
+    <!-- ============================================================ ticket de nivel (imagen 1080 × 1920) -->
+    <!-- Se dibuja en una imagen que se comparte, como una tarjeta de embarque. MAYÚSCULAS y poco sitio:
+         las etiquetas van en columnas estrechas en tipografía monoespaciada. -->
+    <string name="passport_ticket_title">CARTA D\'IMBARCO</string>
+    <!-- Sello rotado sobre el ticket. -->
+    <string name="passport_ticket_stamp">IMBARCO CONFERMATO</string>
+    <string name="passport_ticket_level">LIVELLO</string>
+    <string name="passport_ticket_miles">MIGLIA</string>
+    <string name="passport_ticket_stamps">TIMBRI</string>
+    <string name="passport_ticket_streak">SERIE</string>
+    <string name="passport_ticket_challenges">SFIDE VINTE</string>
+    <string name="passport_ticket_days">GIORNI A BORDO</string>
+
+    <!-- Frase del pie del ticket de nivel. -->
+    <string-array name="passport_ticket_footer">
+        <item>Miglia guadagnate guardando meno video.</item>
+        <item>Neanche un miglio è uscito dallo scroll.</item>
+        <item>Qui si sale di livello guardando meno. Stranezze di questa compagnia aerea.</item>
+    </string-array>
+
+    <!-- Texto que acompaña a la imagen del ticket al compartirla. %1$s el nivel en MAYÚSCULAS («PLATA»).
+         «Reelómetro» es la marca: no se traduce. -->
+    <string name="passport_ticket_share_text">Livello %1$s su Reelómetro: miglia per guardare meno video.</string>
+    <!-- Nombre del archivo de la imagen del ticket (se ve al compartirla). SOLO letras ASCII sin acentos,
+         cifras y guiones: sin espacios. %1$s el nivel en minúsculas («plata»; los acentos se quitan solos). -->
+    <string name="passport_ticket_file_name">reelometro-livello-%1$s.png</string>
+
+    <!-- ============================================================ aviso de nivel nuevo -->
+
+    <!-- Título de la notificación: «Nivel Plata». %1$s el nivel. -->
+    <string name="passport_notify_level_title">Livello %1$s</string>
+    <!-- Texto de la notificación de nivel nuevo. -->
+    <string-array name="passport_notify_level">
+        <item>Sali di livello guardando meno. La tua nuova carta è nel passaporto.</item>
+        <item>Nuova carta d\'imbarco, guadagnata senza fare scroll.</item>
+        <item>Un nuovo livello ti aspetta nel passaporto.</item>
+    </string-array>
+</resources>

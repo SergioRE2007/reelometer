@@ -1,5 +1,7 @@
 package com.reelometro.app.ui.components
 
+import com.reelometro.app.copy.str
+import com.reelometro.app.R
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
@@ -145,7 +147,7 @@ fun Celebration(
                 .fillMaxSize()
                 .background(colors.bg)
                 // Anuncia la hoja al aparecer (como ReelDialog); el liveRegion de abajo, las encadenadas.
-                .semantics { paneTitle = "$label. $title" }
+                .semantics { paneTitle = str(R.string.ui_celebration_pane, label, title) }
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null,

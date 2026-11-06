@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Categorías de los vídeos (data/Category.kt). Nombre corto, con mayúscula inicial: sale en
+  Estadísticas (reparto por categorías), en el Wrapped («Tu categoría: Humor»), en la imagen
+  compartible y en el detalle del día. A veces se pasa a MAYÚSCULAS para etiquetas: que quepa en
+  una línea (máximo unas 20 letras).
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="it">
+
+    <string name="category_humor">Umorismo</string>
+    <string name="category_deporte">Sport</string>
+    <!-- Gimnasio, ejercicio, rutinas. -->
+    <string name="category_fitness">Fitness</string>
+    <!-- Recetas, cocina, restaurantes. -->
+    <string name="category_comida">Cucina</string>
+    <string name="category_musica">Musica</string>
+    <string name="category_baile">Ballo</string>
+    <!-- Videojuegos. -->
+    <string name="category_gaming">Gaming</string>
+    <!-- Divulgación, ciencia, trucos, idiomas. -->
+    <string name="category_aprendizaje">Apprendimento</string>
+    <string name="category_tecnologia">Tecnologia</string>
+    <string name="category_belleza">Moda e bellezza</string>
+    <string name="category_animales">Animali</string>
+    <string name="category_viajes">Viaggi</string>
+    <!-- Coches y motos. -->
+    <string name="category_motor">Motori</string>
+    <string name="category_dinero">Soldi e affari</string>
+    <string name="category_noticias">Notizie e politica</string>
+    <string name="category_relaciones">Coppia e relazioni</string>
+    <!-- Vídeos que no encajan en ninguna categoría (o sin descripción). -->
+    <string name="category_otros">Non classificato</string>
+</resources>

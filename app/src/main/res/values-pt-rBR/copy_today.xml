@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Pantalla Hoy (copy/TodayCopy.kt): el marcador de vídeos de hoy, la frase bajo él, el objetivo,
+  la comparación con la media y las secciones de debajo. También las líneas de comparación
+  compartidas con Estadísticas (today_delta_*, de copy/Classify.kt).
+  Cada <string-array> es una situación y cada <item>, una frase alternativa (se elige una por día).
+  Puedes poner las que quieras (mínimo 2). Los arrays con sufijo (_one, _notime, _noeq) son la
+  misma situación en otro caso gramatical: mantén el mismo sentido en cada posición.
+  Tono: seco, con humor, sin sermones. Lo que va en MAYÚSCULAS son etiquetas con poco sitio.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="pt">
+
+    <!-- Cabeceras de sección en MAYÚSCULAS (poco sitio, una línea). -->
+    <string name="today_section_platforms">PLATAFORMAS</string>
+    <string name="today_section_hours">SEU DIA, HORA A HORA</string>
+    <string name="today_section_categories">O QUE VOCÊ MAIS VÊ</string>
+    <!-- Las cuentas que publican los vídeos que ves. -->
+    <string name="today_section_creators">QUEM TE PÕE NA TELA</string>
+
+    <!-- Secciones vacías (todavía no hay datos hoy). -->
+    <string name="today_empty_platforms">Nenhum app ainda.</string>
+    <string name="today_empty_hours">Sem atividade ainda.</string>
+    <string name="today_empty_categories">Sem categorias ainda.</string>
+    <string name="today_empty_creators">Sem criadores ainda.</string>
+
+    <!-- TalkBack del marcador con el servicio de accesibilidad desconectado. -->
+    <string name="today_service_off_description">Sem sinal: o serviço do Reelómetro está desconectado.</string>
+
+    <!-- Cabecera en MAYÚSCULAS (se pasa a mayúsculas sola): «HOY · MARTES 3 NOV». %1$s día de la
+         semana, %2$s fecha corta («3 nov» o «3 nov 2025»). -->
+    <string name="today_header">HOJE · %1$s %2$s</string>
+
+    <!-- Etiqueta en MAYÚSCULAS sobre el marcador (muy poco sitio): «VÍDEO» si es uno, «VÍDEOS» si no.
+         Sin cifra (la cifra es el propio marcador). -->
+    <plurals name="today_counter_label" tools:ignore="ImpliedQuantity">
+        <item quantity="one">VÍDEO</item>
+        <item quantity="many">VÍDEOS</item>
+        <item quantity="other">VÍDEOS</item>
+    </plurals>
+
+    <!-- ===== Frase bajo el marcador (se muestra entre comillas, ver today_quoted) ===== -->
+
+    <!-- Cero vídeos el primer día (recién instalada). -->
+    <string-array name="today_zero_first">
+        <item>Tudo pronto. O primeiro vídeo que você ver abre a conta.</item>
+        <item>Marcador zerado. Daqui pra frente, tudo conta.</item>
+        <item>Aqui vai aparecer cada vídeo que você ver. Por enquanto, silêncio.</item>
+    </string-array>
+
+    <!-- Cero vídeos hoy (con historial). -->
+    <string-array name="today_zero">
+        <item>Por enquanto, quem ganha é você.</item>
+        <item>Zero. O algoritmo ainda está esperando você.</item>
+        <item>Marcador zerado. Que dure o que tiver que durar.</item>
+        <item>Nenhum vídeo. Isso também conta.</item>
+        <item>Hoje, por enquanto, nada a declarar.</item>
+    </string-array>
+
+    <!-- Primer día con datos (no hay media aún): %1$s los vídeos («34 vídeos»), %2$s el tiempo
+         («9 minutos»). _notime: menos de un minuto (no uses %2$s). -->
+    <string-array name="today_first_day">
+        <item>Primeiro dia contado: %1$s e %2$s. Amanhã você já tem com o que se comparar.</item>
+        <item>%1$s para começar. Ainda não há média; amanhã, sim.</item>
+        <item>Assim começa seu histórico: %1$s em %2$s.</item>
+        <item>Dia um. A partir de hoje, cada vídeo fica anotado.</item>
+    </string-array>
+    <string-array name="today_first_day_notime">
+        <item>Primeiro dia contado: %1$s. Amanhã você já tem com o que se comparar.</item>
+        <item>%1$s para começar. Ainda não há média; amanhã, sim.</item>
+        <item>Assim começa seu histórico: %1$s.</item>
+        <item>Dia um. A partir de hoje, cada vídeo fica anotado.</item>
+    </string-array>
+
+    <!-- Objetivo diario («como mucho N») superado: %1$s lo que se pasó («62 vídeos»), %2$s el
+         objetivo («150»), %3$s los vídeos de hoy («212»). -->
+    <string-array name="today_goal_over">
+        <item>%1$s acima da sua meta. A meta era outra.</item>
+        <item>Meta: %2$s. Realidade: %3$s.</item>
+        <item>Você passou em %1$s. Ninguém controla isso. Bom, eu controlo.</item>
+        <item>Você ultrapassou a meta. Nesse caso, ultrapassar não era a ideia.</item>
+        <item>%3$s de %2$s. As contas não fecham, mas eu fecho.</item>
+    </string-array>
+
+    <!-- Justo en el objetivo: %1$s el objetivo. -->
+    <string-array name="today_goal_at">
+        <item>No limite: %1$s. Nem um a mais, por enquanto.</item>
+        <item>%1$s de %1$s. O que vier agora é gorjeta.</item>
+        <item>Meta cravada. A partir daqui, cada vídeo vai no vermelho.</item>
+    </string-array>
+
+    <!-- Cerca del objetivo (a menos del 20 %): %1$s lo que queda («20 vídeos»), %2$s los vídeos de
+         hoy, %3$s el objetivo. _one: queda un solo vídeo. -->
+    <string-array name="today_goal_near">
+        <item>Faltam %1$s para a meta. Você que sabe.</item>
+        <item>%2$s de %3$s. Pouca margem sobrando.</item>
+        <item>A %1$s do limite. O marcador não julga; só conta.</item>
+        <item>Margem restante: %1$s. Gaste como quiser.</item>
+    </string-array>
+    <string-array name="today_goal_near_one">
+        <item>Falta %1$s para a meta. Você que sabe.</item>
+        <item>%2$s de %3$s. Pouca margem sobrando.</item>
+        <item>A %1$s do limite. O marcador não julga; só conta.</item>
+        <item>Margem restante: %1$s. Gaste como quiser.</item>
+    </string-array>
+
+    <!-- Primeros vídeos (1–9 vídeos y menos de 10 minutos): %1$s los vídeos, %2$s el tiempo.
+         _notime: menos de un minuto (no uses %2$s). -->
+    <string-array name="today_first">
+        <item>%1$s. Aquecendo.</item>
+        <item>Você começou leve: %2$s.</item>
+        <item>%1$s e %2$s. Ninguém percebeu.</item>
+        <item>Pouca coisa, por enquanto: %1$s.</item>
+        <item>Isso mal começou. Por enquanto, %1$s.</item>
+    </string-array>
+    <string-array name="today_first_notime">
+        <item>%1$s. Aquecendo.</item>
+        <item>Você começou leve.</item>
+        <item>%1$s. Ninguém percebeu.</item>
+        <item>Pouca coisa, por enquanto: %1$s.</item>
+        <item>Isso mal começou. Por enquanto, %1$s.</item>
+    </string-array>
+
+    <!-- Día normal (10–99 vídeos o 10–59 minutos): %1$s los vídeos, %2$s el tiempo («47 minutos»),
+         %3$s el tiempo con mayúscula inicial (para empezar la frase con él).
+         _one: el tiempo es singular («un minuto», «una hora y 12 minutos»): «Eso es…». -->
+    <string-array name="today_normal">
+        <item>Isso são %2$s que ninguém vai te devolver.</item>
+        <item>%3$s. O tempo voa, sobretudo em pedaços de quinze segundos.</item>
+        <item>%1$s, um atrás do outro. Igual pipoca.</item>
+        <item>Você já soma %2$s. O dia ainda não disse a última palavra.</item>
+        <item>%1$s. Nem tantos, nem tão poucos, por enquanto.</item>
+    </string-array>
+    <string-array name="today_normal_one">
+        <item>Isso é %2$s que ninguém vai te devolver.</item>
+        <item>%3$s. O tempo voa, sobretudo em pedaços de quinze segundos.</item>
+        <item>%1$s, um atrás do outro. Igual pipoca.</item>
+        <item>Você já soma %2$s. O dia ainda não disse a última palavra.</item>
+        <item>%1$s. Nem tantos, nem tão poucos, por enquanto.</item>
+    </string-array>
+
+    <!-- Mucho (100–299 vídeos o 1–3 horas): %1$s la cifra sola («212»), %2$s el tiempo, %3$s el
+         tiempo con mayúscula inicial, %4$s una equivalencia en infinitivo («leer 14 libros»),
+         %5$s los vídeos («212 vídeos»), %6$s la distancia deslizada con el pulgar (today_metres).
+         _one: el tiempo es singular («una hora y 40 minutos»). _noeq: sin equivalencia (no uses %4$s). -->
+    <string-array name="today_high">
+        <item>Hoje você já soma %1$s. Isso são %2$s que ninguém vai te devolver.</item>
+        <item>%3$s. Dava pra %4$s.</item>
+        <item>%5$s. A essa altura, o algoritmo já sabe como você gosta do café.</item>
+        <item>%5$s: uns %6$s de polegar.</item>
+        <item>%3$s de tela, em doses de quinze segundos.</item>
+    </string-array>
+    <string-array name="today_high_one">
+        <item>Hoje você já soma %1$s. Isso é %2$s que ninguém vai te devolver.</item>
+        <item>%3$s. Dava pra %4$s.</item>
+        <item>%5$s. A essa altura, o algoritmo já sabe como você gosta do café.</item>
+        <item>%5$s: uns %6$s de polegar.</item>
+        <item>%3$s de tela, em doses de quinze segundos.</item>
+    </string-array>
+    <string-array name="today_high_noeq">
+        <item>Hoje você já soma %1$s. Isso são %2$s que ninguém vai te devolver.</item>
+        <item>%3$s de tela. Bem que dá pra chamar de um tempão.</item>
+        <item>%5$s. A essa altura, o algoritmo já sabe como você gosta do café.</item>
+        <item>%5$s: uns %6$s de polegar.</item>
+        <item>%3$s de tela, em doses de quinze segundos.</item>
+    </string-array>
+    <string-array name="today_high_one_noeq">
+        <item>Hoje você já soma %1$s. Isso é %2$s que ninguém vai te devolver.</item>
+        <item>%3$s de tela. Bem que dá pra chamar de um tempão.</item>
+        <item>%5$s. A essa altura, o algoritmo já sabe como você gosta do café.</item>
+        <item>%5$s: uns %6$s de polegar.</item>
+        <item>%3$s de tela, em doses de quinze segundos.</item>
+    </string-array>
+
+    <!-- Brutal (300 vídeos o más, o 3 horas o más): %1$s los vídeos, %2$s el tiempo con mayúscula
+         inicial, %3$s una equivalencia en infinitivo, %4$s la distancia deslizada (today_metres).
+         _noeq: sin equivalencia (no uses %3$s). -->
+    <string-array name="today_extreme">
+        <item>%1$s. O algoritmo manda lembranças.</item>
+        <item>%2$s. Isso já não é passatempo, é turno de trabalho.</item>
+        <item>Hoje você já soma %1$s. Se isso fosse trabalho, já estaria pedindo hora extra.</item>
+        <item>%2$s de vídeo. Dava pra %3$s.</item>
+        <item>%1$s. Seu polegar percorreu %4$s. Você, bem menos.</item>
+    </string-array>
+    <string-array name="today_extreme_noeq">
+        <item>%1$s. O algoritmo manda lembranças.</item>
+        <item>%2$s. Isso já não é passatempo, é turno de trabalho.</item>
+        <item>Hoje você já soma %1$s. Se isso fosse trabalho, já estaria pedindo hora extra.</item>
+        <item>%2$s de vídeo. E subindo.</item>
+        <item>%1$s. Seu polegar percorreu %4$s. Você, bem menos.</item>
+    </string-array>
+
+    <!-- Distancia que ha recorrido el pulgar deslizando vídeos, para las frases de arriba:
+         «870 metros». %1$s la cifra. -->
+    <plurals name="today_metres">
+        <item quantity="one">%1$s\u00A0metro</item>
+        <item quantity="many">%1$s\u00A0metros</item>
+        <item quantity="other">%1$s\u00A0metros</item>
+    </plurals>
+
+    <!-- La frase bajo el marcador, entre comillas (usa las comillas de tu idioma). -->
+    <string name="today_quoted">“%1$s”</string>
+
+    <!-- ===== Objetivo (columna derecha del marcador, MAYÚSCULAS, poco sitio) ===== -->
+
+    <!-- «OBJETIVO 150». %1$s el objetivo. -->
+    <string name="today_goal_label">META %1$s</string>
+    <!-- Estado frente al objetivo: «+62 PASADO» (%1$s lo que se pasó), «EN EL LÍMITE», «QUEDAN 38». -->
+    <string name="today_goal_status_over">+%1$s\u00A0ACIMA</string>
+    <string name="today_goal_status_at">NO LIMITE</string>
+    <plurals name="today_goal_status_left">
+        <item quantity="one">FALTA %1$s</item>
+        <item quantity="many">FALTAM %1$s</item>
+        <item quantity="other">FALTAM %1$s</item>
+    </plurals>
+    <!-- Lo mismo para TalkBack (sin punto final): %1$s los vídeos («62 vídeos»), %2$s el objetivo. -->
+    <string name="today_goal_status_over_description">%1$s acima da meta de %2$s</string>
+    <!-- %1$s el objetivo. -->
+    <string name="today_goal_status_at_description">Exatamente na meta de %1$s</string>
+    <!-- %1$s los vídeos que quedan («38 vídeos»), %2$s el objetivo. -->
+    <plurals name="today_goal_status_left_description">
+        <item quantity="one">Falta %1$s para a meta de %2$s</item>
+        <item quantity="many">Faltam %1$s para a meta de %2$s</item>
+        <item quantity="other">Faltam %1$s para a meta de %2$s</item>
+    </plurals>
+
+    <!-- ===== Línea de tiempo bajo el marcador (MAYÚSCULAS) ===== -->
+
+    <!-- «47 MIN DE PANTALLA». %1$s el tiempo corto («47 MIN», «3,2 H»). -->
+    <string name="today_screen_time">%1$s DE TELA</string>
+    <!-- «47 MIN DE PANTALLA · 4 COMPARTIDOS». %1$s el tiempo, %2$s los compartidos (today_shares, en mayúsculas). -->
+    <string name="today_screen_time_shares">%1$s DE TELA · %2$s</string>
+    <!-- La misma línea partida: la cifra va aparte, en grande; esto es lo que va detrás. %1$s los compartidos. -->
+    <string name="today_screen_time_rest">DE TELA</string>
+    <string name="today_screen_time_rest_shares">DE TELA · %1$s</string>
+    <!-- Vídeos compartidos hoy (se pasa a MAYÚSCULAS): «4 compartidos». -->
+    <plurals name="today_shares">
+        <item quantity="one">%1$s\u00A0compartilhado</item>
+        <item quantity="many">%1$s\u00A0compartilhados</item>
+        <item quantity="other">%1$s\u00A0compartilhados</item>
+    </plurals>
+    <!-- La línea dicha (TalkBack): «47 minutos de pantalla.». %1$s el tiempo con mayúscula inicial. -->
+    <string name="today_screen_time_description">%1$s de tela.</string>
+    <!-- «47 minutos de pantalla. 4 vídeos compartidos.». %1$s el tiempo, %2$s today_shares_videos. -->
+    <string name="today_screen_time_description_shares">%1$s de tela. %2$s.</string>
+    <plurals name="today_shares_videos">
+        <item quantity="one">%1$s\u00A0vídeo compartilhado</item>
+        <item quantity="many">%1$s\u00A0vídeos compartilhados</item>
+        <item quantity="other">%1$s\u00A0vídeos compartilhados</item>
+    </plurals>
+
+    <!-- ===== Comparación con la media del mismo día de la semana ===== -->
+
+    <!-- Los días de la semana en plural, de lunes a domingo («los martes», «los sábados»), para
+         las frases de abajo. -->
+    <string-array name="today_weekdays_plural">
+        <item>segundas-feiras</item>
+        <item>terças-feiras</item>
+        <item>quartas-feiras</item>
+        <item>quintas-feiras</item>
+        <item>sextas-feiras</item>
+        <item>sábados</item>
+        <item>domingos</item>
+    </string-array>
+    <!-- Con qué se compara (en minúsculas; va dentro de las frases today_delta_*): %1$s el día de la
+         semana («martes»). _now: hoy, hasta la misma hora. -->
+    <string name="today_comparison_ref_now">a sua média de %1$s até esta hora</string>
+    <string name="today_comparison_ref">a sua média de %1$s</string>
+    <!-- Aún no hay datos de ese día de la semana: %1$s el día en plural (today_weekdays_plural).
+         La etiqueta va en MAYÚSCULAS (con poco sitio); la _description es para TalkBack. -->
+    <string name="today_comparison_no_base">AINDA SEM DADOS DE %1$s</string>
+    <string name="today_comparison_no_base_description">Ainda sem dados de %1$s para comparar.</string>
+    <!-- La media es cero y hoy ya hay vídeos: %1$s el día en plural. _now: hasta la misma hora. -->
+    <string name="today_comparison_from_zero_now">SUA MÉDIA DE %1$s, ATÉ ESTA HORA, COSTUMA SER ZERO</string>
+    <string name="today_comparison_from_zero_now_description">Sua média de %1$s, até esta hora, costuma ser zero.</string>
+    <string name="today_comparison_from_zero">SUA MÉDIA DE %1$s COSTUMA SER ZERO</string>
+    <string name="today_comparison_from_zero_description">Sua média de %1$s costuma ser zero.</string>
+
+    <!-- Líneas de comparación (también en Estadísticas). La etiqueta va en MAYÚSCULAS con poco sitio;
+         la _description es la misma idea en frase, para TalkBack. %1$s (o el último hueco) es con qué
+         se compara: today_comparison_ref en Hoy, «la semana anterior» en Estadísticas (en las
+         etiquetas, ya en mayúsculas). -->
+    <!-- El doble / el triple. -->
+    <string name="today_delta_double">O DOBRO DO QUE %1$s</string>
+    <string name="today_delta_double_description">O dobro do que %1$s.</string>
+    <string name="today_delta_triple">O TRIPLO DO QUE %1$s</string>
+    <string name="today_delta_triple_description">O triplo do que %1$s.</string>
+    <!-- «2,4 VECES TU MARTES MEDIO». %1$s las veces («2,4»), %2$s con qué se compara. -->
+    <string name="today_delta_times">%1$s VEZES %2$s</string>
+    <string name="today_delta_times_description">%1$s vezes %2$s.</string>
+    <!-- Más: «+34 % QUE…». %1$s el porcentaje con signo en la etiqueta («+34 %») y sin signo en la
+         descripción («34 %»), %2$s con qué se compara. -->
+    <string name="today_delta_more">%1$s A MAIS QUE %2$s</string>
+    <string name="today_delta_more_description">%1$s a mais que %2$s.</string>
+    <!-- Más o menos igual (±5 %). -->
+    <string name="today_delta_same">O MESMO QUE %1$s</string>
+    <string name="today_delta_same_description">Mais ou menos o mesmo que %1$s.</string>
+    <string name="today_delta_half">A METADE DO QUE %1$s</string>
+    <string name="today_delta_half_description">A metade do que %1$s.</string>
+    <!-- Menos: «−12 % QUE…». %1$s el porcentaje con signo en la etiqueta («−12 %») y sin signo en
+         la descripción («12 %»), %2$s con qué se compara. -->
+    <string name="today_delta_less">%1$s A MENOS QUE %2$s</string>
+    <string name="today_delta_less_description">%1$s a menos que %2$s.</string>
+
+    <!-- ===== Resto de la pantalla ===== -->
+
+    <!-- «HORA PUNTA 23:00 · 41 VÍDEOS» (MAYÚSCULAS, se pasa sola). %1$s la hora, %2$s los vídeos. -->
+    <string name="today_peak_hour">HORA DE PICO %1$s · %2$s</string>
+
+    <!-- Banda «desde que usas Reelómetro» (MAYÚSCULAS, se pasa sola): «DESDE EL 3 MAR: 12.408 VÍDEOS · 61 H».
+         %1$s desde cuándo (today_since_*), %2$s los vídeos, %3$s el tiempo corto. -->
+    <string name="today_since_band">%1$s: %2$s · %3$s</string>
+    <!-- La banda dicha (TalkBack): «Desde el 3 de marzo: 12.408 vídeos y 61 horas.». %1$s desde
+         cuándo (con mayúscula inicial), %2$s los vídeos, %3$s el tiempo con palabras. -->
+    <string name="today_since_band_description">%1$s: %2$s e %3$s.</string>
+    <!-- Desde cuándo (en minúsculas; en la banda se pasa a mayúsculas): %1$s la fecha («3 mar»,
+         «3 mar 2025», «3 de marzo», «3 de marzo de 2025»). -->
+    <string name="today_since_today">desde hoje</string>
+    <string name="today_since_yesterday">desde ontem</string>
+    <string name="today_since_date">desde %1$s</string>
+    <!-- Acción de la banda para TalkBack (al tocarla se abren las estadísticas). -->
+    <string name="today_since_band_action">Ver suas estatísticas</string>
+
+    <!-- Gráfico por horas, resumen para TalkBack: %1$s la hora punta («23:00»), %2$s los vídeos. -->
+    <string name="today_hours_description_empty">Vídeos por hora: sem atividade ainda.</string>
+    <string name="today_hours_description">Vídeos por hora. Horário de pico: %1$s, com %2$s.</string>
+
+    <!-- ===== Avisos (van con un botón: CONECTAR o VER EL PERMISO) ===== -->
+
+    <!-- El servicio de accesibilidad se ha desconectado (después de haber funcionado). -->
+    <string-array name="today_service_off">
+        <item>Sem a permissão de acessibilidade eu não vejo nada. O que, aliás, é o que você espera de um app desses.</item>
+        <item>O serviço está desconectado. O que você vê agora não conta. Literalmente.</item>
+        <item>Sem permissão, o marcador fica às escuras. Conecte e seguimos de onde paramos.</item>
+        <item>O Android desconectou o serviço. Às vezes ele faz isso. Um toque e volta.</item>
+        <item>Agora mesmo você poderia ver mil vídeos e aqui não aconteceria nada.</item>
+    </string-array>
+    <!-- El permiso de accesibilidad nunca se ha concedido. -->
+    <string-array name="today_service_never">
+        <item>Para começar a contar eu preciso de uma permissão. Explico qual e para quê, sem letra miúda.</item>
+        <item>Ainda não tenho permissão para olhar, então não conto nada. Você decide.</item>
+        <item>Sem a permissão de acessibilidade, este marcador é decoração. Bonita, mas decoração.</item>
+    </string-array>
+    <!-- Todas las apps apagadas en Ajustes («Qué apps cuento»). -->
+    <string-array name="today_no_platforms">
+        <item>Você desligou todos os apps em Configurações. Assim não tem nada para contar.</item>
+        <item>Não estou contando nenhum app. Assim, qualquer um.</item>
+        <item>Nenhum app ativado em Configurações. O marcador, de férias.</item>
+    </string-array>
+</resources>

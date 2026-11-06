@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Formato de cifras, tiempos y fechas (stats/Format.kt). Se traduce como el resto: cambia el orden
+  de las piezas y las unidades, nunca los huecos. Los nombres de días y meses NO están aquí: en
+  español salen de las tablas de Format.kt y en los demás idiomas, de java.time (el sistema).
+  \u00A0 es un espacio duro (la cifra y su unidad no se separan al partir la línea): mantenlo.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="fr">
+
+    <!-- Etiqueta BCP 47 del idioma de esta carpeta (es-ES, en, pt-BR…). Con ella se eligen
+         separadores de miles y decimales, nombres de días y meses, mayúsculas y plurales. -->
+    <string name="locale_tag" translatable="true">fr</string>
+
+    <!-- %1$s: cifra ya formateada, con signo si lo lleva («34», «+12», «0,4»). -->
+    <string name="format_percent">%1$s\u00A0%%</string>
+
+    <!-- Duraciones cortas: «312 h», «1 h 12 min», «47 min», «45 s». %1$s y %2$s son cifras. -->
+    <string name="format_hours">%1$s\u00A0h</string>
+    <string name="format_hours_minutes">%1$s\u00A0h %2$s\u00A0min</string>
+    <string name="format_minutes">%1$s\u00A0min</string>
+    <string name="format_seconds">%1$s\u00A0s</string>
+
+    <!-- Fechas. %1$s día de la semana, %2$s día del mes, %3$s mes, %4$s año (ver cada una). -->
+    <!-- «mardi 3 novembre»: %1$s día de la semana, %2$s día, %3$s mes. -->
+    <string name="format_day_long">%1$s %2$s %3$s</string>
+    <!-- «mardi 3 novembre 2025»: %1$s día de la semana, %2$s día, %3$s mes, %4$s año. -->
+    <string name="format_day_long_year">%1$s %2$s %3$s %4$s</string>
+    <!-- «3 novembre»: %1$s día, %2$s mes. -->
+    <string name="format_day_month">%1$s %2$s</string>
+    <!-- «3 novembre 2026»: %1$s día, %2$s mes, %3$s año. -->
+    <string name="format_day_full">%1$s %2$s %3$s</string>
+    <!-- «3 nov»: %1$s día, %2$s mes abreviado. -->
+    <string name="format_day_short">%1$s %2$s</string>
+    <!-- «3 nov 2026»: %1$s día, %2$s mes abreviado, %3$s año. -->
+    <string name="format_day_short_year">%1$s %2$s %3$s</string>
+    <!-- «mar. 3 nov»: %1$s día de la semana abreviado, %2$s fecha corta («3 nov»). -->
+    <string name="format_weekday_day_short">%1$s %2$s</string>
+    <!-- «octubre 2026»: %1$s mes, %2$s año. -->
+    <string name="format_month_year">%1$s %2$s</string>
+    <!-- «OCTUBRE 2026», para etiquetas en mayúsculas: %1$s mes, %2$s año. -->
+    <string name="format_month_year_label">%1$s %2$s</string>
+    <!-- Rangos: «27 oct – 2 nov» (%1$s inicio, %2$s fin, fechas cortas). -->
+    <string name="format_range">%1$s – %2$s</string>
+    <!-- «3 – 9 nov», dentro del mismo mes: %1$s día de inicio, %2$s día de fin, %3$s mes abreviado. -->
+    <string name="format_range_same_month">%1$s – %2$s %3$s</string>
+    <!-- «22 – 28 dic 2025»: %1$s rango o fecha, %2$s año. -->
+    <string name="format_with_year">%1$s %2$s</string>
+
+    <!-- Nombre de periodos en Estadísticas. -->
+    <string name="format_period_this_week">Cette semaine</string>
+    <!-- «Depuis le 3 mars 2025»: %1$s fecha corta con año. -->
+    <string name="format_period_since">Depuis le %1$s</string>
+</resources>

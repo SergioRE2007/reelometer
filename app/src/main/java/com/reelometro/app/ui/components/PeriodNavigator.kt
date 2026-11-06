@@ -1,5 +1,6 @@
 package com.reelometro.app.ui.components
 
+import com.reelometro.app.copy.A11y
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.fadeIn
@@ -50,8 +51,8 @@ fun PeriodNavigator(
     modifier: Modifier = Modifier,
     canGoPrevious: Boolean = true,
     canGoNext: Boolean = true,
-    previousDescription: String = "Periodo anterior",
-    nextDescription: String = "Periodo siguiente",
+    previousDescription: String = A11y.PREVIOUS_PERIOD,
+    nextDescription: String = A11y.NEXT_PERIOD,
 ) {
     val colors = ReelTheme.colors
     val reduced = ReelTheme.reducedMotion

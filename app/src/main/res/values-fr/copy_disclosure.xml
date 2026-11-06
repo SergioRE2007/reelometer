@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Divulgación destacada del permiso de accesibilidad (copy/DisclosureCopy.kt): una pantalla propia
+  que explica qué lee la app, para qué y dónde lo guarda, antes de pedir el permiso. Lo exige la
+  política de Google Play: el texto tiene que coincidir con lo que se declara en la ficha de la
+  tienda en ese idioma. Tradúcelo con exactitud, sin quitar ni suavizar nada.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="fr">
+
+    <!-- Antetítulo en MAYÚSCULAS. -->
+    <string name="disclosure_label">AUTORISATION D’ACCESSIBILITÉ</string>
+    <!-- Título grande. -->
+    <string name="disclosure_title">Pour compter, je dois regarder.</string>
+    <!-- Párrafo principal: qué se lee, para qué y dónde se guarda. -->
+    <string name="disclosure_summary">Reelómetro utilise le service d’accessibilité d’Android pour lire l’écran de TikTok, Instagram et YouTube pendant que tu les utilises. Il détecte ainsi chaque vidéo courte que tu vois et enregistre, uniquement dans ce téléphone, dans quelle application tu l’as vue, quand, pendant combien de temps, qui l’a publiée et sa description, afin de t’afficher tes statistiques.</string>
+
+    <!-- Bloques con etiqueta en MAYÚSCULAS (poco sitio) y su texto, en este orden. -->
+    <!-- «Compartir» cita el botón de Instagram/TikTok/YouTube tal cual (en cada idioma, como lo muestren
+         esas apps en ese idioma). «A quién envías» es el nombre del ajuste de la app (settings_recipients_label). -->
+    <string name="disclosure_reads_label">CE QU’IL LIT</string>
+    <string name="disclosure_reads_text">Sur TikTok, Instagram et YouTube : quand tu passes à la vidéo courte suivante et les textes visibles de cette vidéo (le nom du créateur, la description et les hashtags). Aussi quand tu appuies sur «\u00A0Partager\u00A0» et, uniquement sur Instagram et si tu actives «\u00A0À qui tu envoies\u00A0» dans Réglages, le nom de la personne ou du groupe à qui tu l’envoies. Si tu utilises en plus l’envoi rapide, il lit les noms de la feuille de partage pour retrouver la personne que tu as épinglée.</string>
+    <!-- «Compartir» y «Enviar» citan los botones de Instagram tal cual (en cada idioma, como los muestre
+         Instagram en ese idioma). -->
+    <string name="disclosure_not_reads_label">CE QU’IL NE LIT PAS</string>
+    <string name="disclosure_not_reads_text">Rien des autres applications : il sait seulement que tu en es sorti, pour arrêter de compter. Il n’enregistre ni ce que tu écris ni tes messages. Il n’appuie pour toi que si tu utilises l’envoi rapide d’Instagram, et uniquement sur «\u00A0Partager\u00A0», la personne ou le groupe épinglé, puis sur «\u00A0Envoyer\u00A0» quand tu touches sa bulle ; s’il ne le voit pas, il écrit son nom dans la recherche de la feuille. Uniquement avec l’envoi rapide, il découpe dans la feuille de partage la photo de profil des personnes ou groupes épinglés, pour l’afficher sur leur bouton ; il la garde seulement dans ce téléphone et ne fait aucune autre capture d’écran.</string>
+    <string name="disclosure_purpose_label">POURQUOI</string>
+    <string name="disclosure_purpose_text">Uniquement pour te dire combien de vidéos tu regardes, combien de temps, sur quels sujets et avec quels créateurs. Il ne sert ni à la publicité ni à établir des profils.</string>
+    <string name="disclosure_storage_label">OÙ ÇA VA</string>
+    <string name="disclosure_storage_text">Dans ce téléphone et nulle part ailleurs. Rien n’est envoyé à aucun serveur ni partagé avec personne : l’application n’a même pas l’autorisation d’utiliser internet.</string>
+    <!-- «Ajustes > Accesibilidad» cita los menús de Android tal cual; en cada idioma, los que muestre
+         Android en ese idioma. -->
+    <string name="disclosure_control_label">TU DÉCIDES</string>
+    <string name="disclosure_control_text">Tu peux désactiver l’autorisation quand tu veux dans Paramètres &gt; Accessibilité, et effacer toutes les données depuis l’application elle-même.</string>
+
+    <!-- Frase junto a los botones: qué pasa si aceptas y si no. «Hoy» y «Ajustes» son pantallas de la app. -->
+    <string name="disclosure_consent">Si tu acceptes, je t’emmène dans les paramètres d’Android pour activer l’autorisation. Sinon, l’application ne pourra rien compter ; tu peux l’activer plus tard depuis Aujourd’hui ou depuis Réglages.</string>
+    <!-- Confirmación discreta tras pulsar AHORA NO. -->
+    <string name="disclosure_declined">Sans autorisation, il n’y a pas de compte. Quand tu veux, c’est dans Aujourd’hui et dans Réglages.</string>
+</resources>

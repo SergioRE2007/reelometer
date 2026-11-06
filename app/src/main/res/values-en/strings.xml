@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Solo los textos que usa el sistema (manifiesto, servicio, canales, widget).
+         Los textos de pantalla viven en com.reelometro.app.copy, con variantes. -->
+
+    <string name="app_name">Reelómetro</string>
+
+    <!-- Servicio de accesibilidad. Se ven en Ajustes > Accesibilidad > Aplicaciones descargadas.
+         Con la etiqueta corta, Android escribe «Usar Reelómetro» en el interruptor y
+         «¿Permitir que Reelómetro pueda controlar totalmente tu dispositivo?» en su aviso:
+         la guía del onboarding (OnboardingCopy) cita esos textos tal cual. -->
+    <string name="accessibility_service_label">Reelómetro</string>
+    <!-- android:summary (API 24+): subtítulo bajo el nombre en la lista de servicios. -->
+    <string name="accessibility_service_summary">Counts the short videos you watch. Everything stays on your phone.</string>
+    <!-- android:intro (API 31+): entradilla en la página del servicio. -->
+    <string name="accessibility_service_intro">Counts the videos you watch on TikTok, Instagram Reels and YouTube Shorts. Nothing leaves your phone.</string>
+    <!-- android:description: texto completo de la página del servicio. -->
+    <string name="accessibility_service_description">Reelómetro uses this service to count the short videos you watch on TikTok, Instagram Reels and YouTube Shorts. While you use those three apps, it detects when you move on to the next video and reads the creator\'s name, the description and the hashtags to work out what the topic is. If you turn on “Who you send to” in Settings, on Instagram it also reads the name of the person or group you send a video to. It reads nothing from the other apps: it only notices that you have left, so it can stop counting. If you also turn on “Quick send”, on Instagram it puts a button over the reels and, when you tap it, it reads the names on the share sheet to find the person or group you have pinned, and taps “Share”, that person or group and “Send” for you, and nothing else (if it can\'t see them, it types their name into the search box on the sheet). Only with quick send does it crop the profile photos of the people or groups you pin from the share sheet, to show them on their button; it keeps them only on this phone and takes no other screenshots. It does not save what you type. Everything is stored only on this phone and is never sent anywhere: the app has no permission to use the internet. You can turn it off whenever you like.</string>
+
+    <!-- Notificaciones (work/Notifications.kt). «notification_channel_name» y su descripción son el grupo
+         «Resúmenes» que reúne en los ajustes del sistema los canales diario y mensual; el de estado del
+         servicio queda para un aviso opcional (todavía sin uso). -->
+    <string name="notification_channel_name">Summaries</string>
+    <string name="notification_channel_description">Your count for the day and the summary of each month.</string>
+    <string name="notification_channel_daily_name">Daily summary</string>
+    <string name="notification_channel_daily_description">One notification a day, at the time you choose, with your videos and your time for today.</string>
+    <string name="notification_channel_monthly_name">Monthly summary</string>
+    <string name="notification_channel_monthly_description">On the 1st of each month, a notice that your month is counted and its summary is ready.</string>
+
+    <!-- Widget de Hoy (selector de widgets y diseño inicial antes de que pinte Glance). -->
+    <string name="widget_name">Today\'s counter</string>
+    <string name="widget_description">Your videos and your time for today, without opening the app.</string>
+    <string name="widget_loading">COUNTING</string>
+</resources>

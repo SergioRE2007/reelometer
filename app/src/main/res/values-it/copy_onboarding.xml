@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Bienvenida de la primera vez (copy/OnboardingCopy.kt), 4 pasos a pantalla completa:
+  1. Qué hace · 2. Privacidad · 3. Permiso de accesibilidad (guía + «Ajuste restringido») ·
+  4. Avisos y objetivo diario opcional. La app habla en primera persona («te llevo», «te aviso»).
+  Los textos en MAYÚSCULAS se ven así (etiquetas y botones, poco sitio).
+
+  IMPORTANTE: muchos textos del paso 3 citan entre comillas latinas textos de los ajustes de
+  Android (menús, interruptores y avisos). Esas citas van tal cual las muestra Android en tu idioma
+  (AOSP/Pixel), no traducidas a mano: búscalas en un móvil con Android en ese idioma. Cada una
+  lleva su comentario.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="it">
+
+    <!-- Indicador de pasos, en MAYÚSCULAS: «PASO 1 DE 4». %1$s el paso, %2$s el total. -->
+    <string name="onboarding_step_label">PASSO %1$s DI %2$s</string>
+    <!-- Lo mismo para TalkBack: «Paso 2 de 4». -->
+    <string name="onboarding_step_description">Passo %1$s di %2$s</string>
+    <!-- Botón en MAYÚSCULAS para saltar los pasos 1 y 2. -->
+    <string name="onboarding_skip">SALTA</string>
+
+    <!-- ============================================================ 1. Qué hace -->
+
+    <!-- Título grande (juego de palabras: la app cuenta lo que tú no cuentas). -->
+    <string name="onboarding_what_title">Conta quello che non conti.</string>
+    <string name="onboarding_what_body">Reelómetro conta i video brevi che guardi su TikTok, Instagram Reels e YouTube Shorts: quanti, quanto tempo, di quali argomenti e di quali creatori. Il dato è tuo; anche le conclusioni.</string>
+    <!-- Bajo el marcador de demostración, en MAYÚSCULAS: «47 MIN DE PANTALLA». %1$s el tiempo («47 MIN»). -->
+    <string name="onboarding_demo_time">%1$s DI SCHERMO</string>
+    <!-- TalkBack del marcador de demostración. %1$s los vídeos con su palabra («212 vídeos»). -->
+    <string name="onboarding_demo_description">Un contatore che arriva fino a %1$s.</string>
+
+    <!-- ============================================================ 2. Privacidad -->
+
+    <string name="onboarding_privacy_title">Quello che guardi resta qui.</string>
+    <!-- Cuatro puntos: etiqueta en MAYÚSCULAS (poco sitio) y su frase. -->
+    <string name="onboarding_privacy_accounts_label">SENZA ACCOUNT</string>
+    <string name="onboarding_privacy_accounts_text">Niente registrazione, niente email, niente password.</string>
+    <string name="onboarding_privacy_servers_label">SENZA SERVER</string>
+    <string name="onboarding_privacy_servers_text">Tutto viene salvato su questo telefono. Nessuna copia da nessun’altra parte.</string>
+    <string name="onboarding_privacy_ads_label">SENZA PUBBLICITÀ</string>
+    <string name="onboarding_privacy_ads_text">Niente pubblicità né tracker. Nessun altro guarda i tuoi dati.</string>
+    <string name="onboarding_privacy_internet_label">SENZA INTERNET</string>
+    <string name="onboarding_privacy_internet_text">L’app non ha il permesso di collegarsi. Anche volendo, non potrebbe inviare niente.</string>
+    <!-- Segunda línea del sello «100 % LOCAL», en MAYÚSCULAS y con muy poco sitio. -->
+    <string name="onboarding_privacy_stamp_subtext">SOLO SU QUESTO TELEFONO</string>
+    <string name="onboarding_privacy_footnote">Se disinstalli l’app, tutto se ne va con lei.</string>
+
+    <!-- ============================================================ 3. Permiso (guía) -->
+
+    <!-- «Permitir» cita el botón del aviso de Android tal cual; en cada idioma, el que muestre Android en ese idioma. -->
+    <string name="onboarding_guide_title">Un interruttore e un «Consenti».</string>
+
+    <!-- Pasos numerados de la guía (el número va aparte). -->
+    <!-- ABRIR ACCESIBILIDAD es el botón de esta misma pantalla (igual que el botón de la app). -->
+    <string name="onboarding_guide_step_1">Premi APRI ACCESSIBILITÀ: ti porto alle impostazioni di Android.</string>
+    <!-- «Aplicaciones descargadas», «Aplicaciones instaladas» y «Servicios instalados» citan los menús de
+         Android tal cual; en cada idioma, los que muestre Android en ese idioma. «Reelómetro» no se traduce. -->
+    <string name="onboarding_guide_step_2">Cerca «Reelómetro» in «App scaricate». Su alcuni telefoni si trova in «App installate» o «Servizi installati».</string>
+    <!-- «Usar Reelómetro» cita el interruptor de Android tal cual; en cada idioma, el que muestre Android en ese idioma. -->
+    <string name="onboarding_guide_step_3">Tocca «Reelómetro» e attiva «Usa Reelómetro».</string>
+    <!-- «pueda controlar totalmente tu dispositivo» cita el aviso de Android («¿Permitir que Reelómetro pueda
+         controlar totalmente tu dispositivo?») y «Permitir», su botón: tal cual; en cada idioma, como lo
+         muestre Android en ese idioma. -->
+    <string name="onboarding_guide_step_4">Android chiederà se consenti che Reelómetro «possa controllare completamente il tuo dispositivo». È l’avviso standard di qualunque servizio di accessibilità: Reelómetro guarda e conta, e preme per te solo se usi l’invio rapido di Instagram. Tocca «Consenti».</string>
+    <!-- OK es lo que muestra el marcador de la pantalla al conectar (onboarding_guide_connected_counter). -->
+    <string name="onboarding_guide_step_5">Torna qui. Se il contatore dice OK, sei a posto.</string>
+
+    <!-- Etiqueta en MAYÚSCULAS mientras se espera a que el servicio se conecte. -->
+    <string name="onboarding_guide_waiting">IN ATTESA DEL SERVIZIO</string>
+    <!-- Lo que muestra el marcador grande al conectar: dos o tres letras como mucho. -->
+    <string name="onboarding_guide_connected_counter">OK</string>
+
+    <!-- Al volver con el servicio activo (se elige una frase). -->
+    <string-array name="onboarding_connected">
+        <item>Connesso. D’ora in poi ogni video conta.</item>
+        <item>Fatto. Da qui in avanti, tutto quello che guardi è contato.</item>
+        <item>Connesso. Il contatore sta già guardando.</item>
+    </string-array>
+    <!-- Al volver sin haberlo activado (se elige una frase). «Ajuste restringido» cita el aviso de Android
+         tal cual; en cada idioma, el que muestre Android en ese idioma. -->
+    <string-array name="onboarding_not_yet">
+        <item>Non è ancora attivo. Nessuna fretta: i passaggi restano qui.</item>
+        <item>Non vedo ancora il servizio. Ripassa i passi; di solito manca l’ultimo interruttore.</item>
+        <item>Il servizio è ancora spento. Se Android dice «Impostazioni con restrizioni», guarda subito sotto.</item>
+    </string-array>
+
+    <!-- Bajo el «OK»: qué pasa ahora. «Hoy» es la pantalla principal de la app. -->
+    <string name="onboarding_guide_connected_body">Usa TikTok, Instagram o YouTube come sempre. Io vado sommando in Oggi.</string>
+
+    <!-- TalkBack del marcador de estado. -->
+    <string name="onboarding_guide_status_connected">Servizio connesso</string>
+    <string name="onboarding_guide_status_waiting">Servizio non ancora connesso</string>
+
+    <!-- Enlace en MAYÚSCULAS a la ayuda. «AJUSTE RESTRINGIDO» cita el aviso de Android tal cual (aquí en
+         mayúsculas); en cada idioma, el que muestre Android en ese idioma. -->
+    <string name="onboarding_restricted_link">TI COMPARE «IMPOSTAZIONI CON RESTRIZIONI»?</string>
+
+    <!-- ============================================================ 3b. «Ajuste restringido» (Android 13+) -->
+
+    <!-- «Ajuste restringido» cita el aviso de Android tal cual; en cada idioma, el que muestre Android en ese idioma. -->
+    <string name="onboarding_restricted_title">Android dice «Impostazioni con restrizioni»?</string>
+    <string name="onboarding_restricted_body">È una protezione di Android per le app installate fuori da Google Play, non un guasto. Si toglie così:</string>
+
+    <!-- Pasos numerados (el número va aparte). -->
+    <!-- ABRIR INFORMACIÓN DE LA APP es el botón de esta misma pantalla (igual que el botón de la app). -->
+    <string name="onboarding_restricted_step_1">Premi APRI INFO APP.</string>
+    <!-- «Información de la aplicación» cita la pantalla de Android tal cual; en cada idioma, la que muestre
+         Android en ese idioma. ⋮ es el icono del menú: déjalo. -->
+    <string name="onboarding_restricted_step_2">In «Info app», tocca il menu ⋮ in alto a destra.</string>
+    <!-- «Permitir ajustes restringidos» cita la opción del menú de Android tal cual; en cada idioma, la que
+         muestre Android en ese idioma. -->
+    <string name="onboarding_restricted_step_3">Tocca «Consenti impostazioni con restrizioni» e conferma con il PIN, la sagoma o l’impronta.</string>
+    <!-- «Usar Reelómetro» cita el interruptor de Android y «Accesibilidad», su menú: tal cual; en cada
+         idioma, como los muestre Android en ese idioma. -->
+    <string name="onboarding_restricted_step_4">Torna ad Accessibilità e attiva «Usa Reelómetro».</string>
+    <!-- «Permitir ajustes restringidos» cita la opción del menú de Android tal cual; en cada idioma, la que
+         muestre Android en ese idioma. -->
+    <string name="onboarding_restricted_note">«Consenti impostazioni con restrizioni» compare solo dopo che Android ti ha bloccato una volta. Se non lo vedi, prova prima ad attivare il servizio e torna qui.</string>
+
+    <!-- ============================================================ 4. Avisos y objetivo -->
+
+    <string name="onboarding_final_title">Un avviso al giorno. E un limite, se vuoi.</string>
+    <!-- Cabecera en MAYÚSCULAS del bloque de avisos. -->
+    <string name="onboarding_notify_section">AVVISI</string>
+    <string name="onboarding_notify_daily_label">Avviso giornaliero</string>
+    <!-- «A las 21:30, tu cuenta del día.». %1$s la hora con su preposición, con la primera letra en
+         mayúscula («A las 21:30»). -->
+    <string name="onboarding_notify_daily">%1$s, il tuo conteggio del giorno.</string>
+    <string name="onboarding_notify_monthly_label">Riepilogo mensile</string>
+    <string name="onboarding_notify_monthly">Il giorno 1 di ogni mese, il mese precedente, conteggiato.</string>
+    <!-- Antes de pedir el permiso de avisos de Android (Android 13+). -->
+    <string name="onboarding_notify_rationale">Per avvisarti, Android ha bisogno del tuo permesso. Lo uso solo per questo.</string>
+    <!-- Si se deniega. «Ajustes» es la pantalla de ajustes de la app. -->
+    <string name="onboarding_notify_denied">Allora niente avvisi. Puoi attivarli quando vuoi in Impostazioni.</string>
+
+    <!-- Cabecera en MAYÚSCULAS del bloque del objetivo diario. -->
+    <string name="onboarding_goal_label">OBIETTIVO GIORNALIERO · FACOLTATIVO</string>
+    <string name="onboarding_goal_body">Un massimo di video al giorno. Con questo, il contatore ti dice quanto ti resta e tiene il conto delle tue serie. Senza, conta e basta.</string>
+    <!-- Opciones del selector, en MAYÚSCULAS y con muy poco sitio (van junto a «100», «150»…). -->
+    <string name="onboarding_goal_none">NESSUN OBIETTIVO</string>
+    <string name="onboarding_goal_other">ALTRO</string>
+    <!-- TalkBack de los botones − y + del selector «OTRO». -->
+    <string name="onboarding_goal_decrease">Abbassa l’obiettivo</string>
+    <string name="onboarding_goal_increase">Alza l’obiettivo</string>
+    <!-- Ayuda del campo «OTRO»: «Entre 5 y 2.000 vídeos al día.». %1$s el mínimo, %2$s el máximo. -->
+    <string name="onboarding_goal_range">Tra %1$s e %2$s video al giorno.</string>
+    <!-- Confirmación de la elección. %1$s el objetivo («150»). -->
+    <string name="onboarding_goal_chosen">Al massimo %1$s al giorno.</string>
+    <string name="onboarding_goal_chosen_none">Nessun obiettivo: conta e basta.</string>
+</resources>

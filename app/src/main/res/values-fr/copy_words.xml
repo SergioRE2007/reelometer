@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Palabras compartidas por toda la app (copy/Words.kt): recuentos con plural, duraciones con
+  palabras, listas, horas y periodos. %1$s es siempre la cifra ya formateada («1.234»).
+  \u00A0 es un espacio duro: la cifra y su palabra no se separan al partir la línea.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="fr">
+
+    <!-- Recuentos: «1 vídeo», «212 vídeos». En francés, «one» vale para 0 y 1, así que lleva la cifra. -->
+    <plurals name="words_videos">
+        <item quantity="one">%1$s\u00A0vidéo</item>
+        <item quantity="many">%1$s\u00A0de\u00A0vidéos</item>
+        <item quantity="other">%1$s\u00A0vidéos</item>
+    </plurals>
+    <plurals name="words_times">
+        <item quantity="one">%1$s\u00A0fois</item>
+        <item quantity="many">%1$s\u00A0de\u00A0fois</item>
+        <item quantity="other">%1$s\u00A0fois</item>
+    </plurals>
+    <plurals name="words_days">
+        <item quantity="one">%1$s\u00A0jour</item>
+        <item quantity="many">%1$s\u00A0de\u00A0jours</item>
+        <item quantity="other">%1$s\u00A0jours</item>
+    </plurals>
+    <plurals name="words_hours">
+        <item quantity="one">%1$s\u00A0heure</item>
+        <item quantity="many">%1$s\u00A0de\u00A0heures</item>
+        <item quantity="other">%1$s\u00A0heures</item>
+    </plurals>
+    <plurals name="words_minutes">
+        <item quantity="one">%1$s\u00A0minute</item>
+        <item quantity="many">%1$s\u00A0de\u00A0minutes</item>
+        <item quantity="other">%1$s\u00A0minutes</item>
+    </plurals>
+    <plurals name="words_seconds">
+        <item quantity="one">%1$s\u00A0seconde</item>
+        <item quantity="many">%1$s\u00A0de\u00A0secondes</item>
+        <item quantity="other">%1$s\u00A0secondes</item>
+    </plurals>
+
+    <!-- Duraciones dentro de una frase: «un segundo», «45 segundos», «un minuto», «47 minutos»,
+         «una hora», «3 horas». En francés «one» abarca 0 y 1: la forma one lleva la cifra (%1$s). -->
+    <plurals name="words_duration_seconds">
+        <item quantity="one">%1$s\u00A0seconde</item>
+        <item quantity="many">%1$s\u00A0de\u00A0secondes</item>
+        <item quantity="other">%1$s\u00A0secondes</item>
+    </plurals>
+    <plurals name="words_duration_minutes">
+        <item quantity="one">%1$s\u00A0minute</item>
+        <item quantity="many">%1$s\u00A0de\u00A0minutes</item>
+        <item quantity="other">%1$s\u00A0minutes</item>
+    </plurals>
+    <plurals name="words_duration_hours">
+        <item quantity="one">%1$s\u00A0heure</item>
+        <item quantity="many">%1$s\u00A0de\u00A0heures</item>
+        <item quantity="other">%1$s\u00A0heures</item>
+    </plurals>
+    <!-- «una hora y 12 minutos»: %1$s las horas, %2$s los minutos (ya con sus palabras). -->
+    <string name="words_duration_hours_minutes">%1$s et %2$s</string>
+
+    <!-- Listas: «TikTok, Reels y Shorts». Separador entre los primeros (con su espacio). -->
+    <string name="words_list_separator">", "</string>
+    <!-- %1$s los primeros ya unidos, %2$s el último. -->
+    <string name="words_list_last">%1$s et %2$s</string>
+    <!-- Igual, cuando el último empieza por el sonido /i/. En francés no cambia nada. -->
+    <string name="words_list_last_i">%1$s et %2$s</string>
+
+    <!-- Hora dentro de una frase: «a las 23:00»; %1$s es la hora («23:00»). -->
+    <string name="words_at_time">à %1$s</string>
+    <!-- Igual, para la una («a la 01:00»). En francés no cambia nada. -->
+    <string name="words_at_time_one">à %1$s</string>
+
+    <!-- Periodos (copy/Words.kt, CopyPeriod). Para frases con concordancia hay frases enteras por
+         periodo en cada pantalla; estas son las piezas sueltas que aún se usan. -->
+    <string name="period_week_noun">semaine</string>
+    <string name="period_week_this">cette semaine</string>
+    <string name="period_week_that">cette semaine-là</string>
+    <string name="period_week_previous">la semaine précédente</string>
+    <string name="period_month_noun">mois</string>
+    <string name="period_month_this">ce mois-ci</string>
+    <string name="period_month_that">ce mois-là</string>
+    <string name="period_month_previous">le mois précédent</string>
+    <string name="period_year_noun">année</string>
+    <string name="period_year_this">cette année</string>
+    <string name="period_year_that">cette année-là</string>
+    <string name="period_year_previous">l’année précédente</string>
+    <string name="period_all_noun">historique</string>
+    <string name="period_all_this">ton historique</string>
+    <string name="period_all_that">ton historique</string>
+</resources>

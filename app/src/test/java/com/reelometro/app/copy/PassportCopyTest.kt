@@ -70,9 +70,17 @@ class PassportCopyTest {
 
     @Test
     fun `todas las constantes cumplen las reglas`() {
-        val constants = PassportCopy::class.java.declaredFields
+        // Constantes (`const val`) y propiedades con getter que leen los recursos.
+        val fields = PassportCopy::class.java.declaredFields
             .filter { Modifier.isStatic(it.modifiers) && it.type == String::class.java }
             .map { it.isAccessible = true; it.name to it.get(null) as String }
+        val getters = PassportCopy::class.java.declaredMethods
+            .filter {
+                it.name.startsWith("get") && it.name.length > 3 && it.parameterCount == 0 &&
+                    it.returnType == String::class.java && Modifier.isPublic(it.modifiers)
+            }
+            .map { it.name.removePrefix("get") to it.invoke(PassportCopy) as String }
+        val constants = (fields + getters).distinctBy { it.first }
         assertTrue("se esperaban muchas constantes, hay ${constants.size}", constants.size >= 30)
         constants.forEach { (name, value) -> check(value, name) }
     }

@@ -1,8 +1,10 @@
 package com.reelometro.app.ui.calibration
 
 import androidx.compose.runtime.Immutable
+import com.reelometro.app.R
 import com.reelometro.app.copy.CalibrationCopy
 import com.reelometro.app.copy.Words
+import com.reelometro.app.copy.str
 import com.reelometro.app.data.Platform
 import com.reelometro.app.data.RecentVideo
 import com.reelometro.app.detection.CalibrationEvent
@@ -158,7 +160,7 @@ object CalibrationRows {
             v.creator?.takeIf { it.isNotBlank() }?.let { add(Words.handle(it)) }
             add(v.category.label)
             if (v.shares > 0) add(CalibrationCopy.shares(v.shares))
-            v.caption?.takeIf { it.isNotBlank() }?.let { add("«${it.take(CAPTION_MAX)}»") }
+            v.caption?.takeIf { it.isNotBlank() }?.let { add(str(R.string.ui_calibration_caption, it.take(CAPTION_MAX))) }
         }.joinToString(" · "),
         video = true,
         type = null,
@@ -170,20 +172,32 @@ object CalibrationRows {
         // TikTok tiene dos paquetes (musically / trill): el nombre de la plataforma no basta.
         if (e.platform != null) e.packageName?.let { add(it) }
         e.viewId?.let { add("id=${it.substringAfter(":id/")}") }
-        e.className?.let { add("clase=${it.substringAfterLast('.')}") }
+        e.className?.let { add(str(R.string.ui_calibration_class, it.substringAfterLast('.'))) }
         if (e.fromIndex >= 0 || e.toIndex >= 0) {
-            add("idx ${e.fromIndex}→${e.toIndex}" + if (e.itemCount >= 0) " de ${e.itemCount}" else "")
+            val from = e.fromIndex.toString()
+            val to = e.toIndex.toString()
+            add(
+                if (e.itemCount >= 0) str(R.string.ui_calibration_index_of, from, to, e.itemCount.toString())
+                else str(R.string.ui_calibration_index, from, to),
+            )
         } else if (e.itemCount >= 0) {
-            add("items ${e.itemCount}")
+            add(str(R.string.ui_calibration_items, e.itemCount.toString()))
         }
         e.scrollDeltaY?.let { add("dy=$it") }
         e.scrollDeltaX?.takeIf { it != 0 }?.let { add("dx=$it") }
         if (e.nodeWidth > 0 || e.nodeHeight > 0) {
-            val share = if (e.screenHeight > 0) " (${Format.percent(e.nodeHeight.toDouble() / e.screenHeight)})" else ""
-            add("nodo ${e.nodeWidth}×${e.nodeHeight}$share")
+            val w = e.nodeWidth.toString()
+            val h = e.nodeHeight.toString()
+            add(
+                if (e.screenHeight > 0) {
+                    str(R.string.ui_calibration_node_share, w, h, Format.percent(e.nodeHeight.toDouble() / e.screenHeight))
+                } else {
+                    str(R.string.ui_calibration_node, w, h)
+                },
+            )
         }
-        if (e.screenWidth > 0 || e.screenHeight > 0) add("pantalla ${e.screenWidth}×${e.screenHeight}")
-        e.videoId?.let { add("vídeo=${shortId(it)}") }
+        if (e.screenWidth > 0 || e.screenHeight > 0) add(str(R.string.ui_calibration_screen, e.screenWidth.toString(), e.screenHeight.toString()))
+        e.videoId?.let { add(str(R.string.ui_calibration_video, shortId(it))) }
         e.durationMs?.let { add(Format.seconds(it)) }
         e.note?.let { add(it) }
     }.joinToString(" · ")

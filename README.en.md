@@ -11,7 +11,7 @@
 Counts the videos you watch on TikTok, Instagram Reels and YouTube Shorts: how many, for how long,
 on which topics and from whom. Everything stays on your phone.
 
-![Version 1.4.4](https://img.shields.io/badge/version-1.4.4-11100E?style=flat-square)
+![Version 1.5.0](https://img.shields.io/badge/version-1.5.0-11100E?style=flat-square)
 ![Android 8.0+](https://img.shields.io/badge/Android-8.0%2B-11100E?style=flat-square&logo=android&logoColor=EDE8DF)
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.4-11100E?style=flat-square&logo=kotlin&logoColor=EDE8DF)
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack_Compose-11100E?style=flat-square&logo=jetpackcompose&logoColor=EDE8DF)
@@ -34,8 +34,9 @@ on which topics and from whom. Everything stays on your phone.
 
 Reelómetro doesn't block apps or lecture you. It just puts the scoreboard in front of you.
 
-> **The app is in Spanish (Spain) only.** Screenshots and on-screen labels are in Spanish; where this README mentions
-> a menu or button, the Spanish label you'll see in the app is in parentheses.
+> **The app speaks English, Spanish (Spain), Brazilian Portuguese, French and Italian.** It follows your phone's
+> language. Screenshots in this README are in Spanish; where it mentions a menu or button, the Spanish label is in
+> parentheses.
 
 ## What it does
 
@@ -124,7 +125,8 @@ It isn't on Google Play (yet). Download the APK of the latest version from
    and turn it on again. The app itself guides you.
 3. New versions install on top and keep your data.
 
-Requirements: Android 8.0 (API 26) or later. Spanish (Spain) only.
+Requirements: Android 8.0 (API 26) or later. Languages: English, Spanish (Spain), Brazilian Portuguese, French and
+Italian (it follows the phone; on Android 13 or later you can pick one in Settings › Apps › Reelómetro › Language).
 
 ## Build
 
@@ -162,7 +164,7 @@ app/src/main/java/com/reelometro/app/
 
 ## Status
 
-Version **1.4.4**. Honestly:
+Version **1.5.0**. Honestly:
 
 - **Tested on a real phone** (a Pixel with Android 17): TikTok and Instagram count correctly. Instagram quick send has
   been measured send by send: between 0.5 and 0.93 s to a person and 1.4–1.6 s to a group that has to be searched for
@@ -175,6 +177,9 @@ Version **1.4.4**. Honestly:
 - **Not checked yet**: the Passport and the guided tour haven't had a full visual review on screen; quick send with
   Instagram in another language (the app recognises «Send» by its identifier and by the word in several languages,
   but it has only been tested in Spanish); and other phones and Android versions.
+- **New translations** (English, Brazilian Portuguese, French and Italian): checked on screen in the emulator, but
+  no native speaker has read them in full yet, and texts quoting Android menus or Instagram buttons may not match
+  your phone word for word. Corrections are welcome.
 - It builds and passes its 761 JVM tests. The screenshots in this README use sample data.
 
 ## Support the project

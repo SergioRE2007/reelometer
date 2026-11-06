@@ -17,13 +17,29 @@ android {
         applicationId = "com.reelometro.app"
         minSdk = 26
         targetSdk = 37
-        versionCode = 9
-        versionName = "1.4.4"
+        versionCode = 10
+        versionName = "1.5.0"
     }
 
     androidResources {
-        // La app solo existe en español: no empaquetamos las traducciones de las librerías.
-        localeFilters += listOf("es")
+        // Idiomas de la app: español (values/, el de por defecto) y cada carpeta values-xx que exista
+        // (values-en, values-pt-rBR, values-b+sr+Latn). De las librerías solo se empaquetan esos.
+        val appLocales = file("src/main/res").listFiles().orEmpty()
+            .filter { it.isDirectory }
+            .mapNotNull { Regex("values-([a-z]{2,3}(-r[A-Z]{2})?|b\\+[A-Za-z0-9+]+)").matchEntire(it.name)?.groupValues?.get(1) }
+            .sorted()
+        localeFilters += listOf("es") + appLocales
+        // res/xml/locales_config.xml (idioma por app de Android 13+) lo genera AGP con esas mismas carpetas;
+        // el idioma de values/ está en src/main/res/resources.properties.
+        generateLocaleConfig = true
+    }
+
+    // Con un AAB, Play solo instalaría los idiomas del sistema; el idioma por app (y ResourceTexts, que
+    // lee los recursos en el idioma de los textos) necesita todos en el dispositivo.
+    bundle {
+        language {
+            enableSplit = false
+        }
     }
 
     // Firma debug opcional con una llave fija (nunca en git), para que cada APK nueva se instale encima de la anterior.

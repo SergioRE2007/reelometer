@@ -1,5 +1,6 @@
 package com.reelometro.app.copy
 
+import com.reelometro.app.R
 import com.reelometro.app.data.Category
 import com.reelometro.app.data.Platform
 import com.reelometro.app.stats.EquivalenceValue
@@ -11,6 +12,8 @@ import java.time.YearMonth
 /**
  * Textos del **Resumen** (hub) y del **Wrapped** (story a pantalla completa).
  *
+ * Las palabras están en `res/values/copy_wrapped.xml`; aquí se decide qué frase toca y con qué huecos.
+ *
  * Semilla recomendada: el epochDay del **inicio del periodo** (`Variants.daySeed(start)`), así
  * la story y la imagen compartible dicen siempre lo mismo para el mismo periodo.
  *
@@ -21,28 +24,38 @@ object WrappedCopy {
 
     // ------------------------------------------------------------------ hub
 
-    const val HUB_LAST_MONTH = "MES PASADO"
-    const val HUB_THIS_MONTH = "ESTE MES"
-    const val HUB_THIS_WEEK = "ESTA SEMANA"
-    const val HUB_THIS_YEAR = "ESTE AÑO"
-    const val HUB_ALL = "SIEMPRE"
+    val HUB_LAST_MONTH: String get() = str(R.string.wrapped_hub_last_month)
+    val HUB_THIS_MONTH: String get() = str(R.string.wrapped_hub_this_month)
+    val HUB_THIS_WEEK: String get() = str(R.string.wrapped_hub_this_week)
+    val HUB_THIS_YEAR: String get() = str(R.string.wrapped_hub_this_year)
+    val HUB_ALL: String get() = str(R.string.wrapped_hub_all)
 
     /** Titular editorial del hub: «Tu octubre, contado.». */
     fun hubHeadline(month: YearMonth, seed: Long): String = coverTitle(CopyPeriod.MONTH, month.atDay(1), seed)
 
     /** Tira de un periodo sin vídeos (atenuada, no se abre). */
-    const val HUB_NO_DATA = "SIN DATOS"
+    val HUB_NO_DATA: String get() = str(R.string.wrapped_hub_no_data)
 
     /** Marca de las tiras de periodos que siguen abiertos («VÍDEOS · 3,2 H · EN CURSO»). */
-    const val HUB_IN_PROGRESS = "EN CURSO"
+    val HUB_IN_PROGRESS: String get() = str(R.string.wrapped_hub_in_progress)
+
+    /** Detalle de una tira con datos: «VÍDEOS · 3,2 H», «VÍDEOS · 3,2 H · EN CURSO». */
+    fun hubDetail(totalMs: Long, inProgress: Boolean): String =
+        str(if (inProgress) R.string.wrapped_hub_detail_in_progress else R.string.wrapped_hub_detail, Words.durationLabel(totalMs))
+
+    /**
+     * La tira para TalkBack: «Este mes, 1 – 30 nov: 1.204 vídeos, 9 horas y 12 minutos.»;
+     * sin datos, «Este mes, 1 – 30 nov: sin datos.». [title] y [range], ya como se dicen.
+     */
+    fun hubStripDescription(title: String, range: String, count: Int, totalMs: Long, hasData: Boolean): String =
+        if (hasData) {
+            str(R.string.wrapped_hub_strip_description, title, range, Words.videos(count), Words.duration(totalMs))
+        } else {
+            str(R.string.wrapped_hub_strip_description_no_data, title, range)
+        }
 
     /** Hub sin ningún periodo con datos. */
-    fun hubEmpty(seed: Long): String = pick(
-        seed, "wrapped.hub.empty",
-        "Todavía no hay nada que resumir. Vuelve cuando lleves unos días.",
-        "Sin datos no hay resumen. Y de momento no hay datos.",
-        "El primer resumen llegará en cuanto haya algo que contar.",
-    )
+    fun hubEmpty(seed: Long): String = pick(seed, "wrapped.hub.empty", R.array.wrapped_hub_empty)
 
     // ------------------------------------------------------------------ portada
 
@@ -50,86 +63,44 @@ object WrappedCopy {
     fun coverLabel(period: CopyPeriod, start: LocalDate, end: LocalDate): String {
         val what = when (period) {
             CopyPeriod.WEEK -> Format.upper(Format.range(start, end))
-            CopyPeriod.MONTH -> Format.upper("${Format.monthName(start.monthValue)} ${start.year}")
+            CopyPeriod.MONTH -> Format.upper(Format.monthYearLabel(start.monthValue, start.year))
             CopyPeriod.YEAR -> start.year.toString()
-            CopyPeriod.ALL -> Format.upper("desde el ${Format.dayShortWithYear(start)}")
+            CopyPeriod.ALL -> StatsCopy.allLabel(start)
         }
-        return "${ShareCopy.BRAND} · $what"
+        return str(R.string.wrapped_cover_label, ShareCopy.BRAND, what)
     }
 
     /** Pista discreta de la portada: cómo se maneja la historia. */
-    const val COVER_HINT = "TOCA PARA AVANZAR · MANTÉN PARA PAUSAR"
+    val COVER_HINT: String get() = str(R.string.wrapped_cover_hint)
 
     /** Titular de portada: «Tu octubre, contado.», «Lo que octubre se llevó.», «Tu semana, contada.». */
     fun coverTitle(period: CopyPeriod, start: LocalDate, seed: Long): String = when (period) {
         CopyPeriod.MONTH -> {
-            val m = Format.monthName(start.monthValue)
-            pick(
-                seed, "wrapped.cover.month",
-                "Tu $m, contado.",
-                "${Format.capitalize(m)}, en cifras.",
-                "Lo que $m se llevó.",
-                "${Format.capitalize(m)}, vídeo a vídeo.",
-            )
+            val m = Format.monthStandalone(start.monthValue)
+            pick(seed, "wrapped.cover.month", R.array.wrapped_cover_month, m, Format.capitalize(m))
         }
 
-        CopyPeriod.WEEK -> pick(
-            seed, "wrapped.cover.week",
-            "Tu semana, contada.",
-            "Siete días, vídeo a vídeo.",
-            "La semana, en cifras.",
-        )
-
-        CopyPeriod.YEAR -> {
-            val y = start.year.toString()
-            pick(
-                seed, "wrapped.cover.year",
-                "Tu $y, contado.",
-                "$y, vídeo a vídeo.",
-                "Un año entero, en cifras.",
-            )
-        }
-
-        CopyPeriod.ALL -> pick(
-            seed, "wrapped.cover.all",
-            "Todo, contado.",
-            "Tu historial completo, en cifras.",
-            "Desde el principio, vídeo a vídeo.",
-        )
+        CopyPeriod.WEEK -> pick(seed, "wrapped.cover.week", R.array.wrapped_cover_week)
+        CopyPeriod.YEAR -> pick(seed, "wrapped.cover.year", R.array.wrapped_cover_year, start.year.toString())
+        CopyPeriod.ALL -> pick(seed, "wrapped.cover.all", R.array.wrapped_cover_all)
     }
 
     // ------------------------------------------------------------------ total y tiempo
 
-    const val TOTAL_LABEL = Labels.VIDEOS
-    const val TIME_LABEL = Labels.TIME
+    val TOTAL_LABEL: String get() = Labels.VIDEOS
+    val TIME_LABEL: String get() = Labels.TIME
 
     /** Frase bajo el marcador del total. [days] = días del periodo. */
     fun total(count: Long, days: Int, seed: Long): String {
         val v = Words.videos(count)
-        if (count <= 0) {
-            return pick(
-                seed, "wrapped.total.zero",
-                "Ni un vídeo. Este resumen va a ser corto.",
-                "Cero vídeos. Poco que contar, y eso ya dice mucho.",
-                "Nada. Ni uno. El resumen más corto de la historia.",
-            )
-        }
-        if (count < 5) {
-            return pick(
-                seed, "wrapped.total.tiny",
-                "Solo $v. Esto se resume rápido.",
-                "$v. Ni el algoritmo se lo cree.",
-                "$v y punto.",
-            )
-        }
+        if (count <= 0) return pick(seed, "wrapped.total.zero", R.array.wrapped_total_zero)
+        if (count < 5) return pick(seed, "wrapped.total.tiny", R.array.wrapped_total_tiny, v)
         val d = days.coerceAtLeast(1)
         val avg = Format.decimal(count.toDouble() / d)
         return pick(
             seed, "wrapped.total",
-            "$v. Uno detrás de otro.",
-            "Deslizaste hacia arriba ${Words.times(count)}.",
-            if (d >= 2) "Una media de $avg al día, festivos incluidos." else "$v en un solo día. Ahí es nada.",
-            "$v en ${Words.days(d)}. Las cuentas claras.",
+            if (d >= 2) R.array.wrapped_total else R.array.wrapped_total_one_day,
+            v, Words.times(count), avg, Words.days(d),
         )
     }
 
@@ -145,133 +116,93 @@ object WrappedCopy {
         return when {
             hours >= 24 -> {
                 val d = (hours / 24).toLong()
-                val dias = if (d == 1L) "un día entero" else "${Format.integer(d)}${Words.NBSP}días enteros"
-                val jornadas = Equivalences.WORKDAY.forDuration(totalMs).amountText
-                pick(
-                    seed, "wrapped.time.days",
-                    "$tCap. Más de $dias, sin dormir ni comer.",
-                    "$tCap de pantalla o, lo que es lo mismo, $jornadas.",
-                    "$tCap. O, dicho de otra forma, $minutes.",
-                )
+                val wholeDays = if (d == 1L) str(R.string.wrapped_time_one_whole_day) else plural(R.plurals.wrapped_time_whole_days, d, Format.integer(d))
+                val workdays = Equivalences.WORKDAY.forDuration(totalMs).amountText
+                pick(seed, "wrapped.time.days", R.array.wrapped_time_days, tCap, wholeDays, workdays, minutes)
             }
 
             hours >= 1 -> {
                 val eq = Equivalences.pick(totalMs, 1, seed).firstOrNull()?.infinitive
                 pick(
                     seed, "wrapped.time.hours",
-                    if (eq != null) "$tCap. Te daba para $eq." else "$tCap. Un buen rato.",
-                    "$tCap. O, dicho de otra forma, $minutes.",
-                    "$tCap, de quince en quince segundos.",
+                    if (eq != null) R.array.wrapped_time_hours else R.array.wrapped_time_hours_noeq,
+                    tCap, eq.orEmpty(), minutes,
                 )
             }
 
-            else -> pick(
-                seed, "wrapped.time.minutes",
-                "$tCap. Poca cosa, para lo que podría ser.",
-                "$tCap. Ni para una película.",
-                "$tCap, de quince en quince segundos.",
-            )
+            else -> pick(seed, "wrapped.time.minutes", R.array.wrapped_time_minutes, tCap)
         }
     }
 
     // ------------------------------------------------------------------ equivalencias
 
     /** Etiqueta de la diapositiva de equivalencias; cada línea sigue con [equivalenceLine]. */
-    const val EQUIVALENCES_LABEL = "CON ESE TIEMPO PODRÍAS"
+    val EQUIVALENCES_LABEL: String get() = str(R.string.wrapped_equivalences_label)
 
     /** «Leer 14 libros.», «Sacarte medio grado universitario.» (va bajo [EQUIVALENCES_LABEL]). Nota: [EquivalenceValue.basis]. */
     fun equivalenceLine(value: EquivalenceValue): String = Words.sentence(value.infinitive)
 
     /** Si el tiempo es tan poco que no hay equivalencias que mostrar. */
-    const val EQUIVALENCES_EMPTY = "Tan poco tiempo que no hay con qué compararlo."
+    val EQUIVALENCES_EMPTY: String get() = str(R.string.wrapped_equivalences_empty)
 
     // ------------------------------------------------------------------ creador
 
-    const val CREATOR_LABEL = Labels.TOP_CREATOR
+    val CREATOR_LABEL: String get() = Labels.TOP_CREATOR
 
     /** Creador n.º 1. [name] es el usuario tal como se guardó (con o sin «@»). */
-    fun creator(name: String, count: Int, seed: Long): String {
-        val h = Words.handle(name)
-        val v = Words.videos(count)
-        return pick(
-            seed, "wrapped.creator",
-            "$h: $v. A estas alturas, es de la familia.",
-            "$v de $h. Más tiempo que con algunos primos.",
-            "Nadie te puso más vídeos delante que $h: ${Format.integer(count)}.",
-            "Tu n.º 1: $h, con $v. Ese perfil no sabe que existes.",
-        )
-    }
+    fun creator(name: String, count: Int, seed: Long): String =
+        pick(seed, "wrapped.creator", R.array.wrapped_creator, Words.handle(name), Words.videos(count), Format.integer(count))
 
     /** No se pudo leer ningún creador en el periodo. */
-    fun noCreator(seed: Long): String = pick(
-        seed, "wrapped.creator.none",
-        "Sin creador destacado: no he podido leer quién publicaba los vídeos.",
-        "Esta vez no hay creador n.º 1. Las apps no siempre dejan ver quién firma.",
-        "Ningún creador destacado. El anonimato, a veces, gana.",
-    )
+    fun noCreator(seed: Long): String = pick(seed, "wrapped.creator.none", R.array.wrapped_creator_none)
 
     // ------------------------------------------------------------------ categoría
 
-    const val CATEGORY_LABEL = "LO QUE MÁS VISTE"
+    val CATEGORY_LABEL: String get() = str(R.string.wrapped_category_label)
 
     /** Categoría principal con su cuota ([fraction] 0–1). */
     fun category(category: Category, fraction: Double, seed: Long): String {
         val pct = Format.percent(fraction)
-        if (category == Category.OTROS) {
-            return pick(
-                seed, "wrapped.category.otros",
-                "La mayoría, sin clasificar. Tus gustos son un misterio incluso para mí.",
-                "Casi todo, sin categoría. Ni el clasificador se aclara.",
-                "El $pct, sin clasificar. Hay feeds que no se dejan etiquetar.",
-            )
-        }
+        if (category == Category.OTROS) return pick(seed, "wrapped.category.otros", R.array.wrapped_category_otros, pct)
         val label = category.label
-        return pick(
-            seed, "wrapped.category",
-            "Lo que más viste: $label. El $pct de todo.",
-            "$label, con el $pct. Ya sabemos de qué va tu feed.",
-            "Tu feed habla de ${label.replaceFirstChar { it.lowercase(Format.locale) }}: un $pct.",
-            zinger(category),
-        )
+        // Las frases comunes y, al final, el remate propio de la categoría.
+        val texts = AppTexts.current
+        val options = texts.array(R.array.wrapped_category) + listOfNotNull(zinger(category)?.let { str(it) })
+        val chosen = Variants.pick(options, seed, "wrapped.category")
+        return texts.format(chosen, label, pct, label.replaceFirstChar { it.lowercase(Format.locale) })
     }
 
-    private fun zinger(category: Category): String = when (category) {
-        Category.HUMOR -> "Te has reído mucho. O, como mínimo, has echado aire por la nariz."
-        Category.DEPORTE -> "Mucho deporte. Visto, pero deporte."
-        Category.FITNESS -> "Rutinas de gimnasio, vistas desde el sofá. Cuenta como calentamiento."
-        Category.COMIDA -> "Recetas, muchas. Cocinadas, eso ya es otra cuenta."
-        Category.MUSICA -> "Tu feed tiene banda sonora propia."
-        Category.BAILE -> "Muchos bailes. Los pasos, ya si eso, otro día."
-        Category.GAMING -> "Partidas ajenas, horas propias."
-        Category.APRENDIZAJE -> "Vídeos para aprender. Algo se habrá quedado."
-        Category.TECNOLOGIA -> "Mucho gadget. Este móvil, por cierto, aguanta bien."
-        Category.BELLEZA -> "Rutinas de diez pasos, vistas en diez segundos."
-        Category.ANIMALES -> "Animales. Lo mejor de internet, para qué negarlo."
-        Category.VIAJES -> "Has visto medio mundo. Desde el sofá, pero medio mundo."
-        Category.MOTOR -> "Muchos caballos. De los de motor."
-        Category.DINERO -> "Consejos de dinero, a montones. El tiempo, por cierto, también lo es."
-        Category.NOTICIAS -> "Noticias en vertical y en treinta segundos. Al día, a tu manera."
-        Category.RELACIONES -> "Consejos de pareja, muchos. Aplicados, eso ya no lo cuento."
-        Category.OTROS -> "La mayoría, sin clasificar."
+    private fun zinger(category: Category): Int? = when (category) {
+        Category.HUMOR -> R.string.wrapped_category_zinger_humor
+        Category.DEPORTE -> R.string.wrapped_category_zinger_deporte
+        Category.FITNESS -> R.string.wrapped_category_zinger_fitness
+        Category.COMIDA -> R.string.wrapped_category_zinger_comida
+        Category.MUSICA -> R.string.wrapped_category_zinger_musica
+        Category.BAILE -> R.string.wrapped_category_zinger_baile
+        Category.GAMING -> R.string.wrapped_category_zinger_gaming
+        Category.APRENDIZAJE -> R.string.wrapped_category_zinger_aprendizaje
+        Category.TECNOLOGIA -> R.string.wrapped_category_zinger_tecnologia
+        Category.BELLEZA -> R.string.wrapped_category_zinger_belleza
+        Category.ANIMALES -> R.string.wrapped_category_zinger_animales
+        Category.VIAJES -> R.string.wrapped_category_zinger_viajes
+        Category.MOTOR -> R.string.wrapped_category_zinger_motor
+        Category.DINERO -> R.string.wrapped_category_zinger_dinero
+        Category.NOTICIAS -> R.string.wrapped_category_zinger_noticias
+        Category.RELACIONES -> R.string.wrapped_category_zinger_relaciones
+        // «Otros» tiene sus propias frases (wrapped_category_otros).
+        Category.OTROS -> null
     }
 
     // ------------------------------------------------------------------ peor día, hora punta, plataformas
 
-    const val WORST_DAY_LABEL = Labels.WORST_DAY
-    const val PEAK_HOUR_LABEL = Labels.PEAK_HOUR
-    const val PLATFORMS_LABEL = Labels.PLATFORMS
+    val WORST_DAY_LABEL: String get() = Labels.WORST_DAY
+    val PEAK_HOUR_LABEL: String get() = Labels.PEAK_HOUR
+    val PLATFORMS_LABEL: String get() = Labels.PLATFORMS
 
     /** El día con más vídeos del periodo. */
     fun worstDay(date: LocalDate, count: Int, seed: Long): String {
         val d = Format.dayLong(date)
-        val v = Words.videos(count)
-        return pick(
-            seed, "wrapped.worstDay",
-            "Tu peor día: el $d, con $v.",
-            "${Format.capitalize(d)}: $v. Ese día ganó el algoritmo.",
-            "El récord del periodo: $v, el $d. ¿Qué pasó? No lo sé; solo lo cuento.",
-            "$v en un solo día: el $d. Hay días así.",
-        )
+        return pick(seed, "wrapped.worstDay", R.array.wrapped_worst_day, d, Format.capitalize(d), Words.videos(count))
     }
 
     /** Hora punta (misma voz que en Estadísticas). */
@@ -283,38 +214,32 @@ object WrappedCopy {
      */
     fun platforms(shares: List<Pair<Platform, Double>>, seed: Long): String {
         val list = shares.filter { it.second > 0 }.sortedByDescending { it.second }
-        if (list.isEmpty()) return "Sin plataformas que repartir."
+        if (list.isEmpty()) return str(R.string.wrapped_platforms_none)
         val (top, topShare) = list.first()
         val topName = top.shortName
-        if (list.size == 1 || topShare >= 0.995) {
-            return pick(
-                seed, "wrapped.platforms.single",
-                "Todo en $topName. Fidelidad absoluta.",
-                "$topName, y nada más. Monogamia de plataforma.",
-                "Una sola app: $topName. Para qué complicarse.",
-            )
-        }
+        if (list.size == 1 || topShare >= 0.995) return pick(seed, "wrapped.platforms.single", R.array.wrapped_platforms_single, topName)
         val rest = list.drop(1)
         val others = Words.join(rest.map { it.first.shortName })
         val pct = Format.percent(topShare)
         return if (topShare >= 0.5) {
-            val repartieron = if (rest.size == 1) "se quedó con" else "se repartieron"
             pick(
                 seed, "wrapped.platforms.top",
-                "$topName se llevó el $pct. $others $repartieron el resto.",
-                "Ganó $topName, con el $pct.",
-                "$topName, con el $pct, y el resto para $others.",
+                if (rest.size == 1) R.array.wrapped_platforms_top_one_rest else R.array.wrapped_platforms_top,
+                topName, pct, others,
             )
         } else {
-            val detail = Words.join(list.map { "${it.first.shortName} ${Format.percent(it.second)}" })
-            pick(
-                seed, "wrapped.platforms.balanced",
-                "Repartido: $detail. No te casas con nadie.",
-                "Ninguna app pasa del 50${Words.NBSP}%. Lo tuyo es repartir.",
-                "Reparto casi democrático: $detail.",
-            )
+            val detail = Words.join(list.map { str(R.string.wrapped_platform_share, it.first.shortName, Format.percent(it.second)) })
+            pick(seed, "wrapped.platforms.balanced", R.array.wrapped_platforms_balanced, detail, Format.percent(0.5))
         }
     }
+
+    /** Valor de una fila de la gráfica de plataformas: «34 % · 1.204». */
+    fun platformRowValue(fraction: Double, count: Int): String =
+        str(R.string.wrapped_platform_row_value, Format.percent(fraction), Format.integer(count))
+
+    /** Días con vídeos en la diapositiva del total: «26/31». */
+    fun activeDaysValue(active: Int, days: Int): String =
+        str(R.string.wrapped_active_days_value, Format.integer(active), Format.integer(days))
 
     // ------------------------------------------------------------------ cierre
 
@@ -324,61 +249,34 @@ object WrappedCopy {
      */
     fun closing(period: CopyPeriod, start: LocalDate, finished: Boolean, seed: Long): String {
         if (!finished || period == CopyPeriod.ALL) {
-            val soFar = when (period) {
-                CopyPeriod.WEEK -> "lo que va de semana"
-                CopyPeriod.MONTH -> "lo que va de mes"
-                CopyPeriod.YEAR -> "lo que va de año"
-                CopyPeriod.ALL -> "todo, de momento"
+            val array = when (period) {
+                CopyPeriod.WEEK -> R.array.wrapped_closing_open_week
+                CopyPeriod.MONTH -> R.array.wrapped_closing_open_month
+                CopyPeriod.YEAR -> R.array.wrapped_closing_open_year
+                CopyPeriod.ALL -> R.array.wrapped_closing_open_all
             }
-            val todavia = when (period) {
-                CopyPeriod.WEEK -> "la semana todavía no ha terminado"
-                CopyPeriod.MONTH -> "el mes todavía no ha terminado"
-                CopyPeriod.YEAR -> "el año todavía no ha terminado"
-                CopyPeriod.ALL -> "esto no ha terminado"
-            }
-            return pick(
-                seed, "wrapped.closing.open",
-                "Y esto es $soFar. El marcador sigue contando.",
-                "Resumen provisional: $todavia.",
-                "Fin del resumen, de momento. Lo que hagas con él es cosa tuya.",
-            )
+            return pick(seed, "wrapped.closing.open", array)
         }
         return when (period) {
             CopyPeriod.MONTH -> {
-                val m = Format.monthName(start.monthValue)
-                val next = Format.capitalize(Format.monthName(start.plusMonths(1).monthValue))
-                pick(
-                    seed, "wrapped.closing.month",
-                    "Esto fue $m. $next ya ha empezado a contar.",
-                    "Hasta aquí $m. El marcador sigue.",
-                    "${Format.capitalize(m)}, cerrado. Sin devoluciones.",
-                    "Fin del resumen. Lo que hagas con él es cosa tuya.",
-                )
+                val m = Format.monthStandalone(start.monthValue)
+                val next = Format.capitalize(Format.monthStandalone(start.plusMonths(1).monthValue))
+                pick(seed, "wrapped.closing.month", R.array.wrapped_closing_month, m, next, Format.capitalize(m))
             }
 
-            CopyPeriod.WEEK -> pick(
-                seed, "wrapped.closing.week",
-                "Esto fue tu semana. La siguiente ya ha empezado a contar.",
-                "Semana cerrada. Sin devoluciones.",
-                "Hasta aquí la semana. El marcador sigue.",
-            )
+            CopyPeriod.WEEK -> pick(seed, "wrapped.closing.week", R.array.wrapped_closing_week)
 
             else -> {
                 val y = start.year
-                pick(
-                    seed, "wrapped.closing.year",
-                    "Esto fue $y. ${y + 1} ya ha empezado a contar.",
-                    "Hasta aquí $y. El marcador sigue.",
-                    "$y, cerrado. Sin devoluciones.",
-                )
+                pick(seed, "wrapped.closing.year", R.array.wrapped_closing_year, y.toString(), (y + 1).toString())
             }
         }
     }
 
     /** Tras GUARDAR (el sitio lo elige la persona en el selector de documentos, no siempre la galería). */
-    const val SAVED = "Ticket guardado."
-    const val SAVE_FAILED = "No se ha podido guardar la imagen. Prueba otra vez."
+    val SAVED: String get() = str(R.string.wrapped_saved)
+    val SAVE_FAILED: String get() = str(R.string.wrapped_save_failed)
 
     /** Si no se pudo preparar la imagen para compartirla. */
-    const val SHARE_FAILED = "No se ha podido preparar la imagen. Prueba otra vez."
+    val SHARE_FAILED: String get() = str(R.string.wrapped_share_failed)
 }

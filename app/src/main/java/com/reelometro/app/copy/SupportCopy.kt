@@ -1,31 +1,31 @@
 package com.reelometro.app.copy
 
+import com.reelometro.app.R
+
 /**
- * Textos del **aviso de apoyo**: un único aviso, grande y centrado, que sale al poco de usar la app (ver
- * `ui/support/SupportPrompt`) y lleva al GitHub del proyecto. Sin variantes: sale como mucho dos veces en
- * la vida de la app y debe decir siempre lo mismo. Nada de prometer lo que la app no hace: no tiene
- * internet; el enlace lo abre el navegador.
+ * Textos del **aviso de apoyo** (`res/values/copy_support.xml`): un único aviso, grande y centrado, que
+ * sale al poco de usar la app (ver `ui/support/SupportPrompt`) y lleva al GitHub del proyecto. Sin
+ * variantes: sale como mucho dos veces en la vida de la app y debe decir siempre lo mismo. Nada de
+ * prometer lo que la app no hace: no tiene internet; el enlace lo abre el navegador.
  */
 object SupportCopy {
-    const val KICKER = "UNA COSA"
-    const val TITLE = "Esta app la hace un estudiante."
-    const val TEXT =
-        "Reelómetro es gratis, no tiene anuncios y tus datos no salen del móvil. La hace un estudiante en sus " +
-            "ratos libres. En su GitHub puedes ver cómo está hecha y, si te apetece, apoyarlo."
+    val KICKER: String get() = str(R.string.support_kicker)
+    val TITLE: String get() = str(R.string.support_title)
+    val TEXT: String get() = str(R.string.support_text)
 
     /** Pie pequeño bajo el texto: deja claro qué pasa al pulsar. */
-    const val NOTE = "Se abre en el navegador. La app sigue sin internet."
+    val NOTE: String get() = str(R.string.support_note)
 
-    const val OPEN = "VER SU GITHUB"
-    const val LATER = Buttons.NOT_NOW
-    const val NEVER = "No volver a mostrar"
+    val OPEN: String get() = str(R.string.support_open)
+    val LATER: String get() = Buttons.NOT_NOW
+    val NEVER: String get() = str(R.string.support_never)
 
     /** Si no hay navegador (o no se pudo abrir). El aviso no se cierra. */
     fun openFailed(url: String): String =
-        "No se ha podido abrir el navegador. Búscalo en GitHub: ${url.removePrefix("https://").removePrefix("github.com/").trimEnd('/')}."
+        str(R.string.support_open_failed, url.removePrefix("https://").removePrefix("github.com/").trimEnd('/'))
 
     /** TalkBack. */
-    const val PANE_TITLE = "Apoyar Reelómetro"
-    const val OPEN_DESCRIPTION = "Ver su GitHub. Se abre en el navegador"
-    const val NEVER_DESCRIPTION = "No volver a mostrar este aviso"
+    val PANE_TITLE: String get() = str(R.string.support_pane_title)
+    val OPEN_DESCRIPTION: String get() = str(R.string.support_open_description)
+    val NEVER_DESCRIPTION: String get() = str(R.string.support_never_description)
 }

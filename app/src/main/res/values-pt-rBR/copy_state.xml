@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Estados genéricos (cargando, vacío, error), el widget de Hoy y la pantalla oculta de calibración
+  (copy/StateCopy.kt). Cada <string-array> es una situación y cada <item>, una frase alternativa
+  (se elige una por día): puedes poner las que quieras (mínimo 2).
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="pt">
+
+    <!-- Etiqueta en MAYÚSCULAS del marcador animado mientras carga (pocas letras: caben unas 8). -->
+    <string name="state_loading_label">CONTANDO</string>
+
+    <!-- Frase opcional bajo el marcador mientras carga. -->
+    <string-array name="state_loading">
+        <item>Fazendo as contas.</item>
+        <item>Somando.</item>
+        <item>Contando, que é o meu forte.</item>
+    </string-array>
+
+    <!-- Pantalla vacía genérica (cuando la pantalla no tiene una propia). -->
+    <string-array name="state_empty">
+        <item>Nada por aqui. Por enquanto.</item>
+        <item>Ainda não há nada para contar.</item>
+        <item>Aqui não tem nada. Fica registrado em ata.</item>
+    </string-array>
+
+    <!-- Error genérico al cargar datos; va con el botón REINTENTAR. -->
+    <string-array name="state_error">
+        <item>Algo deu errado ao fazer as contas.</item>
+        <item>Não consegui carregar isso. Na segunda tentativa costuma dar certo.</item>
+        <item>Erro ao ler os dados. Tente de novo.</item>
+    </string-array>
+
+    <!-- Widget de Hoy, descripción para TalkBack: %1$s los vídeos («212 vídeos»), %2$s el tiempo
+         («47 minutos»). -->
+    <string name="state_widget_description">Hoje: %1$s, %2$s.</string>
+    <!-- Lo mismo con objetivo: %1$s la frase de arriba, %2$s el estado frente al objetivo
+         («62 vídeos por encima del objetivo de 150»), sin punto final. -->
+    <string name="state_widget_description_goal">%1$s %2$s.</string>
+    <!-- Widget con el servicio de accesibilidad desconectado (TalkBack). -->
+    <string name="state_widget_description_off">Reelómetro, sem sinal: o serviço está desconectado.</string>
+    <!-- Widget grande con la mascota a la vista: %1$s la descripción de arriba, %2$s el estado de
+         ánimo de Flap en minúsculas («en forma»). Flap es el nombre propio de la mascota. -->
+    <string name="state_widget_with_flap">%1$s Flap: %2$s.</string>
+
+    <!-- ===== Calibración: pantalla oculta para ajustar la detección (consola técnica en letra
+         monoespaciada). Las etiquetas en MAYÚSCULAS tienen poco sitio. «Log» es el registro de
+         eventos capturados. ===== -->
+    <string name="state_calibration_title">CALIBRAÇÃO</string>
+    <string name="state_calibration_headline">Calibração</string>
+    <!-- Botones de la consola (TalkBack). -->
+    <string name="state_calibration_copy_description">Copiar o log para a área de transferência</string>
+    <string name="state_calibration_share_description">Compartilhar o log de calibração</string>
+    <string name="state_calibration_clear_description">Limpar o log</string>
+    <string name="state_calibration_intro">Ferramenta para ajustar a detecção. O que for capturado aqui fica neste celular e é apagado ao limpar.</string>
+    <!-- Cabeceras de la consola: estado del servicio, interruptor de captura y filtros. -->
+    <string name="state_calibration_service">SERVIÇO</string>
+    <!-- Interruptor; el texto «CAPTURAR» se cita en state_calibration_paused y en el paso 1. -->
+    <string name="state_calibration_capture">CAPTURAR</string>
+    <string name="state_calibration_filter_platform">PLATAFORMA</string>
+    <string name="state_calibration_filter_type">TIPO</string>
+    <!-- Filtro: todas las plataformas (femenino) / todos los tipos de evento (masculino). -->
+    <string name="state_calibration_all_platforms">TODAS</string>
+    <string name="state_calibration_all_types">TODOS</string>
+    <!-- Decisión de la regla de detección: el deslizamiento ocurrió (✓) o no (✗) en el feed de
+         vídeos cortos. «FEED» es término técnico; se cita en los pasos de la guía. -->
+    <string name="state_calibration_feed_yes">FEED ✓</string>
+    <string name="state_calibration_feed_no">FEED ✗</string>
+    <!-- Un vídeo detectado (etiqueta y filtro de tipo). -->
+    <string name="state_calibration_video_detected">VÍDEO</string>
+    <!-- Título de un vídeo guardado: «VÍDEO #123045». %1$s es el identificador corto. -->
+    <string name="state_calibration_video_title">VÍDEO %1$s</string>
+    <string name="state_calibration_empty">Sem eventos. Abra um dos apps e deslize.</string>
+    <string name="state_calibration_paused">Captura pausada. Ative CAPTURAR para ver eventos.</string>
+    <!-- Mensajes breves tras copiar o vaciar el log, y título del selector de compartir de Android. -->
+    <string name="state_calibration_copied">Log copiado.</string>
+    <string name="state_calibration_cleared">Log vazio.</string>
+    <string name="state_calibration_share_title">Compartilhar log de calibração</string>
+    <!-- Recuento en MAYÚSCULAS: «128 EVENTOS». -->
+    <plurals name="state_calibration_events">
+        <item quantity="one">%1$s\u00A0EVENTO</item>
+        <item quantity="many">%1$s\u00A0EVENTOS</item>
+        <item quantity="other">%1$s\u00A0EVENTOS</item>
+    </plurals>
+    <!-- Servicio activado en Android pero aún sin conectar (tarda un momento tras arrancar). -->
+    <string name="state_calibration_service_waiting">ATIVADO, SEM CONEXÃO</string>
+    <string name="state_calibration_last_event">ÚLTIMO EVENTO</string>
+    <!-- Filtro de tipo de evento: desplazamientos, cambios de ventana, compartir. -->
+    <string name="state_calibration_type_scroll">SCROLL</string>
+    <string name="state_calibration_type_window">JANELA</string>
+    <string name="state_calibration_type_share">COMPARTILHAR</string>
+    <!-- Interruptor de captura (TalkBack). -->
+    <string name="state_calibration_capture_description">Capturar eventos</string>
+    <string name="state_calibration_filter_empty">Nenhum evento com esses filtros.</string>
+    <!-- Guía de uso en un móvil de verdad: título y pasos numerados (el número lo pone la app).
+         Cita tal cual: CAPTURAR, FEED ✓, FEED ✗ (textos de esta pantalla), VIDEO_START (nombre de
+         evento interno, no se traduce) y FeedRules (nombre de un fichero del código, no se traduce). -->
+    <string name="state_calibration_how_to_title">Como usar</string>
+    <string-array name="state_calibration_how_to">
+        <item>Deixe esta tela aberta, com CAPTURAR ativado, e saia pelo botão de início.</item>
+        <item>Abra TikTok, Instagram ou YouTube e faça o percurso devagar: cinco vídeos seguidos, um retorno, os comentários, um perfil, o feed normal e sair.</item>
+        <item>Volte aqui. No feed de vídeos curtos, cada deslizamento tem que sair com FEED ✓ e um VIDEO_START.</item>
+        <item>Fora do feed, FEED ✗. Se algo não bater, compartilhe o log: o guia de ajuste está no fim de FeedRules.</item>
+    </string-array>
+    <!-- Vídeo que todavía se está viendo (en lugar de su duración). -->
+    <string name="state_calibration_on_screen">na tela</string>
+    <!-- Cabecera de la lista en directo. -->
+    <string name="state_calibration_live">AO VIVO</string>
+    <!-- «1 compartido», «3 compartidos» (veces que se compartió el vídeo). -->
+    <plurals name="state_calibration_shares">
+        <item quantity="one">%1$s\u00A0compartilhado</item>
+        <item quantity="many">%1$s\u00A0compartilhados</item>
+        <item quantity="other">%1$s\u00A0compartilhados</item>
+    </plurals>
+</resources>

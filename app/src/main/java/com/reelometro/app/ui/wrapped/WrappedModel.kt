@@ -100,18 +100,11 @@ internal object HubModel {
         val detail = if (!hasData) {
             WrappedCopy.HUB_NO_DATA
         } else {
-            buildString {
-                append(Labels.VIDEOS).append(" · ").append(Words.durationLabel(s.totals.totalMs))
-                if (s.inProgress) append(" · ").append(WrappedCopy.HUB_IN_PROGRESS)
-            }
+            WrappedCopy.hubDetail(s.totals.totalMs, s.inProgress)
         }
         val spokenTitle = Format.capitalize(title.lowercase(Format.locale))
         val spokenRange = range.lowercase(Format.locale)
-        val description = if (hasData) {
-            "$spokenTitle, $spokenRange: ${Words.videos(s.totals.count)}, ${Words.duration(s.totals.totalMs)}."
-        } else {
-            "$spokenTitle, $spokenRange: sin datos."
-        }
+        val description = WrappedCopy.hubStripDescription(spokenTitle, spokenRange, s.totals.count, s.totals.totalMs, hasData)
         return HubStrip(
             ref = s.ref,
             title = title,
@@ -241,7 +234,7 @@ internal object StorySlides {
                     quote = WrappedCopy.total(count, days, seed),
                     details = buildList {
                         if (days >= 2) add(TicketLine(Labels.DAILY_AVERAGE, Format.decimal(stats.avgPerDay)))
-                        add(TicketLine(Labels.ACTIVE_DAYS, "${Format.integer(stats.activeDays)}/${Format.integer(days)}"))
+                        add(TicketLine(Labels.ACTIVE_DAYS, WrappedCopy.activeDaysValue(stats.activeDays, days)))
                     },
                 ),
             )
@@ -328,7 +321,7 @@ internal object StorySlides {
                         peakHour = peak?.let { Format.hour(it.hour) },
                         peakQuote = peak?.let { WrappedCopy.peakHour(it.hour, seed) },
                         platforms = platforms.map {
-                            PlatformRow(it.platform, it.fraction.toFloat(), "${Format.percent(it.fraction)} · ${Format.integer(it.count)}")
+                            PlatformRow(it.platform, it.fraction.toFloat(), WrappedCopy.platformRowValue(it.fraction, it.count))
                         },
                         platformsText = if (platforms.isEmpty()) null else WrappedCopy.platforms(platforms.map { it.platform to it.fraction }, seed),
                     ),

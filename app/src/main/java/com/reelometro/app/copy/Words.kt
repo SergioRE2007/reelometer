@@ -1,5 +1,6 @@
 package com.reelometro.app.copy
 
+import com.reelometro.app.R
 import com.reelometro.app.stats.Format
 import kotlin.math.roundToLong
 
@@ -7,38 +8,34 @@ import kotlin.math.roundToLong
  * Formateadores «de prosa» que no están en [Format] (que es para cifras y etiquetas):
  * plurales bien hechos, duraciones con palabras, listas con «y/e», «a las 23:00».
  *
- * Todas las cifras pasan por [Format] (1.234 · 3,2 · 34 %) y van unidas a su palabra con un
- * espacio duro ([Format.NBSP]) para que «212 vídeos» nunca se parta al final de una línea.
+ * Las palabras salen de `res/values/copy_words.xml` (`<plurals>` y frases con huecos); aquí solo
+ * queda la lógica (qué forma toca). Todas las cifras pasan por [Format] (1.234 · 3,2 · 34 %) y van
+ * unidas a su palabra con un espacio duro (`\u00A0` en los recursos) para que «212 vídeos» nunca se
+ * parta al final de una línea.
  */
 object Words {
 
     /** Espacio duro entre cifra y palabra. */
     const val NBSP: Char = Format.NBSP
 
-    /** «1 vídeo», «2 vídeos», «1.234 vídeos», «0 vídeos». */
-    fun count(n: Long, singular: String, plural: String): String =
-        "${Format.integer(n)}$NBSP${if (n == 1L) singular else plural}"
-
-    fun count(n: Int, singular: String, plural: String): String = count(n.toLong(), singular, plural)
-
     /** «1 vídeo», «212 vídeos». */
-    fun videos(n: Int): String = count(n, "vídeo", "vídeos")
+    fun videos(n: Int): String = videos(n.toLong())
 
-    fun videos(n: Long): String = count(n, "vídeo", "vídeos")
+    fun videos(n: Long): String = plural(R.plurals.words_videos, n, Format.integer(n))
 
     /** «1 vez», «3 veces». */
-    fun times(n: Int): String = count(n, "vez", "veces")
+    fun times(n: Int): String = times(n.toLong())
 
-    fun times(n: Long): String = count(n, "vez", "veces")
+    fun times(n: Long): String = plural(R.plurals.words_times, n, Format.integer(n))
 
     /** «1 día», «12 días». */
-    fun days(n: Int): String = count(n, "día", "días")
+    fun days(n: Int): String = plural(R.plurals.words_days, n, Format.integer(n))
 
-    fun hours(n: Long): String = count(n, "hora", "horas")
+    fun hours(n: Long): String = plural(R.plurals.words_hours, n, Format.integer(n))
 
-    fun minutes(n: Long): String = count(n, "minuto", "minutos")
+    fun minutes(n: Long): String = plural(R.plurals.words_minutes, n, Format.integer(n))
 
-    fun seconds(n: Long): String = count(n, "segundo", "segundos")
+    fun seconds(n: Long): String = plural(R.plurals.words_seconds, n, Format.integer(n))
 
     /**
      * Duración con palabras, para frases: «45 segundos», «un minuto», «47 minutos», «una hora y
@@ -50,23 +47,31 @@ object Words {
     fun duration(ms: Long): String {
         val safe = ms.coerceAtLeast(0)
         val totalSec = safe / 1000
-        if (totalSec < 60) return if (totalSec == 1L) "un segundo" else seconds(totalSec)
+        if (totalSec < 60) return plural(R.plurals.words_duration_seconds, totalSec, Format.integer(totalSec))
         val totalMin = (safe + 30_000) / 60_000
         if (totalMin < 60) return minutesWord(totalMin)
         val h = totalMin / 60
         val m = totalMin % 60
         if (h >= 10) return hours((safe / 3_600_000.0).roundToLong())
-        val hoursText = if (h == 1L) "una hora" else hours(h)
-        return if (m == 0L) hoursText else "$hoursText y ${minutesWord(m)}"
+        val hoursText = plural(R.plurals.words_duration_hours, h, Format.integer(h))
+        return if (m == 0L) hoursText else str(R.string.words_duration_hours_minutes, hoursText, minutesWord(m))
     }
 
     /**
-     * `true` si [duration] empieza en singular («un minuto», «una hora», «una hora y 40 minutos»),
-     * para concordar con su núcleo: «Eso es una hora y 40 minutos…» / «Eso son 47 minutos…».
+     * `true` si [duration] tiene por núcleo un 1 («un minuto», «una hora», «una hora y 40 minutos»),
+     * para concordar: «Eso es una hora y 40 minutos…» / «Eso son 47 minutos…». No mira las palabras
+     * (sirve en cualquier idioma): el núcleo es la unidad mayor de la duración.
      */
-    fun isSingularDuration(ms: Long): Boolean = duration(ms).let { it.startsWith("un ") || it.startsWith("una ") }
+    fun isSingularDuration(ms: Long): Boolean {
+        val safe = ms.coerceAtLeast(0)
+        val totalSec = safe / 1000
+        if (totalSec < 60) return totalSec == 1L
+        val totalMin = (safe + 30_000) / 60_000
+        if (totalMin < 60) return totalMin == 1L
+        return totalMin / 60 == 1L
+    }
 
-    private fun minutesWord(n: Long): String = if (n == 1L) "un minuto" else minutes(n)
+    private fun minutesWord(n: Long): String = plural(R.plurals.words_duration_minutes, n, Format.integer(n))
 
     /** Etiqueta corta en mayúsculas: «47 MIN», «3,2 H», «61 H». */
     fun durationLabel(ms: Long): String = Format.upper(Format.durationCompact(ms))
@@ -79,12 +84,17 @@ object Words {
 
     /**
      * Une con comas e «y» final: «TikTok», «TikTok y Reels», «TikTok, Reels y Shorts».
-     * Usa «e» delante de palabras que empiezan por el sonido /i/ («Reels e Instagram»).
+     * Usa «e» delante de palabras que empiezan por el sonido /i/ («Reels e Instagram»); en otros
+     * idiomas, las dos frases (`words_list_last` y `words_list_last_i`) suelen ser iguales.
      */
     fun join(items: List<String>): String = when (items.size) {
         0 -> ""
         1 -> items[0]
-        else -> items.dropLast(1).joinToString(", ") + " ${conjunction(items.last())} " + items.last()
+        else -> str(
+            if (soundsLikeI(items.last())) R.string.words_list_last_i else R.string.words_list_last,
+            items.dropLast(1).joinToString(str(R.string.words_list_separator)),
+            items.last(),
+        )
     }
 
     /** «a las 23:00», «a la 01:00». */
@@ -94,7 +104,7 @@ object Words {
     fun atTime(hour: Int, minute: Int): String {
         val h = Math.floorMod(hour, 24)
         val m = Math.floorMod(minute, 60)
-        return if (h == 1) "a la ${Format.time(h, m)}" else "a las ${Format.time(h, m)}"
+        return str(if (h == 1) R.string.words_at_time_one else R.string.words_at_time, Format.time(h, m))
     }
 
     /** Primera letra en mayúscula y punto final si no lo tiene: «leer 14 libros» → «Leer 14 libros.». */
@@ -103,34 +113,48 @@ object Words {
         return if (t.endsWith(".") || t.endsWith("?")) t else "$t."
     }
 
-    /** Mayúsculas con las reglas del español (para etiquetas). */
+    /** Mayúsculas con las reglas del idioma de los textos (para etiquetas). */
     fun upper(text: String): String = Format.upper(text)
 
-    private fun conjunction(next: String): String {
+    /** «Instagram», «hielo» no («hie-»): la «y» pasa a «e» (solo cuenta en español). */
+    private fun soundsLikeI(next: String): Boolean {
         val w = next.trim().lowercase(Format.locale)
-        val soundsLikeI = w.startsWith("i") || w.startsWith("í") ||
+        return w.startsWith("i") || w.startsWith("í") ||
             (w.startsWith("hi") && !w.startsWith("hie") && !w.startsWith("hia") && !w.startsWith("hio") && !w.startsWith("hiu"))
-        return if (soundsLikeI) "e" else "y"
     }
 }
 
-/** Tipos de periodo, con lo necesario para concordar en los textos. */
+/**
+ * Tipos de periodo, con lo necesario para los textos. Las palabras salen de `copy_words.xml`.
+ *
+ * Para frases con concordancia («tu semana, contada» / «tu mes, contado») no se pegan trozos con
+ * [feminine]: se escribe una frase por periodo (cada idioma concuerda a su manera).
+ */
 enum class CopyPeriod(
-    /** «semana», «mes», «año», «historial». */
-    val noun: String,
-    /** Femenino: «tu semana, contada» frente a «tu mes, contado». */
+    private val nounId: Int,
+    /** Femenino en español. Solo para código antiguo: lo nuevo usa una frase por periodo. */
     val feminine: Boolean,
-    /** «esta semana», «este mes», «este año», «tu historial». */
-    val thisOne: String,
-    /** «esa semana», «ese mes», «ese año», «tu historial». */
-    val thatOne: String,
-    /** «la semana anterior», «el mes anterior», «el año anterior»; `null` en ALL. */
-    val previous: String?,
+    private val thisOneId: Int,
+    private val thatOneId: Int,
+    private val previousId: Int?,
 ) {
-    WEEK("semana", true, "esta semana", "esa semana", "la semana anterior"),
-    MONTH("mes", false, "este mes", "ese mes", "el mes anterior"),
-    YEAR("año", false, "este año", "ese año", "el año anterior"),
-    ALL("historial", false, "tu historial", "tu historial", null),
+    WEEK(R.string.period_week_noun, true, R.string.period_week_this, R.string.period_week_that, R.string.period_week_previous),
+    MONTH(R.string.period_month_noun, false, R.string.period_month_this, R.string.period_month_that, R.string.period_month_previous),
+    YEAR(R.string.period_year_noun, false, R.string.period_year_this, R.string.period_year_that, R.string.period_year_previous),
+    ALL(R.string.period_all_noun, false, R.string.period_all_this, R.string.period_all_that, null),
+    ;
+
+    /** «semana», «mes», «año», «historial». */
+    val noun: String get() = str(nounId)
+
+    /** «esta semana», «este mes», «este año», «tu historial». */
+    val thisOne: String get() = str(thisOneId)
+
+    /** «esa semana», «ese mes», «ese año», «tu historial». */
+    val thatOne: String get() = str(thatOneId)
+
+    /** «la semana anterior», «el mes anterior», «el año anterior»; `null` en ALL. */
+    val previous: String? get() = previousId?.let { str(it) }
 }
 
 /** Hacia dónde va una comparación. La interfaz decide flecha y color (más vídeos = `signalText`). */

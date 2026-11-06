@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Detalle de un día (copy/DayCopy.kt): se abre al tocar el marcador o una barra del calendario.
+  Cada <string-array> es una situación y cada <item>, una frase alternativa (se elige una por día).
+  Puedes poner las que quieras (mínimo 2). Los arrays con sufijo (_one, _notime, _noeq) son la
+  misma situación en otro caso gramatical: mantén el mismo sentido en cada posición.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
+
+    <!-- Título en frase. %1$s es la fecha larga («martes 3 de noviembre»). -->
+    <string name="day_title_today">Today, %1$s</string>
+    <string name="day_title_yesterday">Yesterday, %1$s</string>
+
+    <!-- Etiqueta en MAYÚSCULAS (se pasa a mayúsculas sola): «MARTES 3 NOV». %1$s día de la semana,
+         %2$s fecha corta («3 nov» o «3 nov 2025»). -->
+    <string name="day_label_date">%1$s %2$s</string>
+    <!-- «HOY · MARTES 3 NOV»: %1$s es la etiqueta de arriba, ya en mayúsculas. -->
+    <string name="day_label_today">TODAY · %1$s</string>
+    <string name="day_label_yesterday">YESTERDAY · %1$s</string>
+
+    <!-- Frase de un día pasado, cero vídeos. -->
+    <string-array name="day_zero">
+        <item>No videos that day.</item>
+        <item>Zero. A good day, or one with no signal.</item>
+        <item>Nothing that day. Either you didn\'t watch anything or I wasn\'t looking.</item>
+    </string-array>
+
+    <!-- Con objetivo, pasado: %1$s lo que se pasó («62 vídeos»), %2$s el objetivo, %3$s los vídeos del día. -->
+    <string-array name="day_goal_over">
+        <item>You went over the goal by %1$s that day.</item>
+        <item>Goal: %2$s. That day: %3$s.</item>
+        <item>%1$s over the goal. It happens.</item>
+    </string-array>
+    <!-- Con objetivo, justo en el límite: %1$s el objetivo. -->
+    <string-array name="day_goal_at">
+        <item>Right on the line: %1$s, not one more.</item>
+        <item>%1$s of %1$s. Spot on.</item>
+        <item>Goal hit exactly that day.</item>
+    </string-array>
+    <!-- Con objetivo, por debajo: %1$s los vídeos del día, %2$s el objetivo, %3$s el margen («38 vídeos»). -->
+    <string-array name="day_goal_under">
+        <item>Within the goal: %1$s of %2$s.</item>
+        <item>Under %2$s, with %3$s to spare.</item>
+        <item>%1$s of %2$s. A day within the limit.</item>
+    </string-array>
+
+    <!-- Día flojo (1–9 vídeos): %1$s los vídeos («3 vídeos»), %2$s el tiempo («2 minutos»).
+         _one: un solo vídeo. _notime: menos de un minuto (sin tiempo en la frase). -->
+    <string-array name="day_first">
+        <item>That day there were %1$s. Hardly anything.</item>
+        <item>%1$s and %2$s. A quiet day.</item>
+        <item>Not much: %1$s.</item>
+    </string-array>
+    <string-array name="day_first_notime">
+        <item>That day there were %1$s. Hardly anything.</item>
+        <item>%1$s. A quiet day.</item>
+        <item>Not much: %1$s.</item>
+    </string-array>
+    <string-array name="day_first_one">
+        <item>That day there was %1$s. Hardly anything.</item>
+        <item>%1$s and %2$s. A quiet day.</item>
+        <item>Not much: %1$s.</item>
+    </string-array>
+    <string-array name="day_first_one_notime">
+        <item>That day there was %1$s. Hardly anything.</item>
+        <item>%1$s. A quiet day.</item>
+        <item>Not much: %1$s.</item>
+    </string-array>
+
+    <!-- Día normal: %1$s los vídeos, %2$s el tiempo («47 minutos»), %3$s el tiempo con mayúscula
+         inicial (para empezar la frase con él). -->
+    <string-array name="day_normal">
+        <item>%1$s and %2$s. A normal day, which is saying something.</item>
+        <item>That day: %2$s of videos.</item>
+        <item>%3$s. Neither here nor there.</item>
+    </string-array>
+
+    <!-- Día alto: %1$s los vídeos, %2$s el tiempo con mayúscula inicial, %3$s el tiempo, %4$s una
+         equivalencia en infinitivo («leer 14 libros»). _noeq: sin equivalencia (no uses %4$s).
+         _one: el tiempo es singular («una hora y 40 minutos»). -->
+    <string-array name="day_high">
+        <item>%1$s. That day the algorithm worked overtime.</item>
+        <item>%2$s of videos. Enough to %4$s.</item>
+        <item>That day, %3$s were gone. Just like that.</item>
+    </string-array>
+    <string-array name="day_high_noeq">
+        <item>%1$s. That day the algorithm worked overtime.</item>
+        <item>%2$s of videos. A long day.</item>
+        <item>That day, %3$s were gone. Just like that.</item>
+    </string-array>
+    <string-array name="day_high_one">
+        <item>%1$s. That day the algorithm worked overtime.</item>
+        <item>%2$s of videos. Enough to %4$s.</item>
+        <item>That day, %3$s was gone. Just like that.</item>
+    </string-array>
+    <string-array name="day_high_one_noeq">
+        <item>%1$s. That day the algorithm worked overtime.</item>
+        <item>%2$s of videos. A long day.</item>
+        <item>That day, %3$s was gone. Just like that.</item>
+    </string-array>
+
+    <!-- Día extremo: %1$s los vídeos, %2$s el tiempo con mayúscula inicial. -->
+    <string-array name="day_extreme">
+        <item>%1$s. Some days are like that. This one was a marathon.</item>
+        <item>%2$s. If anyone asks, you had things to do.</item>
+        <item>%1$s in one day. The algorithm won that one.</item>
+    </string-array>
+
+    <!-- Puesto del día entre todos los contados (MAYÚSCULAS). -->
+    <string name="day_rank_record">YOUR RECORD: THE DAY WITH THE MOST VIDEOS</string>
+    <!-- %1$s el puesto, %2$s los días contados (siempre 2 o más). -->
+    <plurals name="day_rank_line">
+        <item quantity="one">NO. %1$s OF %2$s DAY COUNTED</item>
+        <item quantity="other">NO. %1$s OF %2$s DAYS COUNTED</item>
+    </plurals>
+
+    <!-- Estado frente al objetivo de un día cerrado (MAYÚSCULAS, columna estrecha: corto). %1$s cifra. -->
+    <string name="day_goal_status_over">+%1$s\u00A0OVER</string>
+    <string name="day_goal_status_at">ON THE LINE</string>
+    <string name="day_goal_status_under">%1$s\u00A0UNDER</string>
+
+    <!-- Lo mismo para TalkBack: %1$s la diferencia («38 vídeos»), %2$s el objetivo. -->
+    <string name="day_goal_status_over_description">%1$s over the goal of %2$s</string>
+    <!-- %1$s el objetivo. -->
+    <string name="day_goal_status_at_description">Right on the goal of %1$s</string>
+    <string name="day_goal_status_under_description">%1$s under the goal of %2$s</string>
+
+    <!-- Cabecera de la sección por horas de un día pasado (MAYÚSCULAS). -->
+    <string name="day_section_hours">THAT DAY, HOUR BY HOUR</string>
+    <!-- «PRIMER VÍDEO 08:12 · ÚLTIMO 01:47»: %1$s hora del primero, %2$s del último. -->
+    <string name="day_first_last">FIRST VIDEO %1$s · LAST %2$s</string>
+</resources>

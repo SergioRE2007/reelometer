@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Aviso de apoyo (copy/SupportCopy.kt): un único aviso grande y centrado que sale como mucho dos
+  veces y lleva al GitHub del proyecto. Sin prometer nada que la app no haga: no tiene internet; el
+  enlace lo abre el navegador. «GitHub» no se traduce.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="fr">
+
+    <!-- Antetítulo en MAYÚSCULAS, muy corto. -->
+    <string name="support_kicker">UNE CHOSE</string>
+    <string name="support_title">Cette application, c’est un étudiant qui la fait.</string>
+    <string name="support_text">Reelómetro est gratuit, sans publicité, et tes données ne sortent pas du téléphone. C’est un étudiant qui la fait pendant son temps libre. Sur son GitHub, tu peux voir comment elle est faite et, si tu en as envie, le soutenir.</string>
+    <!-- Pie pequeño bajo el texto: qué pasa al pulsar. -->
+    <string name="support_note">Ça s’ouvre dans le navigateur. L’application reste sans internet.</string>
+    <!-- Botón principal en MAYÚSCULAS. -->
+    <string name="support_open">VOIR SON GITHUB</string>
+    <!-- Enlace pequeño para no volver a ver el aviso. -->
+    <string name="support_never">Ne plus afficher</string>
+    <!-- Si no se pudo abrir el navegador. %1$s la dirección del proyecto sin «https://github.com/» («usuario/proyecto»). -->
+    <string name="support_open_failed">Impossible d’ouvrir le navigateur. Cherche-le sur GitHub\u00A0: %1$s.</string>
+
+    <!-- TalkBack: título del aviso y de los botones. -->
+    <string name="support_pane_title">Soutenir Reelómetro</string>
+    <string name="support_open_description">Voir son GitHub. Ça s’ouvre dans le navigateur</string>
+    <string name="support_never_description">Ne plus afficher cet avis</string>
+</resources>

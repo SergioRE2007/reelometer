@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Envío rápido (copy/QuickSendCopy.kt): burbujas que pone la app sobre los reels de Instagram para
+  compartir el reel con un toque. Las burbujas no llevan texto visible: casi todo es para TalkBack,
+  más la pregunta de si apagarlo. %1$s es siempre el nombre de una persona o un grupo de Instagram.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="pt-BR">
+
+    <!-- TalkBack de cada burbuja, según su estado. -->
+    <string name="quicksend_bubble_description">Enviar este reel para %1$s</string>
+    <string name="quicksend_sending_description">Enviando para %1$s</string>
+    <string name="quicksend_sent_description">Enviado para %1$s</string>
+    <!-- No ha encontrado algo: si la hoja de compartir se abrió, se queda abierta para terminar a mano. -->
+    <string name="quicksend_failed_description">Não consegui enviar para %1$s</string>
+    <!-- Acción de TalkBack: enviar a dos a la vez. %1$s esta burbuja, %2$s otra persona o grupo fijado. -->
+    <string name="quicksend_pair_action">Enviar para %1$s e para %2$s</string>
+    <!-- Acción de TalkBack en cada burbuja (equivale a soltarla en la «X»). -->
+    <string name="quicksend_hide_action">Esconder até o próximo reel</string>
+    <!-- Nombre de la ventana de las burbujas (TalkBack la anuncia así). -->
+    <string name="quicksend_window_title">Envio rápido do Reelómetro</string>
+    <!-- La zona «X» que sale abajo mientras arrastras las burbujas. -->
+    <string name="quicksend_zone_title">Solte aqui para esconder</string>
+
+    <!-- Pregunta tras esconder las burbujas tres veces seguidas (sale una sola vez).
+         «A quién envías» es el nombre del ajuste de la app (settings_recipients_label). -->
+    <string name="quicksend_ask_title">Desligo o envio rápido?</string>
+    <string name="quicksend_ask_body">Você escondeu as bolinhas três vezes seguidas. Se desligar, pode religar nas Configurações, embaixo de «Para quem você envia».</string>
+    <!-- Botones en MAYÚSCULAS, muy cortos. -->
+    <string name="quicksend_ask_turn_off">DESLIGAR</string>
+    <string name="quicksend_ask_keep">MANTER</string>
+</resources>

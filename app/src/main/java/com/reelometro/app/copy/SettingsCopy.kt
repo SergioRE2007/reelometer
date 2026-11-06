@@ -1,5 +1,6 @@
 package com.reelometro.app.copy
 
+import com.reelometro.app.R
 import com.reelometro.app.data.Platform
 import com.reelometro.app.stats.Format
 import java.time.LocalDate
@@ -7,336 +8,334 @@ import java.time.LocalDate
 /** Sección numerada de Ajustes: «01  OBJETIVO ─────» + descripción. */
 data class SettingsSection(val index: String, val title: String, val description: String)
 
-/** Textos de **Ajustes** (lista editorial de 8 secciones numeradas). */
+/**
+ * Textos de **Ajustes** (lista editorial de 8 secciones numeradas).
+ *
+ * Las palabras están en `res/values/copy_settings.xml`; aquí solo se decide qué frase toca.
+ */
 object SettingsCopy {
 
-    const val TITLE = "Ajustes"
+    val TITLE: String get() = str(R.string.settings_title)
 
-    val GOAL = SettingsSection(
-        "01", "OBJETIVO",
-        "Un máximo de vídeos al día. Sirve para el «te quedan» de Hoy y para las rachas.",
-    )
-    val NOTIFICATIONS = SettingsSection(
-        "02", "AVISOS",
-        "Un resumen al día, a la hora que elijas, y otro cada mes.",
-    )
-    val APPS = SettingsSection(
-        "03", "QUÉ APPS CUENTO",
-        "Lo que apagues aquí deja de contarse al momento. Lo ya contado se queda.",
-    )
-    val THEME = SettingsSection(
-        "04", "TEMA",
-        "El marcador luce más a oscuras, pero tú mandas.",
-    )
-    val DATA = SettingsSection(
-        "05", "TUS DATOS",
-        "Todo lo contado vive en este móvil. Puedes llevártelo o borrarlo.",
-    )
-    val SERVICE = SettingsSection(
-        "06", "SERVICIO",
-        "El permiso de accesibilidad es lo que me deja contar. Aquí ves si está activo.",
-    )
-    val PRIVACY = SettingsSection(
-        "07", "PRIVACIDAD",
-        "Qué pasa con tus datos, sin letra pequeña.",
-    )
-    val ABOUT = SettingsSection(
-        "08", "ACERCA DE",
-        "Reelómetro no tiene relación con TikTok, Instagram ni YouTube. Solo cuenta lo que ves en ellas.",
-    )
+    val GOAL: SettingsSection
+        get() = SettingsSection("01", str(R.string.settings_section_goal_title), str(R.string.settings_section_goal_description))
+    val NOTIFICATIONS: SettingsSection
+        get() = SettingsSection(
+            "02",
+            str(R.string.settings_section_notifications_title),
+            str(R.string.settings_section_notifications_description),
+        )
+    val APPS: SettingsSection
+        get() = SettingsSection("03", str(R.string.settings_section_apps_title), str(R.string.settings_section_apps_description))
+    val THEME: SettingsSection
+        get() = SettingsSection("04", str(R.string.settings_section_theme_title), str(R.string.settings_section_theme_description))
+    val DATA: SettingsSection
+        get() = SettingsSection("05", str(R.string.settings_section_data_title), str(R.string.settings_section_data_description))
+    val SERVICE: SettingsSection
+        get() = SettingsSection(
+            "06",
+            str(R.string.settings_section_service_title),
+            str(R.string.settings_section_service_description),
+        )
+    val PRIVACY: SettingsSection
+        get() = SettingsSection(
+            "07",
+            str(R.string.settings_section_privacy_title),
+            str(R.string.settings_section_privacy_description),
+        )
+    val ABOUT: SettingsSection
+        get() = SettingsSection("08", str(R.string.settings_section_about_title), str(R.string.settings_section_about_description))
 
     /** Todas, en orden. */
-    val SECTIONS: List<SettingsSection> = listOf(GOAL, NOTIFICATIONS, APPS, THEME, DATA, SERVICE, PRIVACY, ABOUT)
+    val SECTIONS: List<SettingsSection> get() = listOf(GOAL, NOTIFICATIONS, APPS, THEME, DATA, SERVICE, PRIVACY, ABOUT)
+
+    /** Antetítulo de un diálogo que sale de una sección: «05 · TUS DATOS». */
+    fun dialogKicker(section: SettingsSection): String = str(R.string.settings_dialog_kicker, section.index, section.title)
 
     // ------------------------------------------------------------------ 01 objetivo
 
     /** «150 AL DÍA» / «SIN OBJETIVO». */
     fun goalValue(goal: Int?): String =
-        if (goal == null || goal <= 0) OnboardingCopy.GOAL_NONE else "${Format.integer(goal)} AL DÍA"
+        if (goal == null || goal <= 0) OnboardingCopy.GOAL_NONE else str(R.string.settings_goal_value, Format.integer(goal))
 
-    const val GOAL_REMOVE = Buttons.REMOVE_GOAL
+    val GOAL_REMOVE: String get() = Buttons.REMOVE_GOAL
 
-    const val GOAL_SET = Buttons.SET_GOAL
+    val GOAL_SET: String get() = Buttons.SET_GOAL
 
     /** Línea del selector: «Vídeos al día ······ [ − 150 + ]». */
-    const val GOAL_LINE = "Vídeos al día"
+    val GOAL_LINE: String get() = str(R.string.settings_goal_line)
 
-    const val GOAL_DECREASE = OnboardingCopy.GOAL_DECREASE
-    const val GOAL_INCREASE = OnboardingCopy.GOAL_INCREASE
+    val GOAL_DECREASE: String get() = OnboardingCopy.GOAL_DECREASE
+    val GOAL_INCREASE: String get() = OnboardingCopy.GOAL_INCREASE
 
     /** Ayuda del selector: «Entre 5 y 2.000 vídeos al día.». */
     fun goalRange(min: Int, max: Int): String = OnboardingCopy.goalRange(min, max)
 
     /** Interruptor del modo Pasaporte, bajo el objetivo: el juego premia quedarse por debajo. */
-    const val PASSPORT_LABEL = "Modo pasaporte"
+    val PASSPORT_LABEL: String get() = str(R.string.settings_passport_label)
 
-    const val PASSPORT_DESCRIPTION =
-        "Una pestaña más con Flap, niveles y sellos que se ganan viendo menos. Si lo apagas, desaparece " +
-            "del todo: la pestaña, su aviso y Flap en el widget."
+    val PASSPORT_DESCRIPTION: String get() = str(R.string.settings_passport_description)
 
     // ------------------------------------------------------------------ 02 avisos
 
-    const val DAILY_LABEL = "Resumen diario"
+    val DAILY_LABEL: String get() = str(R.string.settings_daily_label)
 
     /** «Tu cuenta del día, a las 21:30.». */
-    fun dailyDescription(hour: Int, minute: Int): String = "Tu cuenta del día, ${Words.atTime(hour, minute)}."
+    fun dailyDescription(hour: Int, minute: Int): String = str(R.string.settings_daily_description, Words.atTime(hour, minute))
 
-    const val TIME_LABEL = "Hora del aviso"
+    val TIME_LABEL: String get() = str(R.string.settings_time_label)
 
-    const val MONTHLY_LABEL = "Resumen mensual"
+    val MONTHLY_LABEL: String get() = str(R.string.settings_monthly_label)
 
-    const val MONTHLY_DESCRIPTION = "El día 1, el mes anterior contado, con su resumen."
+    val MONTHLY_DESCRIPTION: String get() = str(R.string.settings_monthly_description)
 
     /** Aviso en directo al pasar el objetivo (apagado por defecto). */
-    const val GOAL_LIVE_LABEL = "Aviso al pasar el objetivo"
+    val GOAL_LIVE_LABEL: String get() = str(R.string.settings_goal_live_label)
 
     /** «Un solo aviso al día, en cuanto pases de 150 vídeos.»; sin objetivo, explica por qué no se puede. */
     fun goalLiveDescription(goal: Int?): String =
         if (goal == null || goal <= 0) {
             GOAL_LIVE_NEEDS_GOAL
         } else {
-            "Un solo aviso al día, en cuanto pases de ${Words.videos(goal)}."
+            str(R.string.settings_goal_live_description, Words.videos(goal))
         }
 
-    const val GOAL_LIVE_NEEDS_GOAL = "Necesita un objetivo. Ponlo arriba y te aviso en cuanto lo pases."
+    val GOAL_LIVE_NEEDS_GOAL: String get() = str(R.string.settings_goal_live_needs_goal)
 
     /** Selector propio de la hora (hoja `ReelDialog`). */
-    const val TIME_DIALOG_TITLE = "¿A qué hora te aviso?"
-    const val TIME_HOUR = "HORA"
-    const val TIME_MINUTE = "MINUTOS"
-    const val TIME_CONFIRM = Buttons.DONE
-    const val TIME_CANCEL = Buttons.CANCEL
+    val TIME_DIALOG_TITLE: String get() = str(R.string.settings_time_dialog_title)
+    val TIME_HOUR: String get() = str(R.string.settings_time_hour)
+    val TIME_MINUTE: String get() = str(R.string.settings_time_minute)
+    val TIME_CONFIRM: String get() = Buttons.DONE
+    val TIME_CANCEL: String get() = Buttons.CANCEL
 
     /** Accesibilidad de los botones del selector de hora. */
-    const val TIME_HOUR_DOWN = "Una hora menos"
-    const val TIME_HOUR_UP = "Una hora más"
-    const val TIME_MINUTE_DOWN = "Cinco minutos menos"
-    const val TIME_MINUTE_UP = "Cinco minutos más"
+    val TIME_HOUR_DOWN: String get() = str(R.string.settings_time_hour_down)
+    val TIME_HOUR_UP: String get() = str(R.string.settings_time_hour_up)
+    val TIME_MINUTE_DOWN: String get() = str(R.string.settings_time_minute_down)
+    val TIME_MINUTE_UP: String get() = str(R.string.settings_time_minute_up)
 
     /** Pedir el permiso de avisos (Android 13+), antes de que se haya denegado del todo. */
-    const val NOTIFICATIONS_ASK = OnboardingCopy.NOTIFY_RATIONALE
-    const val NOTIFICATIONS_ALLOW = Buttons.ALLOW_NOTIFICATIONS
-    const val NOTIFICATIONS_OPEN = Buttons.OPEN_SETTINGS
+    val NOTIFICATIONS_ASK: String get() = OnboardingCopy.NOTIFY_RATIONALE
+    val NOTIFICATIONS_ALLOW: String get() = Buttons.ALLOW_NOTIFICATIONS
+    val NOTIFICATIONS_OPEN: String get() = Buttons.OPEN_SETTINGS
 
     /** Con los avisos bloqueados en Android (va con «ABRIR AJUSTES»). */
-    const val NOTIFICATIONS_BLOCKED =
-        "Android tiene los avisos de Reelómetro desactivados. Actívalos en los ajustes del sistema para recibirlos."
+    val NOTIFICATIONS_BLOCKED: String get() = str(R.string.settings_notifications_blocked)
 
     // ------------------------------------------------------------------ 03 apps
 
     /** Nombre de cada app en la lista: «TikTok», «Instagram Reels», «YouTube Shorts». */
     fun appName(platform: Platform): String = platform.displayName
 
-    const val APP_NOT_INSTALLED = Labels.NOT_INSTALLED
+    val APP_NOT_INSTALLED: String get() = Labels.NOT_INSTALLED
 
-    const val ALL_APPS_OFF = "Has apagado todas. Así no hay nada que contar."
+    val ALL_APPS_OFF: String get() = str(R.string.settings_all_apps_off)
 
     /** Interruptor «A quién envías» (apagado por defecto), bajo la lista de apps. */
-    const val RECIPIENTS_LABEL = "A quién envías"
+    val RECIPIENTS_LABEL: String get() = str(R.string.settings_recipients_label)
 
-    const val RECIPIENTS_DESCRIPTION =
-        "Solo en Instagram. Al compartir un vídeo, apunto el nombre de la persona o el grupo que eliges y " +
-            "en Estadísticas ves a quién envías más. No leo el chat ni lo que escribes, y se queda en este móvil."
+    val RECIPIENTS_DESCRIPTION: String get() = str(R.string.settings_recipients_description)
 
     /** Interruptor «Envío rápido» (apagado por defecto), debajo de «A quién envías». */
-    const val QUICK_SEND_LABEL = "Envío rápido"
+    val QUICK_SEND_LABEL: String get() = str(R.string.settings_quick_send_label)
 
-    const val QUICK_SEND_DESCRIPTION =
-        "Solo en Instagram. Mientras ves reels, sale una burbuja por cada persona o grupo que fijes. Al tocarla, " +
-            "pulso por ti «Compartir», ese nombre y «Enviar»; si no sale a la vista, escribo su nombre en el " +
-            "buscador de la hoja. Nada más. Si algo no cuadra, paro y terminas tú. Para enseñar su foto en la " +
-            "burbuja, la recorto de la hoja de compartir cuando sale a la vista, o eliges tú una de tu galería; " +
-            "se queda en este móvil. Arrástralas a donde quieras (abajo, encima del nombre del reel, se ponen en fila) o suéltalas en la " +
-            "«X» para esconderlas hasta el siguiente reel."
+    val QUICK_SEND_DESCRIPTION: String get() = str(R.string.settings_quick_send_description)
 
     /** El gesto para enviar a dos fijados a la vez (1.4.1). */
-    const val QUICK_SEND_PAIR_HINT =
-        "Para mandarlo a dos a la vez, mantén pulsada una burbuja hasta que se despegue y suéltala encima de la otra. " +
-            "Si tocas otra mientras envía, la sumo a la misma hoja."
+    val QUICK_SEND_PAIR_HINT: String get() = str(R.string.settings_quick_send_pair_hint)
 
     /** Con «A quién envías» apagado, el envío rápido no se puede encender. */
-    const val QUICK_SEND_NEEDS_RECIPIENTS =
-        "Para usarlo, enciende antes «A quién envías»: el envío rápido busca en la hoja el nombre que fijas."
+    val QUICK_SEND_NEEDS_RECIPIENTS: String get() = str(R.string.settings_quick_send_needs_recipients)
 
     /** Sin historial de envíos todavía: no hay nada que fijar. */
-    const val QUICK_SEND_EMPTY =
-        "Aún no hay a quién fijar. Comparte un reel a mano con «A quién envías» encendido: aquí saldrán las " +
-            "personas y los grupos a los que envías."
+    val QUICK_SEND_EMPTY: String get() = str(R.string.settings_quick_send_empty)
 
     /** Encima de la lista de personas y grupos para fijar. */
-    const val QUICK_SEND_LIST_LABEL = "A quién envías más"
+    val QUICK_SEND_LIST_LABEL: String get() = str(R.string.settings_quick_send_list_label)
 
-    const val QUICK_SEND_PIN = "FIJAR"
-    const val QUICK_SEND_PINNED = "FIJADO"
+    val QUICK_SEND_PIN: String get() = str(R.string.settings_quick_send_pin)
+    val QUICK_SEND_PINNED: String get() = str(R.string.settings_quick_send_pinned)
 
     /** Devuelve las burbujas a su sitio: borde derecho, a media altura. */
-    const val QUICK_SEND_RELOCATE = "RECOLOCAR"
+    val QUICK_SEND_RELOCATE: String get() = str(R.string.settings_quick_send_relocate)
 
-    const val QUICK_SEND_RELOCATE_HINT = "Las burbujas vuelven al borde derecho, a media altura."
+    val QUICK_SEND_RELOCATE_HINT: String get() = str(R.string.settings_quick_send_relocate_hint)
 
-    const val QUICK_SEND_RELOCATED = "Hecho. Las verás en su sitio en el próximo reel."
+    val QUICK_SEND_RELOCATED: String get() = str(R.string.settings_quick_send_relocated)
 
     /** Ya hay [max] fijados: para fijar otro hay que quitar uno. */
-    fun quickSendFull(max: Int): String = "Ya tienes ${Format.integer(max)} fijados. Quita uno para fijar otro."
+    fun quickSendFull(max: Int): String = plural(R.plurals.settings_quick_send_full, max, Format.integer(max))
 
     /** Para TalkBack, en cada fila: «Fijar a Ana» / «Quitar a Ana del envío rápido». */
     fun quickSendPinDescription(name: String, pinned: Boolean): String =
-        if (pinned) "Quitar a $name del envío rápido" else "Fijar a $name en el envío rápido"
+        if (pinned) {
+            str(R.string.settings_quick_send_unpin_description, name)
+        } else {
+            str(R.string.settings_quick_send_pin_description, name)
+        }
 
     /** Debajo de cada fijado (1.4.3): su burbuja con una foto de la galería, en vez de la recortada de Instagram. */
-    const val QUICK_SEND_PHOTO_PICK = "ELEGIR FOTO"
+    val QUICK_SEND_PHOTO_PICK: String get() = str(R.string.settings_quick_send_photo_pick)
 
     /** Con una foto elegida: cambiarla por otra de la galería. */
-    const val QUICK_SEND_PHOTO_CHANGE = "CAMBIAR FOTO"
+    val QUICK_SEND_PHOTO_CHANGE: String get() = str(R.string.settings_quick_send_photo_change)
 
     /** Quita la foto elegida: vuelve la recortada de la hoja de compartir (o las iniciales). */
-    const val QUICK_SEND_PHOTO_CLEAR = "QUITAR FOTO"
+    val QUICK_SEND_PHOTO_CLEAR: String get() = str(R.string.settings_quick_send_photo_clear)
 
-    const val QUICK_SEND_PHOTO_SET = "Foto puesta. La verás en su burbuja; solo está en este móvil."
+    val QUICK_SEND_PHOTO_SET: String get() = str(R.string.settings_quick_send_photo_set)
 
-    const val QUICK_SEND_PHOTO_CLEARED = "Foto quitada. Vuelve la automática o, si no hay, las iniciales."
+    val QUICK_SEND_PHOTO_CLEARED: String get() = str(R.string.settings_quick_send_photo_cleared)
 
-    const val QUICK_SEND_PHOTO_FAILED = "No he podido abrir esa foto. Prueba con otra."
+    val QUICK_SEND_PHOTO_FAILED: String get() = str(R.string.settings_quick_send_photo_failed)
 
     /** Para TalkBack: «Elegir de la galería la foto de la burbuja de Ana». */
     fun quickSendPhotoPickDescription(name: String, chosen: Boolean): String =
-        if (chosen) "Cambiar la foto de la burbuja de $name por otra de la galería" else "Elegir de la galería la foto de la burbuja de $name"
+        if (chosen) {
+            str(R.string.settings_quick_send_photo_change_description, name)
+        } else {
+            str(R.string.settings_quick_send_photo_pick_description, name)
+        }
 
     /** Para TalkBack: «Quitar la foto elegida de Ana». */
-    fun quickSendPhotoClearDescription(name: String): String =
-        "Quitar la foto elegida para $name y volver a la automática"
+    fun quickSendPhotoClearDescription(name: String): String = str(R.string.settings_quick_send_photo_clear_description, name)
 
-    // ------------------------------------------------------------------ 04 tema
+    // ------------------------------------------------------------------ 04 tema e idioma
 
-    const val THEME_SYSTEM = "SISTEMA"
-    const val THEME_DARK = "OSCURO"
-    const val THEME_LIGHT = "CLARO"
+    val THEME_SYSTEM: String get() = str(R.string.settings_theme_system)
+    val THEME_DARK: String get() = str(R.string.settings_theme_dark)
+    val THEME_LIGHT: String get() = str(R.string.settings_theme_light)
+
+    /** Fila «Idioma» (Android 13+): abre los ajustes de idioma de la app en Android. */
+    fun languageLabel(): String = str(R.string.settings_language_label)
+
+    /** Valor de la fila: el idioma de los textos, en su propio idioma («Español»). */
+    fun languageValue(): String = Format.capitalize(Format.locale.getDisplayLanguage(Format.locale))
+
+    /** Ayuda bajo la fila: «Se cambia en los ajustes del sistema.». */
+    fun languageHint(): String = str(R.string.settings_language_hint)
+
+    /** TalkBack: qué hace tocar la fila. */
+    fun languageOpen(): String = str(R.string.settings_language_open)
 
     // ------------------------------------------------------------------ 05 tus datos
 
     /** Resumen de lo guardado, en líneas de ticket. */
-    const val DATA_COUNT_LABEL = "Vídeos guardados"
-    const val DATA_TIME_LABEL = "Tiempo guardado"
+    val DATA_COUNT_LABEL: String get() = str(R.string.settings_data_count_label)
+    val DATA_TIME_LABEL: String get() = str(R.string.settings_data_time_label)
 
-    const val EXPORT_LABEL = Buttons.EXPORT_CSV
-    const val EXPORT_DESCRIPTION = "Todo tu historial en un archivo que abre cualquier hoja de cálculo."
+    val EXPORT_LABEL: String get() = Buttons.EXPORT_CSV
+    val EXPORT_DESCRIPTION: String get() = str(R.string.settings_export_description)
 
     /** «Exportado: 12.408 vídeos.». */
-    fun exportDone(rows: Int): String = "Exportado: ${Words.videos(rows)}."
+    fun exportDone(rows: Int): String = str(R.string.settings_export_done, Words.videos(rows))
 
-    const val EXPORT_EMPTY = "No hay nada que exportar todavía."
-    const val EXPORT_FAILED = "No se ha podido exportar. Prueba otra vez o elige otra carpeta."
+    val EXPORT_EMPTY: String get() = str(R.string.settings_export_empty)
+    val EXPORT_FAILED: String get() = str(R.string.settings_export_failed)
 
-    /** Nombre propuesto para el CSV: «reelometro-2026-11-03.csv». */
+    /** Nombre propuesto para el CSV: «reelometro-2026-11-03.csv» (igual en todos los idiomas). */
     fun exportFileName(date: LocalDate): String = "reelometro-$date.csv"
 
-    const val DELETE_LABEL = Buttons.DELETE_ALL
-    const val DELETE_DESCRIPTION = "Borra todos los vídeos contados. No hay papelera."
+    val DELETE_LABEL: String get() = Buttons.DELETE_ALL
+    val DELETE_DESCRIPTION: String get() = str(R.string.settings_delete_description)
 
-    const val DELETE_DIALOG_TITLE = "¿Borrar todo?"
+    val DELETE_DIALOG_TITLE: String get() = str(R.string.settings_delete_dialog_title)
 
     /** Cuerpo del diálogo de borrado (`ReelDialog`). */
     fun deleteDialogBody(count: Long, totalMs: Long): String =
         if (count <= 0) {
-            "No hay vídeos que borrar. Tus ajustes se quedan como están."
+            str(R.string.settings_delete_dialog_body_empty)
         } else {
-            "Se borrarán ${Words.videos(count)} y ${Words.duration(totalMs)} de historial. No se puede deshacer, " +
-                "y no hay copia en ningún otro sitio, porque no hay ningún otro sitio. Tus ajustes se quedan como están."
+            plural(R.plurals.settings_delete_dialog_body, count, Words.videos(count), Words.duration(totalMs))
         }
 
-    const val DELETE_CONFIRM = Buttons.DELETE_ALL
-    const val DELETE_CANCEL = Buttons.CANCEL
-    const val DELETE_DONE = "Borrado. Marcador a cero."
-    const val DELETE_FAILED = "No se ha podido borrar. Vuelve a intentarlo."
+    val DELETE_CONFIRM: String get() = Buttons.DELETE_ALL
+    val DELETE_CANCEL: String get() = Buttons.CANCEL
+    val DELETE_DONE: String get() = str(R.string.settings_delete_done)
+    val DELETE_FAILED: String get() = str(R.string.settings_delete_failed)
 
     // ------------------------------------------------------------------ 06 servicio
 
     fun serviceStatus(connected: Boolean): String = if (connected) Labels.CONNECTED else Labels.DISCONNECTED
 
     /** Línea de estado: «Permiso de accesibilidad ······ CONECTADO». */
-    const val SERVICE_LINE = "Permiso de accesibilidad"
+    val SERVICE_LINE: String get() = str(R.string.settings_service_line)
 
     /** Sin el servicio: lleva a la divulgación y la guía. */
-    const val SERVICE_CONNECT = Buttons.CONNECT
+    val SERVICE_CONNECT: String get() = Buttons.CONNECT
 
     /** «Contando en TikTok, Reels y Shorts.»; sin apps activadas, aviso. */
     fun serviceConnected(enabled: List<Platform>): String =
-        if (enabled.isEmpty()) ALL_APPS_OFF else "Contando en ${Words.join(enabled.map { it.shortName })}."
+        if (enabled.isEmpty()) {
+            ALL_APPS_OFF
+        } else {
+            str(R.string.settings_service_connected, Words.join(enabled.map { it.shortName }))
+        }
 
-    const val SERVICE_DISCONNECTED = "Sin el servicio no cuento nada. Actívalo en Accesibilidad."
+    val SERVICE_DISCONNECTED: String get() = str(R.string.settings_service_disconnected)
 
-    const val SERVICE_BUTTON = Buttons.OPEN_ACCESSIBILITY
+    val SERVICE_BUTTON: String get() = Buttons.OPEN_ACCESSIBILITY
 
     /** Enlace para volver a leer la divulgación destacada. */
-    const val SERVICE_DISCLOSURE_LINK = "QUÉ LEE Y PARA QUÉ"
+    val SERVICE_DISCLOSURE_LINK: String get() = str(R.string.settings_service_disclosure_link)
 
     // ------------------------------------------------------------------ 07 privacidad
 
     /** Explicación de privacidad, en párrafos cortos. */
-    val PRIVACY_PARAGRAPHS: List<String> = listOf(
-        "Reelómetro cuenta lo que ves en TikTok, Instagram y YouTube con el servicio de accesibilidad de " +
-            "Android. De cada vídeo guarda la app, la hora, cuánto lo viste, el creador y la descripción.",
-        "Todo se guarda en este móvil. No hay cuentas, ni servidores, ni anuncios, ni analítica. La app no " +
-            "tiene permiso para usar internet.",
-        "Tus datos solo salen de aquí si los sacas tú: al exportar el CSV o al compartir tu ticket.",
-        "Si desactivas el servicio, deja de contar. Si borras los datos o desinstalas la app, desaparecen.",
-    )
+    val PRIVACY_PARAGRAPHS: List<String> get() = strArray(R.array.settings_privacy_paragraphs)
 
-    const val PRIVACY_POLICY_LINK = "POLÍTICA DE PRIVACIDAD COMPLETA"
+    val PRIVACY_POLICY_LINK: String get() = str(R.string.settings_privacy_policy_link)
 
     // ------------------------------------------------------------------ 08 acerca de
 
     /** «VERSIÓN 1.0.0». */
-    fun versionLabel(versionName: String): String = "VERSIÓN $versionName"
+    fun versionLabel(versionName: String): String = str(R.string.settings_version_label, versionName)
 
     /**
      * Cuenta atrás discreta de los 7 toques en la versión: «A 3 toques de la calibración.»,
      * «A un toque de la calibración.». Con 0 o menos, [CALIBRATION_UNLOCKED].
      */
-    fun calibrationTapsLeft(left: Int): String = when {
-        left <= 0 -> CALIBRATION_UNLOCKED
-        left == 1 -> "A un toque de la calibración."
-        else -> "A ${Format.integer(left)} toques de la calibración."
-    }
+    fun calibrationTapsLeft(left: Int): String =
+        if (left <= 0) CALIBRATION_UNLOCKED else plural(R.plurals.settings_calibration_taps_left, left, Format.integer(left))
 
-    const val CALIBRATION_UNLOCKED = "Calibración desbloqueada. Está al final de Ajustes."
-    const val CALIBRATION_ALREADY = "La calibración ya estaba desbloqueada."
-    const val CALIBRATION_ENTRY = "CALIBRACIÓN"
+    val CALIBRATION_UNLOCKED: String get() = str(R.string.settings_calibration_unlocked)
+    val CALIBRATION_ALREADY: String get() = str(R.string.settings_calibration_already)
+    val CALIBRATION_ENTRY: String get() = str(R.string.settings_calibration_entry)
 
     /** Línea de la versión (7 toques desbloquean la calibración). */
-    const val VERSION_LINE = "Versión"
+    val VERSION_LINE: String get() = str(R.string.settings_version_line)
 
     /** Línea que abre las licencias. */
-    const val FONTS_LINE = "Tipografías"
-    const val FONTS_VALUE = "SIL OFL"
-    const val LICENSES_TITLE = "Licencias"
-    const val LICENSES_CLOSE = Buttons.CLOSE
+    val FONTS_LINE: String get() = str(R.string.settings_fonts_line)
+    val FONTS_VALUE: String get() = str(R.string.settings_fonts_value)
+    val LICENSES_TITLE: String get() = str(R.string.settings_licenses_title)
+    val LICENSES_CLOSE: String get() = Buttons.CLOSE
 
     /** Volver a ver el onboarding. */
-    const val REPLAY_ONBOARDING = "VER LA INTRODUCCIÓN"
+    val REPLAY_ONBOARDING: String get() = str(R.string.settings_replay_onboarding)
 
     /** Volver a ver el recorrido guiado (empieza en Hoy). */
-    const val REPLAY_TOUR = "VER EL RECORRIDO"
+    val REPLAY_TOUR: String get() = str(R.string.settings_replay_tour)
 
-    const val LICENSES_LABEL = "LICENCIAS"
-    const val FONTS_LICENSE =
-        "Tipografías: Bricolage Grotesque, JetBrains Mono e Instrument Serif, con licencia SIL Open Font License 1.1."
+    val LICENSES_LABEL: String get() = str(R.string.settings_licenses_label)
+    val FONTS_LICENSE: String get() = str(R.string.settings_fonts_license)
 
-    const val SIGNATURE = "Hecho a ratos de quince segundos."
+    val SIGNATURE: String get() = str(R.string.settings_signature)
 
     /** El proyecto en GitHub (solo si hay enlace en `AppLinks.PROJECT_URL`). Sin hablar de pagos: ver `AppLinks`. */
-    const val PROJECT_TEXT = "Reelómetro es gratis, no tiene anuncios y lo hace una sola persona. El proyecto está en GitHub."
-    const val PROJECT_BUTTON = "VER EN GITHUB"
-    const val PROJECT_NOTE = "Se abre en tu navegador. La app sigue sin internet."
-    const val PROJECT_NO_BROWSER = "No hay ningún navegador para abrir el enlace."
+    val PROJECT_TEXT: String get() = str(R.string.settings_project_text)
+    val PROJECT_BUTTON: String get() = str(R.string.settings_project_button)
+    val PROJECT_NOTE: String get() = str(R.string.settings_project_note)
+    val PROJECT_NO_BROWSER: String get() = str(R.string.settings_project_no_browser)
 
     // ------------------------------------------------------------------ depuración (solo build debug)
 
-    const val DEBUG_TITLE = "DEPURACIÓN"
-    const val DEBUG_DESCRIPTION = "Solo en la versión de pruebas. Sustituye tus datos por un historial inventado de diez semanas."
-    const val DEBUG_SEED = "GENERAR DATOS DE EJEMPLO"
-    const val DEBUG_FAILED = "No se han podido generar los datos de ejemplo."
+    val DEBUG_TITLE: String get() = str(R.string.settings_debug_title)
+    val DEBUG_DESCRIPTION: String get() = str(R.string.settings_debug_description)
+    val DEBUG_SEED: String get() = str(R.string.settings_debug_seed)
+    val DEBUG_FAILED: String get() = str(R.string.settings_debug_failed)
 
     /** «Listo: 12.408 vídeos de ejemplo.». */
-    fun debugSeeded(count: Int): String = "Listo: ${Words.videos(count)} de ejemplo."
+    fun debugSeeded(count: Int): String = str(R.string.settings_debug_seeded, Words.videos(count))
 }

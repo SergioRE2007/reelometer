@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Imagen compartible (copy/ShareCopy.kt): el «ticket de tu tiempo», una imagen de 1080 × 1920 con
+  aspecto de ticket de caja que resume una semana, un mes, un año o todo el historial, y el texto
+  que la acompaña al compartirla. El chiste: el usuario «ha pagado» con su tiempo.
+  Es el ÚNICO sitio de la app donde se permiten emojis (al principio de las líneas del ticket y al
+  final del texto que se comparte): consérvalos.
+  Las etiquetas del ticket van en MAYÚSCULAS, en tipografía monoespaciada y con poco sitio (la cifra
+  va a la derecha en la misma línea).
+  «Reelómetro» / «REELÓMETRO» es la marca: no se traduce.
+  (Traducción pt-BR: el «cupom» es el recibo de caja; el chiste de «IVA no incluido» pasa a «impostos não inclusos».)
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="pt-BR">
+
+    <!-- Cabecera del ticket: la marca, en MAYÚSCULAS. No se traduce. -->
+    <string name="share_brand">REELÓMETRO</string>
+    <!-- Subtítulo del ticket, MAYÚSCULAS. -->
+    <string name="share_title">CUPOM DO SEU TEMPO</string>
+    <!-- Sello rotado sobre el ticket (como el «PAGADO» de una factura), MAYÚSCULAS y corto. -->
+    <string name="share_stamp">PAGO COM SEU TEMPO</string>
+    <!-- Lema de la marca, MAYÚSCULAS. Juego de palabras: «contar» es medir y también decir en voz alta
+         (cuenta los vídeos que no le cuentas a nadie). Si no se puede mantener, busca un lema breve equivalente. -->
+    <string name="share_tagline">CONTA O QUE VOCÊ NÃO CONTA</string>
+    <!-- Pie de marca: «REELÓMETRO · CUENTA LO QUE NO CUENTAS». %1$s la marca, %2$s el lema. -->
+    <string name="share_brand_footer">%1$s · %2$s</string>
+
+    <!-- Título del selector de compartir de Android. -->
+    <string name="share_chooser_title">Compartilhe seu cupom</string>
+    <!-- Etiqueta de la línea de total, MAYÚSCULAS. -->
+    <string name="share_total_label">TOTAL</string>
+
+    <!-- Líneas del ticket: emoji + etiqueta en MAYÚSCULAS (la cifra va aparte, a la derecha).
+         %1$s es la etiqueta común de la app (VÍDEOS, TIEMPO, PEOR DÍA, HORA PUNTA, CREADOR N.º 1). -->
+    <string name="share_line_videos">📱 %1$s</string>
+    <string name="share_line_time">⏱️ %1$s</string>
+    <!-- Media de vídeos al día. -->
+    <string name="share_line_per_day">📅 POR DIA</string>
+    <string name="share_line_worst_day">🔥 %1$s</string>
+    <!-- Hora punta de noche (luna) o de día (sol). -->
+    <string name="share_line_peak_hour_night">🌙 %1$s</string>
+    <string name="share_line_peak_hour_day">☀️ %1$s</string>
+    <string name="share_line_top_creator">👑 %1$s</string>
+
+    <!-- Nota al pie del ticket (chistes de ticket de caja: devoluciones, IVA, precio final). -->
+    <string-array name="share_footer">
+        <item>Não aceitamos devoluções.</item>
+        <item>Guarde este cupom. O tempo não é devolvido.</item>
+        <item>Impostos não inclusos. O tempo, todo.</item>
+        <item>Preço final. Sem descontos nem devoluções.</item>
+    </string-array>
+
+    <!-- Texto que acompaña a la imagen al compartir (en redes o mensajería), termina con el emoji del
+         ticket. %1$s los vídeos («4.812 vídeos»), %2$s el tiempo («29 horas»). -->
+    <string name="share_text_week">Minha semana no Reelómetro: %1$s e %2$s. Não aceitamos devoluções. 🧾</string>
+    <!-- %1$s el mes («octubre»), %2$s los vídeos, %3$s el tiempo. -->
+    <string name="share_text_month">Meu %1$s no Reelómetro: %2$s e %3$s. Não aceitamos devoluções. 🧾</string>
+    <!-- %1$s el año («2026»), %2$s los vídeos, %3$s el tiempo. -->
+    <string name="share_text_year">Meu ano de %1$s no Reelómetro: %2$s e %3$s. Não aceitamos devoluções. 🧾</string>
+    <!-- Todo el historial. %1$s los vídeos, %2$s el tiempo. -->
+    <string name="share_text_all">Meu histórico no Reelómetro: %1$s e %2$s. Não aceitamos devoluções. 🧾</string>
+
+    <!-- Nombre del archivo de la imagen (se ve al compartirla). SOLO letras ASCII sin acentos, cifras y
+         guiones: sin espacios. %1$s la fecha del lunes («2026-10-27»). -->
+    <string name="share_file_week">reelometro-semana-%1$s.png</string>
+    <!-- %1$s el mes en minúsculas («octubre»; si lleva acentos se quitan solos), %2$s el año. -->
+    <string name="share_file_month">reelometro-%1$s-%2$s.png</string>
+    <!-- %1$s el año. -->
+    <string name="share_file_year">reelometro-%1$s.png</string>
+    <string name="share_file_all">reelometro-historico.png</string>
+
+    <!-- TalkBack de la vista previa de la imagen: «Ticket de octubre de 2026: 4.812 vídeos y 29 horas.».
+         Semana: %1$s y %2$s el primer y el último día («27 oct», «2 nov»), %3$s vídeos, %4$s tiempo. -->
+    <string name="share_image_description_week">Cupom da semana de %1$s a %2$s: %3$s e %4$s.</string>
+    <!-- Mes: %1$s el mes y el año («octubre de 2026»), %2$s vídeos, %3$s tiempo. -->
+    <string name="share_image_description_month">Cupom de %1$s: %2$s e %3$s.</string>
+    <!-- Año: %1$s el año, %2$s vídeos, %3$s tiempo. -->
+    <string name="share_image_description_year">Cupom de %1$s: %2$s e %3$s.</string>
+    <!-- Todo el historial: %1$s vídeos, %2$s tiempo. -->
+    <string name="share_image_description_all">Cupom de todo o seu histórico: %1$s e %2$s.</string>
+</resources>

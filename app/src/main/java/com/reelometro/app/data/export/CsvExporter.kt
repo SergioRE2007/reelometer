@@ -82,7 +82,7 @@ class CsvExporter(
         Platform.fromName(row.platform)?.displayName ?: row.platform,
         Csv.seconds(row.durationMs),
         Csv.text(row.creator),
-        Category.fromName(row.category).label,
+        Category.fromName(row.category).csvLabel, // fijo en español: el CSV no cambia con el idioma
         Csv.text(row.caption),
         row.shares.toString(),
     )

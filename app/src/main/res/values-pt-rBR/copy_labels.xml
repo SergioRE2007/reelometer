@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Etiquetas, botones y descripciones para TalkBack que se usan en toda la app (copy/Labels.kt).
+  label_* y button_* van en MAYÚSCULAS y con muy poco sitio (etiquetas pequeñas con tracking,
+  botones, pestañas): escríbelas ya en mayúsculas y lo más cortas posible.
+  a11y_* son descripciones habladas (TalkBack): frase normal, sin punto final.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="pt">
+
+    <!-- Etiquetas cortas en MAYÚSCULAS sobre cifras (marcador, estadísticas, resumen, ticket). Poco sitio. -->
+    <string name="label_videos">VÍDEOS</string>
+    <string name="label_video">VÍDEO</string>
+    <string name="label_time">TEMPO</string>
+    <string name="label_today">HOJE</string>
+    <string name="label_yesterday">ONTEM</string>
+    <string name="label_goal">META</string>
+    <!-- El servicio de accesibilidad está desconectado (el marcador se queda en blanco). -->
+    <string name="label_no_signal">SEM SINAL</string>
+    <!-- La hora del día con más vídeos. -->
+    <string name="label_peak_hour">HORA DE PICO</string>
+    <string name="label_weak_day">DIA FRACO</string>
+    <string name="label_worst_day">PIOR DIA</string>
+    <!-- Racha: días seguidos cumpliendo el objetivo. -->
+    <string name="label_streak">SEQUÊNCIA</string>
+    <string name="label_current_streak">SEQUÊNCIA ATUAL</string>
+    <string name="label_best_streak">MELHOR SEQUÊNCIA</string>
+    <!-- Tiempo medio que dura cada vídeo. -->
+    <string name="label_per_video">POR VÍDEO</string>
+    <!-- Vídeos compartidos con otras personas. -->
+    <string name="label_shares">COMPARTILHADOS</string>
+    <string name="label_daily_average">MÉDIA DIÁRIA</string>
+    <string name="label_active_days">DIAS ATIVOS</string>
+    <string name="label_first_video">PRIMEIRO VÍDEO</string>
+    <string name="label_last_video">ÚLTIMO VÍDEO</string>
+    <!-- TikTok, Instagram Reels, YouTube Shorts. -->
+    <string name="label_platforms">PLATAFORMAS</string>
+    <string name="label_categories">CATEGORIAS</string>
+    <!-- Cuentas que publican los vídeos. -->
+    <string name="label_creators">CRIADORES</string>
+    <string name="label_top_creator">CRIADOR N.º 1</string>
+    <string name="label_top_category">CATEGORIA N.º 1</string>
+    <!-- Encabeza las equivalencias («leer 14 libros») del tiempo pasado viendo vídeos. -->
+    <string name="label_equivalences">COM ESSE TEMPO</string>
+    <string name="label_since_start">DESDE O INÍCIO</string>
+    <!-- Estado del servicio de accesibilidad. -->
+    <string name="label_connected">CONECTADO</string>
+    <string name="label_disconnected">DESCONECTADO</string>
+    <!-- Una app (TikTok, Instagram…) que no está en el móvil. -->
+    <string name="label_not_installed">NÃO INSTALADO</string>
+    <!-- Sello: la app no envía nada fuera del móvil. %1$s es «100 %» ya formateado. -->
+    <string name="label_local_stamp">%1$s LOCAL</string>
+    <!-- Periodos de las estadísticas (pestañas segmentadas, muy poco sitio). ALL = todo el historial. -->
+    <string name="label_week">SEMANA</string>
+    <string name="label_month">MÊS</string>
+    <string name="label_year">ANO</string>
+    <string name="label_all">SEMPRE</string>
+    <!-- Interruptores (dentro del propio interruptor, muy poco sitio: 2–3 letras). -->
+    <string name="label_yes">SIM</string>
+    <string name="label_no">NÃO</string>
+
+    <!-- Pestañas de la barra inferior (MAYÚSCULAS, muy poco sitio). -->
+    <string name="label_tab_today">HOJE</string>
+    <string name="label_tab_stats">ESTATÍSTICAS</string>
+    <!-- Resumen del periodo en diapositivas, tipo «historias». -->
+    <string name="label_tab_wrapped">RESUMO</string>
+    <!-- Pasaporte: la mascota Flap y sus sellos. -->
+    <string name="label_tab_passport">PASSAPORTE</string>
+
+    <!-- Botones (MAYÚSCULAS, verbos directos, poco sitio). -->
+    <string name="button_connect">CONECTAR</string>
+    <string name="button_retry">TENTAR DE NOVO</string>
+    <string name="button_share">COMPARTILHAR</string>
+    <string name="button_save">SALVAR</string>
+    <string name="button_next">PRÓXIMO</string>
+    <string name="button_start">COMEÇAR</string>
+    <!-- Acepta el aviso de accesibilidad y abre los ajustes para activar el servicio. -->
+    <string name="button_accept_and_enable">ACEITAR E ATIVAR</string>
+    <string name="button_not_now">AGORA NÃO</string>
+    <string name="button_open_settings">ABRIR CONFIGURAÇÕES</string>
+    <!-- Abre los ajustes de accesibilidad de Android. -->
+    <string name="button_open_accessibility">ABRIR ACESSIBILIDADE</string>
+    <!-- Abre la pantalla «Información de la app» de Android. -->
+    <string name="button_open_app_info">ABRIR INFORMAÇÕES DO APP</string>
+    <string name="button_allow_notifications">PERMITIR NOTIFICAÇÕES</string>
+    <string name="button_cancel">CANCELAR</string>
+    <string name="button_close">FECHAR</string>
+    <string name="button_delete_all">APAGAR TUDO</string>
+    <string name="button_export_csv">EXPORTAR CSV</string>
+    <string name="button_see_summary">VER RESUMO</string>
+    <string name="button_see_permission">VER A PERMISSÃO</string>
+    <string name="button_remove_goal">TIRAR META</string>
+    <string name="button_set_goal">DEFINIR META</string>
+    <string name="button_done">PRONTO</string>
+    <string name="button_back">VOLTAR</string>
+    <string name="button_copy">COPIAR</string>
+    <!-- Comparte el registro técnico de calibración (pantalla oculta). -->
+    <string name="button_share_log">COMPARTILHAR LOG</string>
+    <string name="button_clear">LIMPAR</string>
+
+    <!-- TalkBack: qué hace cada icono o acción. Frase normal, sin punto final. -->
+    <string name="a11y_settings">Configurações</string>
+    <!-- Pestañas de la barra inferior, en minúsculas para que TalkBack las lea bien. -->
+    <string name="a11y_tab_today">Hoje</string>
+    <string name="a11y_tab_stats">Estatísticas</string>
+    <string name="a11y_tab_wrapped">Resumo</string>
+    <string name="a11y_tab_passport">Passaporte</string>
+    <string name="a11y_share_summary">Compartilhar resumo</string>
+    <string name="a11y_save_image">Salvar imagem</string>
+    <string name="a11y_back">Voltar</string>
+    <string name="a11y_close">Fechar</string>
+    <string name="a11y_previous_period">Período anterior</string>
+    <string name="a11y_next_period">Próximo período</string>
+    <string name="a11y_pause">Pausar</string>
+    <string name="a11y_resume">Retomar</string>
+    <string name="a11y_open_day">Abrir o detalhe do dia</string>
+    <string name="a11y_loading">Carregando</string>
+    <!-- Botones «−» y «+» de un selector numérico. -->
+    <string name="a11y_decrease">Menos</string>
+    <string name="a11y_increase">Mais</string>
+    <!-- Resumen en diapositivas: «Diapositiva 3 de 10». %1$s la actual, %2$s el total. -->
+    <string name="a11y_slide">Slide %1$s de %2$s</string>
+    <string name="a11y_next_slide">Próximo slide</string>
+    <string name="a11y_previous_slide">Slide anterior</string>
+    <string name="a11y_open_summary">Ver o resumo</string>
+</resources>

@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Estadísticas (copy/StatsCopy.kt): pestañas semana / mes / año / siempre, con la cifra grande,
+  la gráfica de cada día, el calendario, los patrones y la comparativa con la semana anterior.
+  Cada <string-array> de frases es una situación y cada <item>, una frase alternativa (se elige
+  una por día). Puedes poner las que quieras (mínimo 2). Los arrays con sufijo (_week, _month,
+  _year, _one…) son la misma situación en otro caso: mantén el mismo sentido en cada posición.
+  00A0 es un espacio duro (la cifra y su palabra no se separan al partir la línea): mantenlo.
+  Tono: seco, con algo de guasa; nunca regaña.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
+
+    <!-- Título de la pantalla. -->
+    <string name="stats_title">Stats</string>
+
+    <!-- Cabeceras de sección (MAYÚSCULAS, una línea: cortas). -->
+    <string name="stats_section_daily">EACH DAY</string>
+    <string name="stats_section_calendar">CALENDAR</string>
+    <string name="stats_section_patterns">PATTERNS</string>
+    <string name="stats_section_platforms">PLATFORMS</string>
+    <string name="stats_section_categories">CATEGORIES</string>
+    <string name="stats_section_creators">CREATORS</string>
+    <!-- Ranking de personas y grupos a los que envías vídeos por mensaje en Instagram. -->
+    <string name="stats_section_recipients">WHO YOU SEND TO</string>
+    <!-- Comparativa semanal (pestaña SEMANA). Tiene que caber en una línea con letra grande. -->
+    <string name="stats_section_week_vs">VERSUS LAST WEEK</string>
+    <!-- Leyenda de la línea discontinua de la gráfica semanal (MAYÚSCULAS, corta). -->
+    <string name="stats_ghost_legend">LAST WEEK</string>
+
+    <!-- Etiquetas de las líneas de PATRONES (en frase, a la izquierda; la cifra va a la derecha). -->
+    <string name="stats_line_peak_hour">Peak hour</string>
+    <!-- El día de la semana con más vídeos de media. -->
+    <string name="stats_line_weak_day">Weak day</string>
+    <!-- El día con más vídeos del periodo. -->
+    <string name="stats_line_worst_day">Worst day</string>
+    <string name="stats_line_active_days">Days with videos</string>
+    <string name="stats_line_per_video">Time per video</string>
+    <!-- Veces que se pulsó compartir. -->
+    <string name="stats_line_shares">Shares</string>
+    <!-- Racha: días seguidos sin pasar del objetivo diario. -->
+    <string name="stats_line_streak">Current streak</string>
+    <string name="stats_line_best_streak">Best streak</string>
+    <string name="stats_line_streak_no_goal">Streak</string>
+
+    <!-- Líneas de la comparativa semanal (en frase, a la izquierda de la cifra). -->
+    <string name="stats_line_this_week_so_far">This week, so far</string>
+    <string name="stats_line_that_week">That week</string>
+    <!-- La semana anterior, contando solo hasta el mismo día y hora que la actual. -->
+    <string name="stats_line_previous_same_stretch">Last week, at this point</string>
+    <string name="stats_line_previous">Last week</string>
+    <string name="stats_line_previous_whole">Last week, whole</string>
+    <string name="stats_line_difference">Difference</string>
+    <string name="stats_line_difference_per_day">Difference per day</string>
+
+    <!-- Dato de la cabecera de CADA DÍA cuando «siempre» se agrupa por semanas (MAYÚSCULAS). -->
+    <string name="stats_by_week">BY WEEK</string>
+    <!-- Acciones para TalkBack. -->
+    <string name="stats_open_worst_day">Open that day</string>
+    <string name="stats_set_goal_action">Set a goal in Settings</string>
+    <!-- «Abrir el martes 3 de noviembre» (TalkBack, desde la gráfica): %1$s fecha larga. -->
+    <string name="stats_open_day">Open %1$s</string>
+
+    <!-- Navegador de la pestaña SIEMPRE (MAYÚSCULAS): %1$s fecha corta con año («3 MAR 2026»). -->
+    <string name="stats_all_label">SINCE %1$s</string>
+
+    <!-- Línea bajo la cifra grande (MAYÚSCULAS, poco sitio: se parte solo por los «·»).
+         La forma va con el número de vídeos (la cifra grande, que no sale aquí).
+         %1$s tiempo total («9 H 12 MIN»), %2$s vídeos por día («172»), %3$s tiempo por vídeo («27 S»). -->
+    <plurals name="stats_summary_line">
+        <item quantity="one">VIDEO · %1$s · %2$s/DAY · %3$s PER VIDEO</item>
+        <item quantity="other">VIDEOS · %1$s · %2$s/DAY · %3$s PER VIDEO</item>
+    </plurals>
+    <!-- Lo mismo, dicho por TalkBack: %1$s vídeos («1.204 vídeos»), %2$s tiempo total
+         («9 horas y 12 minutos»), %3$s vídeos por día, %4$s tiempo por vídeo («27 segundos»). -->
+    <string name="stats_summary_description">%1$s, %2$s, %3$s a day, %4$s per video.</string>
+    <!-- Con cero vídeos: %1$s es «0 vídeos». -->
+    <string name="stats_summary_description_zero">%1$s.</string>
+    <!-- contentDescription de la cifra grande: %1$s vídeos («1.204 vídeos»). -->
+    <string name="stats_count_description">%1$s in this period</string>
+
+    <!-- Tendencia frente al periodo anterior cuando el anterior no tiene datos.
+         _label: MAYÚSCULAS, bajo la cifra grande (poco sitio). Sin _label: la frase para TalkBack. -->
+    <string name="stats_trend_no_base_label_week">NO LAST-WEEK DATA</string>
+    <string name="stats_trend_no_base_label_month">NO LAST-MONTH DATA</string>
+    <string name="stats_trend_no_base_label_year">NO LAST-YEAR DATA</string>
+    <string name="stats_trend_no_base_week">No data from last week.</string>
+    <string name="stats_trend_no_base_month">No data from last month.</string>
+    <string name="stats_trend_no_base_year">No data from last year.</string>
+    <!-- El periodo anterior tuvo cero vídeos y este no. -->
+    <string name="stats_trend_from_zero_label_week">LAST WEEK WAS ZERO</string>
+    <string name="stats_trend_from_zero_label_month">LAST MONTH WAS ZERO</string>
+    <string name="stats_trend_from_zero_label_year">LAST YEAR WAS ZERO</string>
+    <string name="stats_trend_from_zero_week">Last week was zero.</string>
+    <string name="stats_trend_from_zero_month">Last month was zero.</string>
+    <string name="stats_trend_from_zero_year">Last year was zero.</string>
+
+    <!-- Tendencia en frase, sin periodo anterior con el que comparar (es el primero contado). -->
+    <string-array name="stats_trend_none_week">
+        <item>This is your first week on the books. Next week will have something to compare to.</item>
+        <item>There’s no previous week to compare against yet.</item>
+        <item>No previous week with data. This is the starting line.</item>
+    </string-array>
+    <string-array name="stats_trend_none_month">
+        <item>This is your first month on the books. Next month will have something to compare to.</item>
+        <item>There’s no previous month to compare against yet.</item>
+        <item>No previous month with data. This is the starting line.</item>
+    </string-array>
+    <string-array name="stats_trend_none_year">
+        <item>This is your first year on the books. Next year will have something to compare to.</item>
+        <item>There’s no previous year to compare against yet.</item>
+        <item>No previous year with data. This is the starting line.</item>
+    </string-array>
+    <!-- El periodo anterior tuvo cero vídeos y este no. -->
+    <string-array name="stats_trend_from_zero_week">
+        <item>Last week, zero. This one, not.</item>
+        <item>You were coming off a blank week.</item>
+        <item>You started from zero. Not anymore.</item>
+    </string-array>
+    <string-array name="stats_trend_from_zero_month">
+        <item>Last month, zero. This one, not.</item>
+        <item>You were coming off a blank month.</item>
+        <item>You started from zero. Not anymore.</item>
+    </string-array>
+    <string-array name="stats_trend_from_zero_year">
+        <item>Last year, zero. This one, not.</item>
+        <item>You were coming off a blank year.</item>
+        <item>You started from zero. Not anymore.</item>
+    </string-array>
+    <!-- Cero vídeos en este periodo y en el anterior. -->
+    <string-array name="stats_trend_both_zero_week">
+        <item>Same as last week: nothing.</item>
+        <item>Zero now and zero before. Consistency, they call it.</item>
+        <item>No videos now or before.</item>
+    </string-array>
+    <string-array name="stats_trend_both_zero_month">
+        <item>Same as last month: nothing.</item>
+        <item>Zero now and zero before. Consistency, they call it.</item>
+        <item>No videos now or before.</item>
+    </string-array>
+    <string-array name="stats_trend_both_zero_year">
+        <item>Same as last year: nothing.</item>
+        <item>Zero now and zero before. Consistency, they call it.</item>
+        <item>No videos now or before.</item>
+    </string-array>
+    <!-- Tendencia con remate. %1$s es la comparación ya en frase, con su punto final
+         («Un 12 % más que la semana anterior.»). up: más vídeos (malo); down: menos (bueno);
+         same: casi igual. -->
+    <string-array name="stats_trend_up">
+        <item>%1$s The trend is clear, and it’s not heading down.</item>
+        <item>%1$s On the stock market, that would be good news.</item>
+        <item>%1$s The algorithm is taking notes.</item>
+    </string-array>
+    <!-- «Bien visto. O, mejor dicho, menos visto.»: juego con «ver» (bien visto = buena idea). -->
+    <string-array name="stats_trend_down">
+        <item>%1$s Good call. Or, to be exact, less watching.</item>
+        <item>%1$s The algorithm noticed.</item>
+        <item>%1$s There are worse trends.</item>
+    </string-array>
+    <string-array name="stats_trend_same">
+        <item>%1$s Consistency, they call it.</item>
+        <item>%1$s Neither more nor less.</item>
+        <item>%1$s Yours is regularity.</item>
+    </string-array>
+
+    <!-- Racha sin objetivo diario (al tocarla se va a Ajustes). -->
+    <string-array name="stats_streak_no_goal">
+        <item>Set a goal and we’ll start counting.</item>
+        <item>No goal, no streak. Pick a number and we’ll start counting.</item>
+        <item>Streaks run against a limit. Set one and we’ll start counting.</item>
+    </string-array>
+    <!-- Nunca ha habido racha: %1$s es el objetivo diario («150»). -->
+    <string-array name="stats_streak_never">
+        <item>Not one day under %1$s yet. The goal’s still there.</item>
+        <item>No streak yet. One day under %1$s is all it takes to start one.</item>
+        <item>Streak at zero. It starts the first day you stay under %1$s.</item>
+    </string-array>
+    <!-- Racha rota: %1$s es la mejor racha («12 días»). -->
+    <string-array name="stats_streak_broken">
+        <item>Streak broken. Your best is still %1$s, waiting for you.</item>
+        <item>Streak over. The record, %1$s, isn’t going anywhere.</item>
+        <item>Streak at zero. You know you can reach %1$s.</item>
+    </string-array>
+    <!-- La racha actual es la mejor: %1$s la racha («4 días», siempre 2 o más), %2$s el objetivo.
+         _one: la racha es de un solo día (%1$s es «1 día»). -->
+    <string-array name="stats_streak_record">
+        <item>%1$s in a row under %2$s. This is your best streak.</item>
+        <item>%1$s streak, the best so far.</item>
+        <item>%1$s and counting. It’s your record.</item>
+    </string-array>
+    <string-array name="stats_streak_record_one">
+        <item>One day under %2$s. That’s how streaks start.</item>
+        <item>%1$s streak, the best so far.</item>
+        <item>%1$s and counting. It’s your record.</item>
+    </string-array>
+    <!-- Racha en curso por debajo del récord: %1$s la racha («4 días»), %2$s el récord
+         («12 días»), %3$s lo que falta para igualarlo («8 días»; en _one_left, «1 día»). -->
+    <string-array name="stats_streak_ongoing">
+        <item>%1$s streak. The record is %2$s.</item>
+        <item>%1$s streak. %3$s to go to match your best.</item>
+        <item>%1$s and counting. Your best was %2$s.</item>
+    </string-array>
+    <string-array name="stats_streak_ongoing_one_left">
+        <item>%1$s streak. The record is %2$s.</item>
+        <item>%1$s streak. %3$s to go to match your best.</item>
+        <item>%1$s and counting. Your best was %2$s.</item>
+    </string-array>
+
+    <!-- Días de la semana, de lunes a domingo (7, en este orden), para las frases del día débil.
+         _the: uno concreto, con su artículo («el domingo»); _every: todos, en plural («los domingos»). -->
+    <string-array name="stats_weekday_the">
+        <item>on Monday</item>
+        <item>on Tuesday</item>
+        <item>on Wednesday</item>
+        <item>on Thursday</item>
+        <item>on Friday</item>
+        <item>on Saturday</item>
+        <item>on Sunday</item>
+    </string-array>
+    <string-array name="stats_weekday_every">
+        <item>Mondays</item>
+        <item>Tuesdays</item>
+        <item>Wednesdays</item>
+        <item>Thursdays</item>
+        <item>Fridays</item>
+        <item>Saturdays</item>
+        <item>Sundays</item>
+    </string-array>
+    <!-- Día débil (el de más vídeos de media): %1$s «el domingo», %2$s lo mismo con mayúscula
+         («El domingo»), %3$s el plural con mayúscula («Los domingos»), %4$s la media («240 vídeos»). -->
+    <string-array name="stats_weak_day">
+        <item>Your weak day: %1$s, averaging %4$s.</item>
+        <item>%3$s is where you slip: %4$s on average.</item>
+        <item>If there’s a dangerous day, it’s %1$s.</item>
+        <item>%2$s is your weak day. Everybody has one.</item>
+    </string-array>
+    <!-- Media de vídeos («240 vídeos», «1 vídeo»): %1$s la media ya formateada (entera). -->
+    <plurals name="stats_average_videos">
+        <item quantity="one">%1$s00A0video</item>
+        <item quantity="other">%1$s00A0videos</item>
+    </plurals>
+    <!-- La misma media cuando lleva decimales («3,2 vídeos»). -->
+    <string name="stats_average_videos_decimal">%1$s00A0videos</string>
+    <!-- Valor del día débil (MAYÚSCULAS, columna estrecha): «DOMINGO · 240 DE MEDIA».
+         %1$s día de la semana, %2$s la media (solo la cifra). -->
+    <string name="stats_weak_day_value">%1$s · %2$s AVG</string>
+
+    <!-- Valor de la hora punta (MAYÚSCULAS): «23:00 · 41 VÍDEOS». %1$s hora, %2$s vídeos. -->
+    <string name="stats_peak_hour_value">%1$s · %2$s</string>
+    <!-- Hora punta según la franja. %1$s la hora («23:00»), %2$s la hora con preposición
+         («a las 23:00»). night: 0–5 h; morning: 6–11 h; afternoon (sobremesa): 12–16 h;
+         evening: 17–20 h; late: 21–23 h. -->
+    <string-array name="stats_peak_night">
+        <item>%1$s. At that hour it’s just you and the algorithm.</item>
+        <item>Your peak hour, %2$s. After midnight the feed never closes.</item>
+        <item>%1$s: the hour when everything seems like a good idea, including one more video.</item>
+    </string-array>
+    <string-array name="stats_peak_morning">
+        <item>Your peak hour, %2$s. Some people read the newspaper.</item>
+        <item>%1$s: the feed, with breakfast.</item>
+        <item>Where you watch the most is %2$s. Before coffee, the thumb.</item>
+    </string-array>
+    <!-- La sobremesa: el rato después de comer (en España, sobre las 14–16 h). -->
+    <string-array name="stats_peak_afternoon">
+        <item>%1$s. The after-lunch slump is in charge.</item>
+        <item>Your peak hour falls after lunch: %1$s.</item>
+        <item>%1$s: coffee, couch and feed.</item>
+    </string-array>
+    <!-- «de quince en quince segundos»: lo que dura un vídeo corto. -->
+    <string-array name="stats_peak_evening">
+        <item>%1$s. That hour when the day has no room for much more.</item>
+        <item>Your peak hour, %2$s. The evening goes by fifteen seconds at a time.</item>
+        <item>%1$s: between whatever you had to do and dinner, the feed.</item>
+    </string-array>
+    <string-array name="stats_peak_late">
+        <item>%1$s. The classic “just one more and I’m off to sleep.”</item>
+        <item>Your peak hour, %2$s. Bed is the algorithm’s favorite spot.</item>
+        <item>%1$s: the hour of the last video. And the next one.</item>
+    </string-array>
+
+    <!-- Días con vídeos (MAYÚSCULAS, columna estrecha): «26 DE 31». %1$s activos, %2$s del periodo. -->
+    <string name="stats_active_days_value">%1$s OF %2$s</string>
+    <!-- Vídeos y cuota de una plataforma o categoría: «1.204 · 34 %». %1$s vídeos, %2$s porcentaje. -->
+    <string name="stats_count_share_value">%1$s · %2$s</string>
+    <!-- Valor del peor día (MAYÚSCULAS, columna estrecha): «MAR 3 NOV · 412».
+         %1$s día de la semana abreviado, %2$s fecha corta («3 nov» o «3 nov 2025»), %3$s vídeos. -->
+    <string name="stats_worst_day_value">%1$s %2$s · %3$s</string>
+
+    <!-- Tooltips de la gráfica (dos líneas, poco sitio). %1$s primera línea, %2$s fecha («mar 3 nov»). -->
+    <string name="stats_day_tooltip">%1$s\n%2$s</string>
+    <!-- Primera línea del tooltip de un día anterior al primer registro. -->
+    <string name="stats_tooltip_no_data">no data</string>
+    <!-- Primera línea del tooltip de un día que todavía no ha llegado. -->
+    <string name="stats_tooltip_future">not yet</string>
+    <!-- Barra semanal (pestaña SIEMPRE): %1$s vídeos, %2$s el lunes de esa semana («27 oct»). -->
+    <string name="stats_week_tooltip">%1$s\nweek of %2$s</string>
+    <!-- Día de la comparativa semanal: %1$s primera línea (vídeos, «sin datos» o «por llegar»),
+         %2$s fecha («mar 3 nov»), %3$s vídeos ese día de la semana anterior (solo la cifra). -->
+    <string name="stats_ghost_tooltip">%1$s\n%2$s · last week, %3$s</string>
+    <string name="stats_ghost_tooltip_no_previous">%1$s\n%2$s · last week, no data</string>
+
+    <!-- Resumen del calendario para TalkBack. La forma va con los días con vídeos (%1$s, la cifra);
+         %2$s son los días del periodo. -->
+    <plurals name="stats_calendar_description">
+        <item quantity="one">Calendar: %1$s00A0day with videos out of %2$s.</item>
+        <item quantity="other">Calendar: %1$s00A0days with videos out of %2$s.</item>
+    </plurals>
+
+    <!-- Periodo sin un solo vídeo, en la pestaña SIEMPRE. -->
+    <string-array name="stats_empty_all">
+        <item>Your history is empty. Everything starts with the first video.</item>
+        <item>Nothing to count yet.</item>
+        <item>Blank history. For now.</item>
+    </string-array>
+    <!-- Periodo en curso sin un solo vídeo. «Que conste en acta»: que quede apuntado oficialmente.
+         «El servicio» es el de accesibilidad que cuenta los vídeos. -->
+    <string-array name="stats_empty_current_week">
+        <item>Not one video this week. If that’s true, let the record show it.</item>
+        <item>Nothing to count this week, for now.</item>
+        <item>This week, blank. Either you watched nothing, or the service was off.</item>
+    </string-array>
+    <string-array name="stats_empty_current_month">
+        <item>Not one video this month. If that’s true, let the record show it.</item>
+        <item>Nothing to count this month, for now.</item>
+        <item>This month, blank. Either you watched nothing, or the service was off.</item>
+    </string-array>
+    <string-array name="stats_empty_current_year">
+        <item>Not one video this year. If that’s true, let the record show it.</item>
+        <item>Nothing to count this year, for now.</item>
+        <item>This year, blank. Either you watched nothing, or the service was off.</item>
+    </string-array>
+    <!-- Periodo pasado sin un solo vídeo. -->
+    <string-array name="stats_empty_past_week">
+        <item>Nothing to count that week.</item>
+        <item>That week, blank. Either you watched nothing, or the service was off.</item>
+        <item>Not one video that week. Let the record show it.</item>
+    </string-array>
+    <string-array name="stats_empty_past_month">
+        <item>Nothing to count that month.</item>
+        <item>That month, blank. Either you watched nothing, or the service was off.</item>
+        <item>Not one video that month. Let the record show it.</item>
+    </string-array>
+    <string-array name="stats_empty_past_year">
+        <item>Nothing to count that year.</item>
+        <item>That year, blank. Either you watched nothing, or the service was off.</item>
+        <item>Not one video that year. Let the record show it.</item>
+    </string-array>
+    <!-- Periodo anterior al primer día con datos: %1$s la fecha del primer día («3 de marzo de 2026»).
+         Reelómetro es el nombre de la app: no se traduce. -->
+    <string-array name="stats_before_history">
+        <item>Nothing was counted before %1$s. We hadn’t met yet.</item>
+        <item>This is from before Reelómetro. There’s nothing to see here, literally.</item>
+        <item>Your history starts on %1$s. Before that, silence.</item>
+    </string-array>
+
+    <!-- Gráficas para TalkBack. Barra o celda de un día: %1$s fecha larga con mayúscula
+         («Martes 3 de noviembre»), %2$s vídeos. _max: es el día con más vídeos. -->
+    <string name="stats_bar_description">%1$s: %2$s.</string>
+    <string name="stats_bar_description_max">%1$s: %2$s, the day with the most.</string>
+    <string name="stats_heat_cell_description">%1$s: %2$s.</string>
+    <!-- Punto de la línea por horas: %1$s hora («23:00»), %2$s vídeos. _max: la hora con más. -->
+    <string name="stats_hour_description">%1$s: %2$s.</string>
+    <string name="stats_hour_description_max">%1$s: %2$s, the hour with the most.</string>
+    <!-- Resumen de la gráfica diaria: %1$s total de vídeos; en _max, %2$s fecha larga del día con
+         más («martes 3 de noviembre») y %3$s sus vídeos (solo la cifra). -->
+    <string name="stats_daily_bars_summary">%1$s.</string>
+    <string name="stats_daily_bars_summary_max">%1$s. The day with the most, %2$s, with %3$s.</string>
+
+    <!-- Comparativa semanal para TalkBack: primera frase + segunda (la diferencia), unidas con
+         stats_week_vs_description. %1$s vídeos de la semana mostrada («205 vídeos»),
+         %2$s vídeos de la anterior (solo la cifra). _current: la semana en curso (la anterior se
+         cuenta hasta el mismo momento). _no_previous: la anterior no tiene datos de esos días. -->
+    <string name="stats_week_vs_current">This week you’re at %1$s; last week, at this point, %2$s.</string>
+    <string name="stats_week_vs_current_no_previous">This week you’re at %1$s; there’s no data from last week for those days.</string>
+    <string name="stats_week_vs_past">That week, %1$s; the week before, %2$s.</string>
+    <string name="stats_week_vs_past_no_previous">That week, %1$s; there’s no data from the week before for those days.</string>
+    <!-- Diferencia: %1$s porcentaje sin signo («11 %»). _per_day: compara medias por día. -->
+    <string name="stats_week_vs_more">%1$s more.</string>
+    <string name="stats_week_vs_more_per_day">%1$s more per day.</string>
+    <string name="stats_week_vs_less">%1$s less.</string>
+    <string name="stats_week_vs_less_per_day">%1$s less per day.</string>
+    <string name="stats_week_vs_same">Practically the same.</string>
+    <!-- Une las dos frases: %1$s la primera, %2$s la diferencia. -->
+    <string name="stats_week_vs_description">%1$s %2$s</string>
+</resources>

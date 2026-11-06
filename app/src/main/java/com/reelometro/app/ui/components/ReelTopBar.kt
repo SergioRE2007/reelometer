@@ -1,5 +1,7 @@
 package com.reelometro.app.ui.components
 
+import com.reelometro.app.copy.str
+import com.reelometro.app.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,7 +47,7 @@ fun ReelTopBar(
     title: String? = null,
     kicker: String? = null,
     onBack: (() -> Unit)? = null,
-    backDescription: String = "Volver",
+    backDescription: String = str(R.string.ui_top_bar_back),
     titleStyle: TextStyle = ReelTheme.type.displayM,
     divider: Boolean = false,
     windowInsets: WindowInsets = WindowInsets.statusBars,

@@ -1,5 +1,7 @@
 package com.reelometro.app.ui.components.charts
 
+import com.reelometro.app.copy.str
+import com.reelometro.app.R
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -74,7 +76,7 @@ fun HourLine(
     }
     val description = contentDescription ?: remember(values) {
         val peak = maxIndex(hours.toList())
-        if (peak < 0) "Vídeos por hora: sin datos" else "Vídeos por hora. Hora punta: ${spoken(tooltip(peak))}"
+        if (peak < 0) str(R.string.ui_hour_line_description_empty) else str(R.string.ui_hour_line_description, spoken(tooltip(peak)))
     }
 
     Spacer(
@@ -112,7 +114,7 @@ fun HourLine(
                 val ring = (Space.hairline * 2).toPx()
                 val tick = Space.x1.toPx()
                 val labelStyle = type.dataS.copy(color = colors.textMuted)
-                val axisLabels = listOf(0, 6, 12, 18, 24).map { h -> h to measurer.measure("$h${Format.NBSP}h", labelStyle) }
+                val axisLabels = listOf(0, 6, 12, 18, 24).map { h -> h to measurer.measure(str(R.string.ui_hour_axis, Format.integer(h)), labelStyle) }
                 val labelH = axisLabels.first().second.size.height.toFloat()
                 val baseY = size.height - labelH - tick - Space.x1.toPx()
                 val topPad = dotR + ring + stroke

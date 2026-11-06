@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Divulgación destacada del permiso de accesibilidad (copy/DisclosureCopy.kt): una pantalla propia
+  que explica qué lee la app, para qué y dónde lo guarda, antes de pedir el permiso. Lo exige la
+  política de Google Play: el texto tiene que coincidir con lo que se declara en la ficha de la
+  tienda en ese idioma. Tradúcelo con exactitud, sin quitar ni suavizar nada.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="es">
+
+    <!-- Antetítulo en MAYÚSCULAS. -->
+    <string name="disclosure_label">PERMISO DE ACCESIBILIDAD</string>
+    <!-- Título grande. -->
+    <string name="disclosure_title">Para contar, tengo que mirar.</string>
+    <!-- Párrafo principal: qué se lee, para qué y dónde se guarda. -->
+    <string name="disclosure_summary">Reelómetro usa el servicio de accesibilidad de Android para leer la pantalla de TikTok, Instagram y YouTube mientras las usas. Así detecta cada vídeo corto que ves y guarda, solo en este móvil, en qué app lo viste, cuándo, durante cuánto tiempo, quién lo publicó y su descripción, para mostrarte tus estadísticas.</string>
+
+    <!-- Bloques con etiqueta en MAYÚSCULAS (poco sitio) y su texto, en este orden. -->
+    <!-- «Compartir» cita el botón de Instagram/TikTok/YouTube tal cual (en cada idioma, como lo muestren
+         esas apps en ese idioma). «A quién envías» es el nombre del ajuste de la app (settings_recipients_label). -->
+    <string name="disclosure_reads_label">QUÉ LEE</string>
+    <string name="disclosure_reads_text">En TikTok, Instagram y YouTube: cuándo pasas al siguiente vídeo corto y los textos visibles de ese vídeo (el nombre del creador, la descripción y los hashtags). También cuándo pulsas «Compartir» y, solo en Instagram y si activas «A quién envías» en Ajustes, el nombre de la persona o el grupo al que se lo mandas. Si además usas el envío rápido, lee los nombres de la hoja de compartir para encontrar a quien has fijado.</string>
+    <!-- «Compartir» y «Enviar» citan los botones de Instagram tal cual (en cada idioma, como los muestre
+         Instagram en ese idioma). -->
+    <string name="disclosure_not_reads_label">QUÉ NO LEE</string>
+    <string name="disclosure_not_reads_text">Nada de las demás apps: de ellas solo sabe que has salido, para dejar de contar. No guarda lo que escribes ni tus mensajes. Solo pulsa por ti si usas el envío rápido de Instagram, y únicamente «Compartir», la persona o el grupo que has fijado y «Enviar», al tocar su botón; si no lo ve, escribe su nombre en el buscador de la hoja. Solo con el envío rápido, recorta de la hoja de compartir la foto de perfil de las personas o grupos que fijas, para enseñarla en su botón; la guarda solo en este móvil y no hace ninguna otra captura de pantalla.</string>
+    <string name="disclosure_purpose_label">PARA QUÉ</string>
+    <string name="disclosure_purpose_text">Solo para contarte cuántos vídeos ves, cuánto tiempo, de qué temas y de qué creadores. No se usa para publicidad ni para hacer perfiles.</string>
+    <string name="disclosure_storage_label">DÓNDE ACABA</string>
+    <string name="disclosure_storage_text">En este móvil y en ningún otro sitio. No se envía a ningún servidor ni se comparte con nadie: la app ni siquiera tiene permiso para usar internet.</string>
+    <!-- «Ajustes > Accesibilidad» cita los menús de Android tal cual; en cada idioma, los que muestre
+         Android en ese idioma. -->
+    <string name="disclosure_control_label">TÚ MANDAS</string>
+    <string name="disclosure_control_text">Puedes desactivar el permiso cuando quieras en Ajustes &gt; Accesibilidad y borrar todos los datos desde la propia app.</string>
+
+    <!-- Frase junto a los botones: qué pasa si aceptas y si no. «Hoy» y «Ajustes» son pantallas de la app. -->
+    <string name="disclosure_consent">Si aceptas, te llevo a los ajustes de Android para activar el permiso. Si no, la app no podrá contar nada; puedes activarlo más adelante desde Hoy o desde Ajustes.</string>
+    <!-- Confirmación discreta tras pulsar AHORA NO. -->
+    <string name="disclosure_declined">Sin permiso no hay cuenta. Cuando quieras, está en Hoy y en Ajustes.</string>
+</resources>

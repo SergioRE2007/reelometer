@@ -1,5 +1,7 @@
 package com.reelometro.app.ui.components
 
+import com.reelometro.app.copy.str
+import com.reelometro.app.R
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -70,8 +72,8 @@ fun Stepper(
     step: Int = 1,
     enabled: Boolean = true,
     format: (Int) -> String = { Format.integer(it) },
-    decreaseDescription: String = "Restar ${Format.integer(step)}",
-    increaseDescription: String = "Sumar ${Format.integer(step)}",
+    decreaseDescription: String = str(R.string.ui_stepper_decrease, Format.integer(step)),
+    increaseDescription: String = str(R.string.ui_stepper_increase, Format.integer(step)),
     valueContent: (@Composable (value: Int) -> Unit)? = null,
 ) {
     val colors = ReelTheme.colors

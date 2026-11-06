@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Textos sueltos de los componentes de pantalla (gráficos, diálogos, barra superior, selector
+  numérico…) y de la pantalla oculta de calibración. Casi todo es para TalkBack (descripciones
+  habladas, sin punto final).
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="pt">
+
+    <!-- Marcador sin cifra todavía (TalkBack). -->
+    <string name="ui_no_data">Sem dados</string>
+
+    <!-- Calendario de colores por día (TalkBack). %1$s el día más alto, ya dicho («212 vídeos, martes 3 nov»). -->
+    <string name="ui_calendar_description_empty">Calendário: sem dados</string>
+    <string name="ui_calendar_description">Calendário. Dia mais alto: %1$s</string>
+
+    <!-- Gráfico de barras por día (TalkBack). %1$s el día con más vídeos, ya dicho. -->
+    <string name="ui_daily_bars_description_empty">Barras por dia: sem dados</string>
+    <string name="ui_daily_bars_description">Barras por dia. Máximo: %1$s</string>
+    <!-- Etiqueta en MAYÚSCULAS sobre la línea de la media (muy poco sitio): «MEDIA 212». -->
+    <string name="ui_daily_bars_average">MÉDIA %1$s</string>
+
+    <!-- Gráfico por horas (TalkBack). %1$s la hora punta, ya dicha («41 vídeos, 23:00–24:00»). -->
+    <string name="ui_hour_line_description_empty">Vídeos por hora: sem dados</string>
+    <string name="ui_hour_line_description">Vídeos por hora. Horário de pico: %1$s</string>
+    <!-- Eje del gráfico por horas (muy poco sitio): «6 h», «18 h». %1$s la hora (0–24). -->
+    <string name="ui_hour_axis">%1$s\u00A0h</string>
+
+    <!-- Botón para cerrar un diálogo sin hacer nada (el diálogo lo pasa a MAYÚSCULAS si toca). -->
+    <string name="ui_dialog_cancel">Cancelar</string>
+    <!-- Flecha de volver de la barra superior (TalkBack). -->
+    <string name="ui_top_bar_back">Voltar</string>
+    <!-- Botones «−» y «+» de un selector numérico (TalkBack): «Restar 10». %1$s el paso. -->
+    <string name="ui_stepper_decrease">Diminuir %1$s</string>
+    <string name="ui_stepper_increase">Aumentar %1$s</string>
+    <!-- Título hablado de la celebración a pantalla completa (sello nuevo, récord…): %1$s la
+         etiqueta («SELLO NUEVO»), %2$s el título. -->
+    <string name="ui_celebration_pane">%1$s. %2$s</string>
+
+    <!-- Calibración (pantalla oculta, consola técnica en letra monoespaciada): detalles de cada
+         evento capturado. Las abreviaturas técnicas (idx, items) pueden quedarse tal cual.
+         Los huecos son cifras o identificadores tal cual (píxeles, índices). -->
+    <!-- Texto del vídeo, entre comillas. -->
+    <string name="ui_calibration_caption">“%1$s”</string>
+    <!-- Clase de la vista de Android que generó el evento. -->
+    <string name="ui_calibration_class">classe=%1$s</string>
+    <!-- Posición en la lista: de %1$s a %2$s (de %3$s elementos). -->
+    <string name="ui_calibration_index">idx %1$s→%2$s</string>
+    <string name="ui_calibration_index_of">idx %1$s→%2$s de %3$s</string>
+    <!-- Elementos de la lista. -->
+    <string name="ui_calibration_items">itens %1$s</string>
+    <!-- Tamaño del elemento en píxeles (ancho×alto) y, en _share, qué parte de la pantalla ocupa («34 %»). -->
+    <string name="ui_calibration_node">nó %1$s×%2$s</string>
+    <string name="ui_calibration_node_share">nó %1$s×%2$s (%3$s)</string>
+    <!-- Tamaño de la pantalla en píxeles. -->
+    <string name="ui_calibration_screen">tela %1$s×%2$s</string>
+    <!-- Identificador corto del vídeo. -->
+    <string name="ui_calibration_video">vídeo=%1$s</string>
+</resources>
