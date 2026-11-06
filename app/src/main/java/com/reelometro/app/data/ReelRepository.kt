@@ -2,7 +2,18 @@ package com.reelometro.app.data
 
 import androidx.room.Transactor
 import androidx.room.useReaderConnection
+import androidx.room.withTransaction
 import com.reelometro.app.data.export.CsvExporter
+import com.reelometro.app.data.export.CsvImport
+import com.reelometro.app.data.export.CsvParse
+import com.reelometro.app.data.export.CsvReader
+import com.reelometro.app.data.export.ImportError
+import com.reelometro.app.data.export.ImportMode
+import com.reelometro.app.data.export.ImportPreview
+import com.reelometro.app.data.export.ImportResult
+import com.reelometro.app.data.export.ImportedVideo
+import com.reelometro.app.data.export.ParsedCsv
+import com.reelometro.app.data.export.TimeKey
 import com.reelometro.app.stats.AllTime
 import com.reelometro.app.stats.CreatorRank
 import com.reelometro.app.stats.DayRank
@@ -27,6 +38,8 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
 import java.io.OutputStream
 import java.time.Clock
 import java.time.LocalDate
@@ -251,6 +264,180 @@ class ReelRepository(
     }
 
     /**
+     * Lee un CSV de exportación de cualquier versión ([CsvImport]) fuera del hilo principal y cuenta
+     * cuántos de sus vídeos ya están guardados. No escribe nada: es la vista previa. Lee como mucho
+     * [CsvImport.MAX_BYTES] de [input] (no lo cierra).
+     */
+    suspend fun readCsv(input: InputStream): CsvRead = withContext(Dispatchers.IO) {
+        val bytes = readLimited(input) ?: return@withContext CsvRead.Failed(ImportError.TOO_LARGE)
+        when (val parse = CsvImport.parse(bytes, clock.zone)) {
+            is CsvParse.Failed -> CsvRead.Failed(parse.error)
+            is CsvParse.Ok -> {
+                val csv = parse.csv
+                val present = splitVideos(csv.videos, dao.viewKeys()).second
+                val titles = userData().map { CsvReader.normalize(it.blockTitle) }.toSet()
+                CsvRead.Ready(
+                    csv,
+                    ImportPreview(
+                        videos = csv.videos.size,
+                        alreadyPresent = present,
+                        from = csv.from,
+                        to = csv.to,
+                        badLines = csv.badLines,
+                        hasPassport = csv.blocks.any { CsvReader.normalize(it.title) in titles },
+                    ),
+                )
+            }
+        }
+    }
+
+    /**
+     * Importa un CSV ya leído con [readCsv]. Todo en **una transacción** (en lotes de [IMPORT_BATCH]): o
+     * entra todo o no entra nada.
+     * - [ImportMode.ADD]: suma lo nuevo; un vídeo ya guardado (misma plataforma y mismo instante; ver
+     *   [CsvImport.splitNew]) no se repite, ni un envío o un compartido sin vídeo igual. Importar dos veces el
+     *   mismo fichero no añade nada.
+     * - [ImportMode.REPLACE]: borra antes los datos de uso y los de [userData] (como BORRAR TODO).
+     * Cada vídeo lleva un `id` como los del detector (`inicio × 1000 + n`, sin chocar con los que hay),
+     * su `day`/`minuteOfDay` con la zona de la columna `zona` o la del sistema, y sus `compartido`
+     * como compartidos en su inicio. Después, cada parte de [userData] recibe su bloque.
+     */
+    suspend fun importCsv(csv: ParsedCsv, mode: ImportMode): ImportResult {
+        val zone = clock.zone
+        val counts = database.withTransaction {
+            if (mode == ImportMode.REPLACE) dao.deleteAll()
+            writeImport(csv, zone, mode)
+        }
+        val blocks = csv.blocks.associateBy { CsvReader.normalize(it.title) }
+        // Los vídeos ya están guardados: un fallo de una parte (el pasaporte) no puede deshacerlos ni
+        // presentarse como «no ha cambiado nada». Lo suyo se recalcula del historial igualmente.
+        userData().forEach { part ->
+            runCatching {
+                if (mode == ImportMode.REPLACE) part.clearAll()
+                part.importBlock(blocks[CsvReader.normalize(part.blockTitle)])
+            }.onFailure { if (it is kotlinx.coroutines.CancellationException) throw it }
+        }
+        return ImportResult(mode, imported = counts.first, alreadyPresent = counts.second, badLines = csv.badLines)
+    }
+
+    /** [readCsv] e [importCsv] de una vez (gancho de QA `IMPORT` y tests). */
+    suspend fun importCsv(input: InputStream, mode: ImportMode): CsvImportOutcome =
+        when (val read = readCsv(input)) {
+            is CsvRead.Failed -> CsvImportOutcome.Failed(read.error)
+            is CsvRead.Ready -> CsvImportOutcome.Done(importCsv(read.csv, mode))
+        }
+
+    /** Escribe lo importado (dentro de la transacción). Devuelve (vídeos nuevos, vídeos que ya estaban). */
+    private suspend fun writeImport(csv: ParsedCsv, zone: java.time.ZoneId, mode: ImportMode): Pair<Int, Int> {
+        val keys = dao.viewKeys()
+        val usedIds = keys.mapTo(HashSet(keys.size + csv.videos.size)) { it.id }
+        val (fresh, present) = if (mode == ImportMode.ADD) splitVideos(csv.videos, keys) else csv.videos to 0
+        var imported = 0
+        val views = ArrayList<ReelView>(IMPORT_BATCH)
+        val shares = ArrayList<ShareEvent>(IMPORT_BATCH)
+        suspend fun flush() {
+            if (views.isNotEmpty()) dao.insertAll(views)
+            if (shares.isNotEmpty()) dao.insertShares(shares)
+            views.clear()
+            shares.clear()
+        }
+        for (video in fresh) {
+            var id = video.startedAt * 1000
+            while (!usedIds.add(id)) id++
+            val stamp = LocalStamp.of(video.startedAt, video.zone ?: zone)
+            views += ReelView(
+                id = id,
+                platform = video.platform.name,
+                startedAt = video.startedAt,
+                durationMs = video.durationMs,
+                creator = video.creator,
+                caption = video.caption,
+                category = video.category.name,
+                day = stamp.day,
+                minuteOfDay = stamp.minuteOfDay,
+            )
+            repeat(video.shares) {
+                shares += ShareEvent(
+                    platform = video.platform.name, at = video.startedAt, day = stamp.day,
+                    minuteOfDay = stamp.minuteOfDay, reelId = id,
+                )
+            }
+            imported++
+            if (views.size >= IMPORT_BATCH || shares.size >= IMPORT_BATCH) flush()
+        }
+        flush()
+
+        val orphans = if (mode == ImportMode.ADD) {
+            CsvImport.splitNew(
+                csv.orphanShares, dao.orphanShares().map { TimeKey(it.platform, it.at) },
+                keyOf = { TimeKey(it.platform.name, it.at) }, exact = { it.exact },
+            ).first
+        } else {
+            csv.orphanShares
+        }
+        orphans
+            .chunked(IMPORT_BATCH)
+            .forEach { chunk ->
+                dao.insertShares(
+                    chunk.map { s ->
+                        val stamp = LocalStamp.of(s.at, s.zone ?: zone)
+                        ShareEvent(platform = s.platform.name, at = s.at, day = stamp.day, minuteOfDay = stamp.minuteOfDay, reelId = null)
+                    },
+                )
+            }
+
+        val recipients = if (mode == ImportMode.ADD) {
+            CsvImport.splitNew(
+                csv.recipients, dao.shareRecipients().map { TimeKey(it.platform, it.at, it.recipient) },
+                keyOf = { TimeKey(it.platform.name, it.at, it.recipient) }, exact = { it.exact },
+            ).first
+        } else {
+            csv.recipients
+        }
+        recipients
+            .chunked(IMPORT_BATCH)
+            .forEach { chunk ->
+                dao.insertRecipients(
+                    chunk.map { r ->
+                        val stamp = LocalStamp.of(r.at, r.zone ?: zone)
+                        ShareRecipient(
+                            platform = r.platform.name, at = r.at, day = stamp.day, minuteOfDay = stamp.minuteOfDay,
+                            recipient = r.recipient, reelId = null,
+                        )
+                    },
+                )
+            }
+        importFault?.invoke()
+        return imported to present
+    }
+
+    /** Vídeos del fichero que no están ya en [keys] y cuántos sí ([CsvImport.splitNew]). */
+    private fun splitVideos(videos: List<ImportedVideo>, keys: List<ViewKey>): Pair<List<ImportedVideo>, Int> =
+        CsvImport.splitNew(
+            videos, keys.map { TimeKey(it.platform, it.startedAt) },
+            keyOf = { TimeKey(it.platform.name, it.startedAt) }, exact = { it.exact },
+        )
+
+    /** Lee [input] entero si no pasa de [CsvImport.MAX_BYTES]; si pasa, `null`. */
+    private fun readLimited(input: InputStream): ByteArray? {
+        val out = ByteArrayOutputStream()
+        val buffer = ByteArray(64 * 1024)
+        var total = 0L
+        while (true) {
+            val n = input.read(buffer)
+            if (n < 0) break
+            total += n
+            if (total > CsvImport.MAX_BYTES) return null
+            out.write(buffer, 0, n)
+        }
+        return out.toByteArray()
+    }
+
+    /** Solo tests: se llama al final de la escritura, dentro de la transacción (para simular un fallo a mitad). */
+    @androidx.annotation.VisibleForTesting
+    internal var importFault: (() -> Unit)? = null
+
+    /**
      * Borra todos los datos de uso (vídeos, compartidos y envíos) y los de [userData] (el pasaporte).
      * No toca los ajustes.
      */
@@ -430,6 +617,9 @@ class ReelRepository(
         /** Cada cuántos minutos se refrescan las vistas que dependen de la hora actual. */
         const val TICK_MINUTES = 5
 
+        /** Filas por inserción al importar un CSV. */
+        const val IMPORT_BATCH = 500
+
         /** Longitud máxima guardada de la descripción de un vídeo. */
         const val CAPTION_MAX = 300
 
@@ -478,4 +668,18 @@ class ReelRepository(
             )
         }
     }
+}
+
+/** Resultado de [ReelRepository.readCsv]: listo para la vista previa o el motivo por el que no se puede importar. */
+sealed interface CsvRead {
+    data class Ready(val csv: ParsedCsv, val preview: ImportPreview) : CsvRead
+
+    data class Failed(val error: ImportError) : CsvRead
+}
+
+/** Resultado de [ReelRepository.importCsv] de un flujo: importado o el motivo por el que no. */
+sealed interface CsvImportOutcome {
+    data class Done(val result: ImportResult) : CsvImportOutcome
+
+    data class Failed(val error: ImportError) : CsvImportOutcome
 }

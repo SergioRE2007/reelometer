@@ -174,7 +174,7 @@ class RoomGameHistoryTest {
         val title = lines.indexOf("PASAPORTE")
         assertEquals("cabecera, 7 vídeos y una línea en blanco: $lines", 9, title)
         assertEquals("", lines[title - 1])
-        assertEquals("tipo;elemento;fecha;tope;vídeos;experiencia", lines[title + 1])
+        assertEquals("tipo;elemento;fecha;tope;vídeos;experiencia;clave", lines[title + 1])
         val racha = "sello;${PassportCopy.stampName(StampId.RACHA_7)};2026-11-08;"
         assertTrue("falta $racha en $lines", lines.any { it.startsWith(racha) })
         assertTrue(lines.any { it.startsWith("evento;Resumen compartido;2026-11-09;") })

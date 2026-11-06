@@ -53,7 +53,7 @@ Reelómetro doesn't block apps or lecture you. It just puts the scoreboard in fr
 | **Goal** | If you want, a daily limit: the scoreboard tells you how much you have left and keeps your streaks. |
 | **Who you send to** (A quién envías) | Instagram only and only if you turn it on (it's off by default): counts which people and groups you send reels to, so you can see who you share with most. |
 | **Quick send** (Envío rápido) | Also Instagram only and also off by default. Pin your usual people or groups and bubbles with their photo appear over the reels: one tap and the reel is sent by itself, in under a second. You can place the bubbles wherever you like, send to two at once by dropping one bubble onto another, and each bubble's photo can be their profile picture or one you choose from your gallery. |
-| **Your data** | Export everything to CSV or delete it with one button. |
+| **Your data** | Export everything to CSV, import it on another phone (or after resetting this one) without duplicates, or delete it with one button. |
 
 <div align="center">
 <img src="docs/img/hoy-claro.png" width="24%" alt="Today screen in light theme">
@@ -123,7 +123,8 @@ It isn't on Google Play (yet). Download the APK of the latest version from
 2. On Android 13 or later, the accessibility service switch is greyed out («Restricted setting») because the app
    doesn't come from Google Play. Go to the system Settings › Apps › Reelómetro › ⋮ › **Allow restricted settings**
    and turn it on again. The app itself guides you.
-3. New versions install on top and keep your data.
+3. New versions install on top and keep your data. To switch phones: Settings › Your data › **Export CSV** on the
+   old one and **Import CSV** on the new one.
 
 Requirements: Android 8.0 (API 26) or later. Languages: English, Spanish (Spain), Brazilian Portuguese, French and
 Italian (it follows the phone; on Android 13 or later you can pick one in Settings › Apps › Reelómetro › Language).
@@ -153,7 +154,7 @@ Robolectric. `minSdk 26`, `targetSdk 37`.
 ```
 app/src/main/java/com/reelometro/app/
 ├── detection/   accessibility service, per-platform rules, classifier, «Who you send to» and quick send
-├── data/        Room, repository, settings (DataStore), CSV export
+├── data/        Room, repository, settings (DataStore), CSV export and import
 ├── stats/       pure calculations, number formatting, sourced equivalences
 ├── copy/        all the app's text (with variants)
 ├── game/        pure Passport rules (Flap, levels, stamps, challenge)
@@ -164,7 +165,7 @@ app/src/main/java/com/reelometro/app/
 
 ## Status
 
-Version **1.5.0**. Honestly:
+Version **1.6.0**. Honestly:
 
 - **Tested on a real phone** (a Pixel with Android 17): TikTok and Instagram count correctly. Instagram quick send has
   been measured send by send: between 0.5 and 0.93 s to a person and 1.4–1.6 s to a group that has to be searched for
@@ -180,7 +181,10 @@ Version **1.5.0**. Honestly:
 - **New translations** (English, Brazilian Portuguese, French and Italian): checked on screen in the emulator, but
   no native speaker has read them in full yet, and texts quoting Android menus or Instagram buttons may not match
   your phone word for word. Corrections are welcome.
-- It builds and passes its 761 JVM tests. The screenshots in this README use sample data.
+- **Import CSV** (1.6.0): covered by tests (round trip through the database, CSVs from every earlier version,
+  importing twice without duplicates), on the emulator and with a real CSV from a Pixel
+  (798 videos: all of them come in, and none is duplicated on a second import).
+- It builds and passes its 814 JVM tests. The screenshots in this README use sample data.
 
 ## Support the project
 

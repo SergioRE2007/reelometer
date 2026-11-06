@@ -142,7 +142,8 @@
     <!-- Resumen de lo guardado, en líneas de ticket (a la derecha, la cifra). -->
     <string name="settings_data_count_label">Video salvati</string>
     <string name="settings_data_time_label">Tempo salvato</string>
-    <string name="settings_export_description">Tutta la cronologia in un file che apre qualunque foglio di calcolo.</string>
+    <string name="settings_export_description">La tua cronologia in un file: aprilo in un foglio di calcolo o importalo su un altro telefono.</string>
+
     <!-- %1$s los vídeos exportados con su palabra («12.408 vídeos»). -->
     <string name="settings_export_done">Esportato: %1$s.</string>
     <string name="settings_export_empty">Non c’è ancora niente da esportare.</string>
@@ -160,6 +161,53 @@
     </plurals>
     <string name="settings_delete_done">Cancellato. Contatore a zero.</string>
     <string name="settings_delete_failed">Non è stato possibile cancellare. Riprova.</string>
+
+    <!-- Importar el CSV (1.6.0). Descripción junto a IMPORTAR CSV. -->
+    <string name="settings_import_description">Telefono nuovo, o hai ripristinato questo? Importa qui il CSV che hai esportato e la tua cronologia torna.</string>
+    <string name="settings_import_busy">Importazione del file</string>
+    <string name="settings_import_dialog_title">Importare questo file?</string>
+    <string name="settings_import_preview">Nel file ci sono %1$s (%2$s).</string>
+    <plurals name="settings_import_preview_present">
+        <item quantity="one">%1$s era già salvato: non si ripete.</item>
+        <item quantity="many">%1$s erano già salvati: non si ripetono.</item>
+        <item quantity="other">%1$s erano già salvati: non si ripetono.</item>
+    </plurals>
+    <plurals name="settings_import_preview_bad">
+        <item quantity="one">%1$s riga non si legge e viene saltata.</item>
+        <item quantity="many">%1$s righe non si leggono e vengono saltate.</item>
+        <item quantity="other">%1$s righe non si leggono e vengono saltate.</item>
+    </plurals>
+    <string name="settings_import_preview_passport">Porta anche il tuo passaporto: timbri, sfide e livello.</string>
+    <string name="settings_import_preview_settings">Le impostazioni non sono nel file: il tuo obiettivo e i tuoi avvisi restano come sono.</string>
+    <string name="settings_import_modes">AGGIUNGI somma le novità a quello che hai già. SOSTITUISCI TUTTO cancella quello che c’è ora e tiene solo il file.</string>
+    <string name="settings_import_replace_title">Sostituire tutto?</string>
+    <string name="settings_import_replace_body_empty">Non ci sono video salvati: resterà quello del file.</string>
+    <plurals name="settings_import_replace_body">
+        <item quantity="one">Verrà cancellato %1$s e %2$s di cronologia, e resterà solo il file. Non si può annullare.</item>
+        <item quantity="many">Verranno cancellati %1$s e %2$s di cronologia, e resterà solo il file. Non si può annullare.</item>
+        <item quantity="other">Verranno cancellati %1$s e %2$s di cronologia, e resterà solo il file. Non si può annullare.</item>
+    </plurals>
+    <plurals name="settings_import_done">
+        <item quantity="one">Importato: %1$s.</item>
+        <item quantity="many">Importati: %1$s.</item>
+        <item quantity="other">Importati: %1$s.</item>
+    </plurals>
+    <plurals name="settings_import_done_present">
+        <item quantity="one">%1$s c’era già.</item>
+        <item quantity="many">%1$s c’erano già.</item>
+        <item quantity="other">%1$s c’erano già.</item>
+    </plurals>
+    <plurals name="settings_import_done_bad">
+        <item quantity="one">%1$s riga non si leggeva.</item>
+        <item quantity="many">%1$s righe non si leggevano.</item>
+        <item quantity="other">%1$s righe non si leggevano.</item>
+    </plurals>
+    <string name="settings_import_nothing_new">Niente di nuovo: era già tutto salvato.</string>
+    <string name="settings_import_not_csv">Questo file non è un CSV di Reelómetro. Scegli quello che hai esportato dall’app.</string>
+    <string name="settings_import_empty">Il file è vuoto: non ci sono video da importare.</string>
+    <string name="settings_import_too_large">Il file supera i 50\u00A0MB: non sembra una copia di Reelómetro.</string>
+    <string name="settings_import_too_broken">Troppe righe non si leggono, quindi non è stato importato niente.</string>
+    <string name="settings_import_failed">Non è stato possibile importare e non è cambiato niente. Riprova.</string>
 
     <!-- ============================================================ 06 servicio -->
 

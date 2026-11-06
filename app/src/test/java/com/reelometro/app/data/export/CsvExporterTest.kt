@@ -40,7 +40,8 @@ class CsvExporterTest {
 
     private lateinit var db: AppDatabase
     private val day = LocalDate.of(2026, 11, 3)
-    private val header = "fecha_hora_local;plataforma;duración_s;creador;categoría;descripción;compartido"
+    private val header = "fecha_hora_local;plataforma;duración_s;creador;categoría;descripción;compartido;inicio_ms;zona;duración_ms"
+    private val zone = MADRID.id
 
     @Before
     fun setUp() {
@@ -88,7 +89,7 @@ class CsvExporterTest {
         insert(9, t - 5_000, Platform.TIKTOK, 20_000) // insertado el último pero es el primero
         share(t + 1_000, 10)
         share(t + 2_000, 10)
-        share(t + 3_000, null) // sin vídeo: no sale
+        share(t + 3_000, null) // sin vídeo: va en su bloque
 
         val out = ByteArrayOutputStream()
         val count = CsvExporter(db.reelDao(), { MADRID }, pageSize = 2).export(out)
@@ -100,11 +101,15 @@ class CsvExporterTest {
         assertEquals(
             listOf(
                 header,
-                "2026-11-03T14:37:00;TikTok;20,0;;Sin clasificar;;0",
-                "2026-11-03T14:37:05;TikTok;12,3;michi_filosofo;Humor;\"Hola; \"\"mundo\"\"\nadiós\";2",
-                "2026-11-03T14:37:05;Instagram Reels;8,0;'@raro;Sin clasificar;'=SUMA(A1);0",
-                "2026-11-03T14:37:06;YouTube Shorts;1,0;;Sin clasificar;;0",
-                "2026-11-03T14:37:07;TikTok;60,0;;Comida;Tortilla #receta;0",
+                "2026-11-03T14:37:00;TikTok;20,0;;Sin clasificar;;0;${t - 5_000};$zone;20000",
+                "2026-11-03T14:37:05;TikTok;12,3;michi_filosofo;Humor;\"Hola; \"\"mundo\"\"\nadiós\";2;$t;$zone;12345",
+                "2026-11-03T14:37:05;Instagram Reels;8,0;'@raro;Sin clasificar;'=SUMA(A1);0;$t;$zone;8000",
+                "2026-11-03T14:37:06;YouTube Shorts;1,0;;Sin clasificar;;0;${t + 1_000};$zone;1000",
+                "2026-11-03T14:37:07;TikTok;60,0;;Comida;Tortilla #receta;0;${t + 2_000};$zone;59960",
+                "",
+                "COMPARTIDOS SIN VÍDEO",
+                "fecha_hora_local;plataforma;inicio_ms",
+                "2026-11-03T14:37:08;TikTok;${t + 3_000}",
             ),
             rows,
         )
@@ -127,12 +132,12 @@ class CsvExporterTest {
         assertEquals(
             listOf(
                 header,
-                "2026-11-03T14:37:00;Instagram Reels;8,0;;Sin clasificar;;0",
+                "2026-11-03T14:37:00;Instagram Reels;8,0;;Sin clasificar;;0;$t;$zone;8000",
                 "",
                 "ENVÍOS",
-                "fecha_hora_local;plataforma;destinatario",
-                "2026-11-03T14:37:05;Instagram Reels;Los del piso",
-                "2026-11-03T14:37:06;Instagram Reels;'=Ana",
+                "fecha_hora_local;plataforma;destinatario;inicio_ms",
+                "2026-11-03T14:37:05;Instagram Reels;Los del piso;${t + 5_000}",
+                "2026-11-03T14:37:06;Instagram Reels;'=Ana;${t + 6_000}",
             ),
             lines(out.toByteArray()),
         )
@@ -168,6 +173,9 @@ class CsvExporterTest {
         }
         assertEquals(1, repository.exportCsv(out))
         assertFalse(closed)
-        assertEquals("2026-11-03T00:30:00;YouTube Shorts;15,0;;Sin clasificar;;0", lines(out.toByteArray())[1])
+        assertEquals(
+            "2026-11-03T00:30:00;YouTube Shorts;15,0;;Sin clasificar;;0;${at(day, 0, 30)};$zone;15000",
+            lines(out.toByteArray())[1],
+        )
     }
 }

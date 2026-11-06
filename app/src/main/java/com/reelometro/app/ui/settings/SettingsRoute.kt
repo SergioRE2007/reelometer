@@ -51,6 +51,11 @@ fun SettingsRoute(
     val exportFile = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) { uri ->
         if (uri != null) vm.export { context.contentResolver.openOutputStream(uri, "wt") }
     }
+    // IMPORTAR CSV: el selector de documentos del sistema (sin permisos). Hojas de cálculo y algunos gestores de
+    // archivos dan el CSV como texto o como binario: se aceptan esos tipos y el contenido decide.
+    val importFile = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) vm.readImport { context.contentResolver.openInputStream(uri) }
+    }
     // ELEGIR FOTO (1.4.3): el selector de fotos de Android, sin permisos (en versiones viejas, el respaldo de
     // androidx abre el selector de documentos). Para quién era se guarda por si Android recrea la actividad.
     var photoFor by rememberSaveable { mutableStateOf<String?>(null) }
@@ -67,6 +72,7 @@ fun SettingsRoute(
                 SettingsEffect.RequestNotificationPermission ->
                     notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
                 is SettingsEffect.PickExportFile -> exportFile.launch(effect.fileName)
+                SettingsEffect.PickImportFile -> importFile.launch(IMPORT_TYPES)
             }
         }
     }
@@ -88,6 +94,9 @@ fun SettingsRoute(
             onTheme = vm::setTheme,
             onExport = vm::requestExport,
             onDeleteAll = vm::clearAll,
+            onImport = vm::requestImport,
+            onImportConfirm = vm::confirmImport,
+            onImportCancel = vm::cancelImport,
             onOpenServiceSetup = onOpenServiceSetup,
             onOpenAccessibility = { SystemScreens.openAccessibility(context) },
             onVersionTap = vm::onVersionTap,
@@ -110,3 +119,6 @@ fun SettingsRoute(
         ),
     )
 }
+
+/** Tipos que ofrece el selector al importar (el CSV puede llegar como cualquiera de ellos). */
+private val IMPORT_TYPES = arrayOf("text/csv", "text/comma-separated-values", "text/plain", "application/octet-stream")

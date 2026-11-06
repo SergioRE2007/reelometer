@@ -107,4 +107,8 @@ internal object Queries {
         "SELECT $VIDEO_COLUMNS FROM reel_views r " +
             "WHERE r.startedAt >= :afterStartedAt AND (r.startedAt > :afterStartedAt OR r.id > :afterId) " +
             "ORDER BY r.startedAt, r.id LIMIT :limit"
+
+    /** Compartidos sin vídeo: sin `reelId` o con uno que ya no está (el vídeo se descartó o se borró). */
+    const val ORPHAN_SHARES =
+        "SELECT * FROM share_events WHERE reelId IS NULL OR reelId NOT IN (SELECT id FROM reel_views) ORDER BY at, id"
 }

@@ -86,6 +86,9 @@
     <string name="button_close">FECHAR</string>
     <string name="button_delete_all">APAGAR TUDO</string>
     <string name="button_export_csv">EXPORTAR CSV</string>
+    <string name="button_import_csv">IMPORTAR CSV</string>
+    <string name="button_import_add">ADICIONAR</string>
+    <string name="button_import_replace">SUBSTITUIR TUDO</string>
     <string name="button_see_summary">VER RESUMO</string>
     <string name="button_see_permission">VER A PERMISSÃO</string>
     <string name="button_remove_goal">TIRAR META</string>

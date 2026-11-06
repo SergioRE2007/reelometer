@@ -93,6 +93,11 @@ class LivePassport(
         store.update { it.cleared() }
     }
 
+    /** Tras importar un CSV: mezcla lo del fichero ([PassportMemory.imported]) y toma una base nueva ([PassportMemory.rebased]). */
+    suspend fun import(data: PassportImport) {
+        store.update { it.imported(data).rebased() }
+    }
+
     /** Al encender el modo pasaporte: ver [PassportMemory.rebased]. */
     suspend fun rebase() {
         store.update { it.rebased() }

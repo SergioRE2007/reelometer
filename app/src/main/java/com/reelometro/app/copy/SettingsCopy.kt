@@ -2,6 +2,9 @@ package com.reelometro.app.copy
 
 import com.reelometro.app.R
 import com.reelometro.app.data.Platform
+import com.reelometro.app.data.export.ImportError
+import com.reelometro.app.data.export.ImportPreview
+import com.reelometro.app.data.export.ImportResult
 import com.reelometro.app.stats.Format
 import java.time.LocalDate
 
@@ -254,6 +257,74 @@ object SettingsCopy {
     val DELETE_CANCEL: String get() = Buttons.CANCEL
     val DELETE_DONE: String get() = str(R.string.settings_delete_done)
     val DELETE_FAILED: String get() = str(R.string.settings_delete_failed)
+
+    // ------------------------------------------------------------------ importar CSV (1.6.0)
+
+    val IMPORT_LABEL: String get() = Buttons.IMPORT_CSV
+    val IMPORT_DESCRIPTION: String get() = str(R.string.settings_import_description)
+
+    /** TalkBack del indicador mientras se lee o se importa. */
+    val IMPORT_BUSY: String get() = str(R.string.settings_import_busy)
+
+    val IMPORT_DIALOG_TITLE: String get() = str(R.string.settings_import_dialog_title)
+    val IMPORT_ADD: String get() = Buttons.IMPORT_ADD
+    val IMPORT_REPLACE: String get() = Buttons.IMPORT_REPLACE
+    val IMPORT_CANCEL: String get() = Buttons.CANCEL
+    val IMPORT_MODES: String get() = str(R.string.settings_import_modes)
+
+    /**
+     * Vista previa, una frase por línea: «En el archivo hay 1.234 vídeos (3 mar – 4 nov 2026).», «230 ya
+     * estaban guardados: no se repiten.», las líneas rotas, si trae el pasaporte y que los ajustes no viajan.
+     */
+    fun importPreview(preview: ImportPreview): String = buildList {
+        val from = preview.from
+        val to = preview.to
+        if (preview.videos > 0 && from != null && to != null) {
+            add(str(R.string.settings_import_preview, Words.videos(preview.videos), Format.rangeWithYear(from, to)))
+        }
+        if (preview.alreadyPresent > 0) {
+            add(plural(R.plurals.settings_import_preview_present, preview.alreadyPresent, Format.integer(preview.alreadyPresent)))
+        }
+        if (preview.badLines > 0) {
+            add(plural(R.plurals.settings_import_preview_bad, preview.badLines, Format.integer(preview.badLines)))
+        }
+        if (preview.hasPassport) add(str(R.string.settings_import_preview_passport))
+        add(str(R.string.settings_import_preview_settings))
+    }.joinToString("\n")
+
+    val IMPORT_REPLACE_TITLE: String get() = str(R.string.settings_import_replace_title)
+
+    /** Confirmación de SUSTITUIR TODO, con lo que se va a borrar. */
+    fun importReplaceBody(count: Long, totalMs: Long): String =
+        if (count <= 0) {
+            str(R.string.settings_import_replace_body_empty)
+        } else {
+            plural(R.plurals.settings_import_replace_body, count, Words.videos(count), Words.duration(totalMs))
+        }
+
+    /** «Importados: 1.004 vídeos. 230 ya estaban. 3 líneas no se entendían.» */
+    fun importDone(result: ImportResult): String = buildList {
+        if (result.imported > 0) {
+            add(plural(R.plurals.settings_import_done, result.imported, Words.videos(result.imported)))
+            if (result.alreadyPresent > 0) {
+                add(plural(R.plurals.settings_import_done_present, result.alreadyPresent, Format.integer(result.alreadyPresent)))
+            }
+        } else {
+            add(str(R.string.settings_import_nothing_new))
+        }
+        if (result.badLines > 0) {
+            add(plural(R.plurals.settings_import_done_bad, result.badLines, Format.integer(result.badLines)))
+        }
+    }.joinToString(" ")
+
+    /** Por qué no se ha podido importar. */
+    fun importError(error: ImportError): String = when (error) {
+        ImportError.NOT_REELOMETRO -> str(R.string.settings_import_not_csv)
+        ImportError.EMPTY -> str(R.string.settings_import_empty)
+        ImportError.TOO_LARGE -> str(R.string.settings_import_too_large)
+        ImportError.TOO_MANY_BAD -> str(R.string.settings_import_too_broken)
+        ImportError.FAILED -> str(R.string.settings_import_failed)
+    }
 
     // ------------------------------------------------------------------ 06 servicio
 

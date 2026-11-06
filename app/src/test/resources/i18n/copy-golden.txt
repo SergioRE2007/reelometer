@@ -30,6 +30,9 @@ Buttons.COPY → COPIAR
 Buttons.DELETE_ALL → BORRAR TODO
 Buttons.DONE → HECHO
 Buttons.EXPORT_CSV → EXPORTAR CSV
+Buttons.IMPORT_ADD → AÑADIR
+Buttons.IMPORT_CSV → IMPORTAR CSV
+Buttons.IMPORT_REPLACE → SUSTITUIR TODO
 Buttons.NEXT → SIGUIENTE
 Buttons.NOT_NOW → AHORA NO
 Buttons.OPEN_ACCESSIBILITY → ABRIR ACCESIBILIDAD
@@ -9740,7 +9743,7 @@ SettingsCopy.DELETE_DIALOG_TITLE → ¿Borrar todo?
 SettingsCopy.DELETE_DONE → Borrado. Marcador a cero.
 SettingsCopy.DELETE_FAILED → No se ha podido borrar. Vuelve a intentarlo.
 SettingsCopy.DELETE_LABEL → BORRAR TODO
-SettingsCopy.EXPORT_DESCRIPTION → Todo tu historial en un archivo que abre cualquier hoja de cálculo.
+SettingsCopy.EXPORT_DESCRIPTION → Tu historial en un archivo: ábrelo en una hoja de cálculo o impórtalo en otro móvil.
 SettingsCopy.EXPORT_EMPTY → No hay nada que exportar todavía.
 SettingsCopy.EXPORT_FAILED → No se ha podido exportar. Prueba otra vez o elige otra carpeta.
 SettingsCopy.EXPORT_LABEL → EXPORTAR CSV
@@ -9754,6 +9757,15 @@ SettingsCopy.GOAL_LIVE_LABEL → Aviso al pasar el objetivo
 SettingsCopy.GOAL_LIVE_NEEDS_GOAL → Necesita un objetivo. Ponlo arriba y te aviso en cuanto lo pases.
 SettingsCopy.GOAL_REMOVE → QUITAR OBJETIVO
 SettingsCopy.GOAL_SET → PONER OBJETIVO
+SettingsCopy.IMPORT_ADD → AÑADIR
+SettingsCopy.IMPORT_BUSY → Importando el archivo
+SettingsCopy.IMPORT_CANCEL → CANCELAR
+SettingsCopy.IMPORT_DESCRIPTION → ¿Cambias de móvil o lo has reseteado? Importa aquí el CSV que exportaste y vuelve tu historial.
+SettingsCopy.IMPORT_DIALOG_TITLE → ¿Importar este archivo?
+SettingsCopy.IMPORT_LABEL → IMPORTAR CSV
+SettingsCopy.IMPORT_MODES → AÑADIR suma lo nuevo a lo que ya tienes. SUSTITUIR TODO borra lo de ahora y deja solo lo del archivo.
+SettingsCopy.IMPORT_REPLACE → SUSTITUIR TODO
+SettingsCopy.IMPORT_REPLACE_TITLE → ¿Sustituir todo?
 SettingsCopy.LICENSES_CLOSE → CERRAR
 SettingsCopy.LICENSES_LABEL → LICENCIAS
 SettingsCopy.LICENSES_TITLE → Licencias

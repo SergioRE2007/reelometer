@@ -34,3 +34,6 @@ data class VideoRow(
     val category: String,
     val shares: Int,
 )
+
+/** Lo justo de un vídeo para no duplicarlo al importar (`CsvImport.key`) ni repetir su `id`. */
+data class ViewKey(val id: Long, val platform: String, val startedAt: Long)

@@ -6,3 +6,5 @@
 *.png binary
 *.webp binary
 *.apk binary
+# CSV de importación de versiones viejas: tal cual (BOM, CRLF y saltos de línea sueltos dentro de comillas).
+app/src/test/resources/import/*.csv -text

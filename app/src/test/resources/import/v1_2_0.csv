@@ -1,0 +1,16 @@
+﻿fecha_hora_local;plataforma;duración_s;creador;categoría;descripción;compartido
+2026-03-03T09:15:02;TikTok;12,3;gato_ejemplo;Humor;"Un gato ""serio""";1
+2026-03-03T09:15:20;Instagram Reels;8,0;'@cuenta_rara;Sin clasificar;'=1+1;0
+2026-03-04T22:01:00;YouTube Shorts;59,9;;Comida;"Receta; rápida
+segunda línea";2
+
+ENVÍOS
+fecha_hora_local;plataforma;destinatario
+2026-03-03T09:15:25;Instagram Reels;Grupo de ejemplo
+2026-03-03T09:15:26;Instagram Reels;'=Persona
+
+PASAPORTE
+tipo;elemento;fecha;tope;vídeos;experiencia
+nivel;PLATA;;;;420
+sello;PRIMER DÍA;2026-03-03;;;20
+evento;Ticket guardado;2026-03-04;;;

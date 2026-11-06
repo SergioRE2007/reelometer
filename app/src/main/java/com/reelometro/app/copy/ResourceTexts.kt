@@ -15,7 +15,11 @@ import java.util.Locale
  * salen de `values/` (español) y los plurales tienen que seguir las reglas del español, no las del
  * ruso (que diría «21 vídeo»). Se recalcula cuando cambia el idioma de la app o del sistema.
  */
-class ResourceTexts(context: Context) : Texts {
+class ResourceTexts(
+    context: Context,
+    /** Idioma fijo (p. ej. español, para leer un CSV viejo); `null` = el de la app, que puede cambiar. */
+    private val fixed: Locale? = null,
+) : Texts {
 
     private val app: Context = context.applicationContext
 
@@ -28,7 +32,7 @@ class ResourceTexts(context: Context) : Texts {
         val base = app.resources
         val locales = base.configuration.locales
         entry?.let { if (it.locales === locales || it.locales == locales) return it }
-        val locale = Locale.forLanguageTag(base.getString(R.string.locale_tag))
+        val locale = fixed ?: Locale.forLanguageTag(base.getString(R.string.locale_tag))
         val config = Configuration(base.configuration).apply { setLocale(locale) }
         return Entry(locales, locale, app.createConfigurationContext(config).resources).also { entry = it }
     }

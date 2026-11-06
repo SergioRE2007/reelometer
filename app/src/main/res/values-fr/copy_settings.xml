@@ -142,7 +142,8 @@
     <!-- Resumen de lo guardado, en líneas de ticket (a la derecha, la cifra). -->
     <string name="settings_data_count_label">Vidéos enregistrées</string>
     <string name="settings_data_time_label">Temps enregistré</string>
-    <string name="settings_export_description">Tout ton historique dans un fichier que n’importe quel tableur peut ouvrir.</string>
+    <string name="settings_export_description">Ton historique dans un fichier\u00A0: ouvre-le dans un tableur ou importe-le sur un autre téléphone.</string>
+
     <!-- %1$s los vídeos exportados con su palabra («12.408 vídeos»). -->
     <string name="settings_export_done">Exporté\u00A0: %1$s.</string>
     <string name="settings_export_empty">Il n’y a encore rien à exporter.</string>
@@ -160,6 +161,53 @@
     </plurals>
     <string name="settings_delete_done">Effacé. Compteur à zéro.</string>
     <string name="settings_delete_failed">Impossible d’effacer. Réessaie.</string>
+
+    <!-- Importar el CSV (1.6.0). Descripción junto a IMPORTAR CSV. -->
+    <string name="settings_import_description">Nouveau téléphone, ou tu as réinitialisé celui-ci\u00A0? Importe ici le CSV que tu as exporté et ton historique revient.</string>
+    <string name="settings_import_busy">Import du fichier</string>
+    <string name="settings_import_dialog_title">Importer ce fichier\u00A0?</string>
+    <string name="settings_import_preview">Le fichier contient %1$s (%2$s).</string>
+    <plurals name="settings_import_preview_present">
+        <item quantity="one">%1$s était déjà enregistrée\u00A0: elle ne sera pas répétée.</item>
+        <item quantity="many">%1$s étaient déjà enregistrées\u00A0: elles ne seront pas répétées.</item>
+        <item quantity="other">%1$s étaient déjà enregistrées\u00A0: elles ne seront pas répétées.</item>
+    </plurals>
+    <plurals name="settings_import_preview_bad">
+        <item quantity="one">%1$s ligne est illisible et sera ignorée.</item>
+        <item quantity="many">%1$s lignes sont illisibles et seront ignorées.</item>
+        <item quantity="other">%1$s lignes sont illisibles et seront ignorées.</item>
+    </plurals>
+    <string name="settings_import_preview_passport">Il contient aussi ton passeport\u00A0: tampons, défis et niveau.</string>
+    <string name="settings_import_preview_settings">Les réglages ne sont pas dans le fichier\u00A0: ton objectif et tes alertes restent tels quels.</string>
+    <string name="settings_import_modes">AJOUTER met ce qui est nouveau en plus de ce que tu as déjà. TOUT REMPLACER efface ce qu’il y a maintenant et ne garde que le fichier.</string>
+    <string name="settings_import_replace_title">Tout remplacer\u00A0?</string>
+    <string name="settings_import_replace_body_empty">Aucune vidéo enregistrée\u00A0: le fichier restera.</string>
+    <plurals name="settings_import_replace_body">
+        <item quantity="one">%1$s et %2$s d’historique seront effacés, et seul le fichier restera. Impossible de revenir en arrière.</item>
+        <item quantity="many">%1$s et %2$s d’historique seront effacés, et seul le fichier restera. Impossible de revenir en arrière.</item>
+        <item quantity="other">%1$s et %2$s d’historique seront effacés, et seul le fichier restera. Impossible de revenir en arrière.</item>
+    </plurals>
+    <plurals name="settings_import_done">
+        <item quantity="one">Importé\u00A0: %1$s.</item>
+        <item quantity="many">Importé\u00A0: %1$s.</item>
+        <item quantity="other">Importé\u00A0: %1$s.</item>
+    </plurals>
+    <plurals name="settings_import_done_present">
+        <item quantity="one">%1$s y était déjà.</item>
+        <item quantity="many">%1$s y étaient déjà.</item>
+        <item quantity="other">%1$s y étaient déjà.</item>
+    </plurals>
+    <plurals name="settings_import_done_bad">
+        <item quantity="one">%1$s ligne était illisible.</item>
+        <item quantity="many">%1$s lignes étaient illisibles.</item>
+        <item quantity="other">%1$s lignes étaient illisibles.</item>
+    </plurals>
+    <string name="settings_import_nothing_new">Rien de nouveau00A0: tout était déjà enregistré.</string>
+    <string name="settings_import_not_csv">Ce fichier n’est pas un CSV de Reelómetro. Choisis celui que tu as exporté depuis l’appli.</string>
+    <string name="settings_import_empty">Le fichier est vide\u00A0: aucune vidéo à importer.</string>
+    <string name="settings_import_too_large">Le fichier dépasse 50\u00A0Mo\u00A0: ça ne ressemble pas à une copie de Reelómetro.</string>
+    <string name="settings_import_too_broken">Trop de lignes sont illisibles, donc rien n’a été importé.</string>
+    <string name="settings_import_failed">Impossible d’importer, et rien n’a changé. Réessaie.</string>
 
     <!-- ============================================================ 06 servicio -->
 

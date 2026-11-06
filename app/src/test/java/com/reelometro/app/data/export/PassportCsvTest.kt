@@ -43,14 +43,14 @@ class PassportCsvTest {
         val rows = PassportCsv.rows(state, events)
         assertEquals(
             listOf(
-                listOf("nivel", PassportCopy.levelName(state.level.level), "", "", "", "0"),
-                listOf("sello", PassportCopy.stampName(StampId.PRIMER_DIA), "2026-11-01", "", "", "${StampId.PRIMER_DIA.xp}"),
-                listOf("sello", PassportCopy.stampName(StampId.RACHA_3), "2026-11-03", "", "", "${StampId.RACHA_3.xp}"),
-                listOf("sello", PassportCopy.stampName(StampId.MADRUGADOR), "2026-11-03", "", "", "0"),
-                listOf("reto", "cumplido", "2026-10-19", "1200", "980", "${PassportRules.CHALLENGE_XP}"),
-                listOf("reto", "no cumplido", "2026-10-26", "1100", "1250", "0"),
-                listOf("evento", "Resumen compartido", "2026-11-01", "", "", ""),
-                listOf("evento", "Ticket guardado", "2026-11-02", "", "", ""),
+                listOf("nivel", PassportCopy.levelName(state.level.level), "", "", "", "0", state.level.level.name),
+                listOf("sello", PassportCopy.stampName(StampId.PRIMER_DIA), "2026-11-01", "", "", "${StampId.PRIMER_DIA.xp}", "PRIMER_DIA"),
+                listOf("sello", PassportCopy.stampName(StampId.RACHA_3), "2026-11-03", "", "", "${StampId.RACHA_3.xp}", "RACHA_3"),
+                listOf("sello", PassportCopy.stampName(StampId.MADRUGADOR), "2026-11-03", "", "", "0", "MADRUGADOR"),
+                listOf("reto", "cumplido", "2026-10-19", "1200", "980", "${PassportRules.CHALLENGE_XP}", ""),
+                listOf("reto", "no cumplido", "2026-10-26", "1100", "1250", "0", ""),
+                listOf("evento", "Resumen compartido", "2026-11-01", "", "", "", "WRAPPED_SHARED"),
+                listOf("evento", "Ticket guardado", "2026-11-02", "", "", "", "TICKET_SAVED"),
             ),
             rows,
         )
@@ -73,7 +73,7 @@ class PassportCsvTest {
         val lines = text.split(Csv.LINE_END)
         assertEquals("", lines[0])
         assertEquals("PASAPORTE", lines[1])
-        assertEquals("tipo;elemento;fecha;tope;vídeos;experiencia", lines[2])
+        assertEquals("tipo;elemento;fecha;tope;vídeos;experiencia;clave", lines[2])
         assertEquals("", lines.last())
         assertEquals(3 + PassportCsv.rows(state, events).size + 1, lines.size)
     }

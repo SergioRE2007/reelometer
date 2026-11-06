@@ -84,6 +84,14 @@ interface ReelDao {
 
     @Query(Queries.EXPORT_PAGE)
     suspend fun exportPage(afterStartedAt: Long, afterId: Long, limit: Int): List<VideoRow>
+
+    /** Compartidos que no cuelgan de ningún vídeo guardado (bloque COMPARTIDOS SIN VÍDEO del CSV). */
+    @Query(Queries.ORPHAN_SHARES)
+    suspend fun orphanShares(): List<ShareEvent>
+
+    /** Id, plataforma e inicio de todos los vídeos (importar sin duplicar). */
+    @Query("SELECT id, platform, startedAt FROM reel_views")
+    suspend fun viewKeys(): List<ViewKey>
 }
 
 /** Agregaciones en SQL (ver [Queries]). Rangos en epochDay local, ambos incluidos. */

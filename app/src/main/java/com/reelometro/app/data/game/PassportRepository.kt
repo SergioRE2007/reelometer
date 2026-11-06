@@ -7,7 +7,11 @@ import com.reelometro.app.data.ClockTicker
 import com.reelometro.app.data.SystemZoneClock
 import com.reelometro.app.data.Ticker
 import com.reelometro.app.data.UserDataPart
+import com.reelometro.app.copy.ResourceTexts
+import com.reelometro.app.copy.Texts
+import com.reelometro.app.data.export.CsvBlock
 import com.reelometro.app.data.export.PassportCsv
+import com.reelometro.app.game.PassportImport
 import com.reelometro.app.data.settings.SettingsRepository
 import com.reelometro.app.game.FlapMood
 import com.reelometro.app.game.ForcedCelebration
@@ -32,6 +36,7 @@ import kotlinx.coroutines.withContext
 import java.io.OutputStream
 import java.time.Clock
 import java.time.LocalDate
+import java.util.Locale
 import kotlin.math.min
 
 /**
@@ -54,6 +59,8 @@ class PassportRepository internal constructor(
     ticker: Ticker = ClockTicker(clock),
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default,
     throttleMs: Long = LivePassport.THROTTLE_MS,
+    /** Textos de otros idiomas con los que leer el bloque PASAPORTE de un CSV viejo (el español). */
+    private val legacyTexts: () -> List<Texts> = { emptyList() },
 ) : PassportSource, UserDataPart {
 
     /** La de la app: objetivo de Ajustes y memoria en `passport.preferences_pb`. */
@@ -61,6 +68,7 @@ class PassportRepository internal constructor(
         loader = RoomGameHistory(database),
         dailyGoal = settings.settings.map { it.dailyGoal },
         store = PassportStore(context),
+        legacyTexts = { listOf(ResourceTexts(context, SPANISH)) },
     )
 
     private val live = LivePassport(
@@ -115,6 +123,18 @@ class PassportRepository internal constructor(
         withContext(Dispatchers.IO) { PassportCsv.write(out, state, memory.events) }
     }
 
+    override val blockTitle: String get() = PassportCsv.TITLE
+
+    /**
+     * Tras importar un CSV: recupera del bloque PASAPORTE lo que no se puede recalcular (fechas de sellos y
+     * eventos, nivel más alto, retos cerrados) y, siempre, toma una base nueva: lo conseguido con el
+     * historial importado no llega de golpe como celebraciones.
+     */
+    override suspend fun importBlock(block: CsvBlock?) {
+        val data = if (block == null) PassportImport() else withContext(dispatcher) { PassportCsv.read(block, legacyTexts()) }
+        live.import(data)
+    }
+
     /** BORRAR TODO (y el gancho de QA `GAME_RESET`): el pasaporte vuelve a empezar. */
     override suspend fun clearAll() = live.clear()
 
@@ -145,5 +165,6 @@ class PassportRepository internal constructor(
         const val RETRY_MS = 2_000L
         const val MAX_RETRY_MS = 60_000L
         const val LOG = "Reelometro"
+        val SPANISH: Locale = Locale.forLanguageTag("es-ES")
     }
 }

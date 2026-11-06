@@ -86,6 +86,9 @@
     <string name="button_close">CHIUDI</string>
     <string name="button_delete_all">CANCELLA TUTTO</string>
     <string name="button_export_csv">ESPORTA CSV</string>
+    <string name="button_import_csv">IMPORTA CSV</string>
+    <string name="button_import_add">AGGIUNGI</string>
+    <string name="button_import_replace">SOSTITUISCI TUTTO</string>
     <string name="button_see_summary">VEDI RIEPILOGO</string>
     <string name="button_see_permission">VEDI IL PERMESSO</string>
     <string name="button_remove_goal">TOGLI OBIETTIVO</string>

@@ -101,6 +101,15 @@ object ReelIcons {
         }
     }
 
+    /** Subir / importar: flecha que sale de la bandeja (la de [Download], al revés). */
+    val Upload: ImageVector by lazy {
+        reelIcon("Upload") {
+            line(12f, 15f, 12f, 3.5f)
+            poly(7.5f, 8f, 12f, 3.5f, 16.5f, 8f)
+            poly(4f, 15.5f, 4f, 20.5f, 20f, 20.5f, 20f, 15.5f)
+        }
+    }
+
     /** Papelera: tapa separada del cuerpo por el corte. */
     val Trash: ImageVector by lazy {
         reelIcon("Trash") {
@@ -376,7 +385,7 @@ object ReelIcons {
     val all: List<Pair<String, ImageVector>> by lazy {
         listOf(
             "Today" to Today, "Stats" to Stats, "Wrapped" to Wrapped, "Settings" to Settings,
-            "Share" to Share, "Download" to Download, "Trash" to Trash, "Copy" to Copy,
+            "Share" to Share, "Download" to Download, "Upload" to Upload, "Trash" to Trash, "Copy" to Copy,
             "External" to External, "Close" to Close, "Check" to Check, "Plus" to Plus,
             "Minus" to Minus, "Play" to Play, "Pause" to Pause, "Back" to Back,
             "ArrowRight" to ArrowRight, "ArrowUp" to ArrowUp, "ArrowDown" to ArrowDown,

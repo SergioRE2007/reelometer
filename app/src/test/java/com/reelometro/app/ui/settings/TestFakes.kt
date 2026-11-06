@@ -3,11 +3,18 @@ package com.reelometro.app.ui.settings
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
+import com.reelometro.app.data.CsvRead
 import com.reelometro.app.data.Platform
+import com.reelometro.app.data.export.ImportError
+import com.reelometro.app.data.export.ImportMode
+import com.reelometro.app.data.export.ImportResult
+import com.reelometro.app.data.export.ParsedCsv
 import com.reelometro.app.data.settings.SettingsRepository
 import com.reelometro.app.stats.Totals
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import java.io.IOException
+import java.io.InputStream
 import java.io.OutputStream
 
 /** DataStore en memoria: el [SettingsRepository] real sin disco ni Android. */
@@ -46,6 +53,19 @@ internal class FakeUsage(count: Int = 12, totalMs: Long = 600_000) : UsageData {
         cleared = true
         totalsFlow.value = Totals(0, 0)
     }
+
+    /** Lo que devuelve leer un CSV (vista previa) y lo que se importó, con qué modo. */
+    var readResult: CsvRead = CsvRead.Failed(ImportError.NOT_REELOMETRO)
+    var importFails = false
+    val imports = mutableListOf<ImportMode>()
+
+    override suspend fun readCsv(input: InputStream): CsvRead = readResult
+
+    override suspend fun importCsv(csv: ParsedCsv, mode: ImportMode): ImportResult {
+        if (importFails) throw IOException("fallo simulado")
+        imports += mode
+        return ImportResult(mode, imported = csv.videos.size, alreadyPresent = 0, badLines = csv.badLines)
+    }
 }
 
 internal class FakeSettingsSystem(
@@ -64,6 +84,12 @@ internal class FakeSettingsSystem(
 
     override fun onDataCleared() {
         clearedCalls++
+    }
+
+    var importedCalls = 0
+
+    override fun onDataImported() {
+        importedCalls++
     }
 
     /** Cada cambio del modo pasaporte (el real repinta el widget y quita el aviso de nivel). */

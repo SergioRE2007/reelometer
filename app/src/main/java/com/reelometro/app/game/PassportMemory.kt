@@ -56,6 +56,38 @@ data class PassportMemory(
         )
     }
 
+    /**
+     * Suma lo que trae un CSV importado ([PassportImport]) sin perder nada: de cada sello y cada evento se
+     * queda la fecha más antigua, el nivel más alto gana y, en los retos, los ya guardados mandan (los del
+     * fichero solo llenan semanas que no estaban). Solo da por celebrados los niveles hasta el del fichero; no toca el último estado de Flap:
+     * después de importar hay que llamar a [rebased] para que lo importado no llegue como celebraciones.
+     */
+    fun imported(data: PassportImport): PassportMemory {
+        val mergedStamps = HashMap(stamps)
+        data.stamps.forEach { (id, date) ->
+            val current = mergedStamps[id]
+            if (current == null || date.isBefore(current)) mergedStamps[id] = date
+        }
+        val mergedEvents = HashMap(events)
+        data.events.forEach { (event, date) ->
+            val current = mergedEvents[event]
+            if (current == null || date.isBefore(current)) mergedEvents[event] = date
+        }
+        val known = challenges.mapTo(HashSet()) { it.weekStart }
+        // El nivel que traía el fichero ya se celebró en el otro móvil: solo se celebra uno más alto.
+        val seenLevels = data.highestLevel?.let { top ->
+            TravelerLevel.entries.filter { it > TravelerLevel.PASAJERO && it <= top }.map { Celebration.LevelUp(it).key }
+        }.orEmpty()
+        return copy(
+            celebrated = celebrated + seenLevels,
+            stamps = mergedStamps,
+            highestLevel = data.highestLevel?.let { maxOf(highestLevel, it) } ?: highestLevel,
+            challenges = (challenges + data.challenges.filter { it.weekStart !in known }.distinctBy { it.weekStart })
+                .sortedBy { it.weekStart },
+            events = mergedEvents,
+        )
+    }
+
     /** Registra [event] en [on] si es la primera vez (o si es anterior a la fecha guardada). */
     fun withEvent(event: GameEvent, on: LocalDate): PassportMemory {
         val known = events[event]
@@ -201,4 +233,20 @@ internal data class ChallengeDto(
     val target: Int,
     val total: Int,
     val won: Boolean,
+)
+
+/**
+ * Lo que se recupera del bloque PASAPORTE de un CSV importado (`data/export/PassportCsv.read`): solo lo
+ * que no se puede recalcular del historial. Lo demás (Flap, experiencia, casi todos los sellos) sale
+ * solo de los vídeos importados.
+ */
+data class PassportImport(
+    /** Fecha de cada sello conseguido (la más antigua si salía varias veces). */
+    val stamps: Map<StampId, LocalDate> = emptyMap(),
+    /** El nivel del fichero (el más alto, si había varias filas). */
+    val highestLevel: TravelerLevel? = null,
+    /** Retos cerrados, uno por semana, del más antiguo al más reciente. */
+    val challenges: List<ChallengeResult> = emptyList(),
+    /** Primera fecha de cada evento. */
+    val events: Map<GameEvent, LocalDate> = emptyMap(),
 )

@@ -1,7 +1,17 @@
 package com.reelometro.app.ui.settings
 
 import com.reelometro.app.copy.SettingsCopy
+import com.reelometro.app.copy.Words
+import com.reelometro.app.stats.Format
+import com.reelometro.app.data.Category
+import com.reelometro.app.data.CsvRead
 import com.reelometro.app.data.Platform
+import com.reelometro.app.data.export.ImportError
+import com.reelometro.app.data.export.ImportMode
+import com.reelometro.app.data.export.ImportPreview
+import com.reelometro.app.data.export.ImportResult
+import com.reelometro.app.data.export.ImportedVideo
+import com.reelometro.app.data.export.ParsedCsv
 import com.reelometro.app.data.settings.AppSettings
 import com.reelometro.app.data.settings.SettingsRepository
 import com.reelometro.app.data.settings.ThemeMode
@@ -29,6 +39,7 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.time.LocalDate
 
@@ -242,6 +253,106 @@ class SettingsViewModelTest {
         advanceUntilIdle()
         assertEquals(SettingsCopy.EXPORT_FAILED, vm.content().dataMessage)
         assertFalse(vm.content().busy)
+    }
+
+    // ------------------------------------------------------------------ importar CSV
+
+    private fun parsed(videos: Int, bad: Int = 0): ParsedCsv = ParsedCsv(
+        videos = List(videos) { i ->
+            ImportedVideo(Platform.TIKTOK, 1_000L * i, 1_000, null, null, Category.OTROS, 0, null)
+        },
+        orphanShares = emptyList(),
+        recipients = emptyList(),
+        blocks = emptyList(),
+        badLines = bad,
+    )
+
+    @Test
+    fun `importar abre el selector, enseña la vista previa y AÑADIR importa, avisa y vibra`() = runTest(dispatcher) {
+        val effects = mutableListOf<SettingsEffect>()
+        val usage = FakeUsage()
+        val system = FakeSettingsSystem()
+        val vm = viewModel(usage = usage, system = system, effects = effects)
+        vm.requestImport()
+        runCurrent()
+        assertEquals(listOf<SettingsEffect>(SettingsEffect.PickImportFile), effects)
+
+        val preview = ImportPreview(4, alreadyPresent = 1, from = LocalDate.of(2026, 3, 3), to = LocalDate.of(2026, 11, 3), badLines = 2, hasPassport = true)
+        usage.readResult = CsvRead.Ready(parsed(4, bad = 2), preview)
+        vm.readImport { ByteArrayInputStream(ByteArray(0)) }
+        advanceUntilIdle()
+        assertEquals(preview, vm.content().importPreview)
+        assertFalse(vm.content().importing)
+        val text = SettingsCopy.importPreview(preview)
+        assertTrue(text, text.contains(Words.videos(4)) && text.contains(Format.rangeWithYear(LocalDate.of(2026, 3, 3), LocalDate.of(2026, 11, 3))))
+        assertTrue(text, text.contains("1 ya estaba guardado") && text.contains("2 líneas no se entienden"))
+
+        vm.confirmImport(ImportMode.ADD)
+        advanceUntilIdle()
+        assertEquals(listOf(ImportMode.ADD), usage.imports)
+        assertNull(vm.content().importPreview)
+        assertEquals("Importados: ${Words.videos(4)}. 2 líneas no se entendían.", vm.content().dataMessage)
+        runCurrent()
+        assertEquals(1, system.importedCalls)
+        assertEquals(SettingsEffect.Confirm, effects.last())
+
+        // Ya no hay nada pendiente: otra confirmación no importa dos veces.
+        vm.confirmImport(ImportMode.ADD)
+        advanceUntilIdle()
+        assertEquals(1, usage.imports.size)
+    }
+
+    @Test
+    fun `importar un archivo que no es de Reelómetro lo dice y no abre la vista previa`() = runTest(dispatcher) {
+        val usage = FakeUsage()
+        val vm = viewModel(usage = usage)
+        usage.readResult = CsvRead.Failed(ImportError.NOT_REELOMETRO)
+        vm.readImport { ByteArrayInputStream(ByteArray(0)) }
+        advanceUntilIdle()
+        assertNull(vm.content().importPreview)
+        assertEquals(SettingsCopy.importError(ImportError.NOT_REELOMETRO), vm.content().dataMessage)
+
+        vm.readImport { null }
+        advanceUntilIdle()
+        assertEquals(SettingsCopy.importError(ImportError.FAILED), vm.content().dataMessage)
+        assertFalse(vm.content().busy)
+    }
+
+    @Test
+    fun `cancelar la vista previa no importa y un fallo al importar lo dice`() = runTest(dispatcher) {
+        val usage = FakeUsage()
+        val system = FakeSettingsSystem()
+        val vm = viewModel(usage = usage, system = system)
+        usage.readResult = CsvRead.Ready(parsed(2), ImportPreview(2, 0, LocalDate.of(2026, 11, 3), LocalDate.of(2026, 11, 3), 0, false))
+        vm.readImport { ByteArrayInputStream(ByteArray(0)) }
+        advanceUntilIdle()
+        vm.cancelImport()
+        vm.confirmImport(ImportMode.REPLACE)
+        advanceUntilIdle()
+        assertTrue(usage.imports.isEmpty())
+        assertNull(vm.content().importPreview)
+
+        vm.readImport { ByteArrayInputStream(ByteArray(0)) }
+        advanceUntilIdle()
+        usage.importFails = true
+        vm.confirmImport(ImportMode.REPLACE)
+        advanceUntilIdle()
+        assertEquals(SettingsCopy.importError(ImportError.FAILED), vm.content().dataMessage)
+        assertEquals(0, system.importedCalls)
+        assertFalse(vm.content().busy)
+    }
+
+    @Test
+    fun `textos del resultado de importar`() {
+        assertEquals("Importado: ${Words.videos(1)}.", SettingsCopy.importDone(ImportResult(ImportMode.ADD, 1, 0, 0)))
+        assertEquals(
+            "Importados: ${Words.videos(1_004)}. 230 ya estaban. 1 línea no se entendía.",
+            SettingsCopy.importDone(ImportResult(ImportMode.ADD, 1_004, 230, 1)),
+        )
+        assertEquals(
+            "No había nada nuevo: todo ya estaba guardado.",
+            SettingsCopy.importDone(ImportResult(ImportMode.ADD, 0, 230, 0)),
+        )
     }
 
     @Test

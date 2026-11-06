@@ -18,6 +18,8 @@ import androidx.core.graphics.createBitmap
 import androidx.glance.appwidget.ExperimentalGlanceRemoteViewsApi
 import androidx.glance.appwidget.GlanceRemoteViews
 import com.reelometro.app.ReelometroApp
+import com.reelometro.app.data.CsvImportOutcome
+import com.reelometro.app.data.export.ImportMode
 import com.reelometro.app.data.settings.ThemeMode
 import com.reelometro.app.ui.support.SupportPrompt
 import com.reelometro.app.ui.support.SupportPromptState
@@ -43,6 +45,8 @@ import kotlin.math.roundToInt
  * ```
  * adb shell am broadcast -n com.reelometro.app/.debug.DebugReceiver -a com.reelometro.app.debug.SEED --ei weeks 8 [--el seed 42]
  * adb shell am broadcast -n com.reelometro.app/.debug.DebugReceiver -a com.reelometro.app.debug.CLEAR
+ * adb shell am broadcast -n com.reelometro.app/.debug.DebugReceiver -a com.reelometro.app.debug.EXPORT [--es path copia.csv]
+ * adb shell am broadcast -n com.reelometro.app/.debug.DebugReceiver -a com.reelometro.app.debug.IMPORT --es path copia.csv [--ez replace true]
  * adb shell am broadcast -n com.reelometro.app/.debug.DebugReceiver -a com.reelometro.app.debug.ONBOARDING --ez done true
  * adb shell am broadcast -n com.reelometro.app/.debug.DebugReceiver -a com.reelometro.app.debug.THEME --es mode dark
  * adb shell am broadcast -n com.reelometro.app/.debug.DebugReceiver -a com.reelometro.app.debug.GOAL --ei goal 150
@@ -103,6 +107,30 @@ class DebugReceiver : BroadcastReceiver() {
             ACTION_CLEAR -> {
                 DebugTools.clearData(context)
                 "CLEAR: datos de uso borrados"
+            }
+            ACTION_EXPORT -> {
+                // Como EXPORTAR CSV de Ajustes, a un fichero de getExternalFilesDir (adb pull para sacarlo).
+                val base = context.getExternalFilesDir(null) ?: throw IllegalStateException("sin almacenamiento externo")
+                val name = intent.getStringExtra(EXTRA_PATH)?.trim().orEmpty().ifEmpty { "reelometro-export.csv" }
+                val file = File(base, name).canonicalFile
+                require(file.path.startsWith(base.canonicalPath)) { "la ruta tiene que estar dentro de $base" }
+                val videos = file.outputStream().use { app.repository.exportCsv(it) }
+                "EXPORT: $videos vídeos en ${file.path}"
+            }
+            ACTION_IMPORT -> {
+                // Solo ficheros dentro de getExternalFilesDir (adb push a /sdcard/Android/data/com.reelometro.app/files/).
+                val base = context.getExternalFilesDir(null) ?: throw IllegalStateException("sin almacenamiento externo")
+                val name = intent.getStringExtra(EXTRA_PATH)?.trim().orEmpty()
+                require(name.isNotEmpty()) { "falta --es path <fichero dentro de $base>" }
+                val file = File(base, name).canonicalFile
+                require(file.path.startsWith(base.canonicalPath)) { "la ruta tiene que estar dentro de $base" }
+                val mode = if (intent.getBooleanExtra(EXTRA_REPLACE, false)) ImportMode.REPLACE else ImportMode.ADD
+                val outcome = file.inputStream().use { app.repository.importCsv(it, mode) }
+                if (outcome is CsvImportOutcome.Done) {
+                    com.reelometro.app.work.LevelAlert.onPassportEnabled(context)
+                    WidgetUpdater.requestUpdate(context)
+                }
+                "IMPORT $mode: $outcome"
             }
             ACTION_ONBOARDING -> {
                 val done = intent.getBooleanExtra(EXTRA_DONE, true)
@@ -303,6 +331,20 @@ class DebugReceiver : BroadcastReceiver() {
         const val EXTRA_LATE = "late"
         const val EXTRA_PREVIEW = "preview"
         const val EXTRA_ENABLED = "enabled"
+
+        /**
+         * Importa un CSV de getExternalFilesDir (como IMPORTAR CSV de Ajustes, sin la vista previa):
+         * ```
+         * adb push copia.csv /sdcard/Android/data/com.reelometro.app/files/copia.csv
+         * adb shell am broadcast -n com.reelometro.app/.debug.DebugReceiver -a com.reelometro.app.debug.IMPORT --es path copia.csv [--ez replace true]
+         * ```
+         */
+        const val ACTION_IMPORT = PREFIX + "IMPORT"
+
+        /** Exporta el CSV a getExternalFilesDir: `--es path copia.csv` (por defecto reelometro-export.csv). */
+        const val ACTION_EXPORT = PREFIX + "EXPORT"
+        const val EXTRA_PATH = "path"
+        const val EXTRA_REPLACE = "replace"
 
         const val ACTION_GAME_RESET = PREFIX + "GAME_RESET"
         const val ACTION_GAME_CELEBRATE = PREFIX + "GAME_CELEBRATE"

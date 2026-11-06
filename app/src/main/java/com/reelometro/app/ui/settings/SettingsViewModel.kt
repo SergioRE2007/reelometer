@@ -10,7 +10,13 @@ import com.reelometro.app.BuildConfig
 import com.reelometro.app.ReelometroApp
 import com.reelometro.app.copy.SettingsCopy
 import com.reelometro.app.data.Platform
+import com.reelometro.app.data.CsvRead
 import com.reelometro.app.data.ReelRepository
+import com.reelometro.app.data.export.ImportError
+import com.reelometro.app.data.export.ImportMode
+import com.reelometro.app.data.export.ImportPreview
+import com.reelometro.app.data.export.ImportResult
+import com.reelometro.app.data.export.ParsedCsv
 import com.reelometro.app.data.settings.AppSettings
 import com.reelometro.app.data.settings.SettingsRepository
 import com.reelometro.app.data.settings.ThemeMode
@@ -46,6 +52,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import java.io.InputStream
 import java.io.OutputStream
 import java.time.LocalDate
 
@@ -58,6 +65,12 @@ interface UsageData {
     suspend fun exportCsv(out: OutputStream): Int
 
     suspend fun clearAll()
+
+    /** Lee un CSV para la vista previa de IMPORTAR (no escribe nada). Con valor por defecto para las fuentes falsas. */
+    suspend fun readCsv(input: InputStream): CsvRead = CsvRead.Failed(ImportError.FAILED)
+
+    /** Importa el CSV ya leído (una transacción: o todo o nada). */
+    suspend fun importCsv(csv: ParsedCsv, mode: ImportMode): ImportResult = throw IOException("Sin importación")
 
     /**
      * A quién envías más en Instagram, de siempre (para fijar el envío rápido). Con valor por defecto para
@@ -72,6 +85,10 @@ class RepositoryUsageData(private val repository: ReelRepository) : UsageData {
     override suspend fun exportCsv(out: OutputStream): Int = repository.exportCsv(out)
 
     override suspend fun clearAll() = repository.clearAll()
+
+    override suspend fun readCsv(input: InputStream): CsvRead = repository.readCsv(input)
+
+    override suspend fun importCsv(csv: ParsedCsv, mode: ImportMode): ImportResult = repository.importCsv(csv, mode)
 
     override val topRecipients: Flow<List<String>> = repository.observeTopRecipients()
 }
@@ -93,6 +110,9 @@ interface SettingsSystem {
 
     /** Tras borrar los datos: refrescar el widget. */
     fun onDataCleared()
+
+    /** Tras importar un CSV: repintar el widget y tomar una base nueva del aviso de nivel (lo importado no avisa). */
+    fun onDataImported() {}
 
     suspend fun loadLicenses(): List<License>
 
@@ -137,6 +157,11 @@ class AndroidSettingsSystem(context: Context) : SettingsSystem {
         // Envío rápido: las fotos de los fijados y lo aprendido (ids, quién no sale en la cuadrícula).
         ReelometroApp.from(app).appScope.launch(Dispatchers.IO) { AvatarStore(app).clear() }
         QuickSendMemory.clear(app)
+        WidgetUpdater.requestUpdate(app)
+    }
+
+    override fun onDataImported() {
+        LevelAlert.onPassportEnabled(app)
         WidgetUpdater.requestUpdate(app)
     }
 
@@ -216,6 +241,10 @@ data class SettingsState(
     val dataMessage: String?,
     /** Exportando, borrando o generando datos. */
     val busy: Boolean,
+    /** Vista previa de IMPORTAR CSV: con valor, se ve su diálogo. */
+    val importPreview: ImportPreview? = null,
+    /** Leyendo o importando un CSV. */
+    val importing: Boolean = false,
     val serviceEnabled: Boolean,
     val calibrationUnlocked: Boolean,
     /** Cuenta atrás de los 7 toques o confirmación del desbloqueo. */
@@ -273,6 +302,9 @@ sealed interface SettingsEffect {
 
     /** Abrir el selector de archivos para guardar el CSV con este nombre. */
     data class PickExportFile(val fileName: String) : SettingsEffect
+
+    /** Abrir el selector de archivos para elegir el CSV que se importa. */
+    data object PickImportFile : SettingsEffect
 }
 
 /**
@@ -302,6 +334,10 @@ class SettingsViewModel(
         val licenses: List<License>? = null,
         val notificationsBlocked: Boolean = false,
         val quickSendMessage: String? = null,
+        /** Vista previa de IMPORTAR CSV (abre su diálogo). */
+        val importPreview: ImportPreview? = null,
+        /** Leyendo o importando un CSV (indicador de carga). */
+        val importing: Boolean = false,
     )
 
     private data class GoalEdit(val value: Int?)
@@ -353,6 +389,8 @@ class SettingsViewModel(
         totals = totals,
         dataMessage = l.dataMessage,
         busy = l.busy,
+        importPreview = l.importPreview,
+        importing = l.importing,
         serviceEnabled = sys.serviceEnabled,
         calibrationUnlocked = s.calibrationUnlocked,
         aboutMessage = l.aboutMessage,
@@ -594,6 +632,67 @@ class SettingsViewModel(
             local.update {
                 it.copy(busy = false, dataMessage = if (ok) SettingsCopy.DELETE_DONE else SettingsCopy.DELETE_FAILED)
             }
+        }
+    }
+
+    // ------------------------------------------------------------------ importar CSV (1.6.0)
+
+    /** El CSV leído, a la espera de AÑADIR o SUSTITUIR TODO (no va en el estado: puede ser grande). */
+    private var pendingImport: ParsedCsv? = null
+
+    /** IMPORTAR CSV: abre el selector de archivos del sistema (sin permisos de almacenamiento). */
+    fun requestImport() {
+        if (local.value.busy) return
+        _effects.trySend(SettingsEffect.PickImportFile)
+    }
+
+    /** Lee el archivo elegido ([open] lo abre, en el hilo de E/S) y enseña la vista previa o el error. */
+    fun readImport(open: () -> InputStream?) {
+        if (local.value.busy) return
+        local.update { it.copy(busy = true, importing = true, dataMessage = null, importPreview = null) }
+        viewModelScope.launch {
+            val read = runCatching {
+                withContext(io) {
+                    val input = open() ?: throw IOException("No se ha podido abrir el archivo")
+                    input.use { usage.readCsv(it) }
+                }
+            }.getOrElse { CsvRead.Failed(ImportError.FAILED) }
+            when (read) {
+                is CsvRead.Ready -> {
+                    pendingImport = read.csv
+                    local.update { it.copy(busy = false, importing = false, importPreview = read.preview) }
+                }
+                is CsvRead.Failed -> {
+                    pendingImport = null
+                    local.update { it.copy(busy = false, importing = false, dataMessage = SettingsCopy.importError(read.error)) }
+                }
+            }
+        }
+    }
+
+    /** CANCELAR en la vista previa: no se importa nada. */
+    fun cancelImport() {
+        pendingImport = null
+        local.update { it.copy(importPreview = null) }
+    }
+
+    /** AÑADIR o SUSTITUIR TODO (este, ya confirmado en su diálogo). */
+    fun confirmImport(mode: ImportMode) {
+        val csv = pendingImport ?: return
+        if (local.value.busy) return
+        pendingImport = null
+        local.update { it.copy(busy = true, importing = true, importPreview = null, dataMessage = null) }
+        viewModelScope.launch {
+            val result = runCatching { withContext(io) { usage.importCsv(csv, mode) } }.getOrNull()
+            if (result != null) system.onDataImported()
+            local.update {
+                it.copy(
+                    busy = false,
+                    importing = false,
+                    dataMessage = result?.let(SettingsCopy::importDone) ?: SettingsCopy.importError(ImportError.FAILED),
+                )
+            }
+            if (result != null) _effects.send(SettingsEffect.Confirm)
         }
     }
 

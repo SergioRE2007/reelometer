@@ -50,8 +50,26 @@ object AppTexts {
     @Volatile
     private var installed: Texts? = null
 
+    /** Textos de otro idioma solo para este hilo, mientras dura [using]. */
+    private val override = ThreadLocal<Texts?>()
+
     val current: Texts
-        get() = installed ?: fallback().also { installed = it }
+        get() = override.get() ?: installed ?: fallback().also { installed = it }
+
+    /**
+     * Ejecuta [block] con [texts] en este hilo (sin tocar los de los demás) y vuelve a los de antes.
+     * Sirve para leer un CSV escrito en otro idioma: el bloque PASAPORTE de las versiones viejas va con
+     * los nombres en español aunque hoy la app esté en inglés. [block] no debe suspender.
+     */
+    fun <T> using(texts: Texts, block: () -> T): T {
+        val previous = override.get()
+        override.set(texts)
+        try {
+            return block()
+        } finally {
+            override.set(previous)
+        }
+    }
 
     fun install(texts: Texts) {
         installed = texts

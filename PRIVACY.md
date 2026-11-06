@@ -94,6 +94,7 @@ En una base de datos dentro del almacenamiento privado de la app, en tu móvil. 
 Tus datos solo salen del móvil cuando **tú** lo decides:
 
 - **Exportar CSV** (Ajustes > Tus datos): la app crea un archivo con tu historial (con los envíos de «A quién envías», si lo usas) y tu pasaporte (sellos, retos y nivel) y tú eliges dónde guardarlo o a quién mandarlo.
+- **Importar CSV** (Ajustes > Tus datos) va en sentido contrario y no envía nada: con el selector de archivos de Android eliges un CSV exportado antes y la app lee **solo ese archivo** (sin permiso para ver los demás) para recuperar tu historial y tu pasaporte. Los ajustes no viajan en el archivo.
 - **Compartir tu resumen**: la app genera una imagen («ticket») en el móvil y Android te deja elegir con qué app o persona compartirla. Incluye las cifras del periodo y, si la hay, el nombre de tu creador más visto.
 - **Compartir tu nivel del Pasaporte**: igual, una imagen hecha en el móvil con tu nivel, la experiencia, los retos cumplidos y los nombres de tus últimos sellos. Sin cifras de vídeos por app ni creadores.
 
@@ -101,7 +102,7 @@ Una vez que compartes un archivo o una imagen, lo que pase con ellos depende de 
 
 ## 5. Copias de seguridad y cambio de móvil
 
-Los datos de Reelómetro **no se incluyen en la copia de seguridad en la nube de Android**, y la app también los excluye de la transferencia directa entre dispositivos de Android. Alguna herramienta de un fabricante podría copiar los datos de las apps por su cuenta; Reelómetro no interviene y no recibe nada. Si quieres conservar tu historial al cambiar de móvil, usa **Exportar CSV**.
+Los datos de Reelómetro **no se incluyen en la copia de seguridad en la nube de Android**, y la app también los excluye de la transferencia directa entre dispositivos de Android. Alguna herramienta de un fabricante podría copiar los datos de las apps por su cuenta; Reelómetro no interviene y no recibe nada. Si quieres conservar tu historial al cambiar de móvil o tras restablecerlo, usa **Exportar CSV** en el móvil viejo y **Importar CSV** en el nuevo (Ajustes > Tus datos). El archivo lo guardas tú donde quieras: si lo dejas en una carpeta que sincroniza otra app (Google Drive, por ejemplo), esa copia sale del móvil por tu decisión y con las condiciones de esa app, no de Reelómetro.
 
 ## 6. Permisos que pide la app
 
@@ -112,7 +113,7 @@ Los datos de Reelómetro **no se incluyen en la copia de seguridad en la nube de
 | Ver si hay ciertas apps instaladas | Saber si tienes TikTok, Instagram o YouTube para mostrarlas en Ajustes. Solo consulta esas tres. |
 | Ejecución en segundo plano, inicio tras reiniciar y estado de la red | Los añade la librería de Android que programa los avisos (WorkManager), para que lleguen a su hora aunque reinicies el móvil. El de estado de la red solo permite saber si hay conexión; no permite usarla. |
 
-Reelómetro **no** pide acceso a tu ubicación, contactos, cámara, micrófono, fotos ni archivos. (Para elegir la foto de un fijado usa el selector de fotos de Android, que no necesita permiso: la app solo recibe la foto que tú eliges.)
+Reelómetro **no** pide acceso a tu ubicación, contactos, cámara, micrófono, fotos ni archivos. (Para elegir la foto de un fijado usa el selector de fotos de Android, y para exportar o importar el CSV, el selector de archivos; ninguno necesita permiso: la app solo recibe el archivo o la foto que tú eliges.)
 
 ## 7. Cuánto tiempo se guardan y cómo borrarlos
 

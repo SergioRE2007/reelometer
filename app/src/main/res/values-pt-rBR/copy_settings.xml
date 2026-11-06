@@ -142,7 +142,8 @@
     <!-- Resumen de lo guardado, en líneas de ticket (a la derecha, la cifra). -->
     <string name="settings_data_count_label">Vídeos guardados</string>
     <string name="settings_data_time_label">Tempo guardado</string>
-    <string name="settings_export_description">Todo o seu histórico em um arquivo que qualquer planilha abre.</string>
+    <string name="settings_export_description">Seu histórico em um arquivo: abra numa planilha ou importe em outro celular.</string>
+
     <!-- %1$s los vídeos exportados con su palabra («12.408 vídeos»). -->
     <string name="settings_export_done">Exportado: %1$s.</string>
     <string name="settings_export_empty">Ainda não há nada para exportar.</string>
@@ -160,6 +161,53 @@
     </plurals>
     <string name="settings_delete_done">Apagado. Placar zerado.</string>
     <string name="settings_delete_failed">Não foi possível apagar. Tente de novo.</string>
+
+    <!-- Importar el CSV (1.6.0). Descripción junto a IMPORTAR CSV. -->
+    <string name="settings_import_description">Trocou de celular ou resetou este? Importe aqui o CSV que você exportou e seu histórico volta.</string>
+    <string name="settings_import_busy">Importando o arquivo</string>
+    <string name="settings_import_dialog_title">Importar este arquivo?</string>
+    <string name="settings_import_preview">No arquivo há %1$s (%2$s).</string>
+    <plurals name="settings_import_preview_present">
+        <item quantity="one">%1$s já estava salvo: não se repete.</item>
+        <item quantity="many">%1$s já estavam salvos: não se repetem.</item>
+        <item quantity="other">%1$s já estavam salvos: não se repetem.</item>
+    </plurals>
+    <plurals name="settings_import_preview_bad">
+        <item quantity="one">%1$s linha não dá para ler e será pulada.</item>
+        <item quantity="many">%1$s linhas não dá para ler e serão puladas.</item>
+        <item quantity="other">%1$s linhas não dá para ler e serão puladas.</item>
+    </plurals>
+    <string name="settings_import_preview_passport">Também traz seu passaporte: selos, desafios e nível.</string>
+    <string name="settings_import_preview_settings">As configurações não vão no arquivo: sua meta e seus avisos ficam como estão.</string>
+    <string name="settings_import_modes">ADICIONAR soma o que é novo ao que você já tem. SUBSTITUIR TUDO apaga o que há agora e deixa só o do arquivo.</string>
+    <string name="settings_import_replace_title">Substituir tudo?</string>
+    <string name="settings_import_replace_body_empty">Não há vídeos salvos: fica o que vem no arquivo.</string>
+    <plurals name="settings_import_replace_body">
+        <item quantity="one">Será apagado %1$s, com %2$s no histórico, e ficará só o do arquivo. Não dá para desfazer.</item>
+        <item quantity="many">Serão apagados %1$s, com %2$s no histórico, e ficará só o do arquivo. Não dá para desfazer.</item>
+        <item quantity="other">Serão apagados %1$s, com %2$s no histórico, e ficará só o do arquivo. Não dá para desfazer.</item>
+    </plurals>
+    <plurals name="settings_import_done">
+        <item quantity="one">Importado: %1$s.</item>
+        <item quantity="many">Importados: %1$s.</item>
+        <item quantity="other">Importados: %1$s.</item>
+    </plurals>
+    <plurals name="settings_import_done_present">
+        <item quantity="one">%1$s já estava.</item>
+        <item quantity="many">%1$s já estavam.</item>
+        <item quantity="other">%1$s já estavam.</item>
+    </plurals>
+    <plurals name="settings_import_done_bad">
+        <item quantity="one">%1$s linha não deu para ler.</item>
+        <item quantity="many">%1$s linhas não deu para ler.</item>
+        <item quantity="other">%1$s linhas não deu para ler.</item>
+    </plurals>
+    <string name="settings_import_nothing_new">Nada de novo: tudo já estava salvo.</string>
+    <string name="settings_import_not_csv">Este arquivo não é um CSV do Reelómetro. Escolha o que você exportou pelo app.</string>
+    <string name="settings_import_empty">O arquivo está vazio: não há vídeos para importar.</string>
+    <string name="settings_import_too_large">O arquivo passa de 50\u00A0MB: não parece uma cópia do Reelómetro.</string>
+    <string name="settings_import_too_broken">Há linhas demais que não dá para ler, então nada foi importado.</string>
+    <string name="settings_import_failed">Não foi possível importar e nada mudou. Tente de novo.</string>
 
     <!-- ============================================================ 06 servicio -->
 

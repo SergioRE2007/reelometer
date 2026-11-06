@@ -141,7 +141,8 @@
     <!-- Resumen de lo guardado, en líneas de ticket (a la derecha, la cifra). -->
     <string name="settings_data_count_label">Videos saved</string>
     <string name="settings_data_time_label">Time saved</string>
-    <string name="settings_export_description">Your whole history in a file that any spreadsheet app can open.</string>
+    <string name="settings_export_description">Your history in one file: open it in a spreadsheet or import it on another phone.</string>
+
     <!-- %1$s los vídeos exportados con su palabra («12.408 vídeos»). -->
     <string name="settings_export_done">Exported: %1$s.</string>
     <string name="settings_export_empty">There\'s nothing to export yet.</string>
@@ -158,6 +159,47 @@
     </plurals>
     <string name="settings_delete_done">Deleted. Counter back to zero.</string>
     <string name="settings_delete_failed">Couldn\'t delete. Try again.</string>
+
+    <!-- Importar el CSV (1.6.0). Descripción junto a IMPORTAR CSV. -->
+    <string name="settings_import_description">New phone, or did you reset this one? Import the CSV you exported here and your history comes back.</string>
+    <string name="settings_import_busy">Importing the file</string>
+    <string name="settings_import_dialog_title">Import this file?</string>
+    <string name="settings_import_preview">The file has %1$s (%2$s).</string>
+    <plurals name="settings_import_preview_present">
+        <item quantity="one">%1$s was already saved: it won\'t be repeated.</item>
+        <item quantity="other">%1$s were already saved: they won\'t be repeated.</item>
+    </plurals>
+    <plurals name="settings_import_preview_bad">
+        <item quantity="one">%1$s line can\'t be read and will be skipped.</item>
+        <item quantity="other">%1$s lines can\'t be read and will be skipped.</item>
+    </plurals>
+    <string name="settings_import_preview_passport">It also brings your passport: stamps, challenges and level.</string>
+    <string name="settings_import_preview_settings">Settings aren\'t in the file: your goal and your alerts stay as they are.</string>
+    <string name="settings_import_modes">ADD puts what\'s new on top of what you already have. REPLACE ALL deletes what\'s here now and keeps only the file.</string>
+    <string name="settings_import_replace_title">Replace everything?</string>
+    <string name="settings_import_replace_body_empty">There are no saved videos: the file\'s will stay.</string>
+    <plurals name="settings_import_replace_body">
+        <item quantity="one">This will delete %1$s and %2$s of history, and only the file will stay. It can\'t be undone.</item>
+        <item quantity="other">This will delete %1$s and %2$s of history, and only the file will stay. It can\'t be undone.</item>
+    </plurals>
+    <plurals name="settings_import_done">
+        <item quantity="one">Imported: %1$s.</item>
+        <item quantity="other">Imported: %1$s.</item>
+    </plurals>
+    <plurals name="settings_import_done_present">
+        <item quantity="one">%1$s was already there.</item>
+        <item quantity="other">%1$s were already there.</item>
+    </plurals>
+    <plurals name="settings_import_done_bad">
+        <item quantity="one">%1$s line couldn\'t be read.</item>
+        <item quantity="other">%1$s lines couldn\'t be read.</item>
+    </plurals>
+    <string name="settings_import_nothing_new">Nothing new: everything was already saved.</string>
+    <string name="settings_import_not_csv">This file isn\'t a Reelómetro CSV. Pick the one you exported from the app.</string>
+    <string name="settings_import_empty">The file is empty: there are no videos to import.</string>
+    <string name="settings_import_too_large">The file is over 50\u00A0MB: it doesn\'t look like a Reelómetro copy.</string>
+    <string name="settings_import_too_broken">Too many lines can\'t be read, so nothing was imported.</string>
+    <string name="settings_import_failed">Couldn\'t import, and nothing has changed. Try again.</string>
 
     <!-- ============================================================ 06 servicio -->
 

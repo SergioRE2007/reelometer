@@ -53,6 +53,7 @@ import com.reelometro.app.copy.SettingsSection
 import com.reelometro.app.copy.StateCopy
 import com.reelometro.app.copy.Variants
 import com.reelometro.app.data.Platform
+import com.reelometro.app.data.export.ImportMode
 import com.reelometro.app.data.settings.AppSettings
 import com.reelometro.app.data.settings.ThemeMode
 import com.reelometro.app.detection.AvatarStore
@@ -129,6 +130,12 @@ class SettingsActions(
     val onQuickSendPickPhoto: (String) -> Unit = {},
     /** QUITAR FOTO de un fijado: vuelve la recortada de la hoja de compartir (1.4.3). */
     val onQuickSendClearPhoto: (String) -> Unit = {},
+    /** IMPORTAR CSV: abre el selector de archivos (1.6.0). */
+    val onImport: () -> Unit = {},
+    /** AÑADIR o SUSTITUIR TODO (ya confirmado) en la vista previa de la importación. */
+    val onImportConfirm: (ImportMode) -> Unit = {},
+    /** CANCELAR en la vista previa. */
+    val onImportCancel: () -> Unit = {},
 )
 
 /** Ajustes: lista editorial de 8 secciones numeradas (docs/DESIGN.md §9). */
@@ -178,6 +185,7 @@ internal fun StatusBarScrim(modifier: Modifier = Modifier) {
 private fun SettingsList(s: SettingsState, actions: SettingsActions) {
     var timeDialog by rememberSaveable { mutableStateOf(false) }
     var deleteDialog by rememberSaveable { mutableStateOf(false) }
+    var replaceDialog by rememberSaveable { mutableStateOf(false) }
     var licensesDialog by rememberSaveable { mutableStateOf(false) }
     var disclosureOpen by rememberSaveable { mutableStateOf(false) }
     val bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + Space.x16
@@ -256,6 +264,12 @@ private fun SettingsList(s: SettingsState, actions: SettingsActions) {
             deleteDialog = false
             actions.onDeleteAll()
         },
+    )
+    ImportDialogs(
+        s = s,
+        actions = actions,
+        replaceDialog = replaceDialog,
+        onReplaceDialog = { replaceDialog = it },
     )
     LicensesDialog(visible = licensesDialog, licenses = s.licenses, onDismiss = { licensesDialog = false })
 }
@@ -662,6 +676,20 @@ private fun DataSection(s: SettingsState, actions: SettingsActions, onDelete: ()
         enabled = !s.busy,
     )
     Spacer(Modifier.height(Space.x5))
+    Text(SettingsCopy.IMPORT_DESCRIPTION, style = type.bodySmall, color = colors.textMuted)
+    Spacer(Modifier.height(Space.x2))
+    ReelButton(
+        SettingsCopy.IMPORT_LABEL,
+        onClick = actions.onImport,
+        style = ReelButtonStyle.Secondary,
+        icon = ReelIcons.Upload,
+        enabled = !s.busy,
+    )
+    if (s.importing) {
+        Spacer(Modifier.height(Space.x3))
+        FlapLoader(style = type.displayL, contentDescription = SettingsCopy.IMPORT_BUSY)
+    }
+    Spacer(Modifier.height(Space.x5))
     Text(SettingsCopy.DELETE_DESCRIPTION, style = type.bodySmall, color = colors.textMuted)
     Spacer(Modifier.height(Space.x2))
     ReelButton(
@@ -672,6 +700,53 @@ private fun DataSection(s: SettingsState, actions: SettingsActions, onDelete: ()
         enabled = !s.busy,
     )
     Feedback(s.dataMessage)
+}
+
+/**
+ * Vista previa de IMPORTAR CSV (AÑADIR, la opción por defecto; SUSTITUIR TODO dentro, que pide su propia
+ * confirmación, igual que BORRAR TODO). Cerrar la confirmación vuelve a la vista previa.
+ */
+@Composable
+private fun ImportDialogs(
+    s: SettingsState,
+    actions: SettingsActions,
+    replaceDialog: Boolean,
+    onReplaceDialog: (Boolean) -> Unit,
+) {
+    val preview = s.importPreview
+    ReelDialog(
+        visible = preview != null && !replaceDialog,
+        onDismiss = actions.onImportCancel,
+        kicker = SettingsCopy.dialogKicker(SettingsCopy.DATA),
+        title = SettingsCopy.IMPORT_DIALOG_TITLE,
+        text = preview?.let(SettingsCopy::importPreview),
+        confirmLabel = SettingsCopy.IMPORT_ADD,
+        dismissLabel = SettingsCopy.IMPORT_CANCEL,
+        confirmIcon = ReelIcons.Upload,
+        onConfirm = { actions.onImportConfirm(ImportMode.ADD) },
+    ) {
+        Text(SettingsCopy.IMPORT_MODES, style = ReelTheme.type.bodySmall, color = ReelTheme.colors.textMuted)
+        Spacer(Modifier.height(Space.x3))
+        ReelButton(
+            SettingsCopy.IMPORT_REPLACE,
+            onClick = { onReplaceDialog(true) },
+            style = ReelButtonStyle.Secondary,
+        )
+    }
+    ReelDialog(
+        visible = preview != null && replaceDialog,
+        onDismiss = { onReplaceDialog(false) },
+        kicker = SettingsCopy.dialogKicker(SettingsCopy.DATA),
+        title = SettingsCopy.IMPORT_REPLACE_TITLE,
+        text = SettingsCopy.importReplaceBody(s.totals.count.toLong(), s.totals.totalMs),
+        confirmLabel = SettingsCopy.IMPORT_REPLACE,
+        dismissLabel = SettingsCopy.IMPORT_CANCEL,
+        destructive = true,
+        onConfirm = {
+            onReplaceDialog(false)
+            actions.onImportConfirm(ImportMode.REPLACE)
+        },
+    )
 }
 
 // ====================================================================== 06 servicio

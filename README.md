@@ -49,7 +49,7 @@ Reelómetro no bloquea apps ni te echa sermones. Solo te pone el marcador delant
 | **Objetivo** | Si quieres, un límite diario: el marcador te dice cuánto te queda y lleva tus rachas. |
 | **A quién envías** | Solo en Instagram y solo si lo enciendes (viene apagado): cuenta a qué personas y grupos mandas reels, para ver con quién compartes más. |
 | **Envío rápido** | También en Instagram y también apagado de serie. Fija a tus personas o grupos de siempre y sobre los reels salen unas burbujas con su foto: un toque y el reel se envía solo, en menos de un segundo. Las burbujas se colocan donde quieras, puedes mandar a dos a la vez soltando una encima de otra y la foto de cada burbuja puede ser la de su perfil o una que elijas de tu galería. |
-| **Tus datos** | Exporta todo a CSV o bórralo con un botón. |
+| **Tus datos** | Exporta todo a CSV, impórtalo en otro móvil (o tras restablecer este) sin duplicar nada, o bórralo con un botón. |
 
 <div align="center">
 <img src="docs/img/hoy-claro.png" width="24%" alt="Pantalla Hoy en tema claro">
@@ -120,7 +120,8 @@ No está en Google Play (todavía). Descarga la APK de la última versión en
 2. En Android 13 o superior, el interruptor del servicio de accesibilidad sale gris («Ajuste restringido») porque la
    app no viene de Google Play. Ve a Ajustes del sistema › Apps › Reelómetro › ⋮ › **Permitir ajustes restringidos**
    y vuelve a activarlo. La propia app te guía.
-3. Las versiones nuevas se instalan encima y conservan tus datos.
+3. Las versiones nuevas se instalan encima y conservan tus datos. Para cambiar de móvil: Ajustes › Tus datos ›
+   **Exportar CSV** en el viejo e **Importar CSV** en el nuevo.
 
 Requisitos: Android 8.0 (API 26) o superior. Idiomas: español de España, inglés, portugués de Brasil, francés e
 italiano (sigue el del móvil; en Android 13 o superior se puede elegir en Ajustes › Apps › Reelómetro › Idioma).
@@ -150,7 +151,7 @@ Robolectric. `minSdk 26`, `targetSdk 37`.
 ```
 app/src/main/java/com/reelometro/app/
 ├── detection/   servicio de accesibilidad, reglas por plataforma, clasificador, «A quién envías» y envío rápido
-├── data/        Room, repositorio, ajustes (DataStore), exportación CSV
+├── data/        Room, repositorio, ajustes (DataStore), exportación e importación CSV
 ├── stats/       cálculos puros, formato de cifras, equivalencias con fuente
 ├── copy/        todos los textos de la app (con variantes)
 ├── game/        reglas puras del Pasaporte (Flap, niveles, sellos, reto)
@@ -161,7 +162,7 @@ app/src/main/java/com/reelometro/app/
 
 ## Estado
 
-Versión **1.5.0**. Con honestidad:
+Versión **1.6.0**. Con honestidad:
 
 - **Probado en un móvil real** (un Pixel con Android 17): TikTok e Instagram cuentan bien. El envío rápido de
   Instagram está medido envío a envío: entre 0,5 y 0,93 s a una persona y 1,4–1,6 s a un grupo que hay que buscar
@@ -177,7 +178,10 @@ Versión **1.5.0**. Con honestidad:
 - **Traducciones nuevas** (inglés, portugués de Brasil, francés e italiano): revisadas en pantalla en el emulador,
   pero todavía no las ha leído enteras un hablante nativo, y los textos que citan menús de Android o botones de
   Instagram pueden no coincidir palabra por palabra con lo que muestra tu móvil. Las correcciones son bienvenidas.
-- Compila y pasa sus 761 tests JVM. Las capturas de este README usan datos de ejemplo.
+- **Importar CSV** (1.6.0): probado con tests (ida y vuelta con la base de datos, CSV de todas las versiones
+  anteriores, importar dos veces sin duplicar), en el emulador y con el CSV real de un Pixel
+  (798 vídeos: entran todos y, al repetir, ninguno se duplica).
+- Compila y pasa sus 814 tests JVM. Las capturas de este README usan datos de ejemplo.
 
 ## Apoyar el proyecto
 
