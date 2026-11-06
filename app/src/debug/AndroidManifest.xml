@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Solo en la build debug: herramientas de QA (galería de componentes y ganchos por adb). -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application>
+        <!-- Galería del sistema de diseño:
+             adb shell am start -n com.reelometro.app/.gallery.GalleryActivity -->
+        <activity
+            android:name=".gallery.GalleryActivity"
+            android:exported="true"
+            android:label="Galería (debug)"
+            android:theme="@style/Theme.Reelometro" />
+
+        <!-- Ganchos de QA (solo debug):
+             adb shell am broadcast -n com.reelometro.app/.debug.DebugReceiver -a com.reelometro.app.debug.SEED -->
+        <receiver
+            android:name=".debug.DebugReceiver"
+            android:exported="true"
+            tools:ignore="ExportedReceiver" />
+    </application>
+</manifest>

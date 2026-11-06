@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Tema de ventana oscuro (negro cálido): sin destellos blancos al arrancar. Ver values/themes.xml. -->
+    <style name="Theme.Reelometro" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/reel_bg</item>
+        <item name="android:colorBackground">@color/reel_bg</item>
+        <item name="android:colorAccent">@color/brand_signal</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
+        <item name="android:enforceStatusBarContrast" tools:targetApi="29">false</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="29">false</item>
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="28">shortEdges</item>
+    </style>
+
+    <style name="Theme.Reelometro.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/reel_bg</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_flap</item>
+        <item name="windowSplashScreenAnimationDuration">700</item>
+        <item name="postSplashScreenTheme">@style/Theme.Reelometro</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
+    </style>
+</resources>

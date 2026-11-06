@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Colores del diseño inicial del widget (layout/widget_loading.xml), que es XML y no puede usar
+     ui/theme/Colors.kt. Mismo valor que textMuted de LightReelColors; el oscuro, en values-night. -->
+<resources>
+    <color name="widget_text_muted">#FF5F5A52</color>
+</resources>

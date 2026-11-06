@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tema oscuro (por defecto en el sistema oscuro). Ver values/colors.xml. -->
+<resources>
+    <color name="reel_bg">#FF11100E</color>
+    <color name="reel_splash_tile">#FFEDE8DF</color>
+    <color name="reel_splash_tile_shade">#FFA39E94</color>
+</resources>

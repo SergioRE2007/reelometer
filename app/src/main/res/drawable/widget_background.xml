@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fondo del diseño inicial del widget: la ficha (bg) con esquinas de 2 dp. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/reel_bg" />
+    <corners android:radius="2dp" />
+</shape>

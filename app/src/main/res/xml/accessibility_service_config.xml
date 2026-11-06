@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Servicio de accesibilidad de Reelómetro (detection/ReelAccessibilityService).
+
+  - packageNames: el sistema SOLO le entrega eventos de TikTok (sus dos paquetes), Instagram y YouTube.
+    No recibe nada del resto de apps, ni del teclado, ni del lanzador. Debe coincidir con Platform.packages.
+  - Eventos: scroll (cambio de vídeo), cambio de ventana (en qué pantalla de la app estás) y clic
+    (para detectar el botón compartir y, solo en Instagram y con el ajuste «A quién envías» encendido,
+    el nombre de la persona o grupo que eliges en la hoja de compartir).
+  - Envío rápido (solo Instagram y con el ajuste encendido): al tocar su burbuja, el servicio pulsa con
+    performAction (ACTION_CLICK / ACTION_SET_TEXT, que bastan con canRetrieveWindowContent) «Compartir», el
+    nombre fijado y «Enviar». Sin canPerformGestures: añadirlo obligaría a reactivar el servicio.
+  - typeWindowContentChanged (1.4.0) NO va aquí: llega a montones de las tres apps. El servicio lo añade a su
+    configuración (setServiceInfo) solo mientras dura un envío rápido, para reaccionar a la hoja sin esperar al
+    reloj, y lo quita al acabar; si aun así llega sin envío en curso, lo descarta nada más entrar.
+  - canTakeScreenshot (1.4.0, Android 11+): solo con el envío rápido, para recortar de la hoja de compartir la
+    foto de perfil de los fijados y enseñarla en su burbuja. No hace ninguna otra captura. Añadir esta
+    capacidad obliga a desactivar y volver a activar el servicio una vez.
+  - notificationTimeout=0: sin agrupar. Con un valor > 0 Android solo entrega el último evento de cada
+    ráfaga (funciona como un «debounce») y se pierden los desplazamientos intermedios del scroll.
+  - flagRetrieveInteractiveWindows: para comprobar, sin recibir eventos de otras apps, si la app sigue
+    en pantalla mientras hay un vídeo activo.
+  - flagReportViewIds + flagIncludeNotImportantViews: ids de recurso y contenedores en el árbol, que es
+    lo que usan las reglas de detection/FeedRules.kt.
+-->
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:accessibilityEventTypes="typeViewScrolled|typeWindowStateChanged|typeViewClicked"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:accessibilityFlags="flagReportViewIds|flagIncludeNotImportantViews|flagRetrieveInteractiveWindows"
+    android:canRetrieveWindowContent="true"
+    android:canTakeScreenshot="true"
+    android:description="@string/accessibility_service_description"
+    android:summary="@string/accessibility_service_summary"
+    android:intro="@string/accessibility_service_intro"
+    android:notificationTimeout="0"
+    android:packageNames="com.zhiliaoapp.musically,com.ss.android.ugc.trill,com.instagram.android,com.google.android.youtube"
+    tools:targetApi="33" />

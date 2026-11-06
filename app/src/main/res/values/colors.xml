@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Colores para recursos XML (ventana, splash, iconos). Son los mismos valores que
+     ui/theme/Colors.kt; en Compose usa siempre ReelTheme.colors. -->
+<resources>
+    <!-- Marca: no cambian con el tema (icono de la app). -->
+    <color name="brand_ink">#FF11100E</color>
+    <color name="brand_bone">#FFEDE8DF</color>
+    <color name="brand_signal">#FFFF5A1F</color>
+
+    <!-- Según el tema: claro aquí, oscuro en values-night/colors.xml. -->
+    <color name="reel_bg">#FFF3EEE5</color>
+    <!-- Ficha del splash: tinta sobre papel (en oscuro, hueso sobre negro cálido). -->
+    <color name="reel_splash_tile">#FF151412</color>
+    <!-- La misma ficha a media vuelta (sombreado del volteo). -->
+    <color name="reel_splash_tile_shade">#FF5F5A52</color>
+</resources>

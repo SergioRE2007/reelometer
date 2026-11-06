@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Solo los textos que usa el sistema (manifiesto, servicio, canales, widget).
+         Los textos de pantalla viven en com.reelometro.app.copy, con variantes. -->
+
+    <string name="app_name">Reelómetro</string>
+
+    <!-- Servicio de accesibilidad. Se ven en Ajustes > Accesibilidad > Aplicaciones descargadas.
+         Con la etiqueta corta, Android escribe «Usar Reelómetro» en el interruptor y
+         «¿Permitir que Reelómetro pueda controlar totalmente tu dispositivo?» en su aviso:
+         la guía del onboarding (OnboardingCopy) cita esos textos tal cual. -->
+    <string name="accessibility_service_label">Reelómetro</string>
+    <!-- android:summary (API 24+): subtítulo bajo el nombre en la lista de servicios. -->
+    <string name="accessibility_service_summary">Cuenta los vídeos cortos que ves. Todo se queda en tu móvil.</string>
+    <!-- android:intro (API 31+): entradilla en la página del servicio. -->
+    <string name="accessibility_service_intro">Cuenta los vídeos que ves en TikTok, Instagram Reels y YouTube Shorts. Nada sale de tu móvil.</string>
+    <!-- android:description: texto completo de la página del servicio. -->
+    <string name="accessibility_service_description">Reelómetro usa este servicio para contar los vídeos cortos que ves en TikTok, Instagram Reels y YouTube Shorts. Mientras usas esas tres apps, detecta cuándo pasas al siguiente vídeo y lee el nombre del creador, la descripción y los hashtags para saber de qué tema es. Si activas «A quién envías» en Ajustes, en Instagram también lee el nombre de la persona o el grupo al que mandas un vídeo. De las demás apps no lee nada: solo nota que has salido, para dejar de contar. Si activas también «Envío rápido», en Instagram pone un botón sobre los reels y, al tocarlo, lee los nombres de la hoja de compartir para encontrar a quien has fijado y pulsa por ti únicamente «Compartir», esa persona o grupo y «Enviar» (si no lo ve, escribe su nombre en el buscador de la hoja); aparte de eso, no pulsa nada por ti. Solo con el envío rápido, recorta de la hoja de compartir la foto de perfil de las personas o grupos que fijas, para enseñarla en su botón; la guarda solo en este móvil y no hace ninguna otra captura de pantalla. No guarda lo que escribes. Todo se guarda únicamente en este móvil y nunca se envía a ningún sitio: la app no tiene permiso para usar internet. Puedes desactivarlo cuando quieras.</string>
+
+    <!-- Notificaciones (work/Notifications.kt). «notification_channel_name» y su descripción son el grupo
+         «Resúmenes» que reúne en los ajustes del sistema los canales diario y mensual; el de estado del
+         servicio queda para un aviso opcional (todavía sin uso). -->
+    <string name="notification_channel_name">Resúmenes</string>
+    <string name="notification_channel_description">Tu cuenta del día y el resumen de cada mes.</string>
+    <string name="notification_channel_daily_name">Resumen diario</string>
+    <string name="notification_channel_daily_description">Un aviso al día, a la hora que elijas, con tus vídeos y tu tiempo de hoy.</string>
+    <string name="notification_channel_monthly_name">Resumen del mes</string>
+    <string name="notification_channel_monthly_description">El día 1 de cada mes, aviso de que tu mes ya está contado y su resumen, listo.</string>
+
+    <!-- Widget de Hoy (selector de widgets y diseño inicial antes de que pinte Glance). -->
+    <string name="widget_name">Marcador de hoy</string>
+    <string name="widget_description">Tus vídeos y tu tiempo de hoy, sin abrir la app.</string>
+    <string name="widget_loading">CONTANDO</string>
+</resources>

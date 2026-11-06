@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Splash animado: la ficha del icono voltea de «en blanco» a «R» y se enciende la luz.
+      0–80 ms     ficha en blanco, luz apagada
+      80–280 ms   la hoja superior cae sobre la bisagra (y = 54) y se oscurece al girar
+      280–480 ms  la hoja inferior, con la mitad baja de la R, aterriza y se aclara
+      480–680 ms  rebote corto de la hoja
+      520–640 ms  se enciende la luz de grabación
+    Los valores estáticos de cada grupo son los del FINAL (ficha con R y luz): es lo que se ve en
+    API < 31, donde el splash no anima. Al arrancar, cada animación fija primero su valor inicial.
+    Geometría = icono de la app (viewport 108, ficha a escala 1,08; el sistema enmascara un círculo
+    de 72 de diámetro). La R va en el color de fondo del splash: equivale a un hueco y permite
+    apilar las hojas. Su recorte entra 1 unidad en la bisagra para que el borde antialias de la
+    ficha no deje una línea gris dentro de la letra.
+-->
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:width="288dp"
+            android:height="288dp"
+            android:viewportWidth="108"
+            android:viewportHeight="108">
+
+            <group
+                android:pivotX="54"
+                android:pivotY="54"
+                android:scaleX="1.08"
+                android:scaleY="1.08">
+
+                <!-- Detrás, arriba: la mitad superior de la R (el carácter que llega). -->
+                <group android:name="top">
+                    <group>
+                        <clip-path android:pathData="M0,0H108V53H0Z" />
+                        <path
+                            android:fillColor="@color/reel_splash_tile"
+                            android:pathData="M39,30H69A3,3 0,0 1,72,33V75A3,3 0,0 1,69,78H39A3,3 0,0 1,36,75V33A3,3 0,0 1,39,30Z" />
+                    </group>
+                    <group>
+                        <clip-path android:pathData="M0,0H108V54H0Z" />
+                        <path
+                            android:fillColor="@color/reel_bg"
+                            android:fillType="evenOdd"
+                            android:pathData="M44.303,71L44.303,39L53.127,39Q54.776,39 56.279,39.364Q57.782,39.727 59.018,40.503Q60.255,41.279 61.176,42.394Q62.097,43.509 62.606,45.036Q63.115,46.564 63.115,48.503Q63.115,50.103 62.727,51.509Q62.339,52.915 61.491,54.006Q60.642,55.097 59.382,55.848Q58.121,56.6 56.376,56.891L56.376,57.327Q58.945,57.424 60.255,58.394Q61.564,59.364 62.097,60.988Q62.63,62.612 62.873,64.745L63.697,71L55.939,71L55.503,65.861Q55.358,64.212 55.115,62.879Q54.873,61.545 54.218,60.77Q53.564,59.994 52.109,59.945L51.77,59.945L51.77,71ZM51.77,55L52.352,55Q54,55 54.8,53.739Q55.6,52.479 55.6,49.667Q55.6,47.097 54.921,46.03Q54.242,44.964 52.739,44.964L51.77,44.964Z" />
+                    </group>
+                </group>
+
+                <!-- Detrás, abajo: la mitad inferior en blanco (el carácter que se va). -->
+                <group android:name="bottomBlank">
+                    <clip-path android:pathData="M0,55.35H108V108H0Z" />
+                    <path
+                        android:name="bottomBlankPath"
+                        android:fillAlpha="0"
+                        android:fillColor="@color/reel_splash_tile"
+                        android:pathData="M39,30H69A3,3 0,0 1,72,33V75A3,3 0,0 1,69,78H39A3,3 0,0 1,36,75V33A3,3 0,0 1,39,30Z" />
+                </group>
+
+                <!-- Hoja superior en blanco: cae girando sobre la bisagra. -->
+                <group
+                    android:name="flapTop"
+                    android:pivotY="54"
+                    android:scaleY="0">
+                    <clip-path android:pathData="M0,0H108V53H0Z" />
+                    <path
+                        android:name="flapTopPath"
+                        android:fillColor="@color/reel_splash_tile"
+                        android:pathData="M39,30H69A3,3 0,0 1,72,33V75A3,3 0,0 1,69,78H39A3,3 0,0 1,36,75V33A3,3 0,0 1,39,30Z" />
+                </group>
+
+                <!-- Hoja inferior con la mitad baja de la R: aterriza desde la bisagra. -->
+                <group
+                    android:name="flapBottom"
+                    android:pivotY="54">
+                    <group>
+                        <clip-path android:pathData="M0,55.35H108V108H0Z" />
+                        <path
+                            android:name="flapBottomPath"
+                            android:fillColor="@color/reel_splash_tile"
+                            android:pathData="M39,30H69A3,3 0,0 1,72,33V75A3,3 0,0 1,69,78H39A3,3 0,0 1,36,75V33A3,3 0,0 1,39,30Z" />
+                    </group>
+                    <group>
+                        <clip-path android:pathData="M0,54.35H108V108H0Z" />
+                        <path
+                            android:fillColor="@color/reel_bg"
+                            android:fillType="evenOdd"
+                            android:pathData="M44.303,71L44.303,39L53.127,39Q54.776,39 56.279,39.364Q57.782,39.727 59.018,40.503Q60.255,41.279 61.176,42.394Q62.097,43.509 62.606,45.036Q63.115,46.564 63.115,48.503Q63.115,50.103 62.727,51.509Q62.339,52.915 61.491,54.006Q60.642,55.097 59.382,55.848Q58.121,56.6 56.376,56.891L56.376,57.327Q58.945,57.424 60.255,58.394Q61.564,59.364 62.097,60.988Q62.63,62.612 62.873,64.745L63.697,71L55.939,71L55.503,65.861Q55.358,64.212 55.115,62.879Q54.873,61.545 54.218,60.77Q53.564,59.994 52.109,59.945L51.77,59.945L51.77,71ZM51.77,55L52.352,55Q54,55 54.8,53.739Q55.6,52.479 55.6,49.667Q55.6,47.097 54.921,46.03Q54.242,44.964 52.739,44.964L51.77,44.964Z" />
+                    </group>
+                </group>
+
+                <!-- Luz de grabación. -->
+                <path
+                    android:name="led"
+                    android:fillColor="@color/brand_signal"
+                    android:pathData="M65.5,34.25a2.25,2.25 0,1 0,4.5 0a2.25,2.25 0,1 0,-4.5 0Z" />
+            </group>
+        </vector>
+    </aapt:attr>
+
+    <target android:name="flapTop">
+        <aapt:attr name="android:animation">
+            <set android:ordering="sequentially">
+                <objectAnimator
+                    android:duration="1"
+                    android:propertyName="scaleY"
+                    android:valueFrom="1"
+                    android:valueTo="1"
+                    android:valueType="floatType" />
+                <objectAnimator
+                    android:duration="200"
+                    android:interpolator="@android:interpolator/accelerate_quad"
+                    android:propertyName="scaleY"
+                    android:startOffset="79"
+                    android:valueFrom="1"
+                    android:valueTo="0"
+                    android:valueType="floatType" />
+            </set>
+        </aapt:attr>
+    </target>
+
+    <target android:name="flapTopPath">
+        <aapt:attr name="android:animation">
+            <set android:ordering="sequentially">
+                <objectAnimator
+                    android:duration="1"
+                    android:propertyName="fillColor"
+                    android:valueFrom="@color/reel_splash_tile"
+                    android:valueTo="@color/reel_splash_tile"
+                    android:valueType="colorType" />
+                <objectAnimator
+                    android:duration="200"
+                    android:interpolator="@android:interpolator/accelerate_quad"
+                    android:propertyName="fillColor"
+                    android:startOffset="79"
+                    android:valueFrom="@color/reel_splash_tile"
+                    android:valueTo="@color/reel_splash_tile_shade"
+                    android:valueType="colorType" />
+            </set>
+        </aapt:attr>
+    </target>
+
+    <target android:name="flapBottom">
+        <aapt:attr name="android:animation">
+            <set android:ordering="sequentially">
+                <objectAnimator
+                    android:duration="1"
+                    android:propertyName="scaleY"
+                    android:valueFrom="0"
+                    android:valueTo="0"
+                    android:valueType="floatType" />
+                <objectAnimator
+                    android:duration="200"
+                    android:interpolator="@android:interpolator/accelerate_quad"
+                    android:propertyName="scaleY"
+                    android:startOffset="279"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType" />
+                <objectAnimator
+                    android:duration="90"
+                    android:interpolator="@android:interpolator/decelerate_quad"
+                    android:propertyName="scaleY"
+                    android:valueFrom="1"
+                    android:valueTo="0.94"
+                    android:valueType="floatType" />
+                <objectAnimator
+                    android:duration="110"
+                    android:interpolator="@android:interpolator/accelerate_quad"
+                    android:propertyName="scaleY"
+                    android:valueFrom="0.94"
+                    android:valueTo="1"
+                    android:valueType="floatType" />
+            </set>
+        </aapt:attr>
+    </target>
+
+    <target android:name="flapBottomPath">
+        <aapt:attr name="android:animation">
+            <set android:ordering="sequentially">
+                <objectAnimator
+                    android:duration="1"
+                    android:propertyName="fillColor"
+                    android:valueFrom="@color/reel_splash_tile_shade"
+                    android:valueTo="@color/reel_splash_tile_shade"
+                    android:valueType="colorType" />
+                <objectAnimator
+                    android:duration="200"
+                    android:interpolator="@android:interpolator/decelerate_quad"
+                    android:propertyName="fillColor"
+                    android:startOffset="279"
+                    android:valueFrom="@color/reel_splash_tile_shade"
+                    android:valueTo="@color/reel_splash_tile"
+                    android:valueType="colorType" />
+            </set>
+        </aapt:attr>
+    </target>
+
+    <target android:name="bottomBlankPath">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="1"
+                android:propertyName="fillAlpha"
+                android:valueFrom="1"
+                android:valueTo="1"
+                android:valueType="floatType" />
+        </aapt:attr>
+    </target>
+
+    <target android:name="led">
+        <aapt:attr name="android:animation">
+            <set android:ordering="sequentially">
+                <objectAnimator
+                    android:duration="1"
+                    android:propertyName="fillAlpha"
+                    android:valueFrom="0"
+                    android:valueTo="0"
+                    android:valueType="floatType" />
+                <objectAnimator
+                    android:duration="120"
+                    android:interpolator="@android:interpolator/decelerate_quad"
+                    android:propertyName="fillAlpha"
+                    android:startOffset="519"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType" />
+            </set>
+        </aapt:attr>
+    </target>
+</animated-vector>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Widget «Hoy» (widget/TodayWidget.kt, Glance). Tamaño por defecto 2×2; se puede encoger a 2×1
+     y estirar a lo ancho y a lo alto. Sin actualización periódica del sistema: la app lo refresca
+     (WidgetUpdater) en cada vídeo, a medianoche y al cambiar la hora. En API 35+ la vista previa
+     del selector la genera Glance (providePreview); antes se usa previewImage: el 2×2 pintado por
+     el propio widget (DebugReceiver WIDGET_SNAPSHOT con preview=true), claro y oscuro (-night).
+     No hay previewLayout: en RemoteViews no se pueden usar las fuentes de la app. -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:description="@string/widget_description"
+    android:initialLayout="@layout/widget_loading"
+    android:previewImage="@drawable/widget_preview"
+    android:minWidth="110dp"
+    android:minHeight="110dp"
+    android:minResizeWidth="110dp"
+    android:minResizeHeight="40dp"
+    android:resizeMode="horizontal|vertical"
+    android:targetCellWidth="2"
+    android:targetCellHeight="2"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen"
+    tools:targetApi="31" />

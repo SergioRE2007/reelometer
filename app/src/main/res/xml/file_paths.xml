@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ficheros que se comparten con otras apps vía FileProvider (${applicationId}.fileprovider). -->
+<paths>
+    <!-- Imagen compartible del Resumen («ticket de tu tiempo», ui/wrapped/TicketFiles.kt). -->
+    <cache-path name="share" path="share/" />
+    <!-- Otros ficheros compartidos (reservado). -->
+    <cache-path name="shared" path="shared/" />
+</paths>
