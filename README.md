@@ -1,5 +1,7 @@
 <div align="center">
 
+[English](README.en.md) · **Español**
+
 <img src="docs/img/icono.svg" width="112" alt="Icono de Reelómetro">
 
 # Reelómetro
