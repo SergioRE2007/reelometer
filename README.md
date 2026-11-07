@@ -101,7 +101,7 @@ TikTok · Instagram · YouTube
 ```
 
 Cada plataforma cambia sus pantallas a menudo, así que la app trae una consola de **Calibración** oculta (Ajustes ›
-Acerca de › toca 7 veces la versión) que muestra en directo qué eventos llegan y qué vídeos cuenta.
+Acerca de › toca 7 veces la versión; queda al final, en «Licencias y herramientas») que muestra en directo qué eventos llegan y qué vídeos cuenta.
 
 ## Diseño: «el marcador»
 
@@ -139,7 +139,7 @@ cd reelometro
 
 Si Gradle no encuentra el SDK, crea `local.properties` con `sdk.dir=/ruta/al/Android/Sdk` o abre el proyecto en
 Android Studio. La build debug incluye una galería de componentes y un generador de datos de ejemplo (Ajustes ›
-Depuración).
+Licencias y herramientas › Depuración).
 
 ### Tecnología
 
@@ -162,14 +162,15 @@ app/src/main/java/com/reelometro/app/
 
 ## Estado
 
-Versión **1.6.0**. Con honestidad:
+Versión **1.7.0**. Con honestidad:
 
 - **Probado en un móvil real** (un Pixel con Android 17): TikTok e Instagram cuentan bien. El envío rápido de
   Instagram está medido envío a envío: entre 0,5 y 0,93 s a una persona y 1,4–1,6 s a un grupo que hay que buscar
   (casi todo ese tiempo es la búsqueda de Instagram). Las burbujas y la foto elegida de la galería también se han
   probado en ese móvil.
-- **YouTube Shorts no cuenta bien del todo** en el móvil real. El detector se ha reforzado, pero falta calibrarlo con
-  un registro de la consola de Calibración.
+- **YouTube Shorts** (1.6.1): calibrado con un registro real de un Pixel (YouTube 21.44). Antes contaba unos 6 de cada
+  27 Shorts; ahora, en una ronda de comprobación, 7 de 7. Las versiones de YouTube cambian sin avisar: si deja de
+  cuadrar, la consola de Calibración dice por qué.
 - **Comprobado en el emulador**: las pantallas principales en tema claro y oscuro y con la fuente al 130 %, y la
   release recorriendo todas las rutas sin cierres.
 - **Sin comprobar todavía**: el Pasaporte y el recorrido guiado no han tenido una revisión visual completa en
@@ -181,7 +182,9 @@ Versión **1.6.0**. Con honestidad:
 - **Importar CSV** (1.6.0): probado con tests (ida y vuelta con la base de datos, CSV de todas las versiones
   anteriores, importar dos veces sin duplicar), en el emulador y con el CSV real de un Pixel
   (798 vídeos: entran todos y, al repetir, ninguno se duplica).
-- Compila y pasa sus 814 tests JVM. Las capturas de este README usan datos de ejemplo.
+- **1.7.0**: las gráficas se recorren deslizando el dedo en horizontal (sin mantener pulsado) y Ajustes tiene un
+  índice arriba que salta a cada sección; el envío rápido y las herramientas van plegados. Probado en el emulador.
+- Compila y pasa sus 830 tests JVM. Las capturas de este README usan datos de ejemplo.
 
 ## Apoyar el proyecto
 

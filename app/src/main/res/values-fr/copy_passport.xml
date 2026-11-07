@@ -280,7 +280,7 @@
     <!-- «CONSEGUIDO EL 12 OCT 2026». %1$s la fecha corta ya en MAYÚSCULAS. -->
     <string name="passport_stamp_earned_on">OBTENU LE %1$s</string>
     <!-- «50 % HECHO». %1$s el porcentaje. MAYÚSCULAS. -->
-    <string name="passport_stamp_progress">%1$s ACCOMPLI</string>
+    <string name="passport_stamp_progress">%1$s FAIT</string>
     <!-- Millas que da un sello: «+60 MILLAS». %1$s las millas ya en MAYÚSCULAS. -->
     <string name="passport_stamp_xp">+%1$s</string>
     <!-- «9 DE 23» sellos conseguidos. %1$s conseguidos, %2$s total. MAYÚSCULAS. -->
@@ -314,7 +314,7 @@
     <!-- Estado del reto, MAYÚSCULAS y corto. «NO ESTA VEZ» (perdido) suena amable, no a fracaso. -->
     <string name="passport_challenge_status_running">EN COURS</string>
     <string name="passport_challenge_status_won">RÉUSSI</string>
-    <string name="passport_challenge_status_lost">PAS CETTE FOIS</string>
+    <string name="passport_challenge_status_lost">PERDU</string>
 
     <!-- Etiquetas de las líneas del reto (etiqueta a la izquierda, cifra a la derecha). -->
     <string name="passport_line_so_far">Tu en es à</string>
@@ -388,7 +388,7 @@
     <!-- Etiqueta de un reto pasado: «Semana del 26 oct». %1$s la fecha corta del lunes. -->
     <string name="passport_past_label">Semaine du %1$s</string>
     <!-- Valor de un reto pasado ganado (el perdido usa passport_challenge_status_lost). MAYÚSCULAS. -->
-    <string name="passport_past_won">RÉUSSIE</string>
+    <string name="passport_past_won">RÉUSSI</string>
     <!-- TalkBack de un reto pasado: %1$s la fecha del lunes («26 de octubre»), %2$s vídeos, %3$s el tope. -->
     <string name="passport_past_description_won">Semaine du %1$s\u00A0: %2$s sur un plafond de %3$s, réussie.</string>
     <string name="passport_past_description_lost">Semaine du %1$s\u00A0: %2$s sur un plafond de %3$s, cette fois non.</string>

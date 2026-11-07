@@ -26,9 +26,13 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.getValue
@@ -41,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -85,6 +90,7 @@ import com.reelometro.app.ui.theme.ReelTheme
 import com.reelometro.app.ui.theme.Space
 import com.reelometro.app.ui.theme.rememberHaptics
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.util.Locale
@@ -138,7 +144,10 @@ class SettingsActions(
     val onImportCancel: () -> Unit = {},
 )
 
-/** Ajustes: lista editorial de 8 secciones numeradas (docs/DESIGN.md §9). */
+/**
+ * Ajustes: lista editorial de 8 secciones numeradas (docs/DESIGN.md §9) con un índice arriba que salta a cada
+ * una, una barra fija para volver a él y lo menos usado (envío rápido, licencias y herramientas) plegado.
+ */
 @Composable
 fun SettingsScreen(state: SettingsUiState, actions: SettingsActions, modifier: Modifier = Modifier) {
     Box(
@@ -188,18 +197,80 @@ private fun SettingsList(s: SettingsState, actions: SettingsActions) {
     var replaceDialog by rememberSaveable { mutableStateOf(false) }
     var licensesDialog by rememberSaveable { mutableStateOf(false) }
     var disclosureOpen by rememberSaveable { mutableStateOf(false) }
+    var quickSendOpen by rememberSaveable { mutableStateOf(false) }
+    var toolsOpen by rememberSaveable { mutableStateOf(false) }
+    // La sección donde estabas al volver con ÍNDICE (se marca en el índice).
+    var marked by rememberSaveable { mutableStateOf<SettingsPart?>(null) }
     val bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + Space.x16
 
-    LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = bottom)) {
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+    val reduced = ReelTheme.reducedMotion
+    val density = LocalDensity.current
+    // Bajo la barra fija (barra de estado + una fila táctil + filete): ahí queda la cabecera de la sección al saltar.
+    val barBottomPx = WindowInsets.statusBars.getTop(density) + with(density) { (Space.touch + Space.hairline).roundToPx() }
+    val sectionTopPx = with(density) { Space.section.roundToPx() }
+    val gapPx = with(density) { Space.x4.roundToPx() }
+    val showBar by remember { derivedStateOf { SettingsLayout.showsBar(listState.firstVisibleItemIndex) } }
+    val current by remember(barBottomPx) {
+        derivedStateOf {
+            val info = listState.layoutInfo
+            SettingsLayout.currentPart(
+                info.visibleItemsInfo.map { it.index to it.offset },
+                linePx = SettingsLayout.lineFor(
+                    barLinePx = barBottomPx + gapPx - sectionTopPx,
+                    viewportPx = info.viewportEndOffset,
+                    atEnd = !listState.canScrollForward,
+                ),
+            )
+        }
+    }
+    fun scrollTo(item: Int, offset: Int) {
+        scope.launch {
+            if (reduced) listState.scrollToItem(item, offset) else listState.animateScrollToItem(item, offset)
+        }
+    }
+    // La cabecera de la sección, justo debajo de la barra fija (el elemento empieza con su margen de sección).
+    val jump: (SettingsPart) -> Unit = { part -> scrollTo(SettingsLayout.itemOf(part), sectionTopPx - barBottomPx - gapPx) }
+
+    // Al desbloquear la calibración (7 toques en la versión), se despliega el bloque donde está su entrada.
+    val unlocked = s.calibrationUnlocked
+    var wasUnlocked by remember { mutableStateOf(unlocked) }
+    LaunchedEffect(unlocked) {
+        if (unlocked && !wasUnlocked) toolsOpen = true
+        wasUnlocked = unlocked
+    }
+
+    LazyColumn(Modifier.fillMaxSize(), state = listState, contentPadding = PaddingValues(bottom = bottom)) {
         item(key = "top") {
             ReelTopBar(title = SettingsCopy.TITLE, onBack = actions.onBack, backDescription = A11y.BACK)
         }
-        item(key = "goal") { Section(SettingsCopy.GOAL, first = true) { GoalSection(s, actions) } }
-        item(key = "notifications") {
+        item(key = "index") {
+            SettingsIndex(
+                marked = marked,
+                busy = s.busy,
+                onJump = jump,
+                // Exportar e importar desde arriba: la acción y, para ver el resultado, a TUS DATOS.
+                onExport = {
+                    actions.onExport()
+                    jump(SettingsPart.DATA)
+                },
+                onImport = {
+                    actions.onImport()
+                    jump(SettingsPart.DATA)
+                },
+            )
+        }
+        item(key = SettingsPart.GOAL.key) { Section(SettingsCopy.GOAL) { GoalSection(s, actions) } }
+        item(key = SettingsPart.NOTIFICATIONS.key) {
             Section(SettingsCopy.NOTIFICATIONS) { NotificationsSection(s, actions, onPickTime = { timeDialog = true }) }
         }
-        item(key = "apps") { Section(SettingsCopy.APPS) { AppsSection(s, actions) } }
-        item(key = "theme") {
+        item(key = SettingsPart.APPS.key) {
+            Section(SettingsCopy.APPS) {
+                AppsSection(s, actions, quickSendOpen = quickSendOpen, onToggleQuickSend = { quickSendOpen = !quickSendOpen })
+            }
+        }
+        item(key = SettingsPart.THEME.key) {
             Section(SettingsCopy.THEME) {
                 SegmentedTabs(
                     options = THEME_OPTIONS,
@@ -209,13 +280,13 @@ private fun SettingsList(s: SettingsState, actions: SettingsActions) {
                 LanguageLine()
             }
         }
-        item(key = "data") { Section(SettingsCopy.DATA) { DataSection(s, actions, onDelete = { deleteDialog = true }) } }
-        item(key = "service") {
+        item(key = SettingsPart.DATA.key) { Section(SettingsCopy.DATA) { DataSection(s, actions, onDelete = { deleteDialog = true }) } }
+        item(key = SettingsPart.SERVICE.key) {
             Section(SettingsCopy.SERVICE) {
                 ServiceSection(s, actions, disclosureOpen = disclosureOpen, onToggleDisclosure = { disclosureOpen = !disclosureOpen })
             }
         }
-        item(key = "privacy") {
+        item(key = SettingsPart.PRIVACY.key) {
             Section(SettingsCopy.PRIVACY) {
                 Column(verticalArrangement = Arrangement.spacedBy(Space.x3)) {
                     SettingsCopy.PRIVACY_PARAGRAPHS.forEach {
@@ -224,22 +295,41 @@ private fun SettingsList(s: SettingsState, actions: SettingsActions) {
                 }
             }
         }
-        item(key = "about") {
+        item(key = SettingsPart.ABOUT.key) {
             Section(SettingsCopy.ABOUT) {
                 AboutSection(
                     s,
-                    actions,
-                    onLicenses = {
-                        actions.onOpenLicenses()
-                        licensesDialog = true
+                    onVersionTap = {
+                        // Ya desbloqueada, otro toque en la versión enseña dónde está la calibración.
+                        if (s.calibrationUnlocked) toolsOpen = true
+                        actions.onVersionTap()
                     },
+                    actions = actions,
                 )
             }
         }
-        if (s.debugAvailable) {
-            item(key = "debug") { DebugSection(s, actions) }
+        item(key = "tools") {
+            ToolsSection(
+                s,
+                actions,
+                open = toolsOpen,
+                onToggle = { toolsOpen = !toolsOpen },
+                onLicenses = {
+                    actions.onOpenLicenses()
+                    licensesDialog = true
+                },
+            )
         }
     }
+
+    SettingsJumpBar(
+        visible = showBar,
+        current = current,
+        onIndex = {
+            marked = current
+            scrollTo(SettingsLayout.TOP_ITEM, 0)
+        },
+    )
 
     NotifyTimeDialog(
         visible = timeDialog,
@@ -414,7 +504,7 @@ private fun NotificationsSection(s: SettingsState, actions: SettingsActions, onP
 // ====================================================================== 03 apps
 
 @Composable
-private fun AppsSection(s: SettingsState, actions: SettingsActions) {
+private fun AppsSection(s: SettingsState, actions: SettingsActions, quickSendOpen: Boolean, onToggleQuickSend: () -> Unit) {
     s.apps.forEach { app -> AppSwitchLine(app, onToggle = { actions.onPlatform(app.platform, it) }) }
     AnimatedVisibility(
         visible = s.allAppsOff,
@@ -429,7 +519,7 @@ private fun AppsSection(s: SettingsState, actions: SettingsActions) {
         )
     }
     RecipientsLine(s, actions)
-    QuickSendSection(s, actions)
+    QuickSendSection(s, actions, open = quickSendOpen, onToggle = onToggleQuickSend)
 }
 
 /** «A quién envías» (solo Instagram): va con las apps porque decide qué se lee de una de ellas. */
@@ -444,15 +534,31 @@ private fun RecipientsLine(s: SettingsState, actions: SettingsActions) {
 
 /**
  * «Envío rápido» (solo Instagram), debajo de «A quién envías»: el interruptor y, encendido, la lista para
- * fijar hasta [AppSettings.MAX_QUICK_SEND] personas o grupos de tu historial de envíos.
+ * fijar hasta [AppSettings.MAX_QUICK_SEND] personas o grupos de tu historial de envíos. Plegado por defecto tras
+ * `ENVÍO RÁPIDO · 2 FIJADOS ▸`: es lo más largo de Ajustes y casi nunca se toca.
  */
 @Composable
-private fun QuickSendSection(s: SettingsState, actions: SettingsActions) {
-    val colors = ReelTheme.colors
-    val type = ReelTheme.type
+private fun QuickSendSection(s: SettingsState, actions: SettingsActions, open: Boolean, onToggle: () -> Unit) {
     Spacer(Modifier.height(Space.x4))
     TicketDivider(style = TicketDividerStyle.Dashed)
-    Spacer(Modifier.height(Space.x2))
+    FoldLine(
+        text = SettingsCopy.quickSendFold(s.quickSendEnabled && s.quickSendAvailable, s.quickSendLines.count { it.pinned }),
+        expanded = open,
+        onToggle = onToggle,
+    )
+    AnimatedVisibility(
+        visible = open,
+        enter = revealIn(ReelTheme.reducedMotion),
+        exit = revealOut(ReelTheme.reducedMotion),
+    ) {
+        Column(Modifier.fillMaxWidth()) { QuickSendContent(s, actions) }
+    }
+}
+
+@Composable
+private fun QuickSendContent(s: SettingsState, actions: SettingsActions) {
+    val colors = ReelTheme.colors
+    val type = ReelTheme.type
     // Sin «A quién envías», deshabilitado y con la explicación debajo (como el aviso en directo sin objetivo).
     SwitchLine(
         SettingsCopy.QUICK_SEND_LABEL,
@@ -739,7 +845,7 @@ private fun ImportDialogs(
         kicker = SettingsCopy.dialogKicker(SettingsCopy.DATA),
         title = SettingsCopy.IMPORT_REPLACE_TITLE,
         text = SettingsCopy.importReplaceBody(s.totals.count.toLong(), s.totals.totalMs),
-        confirmLabel = SettingsCopy.IMPORT_REPLACE,
+        confirmLabel = SettingsCopy.IMPORT_REPLACE_CONFIRM,
         dismissLabel = SettingsCopy.IMPORT_CANCEL,
         destructive = true,
         onConfirm = {
@@ -819,28 +925,60 @@ private fun ServiceSection(
 // ====================================================================== 08 acerca de
 
 @Composable
-private fun AboutSection(s: SettingsState, actions: SettingsActions, onLicenses: () -> Unit) {
-    ReceiptLine(SettingsCopy.VERSION_LINE, s.versionName, onClick = actions.onVersionTap)
+private fun AboutSection(s: SettingsState, onVersionTap: () -> Unit, actions: SettingsActions) {
+    ReceiptLine(SettingsCopy.VERSION_LINE, s.versionName, onClick = onVersionTap)
     Feedback(s.aboutMessage, Modifier.padding(bottom = Space.x2))
-    ReceiptLine(SettingsCopy.FONTS_LINE, SettingsCopy.FONTS_VALUE, onClick = onLicenses)
     Spacer(Modifier.height(Space.x3))
     ReelButton(SettingsCopy.REPLAY_ONBOARDING, onClick = actions.onReplayOnboarding, style = ReelButtonStyle.Ghost)
     ReelButton(SettingsCopy.REPLAY_TOUR, onClick = actions.onReplayTour, style = ReelButtonStyle.Ghost)
-    AnimatedVisibility(
-        visible = s.calibrationUnlocked,
-        enter = revealIn(ReelTheme.reducedMotion),
-        exit = revealOut(ReelTheme.reducedMotion),
-    ) {
-        ReelButton(
-            SettingsCopy.CALIBRATION_ENTRY,
-            onClick = actions.onOpenCalibration,
-            style = ReelButtonStyle.Ghost,
-            icon = ReelIcons.Bug,
-        )
-    }
     if (AppLinks.PROJECT_URL.isNotBlank()) ProjectBlock(AppLinks.PROJECT_URL)
     Spacer(Modifier.height(Space.x8))
     Text(SettingsCopy.SIGNATURE, style = ReelTheme.type.quoteSmall, color = ReelTheme.colors.textMuted)
+}
+
+/**
+ * Al final y plegado (`LICENCIAS Y HERRAMIENTAS ▸`): las licencias de las fuentes, la calibración (si está
+ * desbloqueada) y, en la versión de pruebas, la depuración.
+ */
+@Composable
+private fun ToolsSection(
+    s: SettingsState,
+    actions: SettingsActions,
+    open: Boolean,
+    onToggle: () -> Unit,
+    onLicenses: () -> Unit,
+) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Space.screen)
+            .padding(top = Space.section),
+    ) {
+        TicketDivider(style = TicketDividerStyle.Dashed)
+        FoldLine(SettingsCopy.TOOLS_FOLD, expanded = open, onToggle = onToggle)
+        AnimatedVisibility(
+            visible = open,
+            enter = revealIn(ReelTheme.reducedMotion),
+            exit = revealOut(ReelTheme.reducedMotion),
+        ) {
+            Column(Modifier.fillMaxWidth()) {
+                ReceiptLine(SettingsCopy.FONTS_LINE, SettingsCopy.FONTS_VALUE, onClick = onLicenses)
+                AnimatedVisibility(
+                    visible = s.calibrationUnlocked,
+                    enter = revealIn(ReelTheme.reducedMotion),
+                    exit = revealOut(ReelTheme.reducedMotion),
+                ) {
+                    ReelButton(
+                        SettingsCopy.CALIBRATION_ENTRY,
+                        onClick = actions.onOpenCalibration,
+                        style = ReelButtonStyle.Ghost,
+                        icon = ReelIcons.Bug,
+                    )
+                }
+                if (s.debugAvailable) DebugSection(s, actions)
+            }
+        }
+    }
 }
 
 /** El proyecto en GitHub (donde está el botón de donaciones): se abre en el navegador; la app sigue sin INTERNET. */
@@ -871,8 +1009,7 @@ private fun DebugSection(s: SettingsState, actions: SettingsActions) {
     Column(
         Modifier
             .fillMaxWidth()
-            .padding(horizontal = Space.screen)
-            .padding(top = Space.section),
+            .padding(top = Space.x8),
     ) {
         SectionHeader(index = null, title = SettingsCopy.DEBUG_TITLE)
         Spacer(Modifier.height(Space.x3))

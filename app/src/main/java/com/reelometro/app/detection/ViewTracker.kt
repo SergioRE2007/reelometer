@@ -72,6 +72,8 @@ class ViewTracker(
         val jumpPages: Double = 1.5,
         val maxRecordsPerFeed: Int = 40,
         val maxFeeds: Int = 6,
+        /** Margen para [FeedScroll.resumeOnReturn]: volver a la app antes de esto es volver al mismo vídeo. */
+        val quickReturnMs: Long = QUICK_RETURN_MS,
     )
 
     /** Un evento de scroll del feed. */
@@ -88,6 +90,13 @@ class ViewTracker(
         val pageHeight: Int = 0,
         val indexStyle: IndexStyle = IndexStyle.VISIBLE_RANGE,
         val now: Long,
+        /** Tolerancia de asiento de esta app (en páginas); `null` = [Config.settleTolerance]. */
+        val settleTolerance: Double? = null,
+        /**
+         * Si el usuario sale de la app y vuelve antes de [Config.quickReturnMs], el feed quieto que aparece es el vídeo
+         * que dejó: se reanuda en vez de contarlo otra vez (YouTube redibuja el feed como un contenedor nuevo).
+         */
+        val resumeOnReturn: Boolean = false,
     )
 
     private enum class Motion { NONE, SWIPE, JUMP, UNKNOWN }
@@ -123,6 +132,10 @@ class ViewTracker(
 
     /** Cuándo llegó el usuario a la pantalla/app actual (para estimar el inicio del primer vídeo). */
     private var contextSince = 0L
+
+    /** El vídeo que se veía al salir de la app ([onLeave]), por si se vuelve enseguida ([FeedScroll.resumeOnReturn]). */
+    private var leftBehind: Active? = null
+    private var leftAt = 0L
     private var idSeq = 0L
 
     /** Cambia con cada vídeo nuevo, reanudado o pausado (para saber si una lectura sigue siendo válida). */
@@ -143,6 +156,7 @@ class ViewTracker(
 
     /** Ha cambiado la actividad de [platform] (otra pantalla de la app): el vídeo en curso ya no se ve. */
     fun onScreenChanged(platform: Platform, now: Long) {
+        leftBehind = null
         onAppForeground(platform, now)
         if (active?.record?.platform == platform) pause(now)
         contextSince = now
@@ -150,6 +164,7 @@ class ViewTracker(
 
     /** El usuario está en otra pantalla de la app (feed normal, perfil…) o el feed ya no se ve. */
     fun onLeaveFeed(platform: Platform, now: Long) {
+        leftBehind = null // ha pasado por otra pantalla: lo próximo que aparezca no es el vídeo que dejó
         onAppForeground(platform, now)
         if (active?.record?.platform == platform) pause(now)
         contextSince = max(contextSince, now)
@@ -157,7 +172,10 @@ class ViewTracker(
 
     /** El usuario salió de la app, apagó la pantalla, etc. */
     fun onLeave(now: Long) {
+        val leaving = active
         pause(now)
+        leftBehind = leaving?.takeIf { it.feed.records.containsValue(it.record) }
+        leftAt = now
         foreground = null
         contextSince = now
     }
@@ -263,7 +281,7 @@ class ViewTracker(
         feed.rangeOffsetPx += dy
         val pos = feed.rangeOffsetPx.toDouble() / s.pageHeight
         val pages = Math.round(pos)
-        if (pages == 0L || abs(pos - pages) > config.settleTolerance) return false
+        if (pages == 0L || abs(pos - pages) > (s.settleTolerance ?: config.settleTolerance)) return false
         feed.rangeOffsetPx -= pages * s.pageHeight
         return moveTo(feed, here.index + pages.toInt(), s.now)
     }
@@ -290,6 +308,16 @@ class ViewTracker(
         }
         val arrival = enterFeed(s.now)
         if (previous == null) {
+            // Vuelta rápida a la app: el feed recién dibujado y quieto es el vídeo que se dejó (se reanuda).
+            val back = leftBehind
+            if (s.resumeOnReturn && motion == Motion.NONE && back != null && back.record.platform == feed.platform &&
+                feed.records.isEmpty() && s.now - leftAt <= config.quickReturnMs
+            ) {
+                back.feed.records.values.remove(back.record)
+                feed.records[index] = back.record
+                leftBehind = null
+                return activate(feed, index, newSince = s.now, resumeSince = s.now)
+            }
             // Sin movimiento (el feed acaba de dibujarse) el vídeo aparece ahora; si no, desde la llegada.
             val appearsNow = motion == Motion.NONE || motion == Motion.JUMP ||
                 (motion == Motion.UNKNOWN && s.indexStyle == IndexStyle.VISIBLE_RANGE)
@@ -308,7 +336,7 @@ class ViewTracker(
         val pos = feed.offsetPx / page
         val nearest = Math.round(pos)
         val here = active?.takeIf { it.feed === feed }
-        if (abs(pos - nearest) > config.settleTolerance) {
+        if (abs(pos - nearest) > (s.settleTolerance ?: config.settleTolerance)) {
             feed.midSeen = true
             if (here == null) {
                 val leaving = (if (dy >= 0) floor(pos) else ceil(pos)).toInt()
@@ -505,6 +533,9 @@ class ViewTracker(
         /** Inicio estimado del vídeo que ya estaba en pantalla: como mucho 1 minuto antes. */
         const val MAX_PREVIOUS_MS = 60_000L
         const val BURST_GAP_MS = 1_200L
+
+        /** Volver a la app antes de esto, con el feed quieto, es volver al mismo vídeo (solo apps con resumeOnReturn). */
+        const val QUICK_RETURN_MS = 2 * 60_000L
 
         /** Volver al mismo vídeo dentro de este margen lo reanuda en vez de contarlo otra vez. */
         const val RESUME_WINDOW_MS = 10 * 60_000L

@@ -20,6 +20,7 @@ import androidx.glance.appwidget.GlanceRemoteViews
 import com.reelometro.app.ReelometroApp
 import com.reelometro.app.data.CsvImportOutcome
 import com.reelometro.app.data.export.ImportMode
+import com.reelometro.app.detection.CalibrationLog
 import com.reelometro.app.data.settings.ThemeMode
 import com.reelometro.app.ui.support.SupportPrompt
 import com.reelometro.app.ui.support.SupportPromptState
@@ -107,6 +108,14 @@ class DebugReceiver : BroadcastReceiver() {
             ACTION_CLEAR -> {
                 DebugTools.clearData(context)
                 "CLEAR: datos de uso borrados"
+            }
+            ACTION_CALIBRATION -> {
+                // Captura de Calibración copiada a logcat (etiqueta ReelCal): adb logcat -s ReelCal:V
+                val on = intent.getBooleanExtra(EXTRA_ENABLED, true)
+                CalibrationLog.mirror = if (on) { line -> Log.i(CAL_TAG, line) } else null
+                CalibrationLog.enabled.value = on
+                if (on) Log.i(CAL_TAG, "=== captura activada · ${CalibrationLog.environment ?: "sin entorno"}")
+                "CALIBRATION: captura ${if (on) "activada (logcat ReelCal)" else "desactivada"}"
             }
             ACTION_EXPORT -> {
                 // Como EXPORTAR CSV de Ajustes, a un fichero de getExternalFilesDir (adb pull para sacarlo).
@@ -343,6 +352,10 @@ class DebugReceiver : BroadcastReceiver() {
 
         /** Exporta el CSV a getExternalFilesDir: `--es path copia.csv` (por defecto reelometro-export.csv). */
         const val ACTION_EXPORT = PREFIX + "EXPORT"
+
+        /** Captura de Calibración a logcat (`--ez enabled false` para pararla): `adb logcat -s ReelCal:V`. */
+        const val ACTION_CALIBRATION = PREFIX + "CALIBRATION"
+        const val CAL_TAG = "ReelCal"
         const val EXTRA_PATH = "path"
         const val EXTRA_REPLACE = "replace"
 

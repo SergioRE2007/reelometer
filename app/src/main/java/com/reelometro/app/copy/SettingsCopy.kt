@@ -8,8 +8,8 @@ import com.reelometro.app.data.export.ImportResult
 import com.reelometro.app.stats.Format
 import java.time.LocalDate
 
-/** Sección numerada de Ajustes: «01  OBJETIVO ─────» + descripción. */
-data class SettingsSection(val index: String, val title: String, val description: String)
+/** Sección numerada de Ajustes: «01  OBJETIVO ─────» + descripción; [short], su nombre en el índice de arriba. */
+data class SettingsSection(val index: String, val title: String, val description: String, val short: String = title)
 
 /**
  * Textos de **Ajustes** (lista editorial de 8 secciones numeradas).
@@ -21,39 +21,107 @@ object SettingsCopy {
     val TITLE: String get() = str(R.string.settings_title)
 
     val GOAL: SettingsSection
-        get() = SettingsSection("01", str(R.string.settings_section_goal_title), str(R.string.settings_section_goal_description))
+        get() = SettingsSection(
+            "01",
+            str(R.string.settings_section_goal_title),
+            str(R.string.settings_section_goal_description),
+            INDEX_GOAL,
+        )
     val NOTIFICATIONS: SettingsSection
         get() = SettingsSection(
             "02",
             str(R.string.settings_section_notifications_title),
             str(R.string.settings_section_notifications_description),
+            INDEX_NOTIFICATIONS,
         )
     val APPS: SettingsSection
-        get() = SettingsSection("03", str(R.string.settings_section_apps_title), str(R.string.settings_section_apps_description))
+        get() = SettingsSection(
+            "03",
+            str(R.string.settings_section_apps_title),
+            str(R.string.settings_section_apps_description),
+            INDEX_APPS,
+        )
     val THEME: SettingsSection
-        get() = SettingsSection("04", str(R.string.settings_section_theme_title), str(R.string.settings_section_theme_description))
+        get() = SettingsSection(
+            "04",
+            str(R.string.settings_section_theme_title),
+            str(R.string.settings_section_theme_description),
+            INDEX_THEME,
+        )
     val DATA: SettingsSection
-        get() = SettingsSection("05", str(R.string.settings_section_data_title), str(R.string.settings_section_data_description))
+        get() = SettingsSection(
+            "05",
+            str(R.string.settings_section_data_title),
+            str(R.string.settings_section_data_description),
+            INDEX_DATA,
+        )
     val SERVICE: SettingsSection
         get() = SettingsSection(
             "06",
             str(R.string.settings_section_service_title),
             str(R.string.settings_section_service_description),
+            INDEX_SERVICE,
         )
     val PRIVACY: SettingsSection
         get() = SettingsSection(
             "07",
             str(R.string.settings_section_privacy_title),
             str(R.string.settings_section_privacy_description),
+            INDEX_PRIVACY,
         )
     val ABOUT: SettingsSection
-        get() = SettingsSection("08", str(R.string.settings_section_about_title), str(R.string.settings_section_about_description))
+        get() = SettingsSection(
+            "08",
+            str(R.string.settings_section_about_title),
+            str(R.string.settings_section_about_description),
+            INDEX_ABOUT,
+        )
 
     /** Todas, en orden. */
     val SECTIONS: List<SettingsSection> get() = listOf(GOAL, NOTIFICATIONS, APPS, THEME, DATA, SERVICE, PRIVACY, ABOUT)
 
     /** Antetítulo de un diálogo que sale de una sección: «05 · TUS DATOS». */
     fun dialogKicker(section: SettingsSection): String = str(R.string.settings_dialog_kicker, section.index, section.title)
+
+    // ------------------------------------------------------------------ índice y líneas plegables
+
+    /** Nombres cortos del índice de arriba (se ven en MAYÚSCULAS). */
+    val INDEX_GOAL: String get() = str(R.string.settings_index_goal)
+    val INDEX_NOTIFICATIONS: String get() = str(R.string.settings_index_notifications)
+    val INDEX_APPS: String get() = str(R.string.settings_index_apps)
+    val INDEX_THEME: String get() = str(R.string.settings_index_theme)
+    val INDEX_DATA: String get() = str(R.string.settings_index_data)
+    val INDEX_SERVICE: String get() = str(R.string.settings_index_service)
+    val INDEX_PRIVACY: String get() = str(R.string.settings_index_privacy)
+    val INDEX_ABOUT: String get() = str(R.string.settings_index_about)
+
+    /** TalkBack de un acceso del índice: «Ir a Tus datos». */
+    fun indexGo(section: SettingsSection): String = str(R.string.settings_index_go, section.short)
+
+    /** TalkBack: el acceso de la sección donde estabas antes de volver al índice. */
+    val INDEX_HERE: String get() = str(R.string.settings_index_here)
+
+    /** Barra fija al bajar por la lista: la sección en la que estás («05 · TUS DATOS») y el botón ÍNDICE. */
+    fun indexCurrent(section: SettingsSection): String = dialogKicker(section)
+
+    val INDEX_BACK: String get() = str(R.string.settings_index_back)
+    val INDEX_BACK_DESCRIPTION: String get() = str(R.string.settings_index_back_description)
+
+    /** Línea plegable del envío rápido: «ENVÍO RÁPIDO · APAGADO», «… · NADIE FIJADO», «… · 2 FIJADOS». */
+    fun quickSendFold(enabled: Boolean, pinned: Int): String = when {
+        !enabled -> str(R.string.settings_quick_send_fold_off)
+        pinned <= 0 -> str(R.string.settings_quick_send_fold_none)
+        else -> plural(R.plurals.settings_quick_send_fold, pinned, Format.integer(pinned))
+    }
+
+    /** Línea plegable del final: licencias, calibración y depuración. */
+    val TOOLS_FOLD: String get() = str(R.string.settings_tools_fold)
+
+    /** TalkBack de las líneas plegables. */
+    val FOLD_OPEN: String get() = str(R.string.settings_fold_open)
+    val FOLD_CLOSED: String get() = str(R.string.settings_fold_closed)
+    val FOLD_EXPAND: String get() = str(R.string.settings_fold_expand)
+    val FOLD_COLLAPSE: String get() = str(R.string.settings_fold_collapse)
 
     // ------------------------------------------------------------------ 01 objetivo
 
@@ -269,6 +337,9 @@ object SettingsCopy {
     val IMPORT_DIALOG_TITLE: String get() = str(R.string.settings_import_dialog_title)
     val IMPORT_ADD: String get() = Buttons.IMPORT_ADD
     val IMPORT_REPLACE: String get() = Buttons.IMPORT_REPLACE
+
+    /** Confirmar en «¿Sustituir todo?»: corto, para que quepa junto al icono con la fuente al 130 %. */
+    val IMPORT_REPLACE_CONFIRM: String get() = Buttons.IMPORT_REPLACE_CONFIRM
     val IMPORT_CANCEL: String get() = Buttons.CANCEL
     val IMPORT_MODES: String get() = str(R.string.settings_import_modes)
 

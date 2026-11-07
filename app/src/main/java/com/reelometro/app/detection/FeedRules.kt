@@ -128,6 +128,19 @@ object FeedRules {
          * los vídeos contados dos veces. Cuesta una lectura del árbol cada pocos segundos con un vídeo activo.
          */
         val contentCheck: Boolean = false,
+        /**
+         * Fragmentos de id que se ignoran siempre, aunque casen con [feedIds]: piezas de cada página que también
+         * hacen scroll al deslizar (y a veces al revés). Si contaran como feed, el detector creería saltar entre
+         * varios feeds y no contaría casi nada.
+         */
+        val ignoredIds: List<String> = emptyList(),
+        /**
+         * Distancia máxima (en páginas) a un entero para dar el feed por asentado cuando no hay índices; `null` = la
+         * del [ViewTracker]. Más ancha si la app no informa de la vuelta de un deslizamiento a medias.
+         */
+        val settleTolerance: Double? = null,
+        /** Volver a la app enseguida reanuda el vídeo que se dejó ([ViewTracker.FeedScroll.resumeOnReturn]). */
+        val resumeOnReturn: Boolean = false,
     )
 
     /** Clases cuyo scroll nunca es el feed: texto que se desplaza dentro de una vista, webs. */
@@ -185,9 +198,19 @@ object FeedRules {
             // El id ya dice que es el feed de Shorts. Al volver hacia arriba pueden asomar tres páginas a
             // la vez (la vecina precargada toca el borde) y eso no es una lista: no debe pausar el vídeo.
             maxVisibleSpan = 2,
-            // Primera prueba en un móvil real (nov 2026): el recuento de Shorts no cuadraba. Además del
-            // scroll de reel_recycler se comprueba el contenido (autor + título) del vídeo visible.
-            contentCheck = true,
+            // La comprobación por contenido (autor + título del vídeo visible) se apaga: YouTube 21.44 no expone a los
+            // servicios de accesibilidad la capa del Short (ni canal, ni título, ni botones; volcado del árbol en un
+            // móvil real, 7 nov 2026), así que leía la pantalla cada pocos segundos sin encontrar nada. El recuento
+            // va por el scroll de reel_recycler (calibrado con registros reales, ver ShortsReplayTest).
+            contentCheck = false,
+            // Calibración real (YouTube 21.44, nov 2026): al deslizar, además de reel_recycler hacen scroll el
+            // reproductor y el fondo de cada página (dy al revés). Contaban como otros feeds: 6 de ~26 Shorts.
+            ignoredIds = listOf("reel_watch_player", "reel_player_underlay"),
+            // Y la vuelta de un arrastre a medias no llega como scroll: las páginas «aterrizan» a 0,12–0,2 del entero
+            // y con la tolerancia normal (0,12) unas contaban y otras no. Al asentarse se vuelve a anclar.
+            settleTolerance = 0.25,
+            // Al salir de YouTube y volver enseguida, el feed se redibuja como otro contenedor: es el mismo Short.
+            resumeOnReturn = true,
         ),
         // TikTok ofusca los ids (cambian en cada versión): se decide por clase + tamaño + dirección + un
         // solo vídeo visible + actividad. El feed principal (Para ti, Siguiendo, Amigos…) y el detalle
@@ -246,6 +269,8 @@ object FeedRules {
             val reason = "pantalla excluida ($fragment)"
             return if (moved) other(reason) else ignored(reason)
         }
+        // 0. Piezas de la página que se mueven con el feed (YouTube: reproductor y fondo de cada Short).
+        rules.ignoredIds.firstOrNull { id.contains(it) }?.let { return ignored("pieza de la página ($it)") }
         val feedId = rules.feedIds.firstOrNull { id.contains(it) }
         // 2. Ids que delatan otra pantalla aunque se muevan en horizontal (visor de Stories…)
         if (feedId == null) {

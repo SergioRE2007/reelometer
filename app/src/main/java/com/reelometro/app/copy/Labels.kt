@@ -76,6 +76,7 @@ object Buttons {
     val IMPORT_CSV: String get() = str(R.string.button_import_csv)
     val IMPORT_ADD: String get() = str(R.string.button_import_add)
     val IMPORT_REPLACE: String get() = str(R.string.button_import_replace)
+    val IMPORT_REPLACE_CONFIRM: String get() = str(R.string.button_import_replace_confirm)
     val SEE_SUMMARY: String get() = str(R.string.button_see_summary)
     val SEE_PERMISSION: String get() = str(R.string.button_see_permission)
     val REMOVE_GOAL: String get() = str(R.string.button_remove_goal)

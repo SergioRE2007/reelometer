@@ -21,7 +21,7 @@
     <string name="settings_section_theme_title">THÈME</string>
     <string name="settings_section_theme_description">Le compteur a plus d’allure dans le noir, mais c’est toi qui décides.</string>
     <string name="settings_section_data_title">TES DONNÉES</string>
-    <string name="settings_section_data_description">Tout ce qui est compté vit dans ce téléphone. Tu peux l’emporter ou l’effacer.</string>
+    <string name="settings_section_data_description">Tout ce qui est compté vit dans ce téléphone. Tu peux l’emporter, le récupérer ou l’effacer.</string>
     <string name="settings_section_service_title">SERVICE</string>
     <string name="settings_section_service_description">L’autorisation d’accessibilité, c’est ce qui me permet de compter. Ici tu vois si elle est active.</string>
     <string name="settings_section_privacy_title">CONFIDENTIALITÉ</string>
@@ -32,6 +32,42 @@
     <!-- Antetítulo de los diálogos que salen de una sección: «05 · TUS DATOS». %1$s el número de la
          sección («05»), %2$s su título (ya en MAYÚSCULAS). -->
     <string name="settings_dialog_kicker">%1$s · %2$s</string>
+
+    <!-- Índice de arriba: un acceso por sección que salta a ella. Nombres cortos (se ven en MAYÚSCULAS,
+         en media fila y con el número delante): cuanto más cortos, mejor. -->
+    <string name="settings_index_goal">Objectif</string>
+    <string name="settings_index_notifications">Alertes</string>
+    <string name="settings_index_apps">Apps</string>
+    <string name="settings_index_theme">Thème</string>
+    <string name="settings_index_data">Tes données</string>
+    <string name="settings_index_service">Service</string>
+    <string name="settings_index_privacy">Confidentialité</string>
+    <string name="settings_index_about">À propos</string>
+    <!-- TalkBack de cada acceso del índice. %1$s el nombre corto de la sección («Tus datos»). -->
+    <string name="settings_index_go">Aller à %1$s</string>
+    <!-- TalkBack: el acceso de la sección donde estabas antes de volver al índice. -->
+    <string name="settings_index_here">Tu étais ici</string>
+    <!-- Barra fija de arriba al bajar por la lista: botón para volver al índice (MAYÚSCULAS, muy corto). -->
+    <string name="settings_index_back">SOMMAIRE</string>
+    <!-- TalkBack del botón ÍNDICE. -->
+    <string name="settings_index_back_description">Revenir au sommaire des réglages</string>
+
+    <!-- Línea plegable del envío rápido (se ve en MAYÚSCULAS): apagado, encendido sin nadie fijado y con
+         %1$s fijados (la cifra ya formateada). -->
+    <string name="settings_quick_send_fold_off">Envoi rapide · désactivé</string>
+    <string name="settings_quick_send_fold_none">Envoi rapide · personne d’épinglé</string>
+    <plurals name="settings_quick_send_fold">
+        <item quantity="one">Envoi rapide · %1$s épinglé</item>
+        <item quantity="many">Envoi rapide · %1$s épinglés</item>
+        <item quantity="other">Envoi rapide · %1$s épinglés</item>
+    </plurals>
+    <!-- Línea plegable del final (se ve en MAYÚSCULAS): licencias, calibración y depuración. -->
+    <string name="settings_tools_fold">Licences et outils</string>
+    <!-- TalkBack de las líneas plegables: su estado y qué hace tocarlas («toca dos veces para desplegar»). -->
+    <string name="settings_fold_open">Développé</string>
+    <string name="settings_fold_closed">Réduit</string>
+    <string name="settings_fold_expand">développer</string>
+    <string name="settings_fold_collapse">réduire</string>
 
     <!-- ============================================================ 01 objetivo -->
 
@@ -53,7 +89,7 @@
     <string name="settings_monthly_label">Bilan mensuel</string>
     <string name="settings_monthly_description">Le 1er, le mois précédent compté, avec son bilan.</string>
     <!-- Aviso en directo al pasar el objetivo (apagado por defecto). -->
-    <string name="settings_goal_live_label">Alerte en franchissant l’objectif</string>
+    <string name="settings_goal_live_label">Alerte d’objectif</string>
     <!-- %1$s el objetivo con su palabra («150 vídeos»). -->
     <string name="settings_goal_live_description">Une seule alerte par jour, dès que tu dépasses %1$s.</string>
     <!-- Lo mismo sin objetivo: explica por qué no se puede encender. -->
@@ -271,7 +307,7 @@
 
     <string name="settings_debug_title">DÉBOGAGE</string>
     <string name="settings_debug_description">Uniquement dans la version de test. Remplace tes données par un historique inventé de dix semaines.</string>
-    <string name="settings_debug_seed">GÉNÉRER DES DONNÉES D’EXEMPLE</string>
+    <string name="settings_debug_seed">CRÉER DES DONNÉES TEST</string>
     <string name="settings_debug_failed">Impossible de générer les données d’exemple.</string>
     <!-- %1$s los vídeos inventados con su palabra («12.408 vídeos»). -->
     <string name="settings_debug_seeded">Prêt\u00A0: %1$s d’exemple.</string>

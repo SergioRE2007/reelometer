@@ -28,7 +28,7 @@
     <string name="stats_ghost_legend">SEMAINE D’AVANT</string>
 
     <!-- Etiquetas de las líneas de PATRONES (en frase, a la izquierda; la cifra va a la derecha). -->
-    <string name="stats_line_peak_hour">Heure de pointe</string>
+    <string name="stats_line_peak_hour">Le pic</string>
     <!-- El día de la semana con más vídeos de media. -->
     <string name="stats_line_weak_day">Jour faible</string>
     <!-- El día con más vídeos del periodo. -->
@@ -46,7 +46,7 @@
     <string name="stats_line_this_week_so_far">Cette semaine, jusqu’ici</string>
     <string name="stats_line_that_week">Cette semaine-là</string>
     <!-- La semana anterior, contando solo hasta el mismo día y hora que la actual. -->
-    <string name="stats_line_previous_same_stretch">La précédente, à la même heure</string>
+    <string name="stats_line_previous_same_stretch">La précédente, à ce stade</string>
     <string name="stats_line_previous">La précédente</string>
     <string name="stats_line_previous_whole">La précédente, entière</string>
     <string name="stats_line_difference">Écart</string>

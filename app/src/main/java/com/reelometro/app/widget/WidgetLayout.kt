@@ -127,7 +127,10 @@ internal data class WidgetLayout(
 
             // En orden de preferencia (a igualdad de marcador, gana la primera).
             val candidates = buildList {
-                for (spec in listOf(dataL, data)) {
+                for (spec in listOf(dataL, data, dataS)) {
+                    // El tiempo (o «SIN SEÑAL») va en una línea debajo: si no cabe a lo ancho en este estilo,
+                    // se cortaba («SIN SE» con la fuente al 130 %). Se prueba el siguiente, más pequeño.
+                    if (detail != null && text.width(detail, spec) > innerW) continue
                     val rows = top + (if (detail != null) GAP + text.lineHeight(spec) else 0f) + bar
                     add(layout(Arrangement.STACKED, fit(innerW, innerH - rows), spec, detail != null, statusFits, goal))
                 }

@@ -23,6 +23,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
@@ -434,16 +435,31 @@ internal fun FlapBoard(
                 }
 
                 val frame = FlapFrame()
+                val groupMark = FlapGroupMark.current
 
                 onDrawBehind {
                     for (i in cells.indices) {
                         val left = lefts[i]
                         when (val cell = cells[i]) {
-                            FlapCell.Separator -> drawCircle(
-                                glyphColor,
-                                radius = dot / 2f,
-                                center = Offset(left + dot / 2f, baseline - dot / 2f),
-                            )
+                            // Separador de miles del idioma: «.» (es, it, pt-BR), «,» (en) o solo el hueco (fr).
+                            FlapCell.Separator -> when (groupMark) {
+                                FlapGroupMark.SPACE -> Unit
+                                FlapGroupMark.DOT -> drawCircle(
+                                    glyphColor,
+                                    radius = dot / 2f,
+                                    center = Offset(left + dot / 2f, baseline - dot / 2f),
+                                )
+                                FlapGroupMark.COMMA -> {
+                                    drawCircle(glyphColor, radius = dot / 2f, center = Offset(left + dot / 2f, baseline - dot / 2f))
+                                    drawLine(
+                                        glyphColor,
+                                        start = Offset(left + dot * 0.85f, baseline - dot * 0.35f),
+                                        end = Offset(left + dot * 0.2f, baseline + dot * 0.9f),
+                                        strokeWidth = dot * 0.45f,
+                                        cap = StrokeCap.Round,
+                                    )
+                                }
+                            }
 
                             is FlapCell.Tile -> {
                                 val col = state.column(cell.position)

@@ -95,7 +95,7 @@ fun HourLine(
                 onScrubStart = { pos, size ->
                     pending.replace(null)
                     selection.intValue = hourAt(pos.x, size.width.toFloat(), lastHour)
-                    haptics.longPress()
+                    haptics.tick()
                 },
                 onScrub = { pos, size ->
                     val h = hourAt(pos.x, size.width.toFloat(), lastHour)

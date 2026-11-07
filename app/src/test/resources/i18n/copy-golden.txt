@@ -33,6 +33,7 @@ Buttons.EXPORT_CSV → EXPORTAR CSV
 Buttons.IMPORT_ADD → AÑADIR
 Buttons.IMPORT_CSV → IMPORTAR CSV
 Buttons.IMPORT_REPLACE → SUSTITUIR TODO
+Buttons.IMPORT_REPLACE_CONFIRM → SUSTITUIR
 Buttons.NEXT → SIGUIENTE
 Buttons.NOT_NOW → AHORA NO
 Buttons.OPEN_ACCESSIBILITY → ABRIR ACCESIBILIDAD
@@ -9747,6 +9748,10 @@ SettingsCopy.EXPORT_DESCRIPTION → Tu historial en un archivo: ábrelo en una h
 SettingsCopy.EXPORT_EMPTY → No hay nada que exportar todavía.
 SettingsCopy.EXPORT_FAILED → No se ha podido exportar. Prueba otra vez o elige otra carpeta.
 SettingsCopy.EXPORT_LABEL → EXPORTAR CSV
+SettingsCopy.FOLD_CLOSED → Plegado
+SettingsCopy.FOLD_COLLAPSE → plegar
+SettingsCopy.FOLD_EXPAND → desplegar
+SettingsCopy.FOLD_OPEN → Desplegado
 SettingsCopy.FONTS_LICENSE → Tipografías: Bricolage Grotesque, JetBrains Mono e Instrument Serif, con licencia SIL Open Font License 1.1.
 SettingsCopy.FONTS_LINE → Tipografías
 SettingsCopy.FONTS_VALUE → SIL OFL
@@ -9765,7 +9770,19 @@ SettingsCopy.IMPORT_DIALOG_TITLE → ¿Importar este archivo?
 SettingsCopy.IMPORT_LABEL → IMPORTAR CSV
 SettingsCopy.IMPORT_MODES → AÑADIR suma lo nuevo a lo que ya tienes. SUSTITUIR TODO borra lo de ahora y deja solo lo del archivo.
 SettingsCopy.IMPORT_REPLACE → SUSTITUIR TODO
+SettingsCopy.IMPORT_REPLACE_CONFIRM → SUSTITUIR
 SettingsCopy.IMPORT_REPLACE_TITLE → ¿Sustituir todo?
+SettingsCopy.INDEX_ABOUT → Acerca de
+SettingsCopy.INDEX_APPS → Apps
+SettingsCopy.INDEX_BACK → ÍNDICE
+SettingsCopy.INDEX_BACK_DESCRIPTION → Volver al índice de Ajustes
+SettingsCopy.INDEX_DATA → Tus datos
+SettingsCopy.INDEX_GOAL → Objetivo
+SettingsCopy.INDEX_HERE → Aquí estabas
+SettingsCopy.INDEX_NOTIFICATIONS → Avisos
+SettingsCopy.INDEX_PRIVACY → Privacidad
+SettingsCopy.INDEX_SERVICE → Servicio
+SettingsCopy.INDEX_THEME → Tema
 SettingsCopy.LICENSES_CLOSE → CERRAR
 SettingsCopy.LICENSES_LABEL → LICENCIAS
 SettingsCopy.LICENSES_TITLE → Licencias
@@ -9827,6 +9844,7 @@ SettingsCopy.TIME_MINUTE → MINUTOS
 SettingsCopy.TIME_MINUTE_DOWN → Cinco minutos menos
 SettingsCopy.TIME_MINUTE_UP → Cinco minutos más
 SettingsCopy.TITLE → Ajustes
+SettingsCopy.TOOLS_FOLD → Licencias y herramientas
 SettingsCopy.VERSION_LINE → Versión
 SettingsCopy.calibrationTapsLeft(0) → Calibración desbloqueada. Está al final de Ajustes.
 SettingsCopy.calibrationTapsLeft(1) → A un toque de la calibración.
@@ -9977,7 +9995,7 @@ SettingsCopy.section.description → El permiso de accesibilidad es lo que me de
 SettingsCopy.section.description → Lo que apagues aquí deja de contarse al momento. Lo ya contado se queda.
 SettingsCopy.section.description → Qué pasa con tus datos, sin letra pequeña.
 SettingsCopy.section.description → Reelómetro no tiene relación con TikTok, Instagram ni YouTube. Solo cuenta lo que ves en ellas.
-SettingsCopy.section.description → Todo lo contado vive en este móvil. Puedes llevártelo o borrarlo.
+SettingsCopy.section.description → Todo lo contado vive en este móvil. Puedes llevártelo a otro, traerlo de vuelta o borrarlo.
 SettingsCopy.section.description → Un máximo de vídeos al día. Sirve para el «te quedan» de Hoy y para las rachas.
 SettingsCopy.section.description → Un resumen al día, a la hora que elijas, y otro cada mes.
 SettingsCopy.section.title → ACERCA DE

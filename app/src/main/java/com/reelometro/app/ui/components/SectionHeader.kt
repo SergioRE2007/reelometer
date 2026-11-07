@@ -37,7 +37,7 @@ internal const val DisplayCapHeight = 0.66f
  * mayúsculas y, si hay, un dato final. Para TalkBack es un encabezado.
  *
  * @param index número de sección (se escribe con dos cifras: «01»); `null` para no numerar.
- * @param trailing dato corto al final del filete («3», «TOP 10»).
+ * @param trailing dato corto al final del filete («3», «TOP 10»); si no cabe entero, no sale.
  */
 @Composable
 fun SectionHeader(
@@ -77,10 +77,15 @@ fun SectionHeader(
         val indexP = if (hasIndex) measurables[i++].measure(Constraints(maxWidth = width)) else null
         val titleM = measurables[i++]
         val indexW = indexP?.let { it.width + gap } ?: 0
-        // El título manda; el dato final se queda con lo que sobre (y se recorta o desaparece).
+        // El título manda; el dato final sale entero o no sale («NIVEL 2 DE…» es un dato a medias): con la fuente
+        // grande, si no cabe, el filete llega hasta el borde.
         val titleP = titleM.measure(Constraints(maxWidth = max(0, width - indexW - gap - minRule)))
         val room = width - indexW - titleP.width - gap * 2 - minRule
-        val trailingP = if (hasTrailing && room > gap * 2) measurables[i].measure(Constraints(maxWidth = room)) else null
+        val trailingP = if (hasTrailing && room > gap * 2 && measurables[i].maxIntrinsicWidth(Constraints.Infinity) <= room) {
+            measurables[i].measure(Constraints(maxWidth = room))
+        } else {
+            null
+        }
         val height = maxOf(indexP?.height ?: 0, titleP.height, trailingP?.height ?: 0)
         val baseline = titleP[FirstBaseline].takeIf { it != AlignmentLine.Unspecified } ?: titleP.height
 

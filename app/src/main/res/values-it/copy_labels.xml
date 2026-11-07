@@ -89,6 +89,8 @@
     <string name="button_import_csv">IMPORTA CSV</string>
     <string name="button_import_add">AGGIUNGI</string>
     <string name="button_import_replace">SOSTITUISCI TUTTO</string>
+    <!-- Botón de confirmar en «¿Sustituir todo?»: corto, cabe junto al icono con la fuente al 130 %. -->
+    <string name="button_import_replace_confirm">SOSTITUIRE</string>
     <string name="button_see_summary">VEDI RIEPILOGO</string>
     <string name="button_see_permission">VEDI IL PERMESSO</string>
     <string name="button_remove_goal">TOGLI OBIETTIVO</string>

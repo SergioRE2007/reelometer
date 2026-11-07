@@ -12,6 +12,7 @@ import androidx.core.graphics.createBitmap
 import com.reelometro.app.R
 import com.reelometro.app.game.FlapMood
 import com.reelometro.app.game.FlapSprite
+import com.reelometro.app.ui.components.flap.FlapGroupMark
 import com.reelometro.app.ui.components.flap.FlapGlyphMetrics
 import com.reelometro.app.ui.components.flap.FlapGlyphs
 import com.reelometro.app.ui.components.flap.FlapProportions
@@ -82,12 +83,24 @@ internal class WidgetGlyphs private constructor(context: Context) : TextMetrics 
 
     /** Máscara del punto de millar: un círculo apoyado en la línea base, del alto de una ficha. */
     @Synchronized
-    fun dot(board: BoardSpec): Bitmap = cached("d|${board.fontPx}|${board.dotWPx}x${board.tileHPx}") {
-        mask(board.dotWPx, board.tileHPx).also { bmp ->
-            val r = board.fontPx * FlapProportions.DOT / 2f
-            Canvas(bmp).drawCircle(board.dotWPx / 2f, board.baselinePx - r, r, fill)
+    fun dot(board: BoardSpec, mark: FlapGroupMark = FlapGroupMark.current): Bitmap =
+        cached("d|${mark.name}|${board.fontPx}|${board.dotWPx}x${board.tileHPx}") {
+            mask(board.dotWPx, board.tileHPx).also { bmp ->
+                // Separador de miles del idioma: punto, coma (punto con rabito) o nada (francés: solo el hueco).
+                val r = board.fontPx * FlapProportions.DOT / 2f
+                val canvas = Canvas(bmp)
+                if (mark != FlapGroupMark.SPACE) canvas.drawCircle(board.dotWPx / 2f, board.baselinePx - r, r, fill)
+                if (mark == FlapGroupMark.COMMA) {
+                    val d = r * 2f
+                    val tail = android.graphics.Paint(fill).apply {
+                        style = android.graphics.Paint.Style.STROKE
+                        strokeWidth = d * 0.45f
+                        strokeCap = android.graphics.Paint.Cap.ROUND
+                    }
+                    canvas.drawLine(board.dotWPx / 2f + d * 0.35f, board.baselinePx - d * 0.35f, board.dotWPx / 2f - d * 0.3f, board.baselinePx + d * 0.9f, tail)
+                }
+            }
         }
-    }
 
     /**
      * Máscara de una capa de Flap: los píxeles de [FlapSprite.frame] ([mood], ojos abiertos) que son

@@ -301,7 +301,10 @@ private fun TourPanel(state: TourState, step: TourStep, hole: Rect?, onNext: () 
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .then(if (cramped) Modifier.background(colors.bg).padding(vertical = Space.x4) else Modifier)
+                    // Fondo propio siempre: con el velo (90 %) lo de detrás aún se transparenta y, con la fuente
+                    // al 130 % y el tema claro, se mezclaba con el texto del paso.
+                    .background(colors.bg)
+                    .then(if (cramped) Modifier.padding(vertical = Space.x4) else Modifier)
                     .semantics { paneTitle = TourCopy.PANE_TITLE },
             ) {
                 // El texto se desplaza si no cabe; los botones, siempre a la vista.

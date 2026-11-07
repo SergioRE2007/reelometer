@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.TextAutoSize
+import androidx.compose.foundation.text.modifiers.TextAutoSizeLayoutScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,10 +25,15 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.em
+import androidx.compose.ui.unit.sp
 import com.reelometro.app.copy.PassportCopy
 import com.reelometro.app.game.StampKind
 import com.reelometro.app.ui.components.pressable
@@ -106,18 +113,28 @@ fun PassportStamp(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(Space.x1, Alignment.CenterVertically),
             ) {
-                StampText(stamp.kindLabel, type.label, textColor, maxLines = 1)
+                // Rótulo y fecha van arriba y abajo, donde el hexágono y el octógono se estrechan: menos ancho
+                // para que encojan antes de pisar el borde (fuente al 130 %).
+                val edge = Modifier.fillMaxWidth(edgeWidth(stamp.kind))
+                StampText(stamp.kindLabel, type.label, textColor, maxLines = 1, modifier = edge)
                 // El nombre se mide el último: el rótulo y la fecha tienen siempre su línea (130 %).
                 StampText(stamp.name, type.labelL, textColor, maxLines = 2, modifier = Modifier.weight(1f, fill = false))
-                StampText(stamp.date ?: stamp.progressText ?: PassportCopy.STAMP_PENDING, type.label, textColor, maxLines = 1)
+                StampText(stamp.date ?: stamp.progressText ?: PassportCopy.STAMP_PENDING, type.label, textColor, maxLines = 1, modifier = edge)
             }
         }
     }
 }
 
+/** Ancho de las líneas de arriba y abajo (rótulo y fecha) según la forma: donde se estrecha, menos. */
+private fun edgeWidth(kind: StampKind): Float = when (kind) {
+    StampKind.IRONICO -> 0.8f // la fecha rozaba el borde en portugués con 0,86
+    StampKind.RETO -> 0.84f // «4 OCT. 2026» en francés pisaba el borde con 0,92
+    else -> 1f
+}
+
 /**
- * Texto del sello: centrado y encogiendo hasta caber (fuente al 130 % incluida), sin cortes. El
- * interlineado va en `em` para que encoja con la letra.
+ * Texto del sello: centrado y encogiendo hasta caber (fuente al 130 % incluida), sin cortes ni palabras
+ * partidas entre líneas («TRIPLET / E»). El interlineado va en `em` para que encoja con la letra.
  */
 @Composable
 private fun StampText(text: String, style: TextStyle, color: Color, maxLines: Int, modifier: Modifier = Modifier) {
@@ -130,8 +147,35 @@ private fun StampText(text: String, style: TextStyle, color: Color, maxLines: In
             lineHeight = (style.lineHeight.value / style.fontSize.value).em,
         ),
         maxLines = maxLines,
-        autoSize = TextAutoSize.StepBased(minFontSize = style.fontSize * 0.55f, maxFontSize = style.fontSize, stepSize = style.fontSize * 0.05f),
+        autoSize = WholeWordsAutoSize(min = style.fontSize * 0.5f, max = style.fontSize, step = style.fontSize * 0.05f),
     )
+}
+
+/**
+ * Como `TextAutoSize.StepBased`, pero un tamaño solo vale si el texto cabe **y no parte ninguna palabra** entre
+ * dos líneas: Compose da por bueno «TRIPLET / E» si entra en las líneas permitidas. Si ni el mínimo vale, el mínimo.
+ */
+private class WholeWordsAutoSize(private val min: TextUnit, private val max: TextUnit, private val step: TextUnit) : TextAutoSize {
+    override fun TextAutoSizeLayoutScope.getFontSize(constraints: Constraints, text: AnnotatedString): TextUnit {
+        var size = max.value
+        while (size > min.value) {
+            val layout = performLayout(constraints, text, size.sp)
+            if (!layout.hasVisualOverflow && !layout.splitsAWord(text.text)) return size.sp
+            size -= step.value
+        }
+        return min
+    }
+
+    override fun equals(other: Any?): Boolean =
+        other is WholeWordsAutoSize && other.min == min && other.max == max && other.step == step
+
+    override fun hashCode(): Int = (min.hashCode() * 31 + max.hashCode()) * 31 + step.hashCode()
+}
+
+/** Alguna línea acaba en mitad de una palabra (letra o cifra a los dos lados del corte). */
+private fun TextLayoutResult.splitsAWord(text: String): Boolean = (0 until lineCount - 1).any { line ->
+    val end = getLineEnd(line)
+    end in 1 until text.length && text[end - 1].isLetterOrDigit() && text[end].isLetterOrDigit()
 }
 
 /** Doble borde con la forma de la familia del sello. */

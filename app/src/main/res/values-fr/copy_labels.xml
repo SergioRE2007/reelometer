@@ -70,7 +70,7 @@
     <string name="button_connect">CONNECTER</string>
     <string name="button_retry">RÉESSAYER</string>
     <string name="button_share">PARTAGER</string>
-    <string name="button_save">ENREGISTRER</string>
+    <string name="button_save">GARDER</string>
     <string name="button_next">SUIVANT</string>
     <string name="button_start">COMMENCER</string>
     <!-- Acepta el aviso de accesibilidad y abre los ajustes para activar el servicio. -->
@@ -89,6 +89,8 @@
     <string name="button_import_csv">IMPORTER CSV</string>
     <string name="button_import_add">AJOUTER</string>
     <string name="button_import_replace">TOUT REMPLACER</string>
+    <!-- Botón de confirmar en «¿Sustituir todo?»: corto, cabe junto al icono con la fuente al 130 %. -->
+    <string name="button_import_replace_confirm">REMPLACER</string>
     <string name="button_see_summary">VOIR LE BILAN</string>
     <string name="button_see_permission">VOIR L’AUTORISATION</string>
     <string name="button_remove_goal">SUPPRIMER L’OBJECTIF</string>

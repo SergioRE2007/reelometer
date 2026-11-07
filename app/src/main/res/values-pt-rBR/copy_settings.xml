@@ -21,7 +21,7 @@
     <string name="settings_section_theme_title">TEMA</string>
     <string name="settings_section_theme_description">O placar fica mais bonito no escuro, mas quem manda é você.</string>
     <string name="settings_section_data_title">SEUS DADOS</string>
-    <string name="settings_section_data_description">Tudo o que foi contado fica neste celular. Você pode levar ou apagar.</string>
+    <string name="settings_section_data_description">Tudo o que foi contado fica neste celular. Você pode levar, trazer de volta ou apagar.</string>
     <string name="settings_section_service_title">SERVIÇO</string>
     <string name="settings_section_service_description">A permissão de acessibilidade é o que me deixa contar. Aqui você vê se ela está ativa.</string>
     <string name="settings_section_privacy_title">PRIVACIDADE</string>
@@ -32,6 +32,42 @@
     <!-- Antetítulo de los diálogos que salen de una sección: «05 · TUS DATOS». %1$s el número de la
          sección («05»), %2$s su título (ya en MAYÚSCULAS). -->
     <string name="settings_dialog_kicker">%1$s · %2$s</string>
+
+    <!-- Índice de arriba: un acceso por sección que salta a ella. Nombres cortos (se ven en MAYÚSCULAS,
+         en media fila y con el número delante): cuanto más cortos, mejor. -->
+    <string name="settings_index_goal">Meta</string>
+    <string name="settings_index_notifications">Avisos</string>
+    <string name="settings_index_apps">Apps</string>
+    <string name="settings_index_theme">Tema</string>
+    <string name="settings_index_data">Seus dados</string>
+    <string name="settings_index_service">Serviço</string>
+    <string name="settings_index_privacy">Privacidade</string>
+    <string name="settings_index_about">Sobre</string>
+    <!-- TalkBack de cada acceso del índice. %1$s el nombre corto de la sección («Tus datos»). -->
+    <string name="settings_index_go">Ir para %1$s</string>
+    <!-- TalkBack: el acceso de la sección donde estabas antes de volver al índice. -->
+    <string name="settings_index_here">Você estava aqui</string>
+    <!-- Barra fija de arriba al bajar por la lista: botón para volver al índice (MAYÚSCULAS, muy corto). -->
+    <string name="settings_index_back">ÍNDICE</string>
+    <!-- TalkBack del botón ÍNDICE. -->
+    <string name="settings_index_back_description">Voltar ao índice das configurações</string>
+
+    <!-- Línea plegable del envío rápido (se ve en MAYÚSCULAS): apagado, encendido sin nadie fijado y con
+         %1$s fijados (la cifra ya formateada). -->
+    <string name="settings_quick_send_fold_off">Envio rápido · desligado</string>
+    <string name="settings_quick_send_fold_none">Envio rápido · ninguém fixado</string>
+    <plurals name="settings_quick_send_fold">
+        <item quantity="one">Envio rápido · %1$s fixado</item>
+        <item quantity="many">Envio rápido · %1$s fixados</item>
+        <item quantity="other">Envio rápido · %1$s fixados</item>
+    </plurals>
+    <!-- Línea plegable del final (se ve en MAYÚSCULAS): licencias, calibración y depuración. -->
+    <string name="settings_tools_fold">Licenças e ferramentas</string>
+    <!-- TalkBack de las líneas plegables: su estado y qué hace tocarlas («toca dos veces para desplegar»). -->
+    <string name="settings_fold_open">Expandido</string>
+    <string name="settings_fold_closed">Recolhido</string>
+    <string name="settings_fold_expand">expandir</string>
+    <string name="settings_fold_collapse">recolher</string>
 
     <!-- ============================================================ 01 objetivo -->
 

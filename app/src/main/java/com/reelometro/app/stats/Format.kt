@@ -42,6 +42,9 @@ object Format {
 
     private class Symbols(val locale: Locale, val group: Char, val decimal: Char)
 
+    /** Separador de miles del idioma de los textos («.» en español, «,» en inglés, espacio fino en francés). */
+    val groupingSeparator: Char get() = symbols().group
+
     @Volatile
     private var symbols: Symbols? = null
 

@@ -26,7 +26,7 @@
     <!-- Coches y motos. -->
     <string name="category_motor">Auto et moto</string>
     <string name="category_dinero">Argent et affaires</string>
-    <string name="category_noticias">Actualités et politique</string>
+    <string name="category_noticias">Actu et politique</string>
     <string name="category_relaciones">Couple et relations</string>
     <!-- Vídeos que no encajan en ninguna categoría (o sin descripción). -->
     <string name="category_otros">Non classé</string>

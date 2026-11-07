@@ -160,7 +160,8 @@ sealed interface PeriodResult {
 /** Mapeo puro de los datos a [StatsUiState]. */
 object StatsMapper {
     val KINDS = listOf(PeriodKind.WEEK, PeriodKind.MONTH, PeriodKind.YEAR, PeriodKind.ALL)
-    val TABS: List<String> = KINDS.map { StatsCopy.tab(copyPeriod(it)) }
+    // `get()`: se relee al cambiar de idioma con la app abierta (antes se quedaba en el anterior).
+    val TABS: List<String> get() = KINDS.map { StatsCopy.tab(copyPeriod(it)) }
 
     const val CATEGORY_ROWS = 8
     const val CREATOR_ROWS = 10
@@ -226,7 +227,8 @@ object StatsMapper {
 
     /** La línea solo se puede partir por los « · »: «18 S POR VÍDEO» nunca queda en dos renglones. */
     internal fun unbreakableSegments(line: String): String =
-        line.split(SEPARATOR).joinToString(SEPARATOR) { it.replace(' ', Format.NBSP) }
+        // El «·» va pegado (espacio duro) a lo de antes: si la línea parte, queda al final, no al principio de la siguiente.
+        line.split(SEPARATOR).joinToString(Format.NBSP + "· ") { it.replace(' ', Format.NBSP) }
 
     private const val SEPARATOR = " · "
 

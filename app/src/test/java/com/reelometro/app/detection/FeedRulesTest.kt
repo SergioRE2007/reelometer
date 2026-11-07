@@ -77,7 +77,7 @@ class FeedRulesTest {
     fun `youtube - tres paginas asomando en shorts siguen siendo el feed y la portada no`() {
         assertEquals(Verdict.FEED, eval(Platform.YOUTUBE, "com.google.android.youtube:id/reel_recycler", recyclerClass, h = 2200, from = 4, to = 6).verdict)
         assertEquals(Verdict.OTHER_SCREEN, eval(Platform.YOUTUBE, "com.google.android.youtube:id/reel_recycler", recyclerClass, h = 2200, from = 4, to = 8).verdict)
-        assertTrue(FeedRules.rulesFor(Platform.YOUTUBE).contentCheck)
+        assertFalse(FeedRules.rulesFor(Platform.YOUTUBE).contentCheck) // YouTube 21.44 no expone autor ni título
         assertFalse(FeedRules.rulesFor(Platform.TIKTOK).contentCheck)
         assertFalse(FeedRules.rulesFor(Platform.INSTAGRAM).contentCheck)
     }

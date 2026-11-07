@@ -222,6 +222,9 @@ class ReelAccessibilityService : AccessibilityService() {
     private val dumpReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (!BuildConfig.DEBUG) return
+            // `--ez active true`: la ventana activa de cualquier app (YouTube…); si no, la de Instagram.
+            val active = intent.getBooleanExtra("active", false)
+            if (!BuildConfig.DEBUG) return
             readScope.launch {
                 val lines = mutableListOf<String>()
                 fun visit(n: UiNode, depth: Int) {
@@ -237,7 +240,8 @@ class ReelAccessibilityService : AccessibilityService() {
                     if (n.text != null || n.contentDescription != null || !n.viewId.isNullOrEmpty()) lines += "  ".repeat(depth.coerceAtMost(20)) + label
                     n.children.forEach { visit(it, depth + 1) }
                 }
-                instagramRoots().forEachIndexed { i, root ->
+                val roots = if (active) listOfNotNull(rootInActiveWindow?.let { AccessibilityUiNode(it) }) else instagramRoots()
+                roots.forEachIndexed { i, root ->
                     lines += "── raíz $i"
                     visit(root, 0)
                 }
@@ -564,6 +568,8 @@ class ReelAccessibilityService : AccessibilityService() {
                         pageHeight = r.height(),
                         indexStyle = FeedRules.indexStyleFor(cls),
                         now = now,
+                        settleTolerance = FeedRules.rulesFor(platform).settleTolerance,
+                        resumeOnReturn = FeedRules.rulesFor(platform).resumeOnReturn,
                     ),
                 )
                 if (started) {

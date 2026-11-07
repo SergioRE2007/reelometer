@@ -157,7 +157,7 @@ fun DailyBars(
                     onScrubStart = { pos, size ->
                         pending.replace(null)
                         selection.intValue = indexAt(pos.x, size.width.toFloat(), n)
-                        haptics.longPress()
+                        haptics.tick()
                     },
                     onScrub = { pos, size ->
                         val i = indexAt(pos.x, size.width.toFloat(), n)

@@ -200,10 +200,10 @@
     <!-- Sábado y domingo bajo el objetivo («finde» = fin de semana, coloquial). -->
     <string name="passport_stamp_fin_de_semana">FDS LIMPO</string>
     <!-- Rachas de días seguidos bajo el objetivo. -->
-    <string name="passport_stamp_racha_3">SÉRIE DE 3</string>
-    <string name="passport_stamp_racha_7">SÉRIE DE 7</string>
-    <string name="passport_stamp_racha_14">SÉRIE DE 14</string>
-    <string name="passport_stamp_racha_30">SÉRIE DE 30</string>
+    <string name="passport_stamp_racha_3">SÉRIE DE\u00A03</string>
+    <string name="passport_stamp_racha_7">SÉRIE DE\u00A07</string>
+    <string name="passport_stamp_racha_14">SÉRIE DE\u00A014</string>
+    <string name="passport_stamp_racha_30">SÉRIE DE\u00A030</string>
     <!-- Una semana un 20 % por debajo de la anterior. %1$s es «−20 %». -->
     <string name="passport_stamp_semana_menos_20">SEMANA %1$s</string>
     <!-- Un mes con menos vídeos que el anterior. -->

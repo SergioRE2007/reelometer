@@ -176,7 +176,7 @@ fun CalendarHeatmap(
                     onScrubStart = { pos, _ ->
                         pending.replace(null)
                         selection.intValue = cellIndexAt(pos)
-                        haptics.longPress()
+                        haptics.tick()
                     },
                     onScrub = { pos, _ ->
                         val i = cellIndexAt(pos)

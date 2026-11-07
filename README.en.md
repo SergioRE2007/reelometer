@@ -105,7 +105,7 @@ TikTok · Instagram · YouTube
 ```
 
 Every platform changes its screens often, so the app includes a hidden **Calibration** console (Settings (Ajustes) ›
-About (Acerca de) › tap the version 7 times) that shows live which events arrive and which videos it counts.
+About (Acerca de) › tap the version 7 times; it then sits at the bottom, under «Licenses and tools») that shows live which events arrive and which videos it counts.
 
 ## Design: «the scoreboard»
 
@@ -142,7 +142,7 @@ cd reelometro
 
 If Gradle can't find the SDK, create `local.properties` with `sdk.dir=/path/to/Android/Sdk` or open the project in
 Android Studio. The debug build includes a component gallery and a sample-data generator (Settings (Ajustes) ›
-Debugging (Depuración)).
+Licenses and tools › Debugging (Depuración)).
 
 ### Technology
 
@@ -165,14 +165,15 @@ app/src/main/java/com/reelometro/app/
 
 ## Status
 
-Version **1.6.0**. Honestly:
+Version **1.7.0**. Honestly:
 
 - **Tested on a real phone** (a Pixel with Android 17): TikTok and Instagram count correctly. Instagram quick send has
   been measured send by send: between 0.5 and 0.93 s to a person and 1.4–1.6 s to a group that has to be searched for
   (almost all of that time is Instagram's search). The bubbles and the photo chosen from the gallery have also been
   tested on that phone.
-- **YouTube Shorts doesn't count quite right yet** on the real phone. The detector has been strengthened, but it still
-  needs calibrating with a log from the Calibration console.
+- **YouTube Shorts** (1.6.1): calibrated with a real log from a Pixel (YouTube 21.44). It used to count about 6 out of
+  27 Shorts; in a check round it now counted 7 out of 7. YouTube changes without notice: if it stops adding up, the
+  Calibration console shows why.
 - **Checked on the emulator**: the main screens in light and dark theme and with the font at 130 %, and the release
   build going through every route without crashes.
 - **Not checked yet**: the Passport and the guided tour haven't had a full visual review on screen; quick send with
@@ -184,7 +185,9 @@ Version **1.6.0**. Honestly:
 - **Import CSV** (1.6.0): covered by tests (round trip through the database, CSVs from every earlier version,
   importing twice without duplicates), on the emulator and with a real CSV from a Pixel
   (798 videos: all of them come in, and none is duplicated on a second import).
-- It builds and passes its 814 JVM tests. The screenshots in this README use sample data.
+- **1.7.0**: charts can be scrubbed by sliding a finger sideways (no long press) and Settings has an index at the
+  top that jumps to each section; quick send and the tools are folded. Tested on the emulator.
+- It builds and passes its 830 JVM tests. The screenshots in this README use sample data.
 
 ## Support the project
 

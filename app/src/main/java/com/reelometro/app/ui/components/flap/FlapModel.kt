@@ -257,3 +257,27 @@ internal fun fitFontPx(
     if (heightEm > 0f && maxHeightPx.isFinite()) fs = min(fs, maxHeightPx / heightEm)
     return fs.coerceAtLeast(0f)
 }
+
+/** Cómo se dibuja el separador de miles entre fichas, según el idioma ([Format.groupingSeparator]). */
+internal enum class FlapGroupMark {
+    /** «1.234» (español, italiano, portugués de Brasil). */
+    DOT,
+
+    /** «1,234» (inglés): un punto con rabito. */
+    COMMA,
+
+    /** «1 234» (francés): solo el hueco. */
+    SPACE,
+    ;
+
+    companion object {
+        fun of(separator: Char): FlapGroupMark = when {
+            separator == ',' -> COMMA
+            separator.isWhitespace() || Character.isSpaceChar(separator) -> SPACE
+            else -> DOT
+        }
+
+        /** La del idioma actual de los textos. */
+        val current: FlapGroupMark get() = of(Format.groupingSeparator)
+    }
+}

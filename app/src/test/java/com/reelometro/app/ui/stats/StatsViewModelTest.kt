@@ -77,7 +77,8 @@ class StatsViewModelTest {
         val vm = viewModel()
         advanceUntilIdle()
         val line = (vm.uiState.value as StatsUiState.Content).summary.line
-        line.split(" · ").forEach { segment -> assertFalse("«$segment» se podría partir", ' ' in segment) }
+        // Solo se parte tras cada «·», que va pegado (espacio duro) al trozo de antes: nunca empieza una línea.
+        line.split(" · ").forEach { segment -> assertFalse("«$segment» se podría partir", ' ' in segment) }
         // El texto es el mismo que el de copy/: solo cambian los espacios de dentro de cada trozo.
         assertEquals(CopyRules.plain(StatsCopy.summaryLine(205, 205 * 15_000L, 102.5, 15_000)), CopyRules.plain(line))
     }

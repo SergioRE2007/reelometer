@@ -112,6 +112,13 @@ object CalibrationLog {
     /** Eventos capturados, el más reciente primero. */
     val events: StateFlow<List<CalibrationEvent>> = _events.asStateFlow()
 
+    /**
+     * Copia de cada evento, ya en texto, a otro sitio (solo QA: el gancho `CALIBRATION` de la build debug lo manda a
+     * logcat para leer recorridos largos por cable, sin el tope de [CAPACITY]). `null` = nada.
+     */
+    @Volatile
+    var mirror: ((String) -> Unit)? = null
+
     /** Cabecera de la exportación (móvil, Android, versiones de las apps). La rellena el servicio. */
     @Volatile
     var environment: String? = null
@@ -128,6 +135,7 @@ object CalibrationLog {
             while (buffer.size > CAPACITY) buffer.removeLast()
             _events.value = buffer.toList()
         }
+        mirror?.invoke(event.toLine())
     }
 
     fun clear() {
