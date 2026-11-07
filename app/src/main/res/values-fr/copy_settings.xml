@@ -16,7 +16,7 @@
     <string name="settings_section_notifications_title">ALERTES</string>
     <string name="settings_section_notifications_description">Un bilan par jour, à l’heure que tu choisis, et un autre chaque mois.</string>
     <string name="settings_section_apps_title">APPS COMPTÉES</string>
-    <string name="settings_section_apps_description">Ce que tu éteins ici cesse d’être compté tout de suite. Ce qui est déjà compté reste.</string>
+    <string name="settings_section_apps_description">Ce que tu désactives ici cesse d’être compté tout de suite. Ce qui est déjà compté reste.</string>
     <!-- Sección del tema (claro, oscuro o el del sistema); también lleva la fila del idioma. -->
     <string name="settings_section_theme_title">THÈME</string>
     <string name="settings_section_theme_description">Le compteur a plus d’allure dans le noir, mais c’est toi qui décides.</string>
@@ -121,7 +121,7 @@
          con un toque. «Compartir» y «Enviar» citan los botones de Instagram y TikTok tal cual: en cada idioma,
          como los muestren esas apps en ese idioma. «X» es la zona donde se sueltan las burbujas. -->
     <string name="settings_quick_send_label">Envoi rapide</string>
-    <string name="settings_quick_send_description">Sur Instagram et TikTok. Pendant que tu regardes des vidéos, une bulle apparaît pour chaque personne ou groupe que tu épingles dans cette application. En la touchant, j’appuie pour toi sur «\u00A0Partager\u00A0», sur ce nom, puis sur «\u00A0Envoyer\u00A0»\u00A0; s’il n’apparaît pas, je le cherche dans la barre de recherche de la feuille (sur TikTok, en touchant d’abord sa loupe). Rien de plus. Si quelque chose ne colle pas, je m’arrête et tu termines. Pour afficher sa photo dans la bulle, je la découpe dans la feuille de partage quand elle est visible, ou tu choisis une photo de ta galerie\u00A0; elle reste dans ce téléphone. Fais-les glisser où tu veux (en bas, au-dessus du nom de la vidéo, elles se mettent en file) ou lâche-les sur la «\u00A0X\u00A0» pour les cacher jusqu’à la vidéo suivante.</string>
+    <string name="settings_quick_send_description">Sur Instagram et TikTok. Pendant que tu regardes des vidéos, une bulle apparaît pour chaque personne ou groupe que tu épingles dans cette application. En la touchant, j’appuie pour toi sur «\u00A0Partager\u00A0», sur ce nom, puis sur «\u00A0Envoyer\u00A0»\u00A0; s’il n’apparaît pas, je le cherche dans la barre de recherche de la feuille (sur TikTok, en touchant d’abord sa loupe). Rien de plus. Si quelque chose ne colle pas, je m’arrête et tu termines. Pour afficher sa photo dans la bulle, je la découpe dans la feuille de partage quand elle est visible, ou tu choisis une photo de ta galerie\u00A0; elle reste dans ce téléphone. Fais-les glisser où tu veux (en bas, au-dessus du nom de la vidéo, elles se mettent en file) ou lâche-les sur la «\u00A0X\u00A0» pour les masquer jusqu’à la vidéo suivante.</string>
     <!-- El gesto para enviar a dos personas a la vez. -->
     <string name="settings_quick_send_pair_hint">Pour l’envoyer à deux personnes à la fois, maintiens une bulle jusqu’à ce qu’elle se détache et lâche-la sur l’autre. Si tu en touches une autre pendant l’envoi, je l’ajoute à la même feuille.</string>
     <!-- Con «A quién envías» apagado, el envío rápido no se puede encender. -->
@@ -142,11 +142,11 @@
     <string name="settings_quick_send_pin_description">Épingler %1$s dans l’envoi rapide</string>
     <string name="settings_quick_send_unpin_description">Retirer %1$s de l’envoi rapide</string>
     <!-- Botones en MAYÚSCULAS bajo cada fijado: elegir de la galería la foto de su burbuja, cambiarla o quitarla. -->
-    <string name="settings_quick_send_photo_pick">CHOISIR PHOTO</string>
+    <string name="settings_quick_send_photo_pick">CHOISIR UNE PHOTO</string>
     <string name="settings_quick_send_photo_change">CHANGER</string>
     <string name="settings_quick_send_photo_clear">RETIRER</string>
     <string name="settings_quick_send_photo_set">Photo ajoutée. Tu la verras dans sa bulle\u00A0; elle reste uniquement dans ce téléphone.</string>
-    <string name="settings_quick_send_photo_cleared">Photo retirée. L’automatique revient ou, à défaut, les initiales.</string>
+    <string name="settings_quick_send_photo_cleared">Photo retirée. La photo automatique revient ou, à défaut, les initiales.</string>
     <string name="settings_quick_send_photo_failed">Je n’ai pas pu ouvrir cette photo. Essaie-en une autre.</string>
     <!-- TalkBack de esos botones. %1$s el nombre de la persona o el grupo. -->
     <string name="settings_quick_send_photo_pick_description">Choisir dans la galerie la photo de la bulle de %1$s</string>

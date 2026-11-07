@@ -11,7 +11,9 @@ import com.reelometro.app.stats.Format
  * es la ventana con `tv_title` que no es la del visor, el nombre es la **celda** de la fila de contactos cuya
  * descripción es el nombre, el buscador se abre con la lupa de la cabecera ([Phase.SEARCH]) y el envío se confirma
  * cuando esa ventana desaparece. En esa hoja solo se pulsan una celda o fila de contacto, la lupa de la cabecera y
- * «Enviar», y solo se escribe en el campo del buscador.
+ * «Enviar», y solo se escribe en el campo del buscador. 1.10.1: la lupa y «Enviar» se encuentran también por su sitio (en
+ * cualquier idioma), el buscador se busca en su propia ventana y una fila de contactos abierta desplazada se vuelve al
+ * principio una vez (la única acción que no es un [Step]: [UiNode.scrollBackward]).
  *
  * Es una máquina de estados sin Android. El servicio la arranca con [start] al tocar la burbuja (o al soltar
  * una encima de otra) y, cada ~100 ms (antes si Instagram avisa de un cambio), le pasa las raíces de las
@@ -340,6 +342,32 @@ class QuickSender(
 
     /** Hoja en su propia ventana: se buscó el campo del buscador (si el aprendido no salió, se olvida). */
     private var ownFieldSought = false
+
+    /**
+     * 1.10.1, hoja en su propia ventana: la fila de contactos se volvió al principio en este envío (TikTok la abre a veces
+     * desplazada). Solo una vez por envío; [rowScrolledAt], cuándo, para darle [ROW_SCROLL_SETTLE_MS] antes de ir a la lupa.
+     */
+    private var rowScrolled = false
+    private var rowScrolledAt: Long? = null
+
+    /**
+     * 1.10.1: la etiqueta de la lupa pulsada, tal cual (la de su idioma, aunque no esté en ninguna lista): con ella se pide al
+     * atajo la lupa del buscador, que lleva la misma, y vale como «lupa al lado» del campo ([besideSearchButton]).
+     */
+    private var lupaWord: String? = null
+
+    /** 1.10.1: la etiqueta del «Enviar» pulsado, tal cual: la confirmación lo busca por ella (y no por todas las palabras). */
+    private var sentWord: String? = null
+
+    /** El «Enviar» pulsado llevaba un id conocido ([PlatformProfile.sendIds]): la confirmación lo puede pedir por él. */
+    private var sentById = false
+
+    /**
+     * Revisión de la 1.10.1: con la fila recién vuelta al principio (aún moviéndose), la celda del destino solo se pulsa si
+     * sale en el mismo sitio en dos lecturas seguidas (una celda reciclada a mitad de movimiento podría ser otra persona).
+     * La clave del destino y dónde se vio la última vez.
+     */
+    private var settlingCell: Pair<String, NodeBounds>? = null
     private var waitForClosedSheet = false
     private var phase = Phase.SHARE
     private var phaseSince = 0L
@@ -465,6 +493,12 @@ class QuickSender(
         searchOpen = false
         rowLoaded = false
         ownFieldSought = false
+        rowScrolled = false
+        rowScrolledAt = null
+        lupaWord = null
+        sentWord = null
+        sentById = false
+        settlingCell = null
         dests.clear()
         targets.distinctBy { RecipientDetector.normalize(it.name) }.forEach { dests += Dest(it, dests.size + 1) }
         running = dests.isNotEmpty()
@@ -918,6 +952,8 @@ class QuickSender(
 
     private fun clickSend(send: UiNode, fast: Boolean, now: Long): Step {
         sentBounds = send.bounds
+        sentWord = labelsOf(send).firstOrNull()?.value
+        sentById = shortViewId(send.viewId).let { it.isNotEmpty() && it in profile.sendIds }
         snapshot(null)
         enter(Phase.SENT, now, if (fast) How.FAST else How.WALK)
         sentFast = fast
@@ -1014,7 +1050,8 @@ class QuickSender(
     /**
      * El nombre en la hoja: la **celda** de la fila de contactos cuya descripción es el nombre (su texto puede ir cortado).
      * Si no está (la fila ya cargó sin él, o pasado [Config.searchAfterMs]) o suele no estar ([Target.skipGrid]), la lupa
-     * de la cabecera abre el buscador ([openSearch]). Con el buscador abierto, [ownLookInSearch].
+     * de la cabecera abre el buscador ([openSearch]); antes, si la fila se abrió desplazada, se vuelve al principio una vez
+     * ([scrollRowBack]). Con el buscador abierto, [ownLookInSearch].
      */
     private fun ownLookForTarget(screen: Screen, now: Long): Step {
         val dest = current() ?: return afterTargets(screen, now)
@@ -1031,7 +1068,15 @@ class QuickSender(
                 return onOwnTargets(dest, cells, screen, now, How.FAST, Found.GRID)
             }
             if (!dest.searched) {
-                val loaded = header != null && (rowLoaded || probeRow(header.node, screen.w).also { if (it) rowLoaded = true })
+                // La celda de la fila también dice si la fila se puede volver al principio (solo hasta que se vuelva una vez).
+                val cell = if (header != null && (!rowLoaded || !rowScrolled)) probeRow(header.node, screen.w) else null
+                if (cell != null) rowLoaded = true
+                val loaded = header != null && rowLoaded
+                if (loaded) scrollRowBack(cell, screen, now)?.let { return it }
+                if (rowSettling(now)) {
+                    waitWhy = "fila vuelta al principio"
+                    return destTimeoutOr(dest, screen, now, notFound)
+                }
                 val waited = now - (sheetAt ?: now) >= config.searchAfterMs
                 if (loaded || waited) {
                     return openSearch(dest, screen, now, if (loaded) "fila sin él" else "pasado el plazo sin fila", rowSeen = loaded, walk = null)
@@ -1048,8 +1093,16 @@ class QuickSender(
         val divider = header?.let { walkDivider(sheet, it, screen.w) }
         val cells = ownCells(dest, sheet, header, divider)
         if (cells.isNotEmpty()) return onOwnTargets(dest, cells, screen, now, How.WALK, Found.GRID)
-        val loaded = header != null && sheet.any { !it.inFeed && isCellLike(it.node) && inContactRow(it.node.bounds, header, divider) }
+        val cell = header?.let { h -> sheet.firstOrNull { !it.inFeed && isCellLike(it.node) && inContactRow(it.node.bounds, h, divider) } }
+        val loaded = cell != null
         if (loaded) rowLoaded = true
+        if (!dest.searched) {
+            if (loaded) scrollRowBack(cell?.node, screen, now)?.let { return it }
+            if (rowSettling(now)) {
+                waitWhy = "fila vuelta al principio"
+                return destTimeoutOr(dest, screen, now, notFound)
+            }
+        }
         val waited = now - (sheetAt ?: now) >= config.searchAfterMs
         if (!dest.searched && (loaded || waited)) {
             return openSearch(dest, screen, now, if (loaded) "fila sin él" else "pasado el plazo sin fila", rowSeen = loaded, walk = sheet)
@@ -1060,15 +1113,16 @@ class QuickSender(
 
     /**
      * Pulsa la lupa de la **cabecera de la hoja** (nunca la del visor: solo se mira la ventana de la hoja, a la altura de su
-     * título). [rowSeen]: se vio la fila de contactos sin él (si no, no se aprende «no sale en la fila»).
+     * título). 1.10.1: primero por su sitio ([siteLupa], cualquier idioma) y, si no, por sus palabras (al atajo, solo el español
+     * y el inglés; recorriendo, todas). [rowSeen]: se vio la fila de contactos sin él (si no, no se aprende «no sale en la fila»).
      */
     private fun openSearch(dest: Dest, screen: Screen, now: Long, why: String, rowSeen: Boolean, walk: List<Seen>?): Step {
         var lupa: UiNode? = null
         var how = How.FAST
         if (walk == null && finder != null) {
-            val header = ownHeader(screen)?.node?.bounds
-            lupa = header?.let { h ->
-                profile.searchButtonLabels.firstNotNullOfOrNull { q -> screen.sheetOnlyText(q).firstOrNull { isLupa(it, h) }?.node }
+            val header = ownHeader(screen)
+            lupa = header?.let { siteLupa(it.node, screen.w) } ?: header?.node?.bounds?.let { h ->
+                profile.searchButtonWords.take(PRIMARY_WORDS).firstNotNullOfOrNull { q -> screen.sheetOnlyText(q).firstOrNull { isLupa(it, h) }?.node }
             }
         }
         if (lupa == null) {
@@ -1079,7 +1133,8 @@ class QuickSender(
                 }
                 ownSheetOf(screen.outside) ?: return finish(false, "la hoja se ha cerrado", now)
             }
-            lupa = walkHeader(sheet)?.let { h -> sheet.firstOrNull { isLupa(it, h) }?.node }
+            val title = walkTitle(sheet)
+            lupa = title?.let { siteLupa(it, screen.w) } ?: title?.bounds?.let { h -> sheet.firstOrNull { isLupa(it, h) }?.node }
             how = How.WALK
         }
         if (lupa == null) {
@@ -1092,8 +1147,53 @@ class QuickSender(
         dest.gridHidden = !rowSeen
         searchOpen = true
         searches += why
+        lupaWord = labelsOf(lupa).firstOrNull()?.value
         enter(Phase.SEARCH, now, how)
         return Step.Click(lupa, "lupa del buscador")
+    }
+
+    /**
+     * 1.10.1, la lupa por su **sitio**, en cualquier idioma: de los botones pulsables que acompañan al título de la hoja (sus
+     * hermanos: en TikTok 47.7, la lupa y «Cerrar»), el primero, si es el único del lado donde empieza la lectura (la izquierda;
+     * la derecha si el título se escribe de derecha a izquierda, como en árabe, donde la cabecera va al revés). Si no está
+     * claro (ninguno o dos de ese lado, o el primero es el del otro lado), nada: las palabras de respaldo o el recorrido.
+     *
+     * Revisión de la 1.10.1: lo que se sabe va antes que el sitio. Si uno de esos botones dice una palabra de la lupa
+     * ([PlatformProfile.searchButtonLabels]), es ese, esté donde esté; y el del sitio no vale si dice la de otro botón conocido
+     * («Cerrar» en cualquiera de sus idiomas, «Enviar», el título o una opción de la hoja).
+     */
+    private fun siteLupa(title: UiNode, screenWidth: Int): UiNode? {
+        val t = title.bounds
+        if (t.isEmpty) return null
+        val buttons = title.parent?.children.orEmpty().filter { c ->
+            val b = c.bounds
+            c !== title && b != t && c.isClickable && c.isVisible && !isField(c) && !b.isEmpty && b.width < screenWidth / 3 &&
+                b.centerY >= t.top - t.height && b.centerY <= t.bottom + t.height
+        }
+        buttons.firstOrNull { b -> labelsOf(b).any { plain(it.value) in profile.searchButtonLabels } }?.let { return it }
+        val rtl = rightToLeft(title.text)
+        val start = buttons.filter { if (rtl) it.bounds.centerX > screenWidth / 2 else it.bounds.centerX < screenWidth / 2 }
+        val first = buttons.firstOrNull() ?: return null
+        return first.takeIf { start.size == 1 && start.single() === first && !isOtherKnownButton(it) }
+    }
+
+    /** ¿Dice la etiqueta de otro botón conocido de la hoja (cerrar, «Enviar», el título, una opción) y no la de la lupa? */
+    private fun isOtherKnownButton(node: UiNode): Boolean = labelsOf(node).any { l ->
+        plain(l.value).let {
+            it !in profile.searchButtonLabels &&
+                (it in profile.closeLabels || it in profile.sendLabels || it in profile.titleLabels || it in profile.sheetOptions)
+        }
+    }
+
+    /** ¿El texto empieza (su primera letra con dirección) de derecha a izquierda? Árabe, hebreo, persa… */
+    private fun rightToLeft(text: CharSequence?): Boolean {
+        for (c in text ?: return false) {
+            when (Character.getDirectionality(c)) {
+                Character.DIRECTIONALITY_RIGHT_TO_LEFT, Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC -> return true
+                Character.DIRECTIONALITY_LEFT_TO_RIGHT -> return false
+            }
+        }
+        return false
     }
 
     /** La lupa de la cabecera: pulsable, dice exactamente «Buscar»/«Search» y está en la fila del título de la hoja. */
@@ -1183,28 +1283,79 @@ class QuickSender(
      * contactos, `h84` en el buscador con alguien marcado), en un idioma cuya pista no está en [MESSAGE_HINTS], habría escrito
      * ahí el nombre del siguiente destino (y se habría enviado como mensaje). En los volcados de la 47.7, el buscador (`vlq`)
      * siempre va junto a la lupa «Buscar» y los campos del mensaje no tienen hermanos. Sin consultas de más.
+     *
+     * 1.10.1: al atajo de texto se le pide la etiqueta de la lupa pulsada ([lupaWord], la de su idioma) y, de respaldo, las
+     * palabras en español e inglés (no todas: en un idioma sin palabras serían dos docenas de consultas por tick).
+     *
+     * 1.10.1, **la ventana del buscador**: tras la lupa, TikTok abre el buscador en **otra ventana** (otro diálogo) que la de
+     * la hoja de contactos ([PlatformProfile]: en los volcados, la ventana de la hoja tiene un nivel más sobre su contenedor que
+     * la del buscador). Con [sheetWindow] aún en la de la hoja, el atajo no veía el campo y se esperaba al recorrido (~1 s,
+     * medido en el móvil). Si en la ventana de la hoja no está, se busca igual (el id aprendido o la lupa con el campo al lado)
+     * en las demás ventanas de la app que no son el visor, y solo vale si esa ventana es una hoja de abajo (lleva
+     * [PlatformProfile.openSheetIds], `touch_outside`): entonces pasa a ser la de la hoja. Así sigue sin mirarse nada fuera de
+     * las ventanas de la hoja.
      */
     private fun ownSearchField(screen: Screen): UiNode? {
         ownFieldSought = true
+        searchFieldIn(screen::sheetOnlyId, screen::sheetOnlyText)?.let { return accept(it) }
+        if (!searchOpen) return null
+        val old = sheetWindow
+        val moved = searchFieldIn(
+            { id -> screen.awayId(id, also = old).filter { it.window != old } },
+            { q -> screen.awayText(q, also = old).filter { it.window != old } },
+        ) ?: return null
+        if (fullIds(profile.openSheetIds).none { id -> screen.windowOnlyId(moved.seen.window, id).any { !it.inFeed } }) return null
+        sheetWindow = moved.seen.window
+        return accept(moved)
+    }
+
+    /** Un campo del buscador encontrado por [searchFieldIn] y por qué id (el aprendido que se probó, o `null`). */
+    private class SearchHit(val seen: Seen, val byLearned: String?)
+
+    /**
+     * El campo ya vale (en la ventana de la hoja o en una que es hoja de abajo): solo ahora se aprende su id (revisión de la
+     * 1.10.1: antes se aprendía también el de una ventana que luego no valía).
+     */
+    private fun accept(hit: SearchHit): UiNode {
+        val learned = hit.byLearned
+        if (learned != null) {
+            if (learned == hints.searchId) sawLearnedSearch = true
+            learnedSearchId = learned
+        } else {
+            hit.seen.node.viewId?.takeIf { it.isNotEmpty() }?.let { learnedSearchId = it }
+        }
+        return hit.seen.node
+    }
+
+    /**
+     * El campo del buscador con [byId] (el id aprendido) o [byText] (la lupa y su hermano), con las reglas de [ownSearchField].
+     * Siempre con la lupa al lado ([besideSearchButton]), también si lo devuelto ya es un campo (revisión de la 1.10.1: con la
+     * etiqueta de la lupa en cualquier idioma, un campo del mensaje cuya pista la contuviera pasaba solo por [MESSAGE_HINTS]).
+     * No aprende nada: eso, [accept].
+     */
+    private fun searchFieldIn(byId: (String) -> List<Seen>, byText: (String) -> List<Seen>): SearchHit? {
         val learned = learnedSearchId ?: hints.searchId
         if (learned != null) {
-            screen.sheetOnlyId(learned).firstOrNull { !it.inFeed && isOwnSearchField(it.node) && besideSearchButton(it.node) }?.let { s ->
-                if (learned == hints.searchId) sawLearnedSearch = true
-                learnedSearchId = learned
-                return s.node
-            }
+            byId(learned).firstOrNull { !it.inFeed && isOwnSearchField(it.node) && besideSearchButton(it.node) }?.let { return SearchHit(it, learned) }
         }
-        for (q in profile.searchButtonLabels) {
-            val hits = screen.sheetOnlyText(q).filter { !it.inFeed }
+        for (q in searchQueries()) {
+            val hits = byText(q).filter { !it.inFeed }
             if (hits.isEmpty()) continue
-            val field = hits.firstOrNull { isOwnSearchField(it.node) }?.node
-                ?: hits.firstNotNullOfOrNull { s -> s.node.parent?.children?.firstOrNull(::isOwnSearchField) }
-            field?.viewId?.takeIf { it.isNotEmpty() }?.let { learnedSearchId = it }
+            val field = hits.firstOrNull { isOwnSearchField(it.node) && besideSearchButton(it.node) }
+                ?: hits.firstNotNullOfOrNull { s ->
+                    if (isField(s.node)) return@firstNotNullOfOrNull null
+                    s.node.parent?.children?.firstOrNull { isOwnSearchField(it) && besideSearchButton(it) }
+                        ?.let { Seen(it, inFeed = false, inField = true, window = s.window, real = s.real) }
+                }
             // La lupa salió (en esta lengua): no se pregunta en la otra.
-            return field
+            return field?.let { SearchHit(it, null) }
         }
         return null
     }
+
+    /** Lo que se pide al atajo para encontrar la lupa del buscador: la etiqueta de la pulsada y el español y el inglés. */
+    private fun searchQueries(): List<String> =
+        (listOfNotNull(lupaWord) + profile.searchButtonWords.take(PRIMARY_WORDS)).distinctBy { plain(it) }
 
     /** Recorriendo la hoja: el campo de más arriba que no es el del mensaje. */
     private fun walkSearchField(sheet: List<Seen>): UiNode? {
@@ -1214,9 +1365,16 @@ class QuickSender(
         return field
     }
 
-    /** ¿Tiene el campo la lupa al lado (un hermano, que no es un campo, con la etiqueta «Buscar», «Search»…)? */
-    private fun besideSearchButton(node: UiNode): Boolean =
-        node.parent?.children.orEmpty().any { c -> !isField(c) && labelsOf(c).any { plain(it.value) in profile.searchButtonLabels } }
+    /**
+     * ¿Tiene el campo la lupa al lado (un hermano, que no es un campo, con la etiqueta «Buscar», «Search»… o la de la lupa
+     * pulsada en este envío, en su idioma)?
+     */
+    private fun besideSearchButton(node: UiNode): Boolean {
+        val pressed = lupaWord?.let(::plain)
+        return node.parent?.children.orEmpty().any { c ->
+            !isField(c) && labelsOf(c).any { plain(it.value).let { l -> l in profile.searchButtonLabels || l == pressed } }
+        }
+    }
 
     private fun isOwnSearchField(node: UiNode): Boolean =
         isField(node) && node.isVisible && labelsOf(node).none { l -> plain(l.value).let { p -> MESSAGE_HINTS.any { p.startsWith(it) } } }
@@ -1306,11 +1464,12 @@ class QuickSender(
 
     /**
      * ¿Ha cargado la fila de contactos? Desde el título: su fila (la cabecera), la columna de la hoja y, tras la cabecera
-     * y hasta la primera línea divisoria, alguna celda. Unas pocas llamadas, solo si el nombre no salió.
+     * y hasta la primera línea divisoria, alguna celda (la devuelve: su padre es la fila, [scrollRowBack]). Unas pocas
+     * llamadas, solo si el nombre no salió.
      */
-    private fun probeRow(title: UiNode, screenWidth: Int): Boolean {
-        val headerRow = title.parent ?: return false
-        val column = headerRow.parent ?: return false
+    private fun probeRow(title: UiNode, screenWidth: Int): UiNode? {
+        val headerRow = title.parent ?: return null
+        val column = headerRow.parent ?: return null
         var after = false
         for (child in column.children) {
             if (!after) {
@@ -1318,18 +1477,65 @@ class QuickSender(
                 continue
             }
             if (isDivider(child, screenWidth)) break
-            if (below(child, config.rowMaxNodes, config.rowMaxDepth).any { isCellLike(it) && inContactRow(it.bounds, title.bounds, null) }) return true
+            below(child, config.rowMaxNodes, config.rowMaxDepth).firstOrNull { isCellLike(it) && inContactRow(it.bounds, title.bounds, null) }
+                ?.let { return it }
         }
-        return false
+        return null
     }
 
-    /** La hoja recorrida: la ventana (fuera del visor) con su título o sus marcas; la ya conocida, si sigue. */
+    /**
+     * 1.10.1: el fijado no está en la fila de contactos y la fila **no empieza en su primer elemento** (se puede desplazar
+     * hacia atrás: TikTok la abre a veces desplazada, «idx 2→8 de 61», y los primeros, los de siempre, no se ven). Se vuelve al
+     * principio (`ACTION_SCROLL_BACKWARD`, [UiNode.scrollBackward]) y se mira otra vez antes de ir a la lupa. Una sola vez por
+     * envío. Solo la fila de la hoja: el padre de una celda de contacto, en la ventana de la hoja y de la altura de una fila
+     * (nunca el visor, que pasaría de vídeo). `null` si no hay que desplazar (o Android no quiere): se sigue como siempre.
+     */
+    private fun scrollRowBack(cell: UiNode?, screen: Screen, now: Long): Step? {
+        if (rowScrolled || cell == null) return null
+        val row = cell.parent ?: return null
+        val window = sheetWindow
+        if (window != null && row.windowId != UiNode.NO_WINDOW && row.windowId != window) return null
+        if (row.bounds.height > screen.h * config.maxRowHeight || isFeedNode(row) || !row.canScrollBackward) return null
+        rowScrolled = true
+        val start = clock?.invoke()
+        val ok = row.scrollBackward()
+        val performMs = start?.let { s -> clock?.invoke()?.minus(s) } ?: -1L
+        actions += ActionTime("vuelve la fila al principio", (now - startedAt).coerceAtLeast(0L), performMs, ok)
+        if (!ok) return null
+        rowScrolledAt = now
+        return wait("fila vuelta al principio")
+    }
+
+    /** La fila se acaba de volver al principio y aún se está moviendo: se mira el nombre otra vez antes de ir a la lupa. */
+    private fun rowSettling(now: Long): Boolean = rowScrolledAt?.let { now - it in 0 until ROW_SCROLL_SETTLE_MS } == true
+
+    /**
+     * La hoja recorrida: la ventana (fuera del visor) con su título o sus marcas; la ya conocida, si sigue.
+     *
+     * 1.10.1: con la lupa ya pulsada, el buscador va en otra ventana ([ownSearchField]) y, en un idioma sin palabras, no lleva
+     * ninguna marca que se reconozca: valen también las ventanas que son una hoja de abajo ([PlatformProfile.openSheetIds],
+     * `touch_outside`), y va primero la que tiene un campo y no el título de la hoja de contactos (el buscador), aunque la de la
+     * hoja siga debajo. Sin buscador en ninguna, como siempre (la de la hoja: con su título a la vista no hay buscador).
+     */
     private fun ownSheetOf(windows: List<List<Seen>>): List<Seen>? {
-        val marked = windows.filter { w -> w.any { !it.inFeed && isOwnSheetMark(it.node) } }
-        val sheet = marked.firstOrNull { it.firstOrNull()?.window == sheetWindow } ?: marked.firstOrNull()
+        val fw = feedWindow
+        val marked = windows.filter { w ->
+            w.firstOrNull()?.window.let { it == null || it != fw } &&
+                w.any { !it.inFeed && (isOwnSheetMark(it.node) || (searchOpen && isOpenSheetId(it.node))) }
+        }
+        val search = if (searchOpen) {
+            marked.firstOrNull { w -> w.none { !it.inFeed && isTitleId(it.node) } && w.any { !it.inFeed && isOwnSearchField(it.node) } }
+        } else {
+            null
+        }
+        val sheet = search ?: marked.firstOrNull { it.firstOrNull()?.window == sheetWindow } ?: marked.firstOrNull()
         sheet?.firstOrNull()?.let { sheetWindow = it.window }
         return sheet
     }
+
+    private fun isTitleId(node: UiNode): Boolean = shortViewId(node.viewId).let { it.isNotEmpty() && it in profile.sheetIds }
+
+    private fun isOpenSheetId(node: UiNode): Boolean = shortViewId(node.viewId).let { it.isNotEmpty() && it in profile.openSheetIds }
 
     /**
      * Marca de la hoja: su id de título, una de sus opciones o el título en cualquiera de sus idiomas
@@ -1343,12 +1549,15 @@ class QuickSender(
     private fun isOwnSheetOpenMark(node: UiNode): Boolean =
         isOwnSheetMark(node) || shortViewId(node.viewId).let { it.isNotEmpty() && it in profile.openSheetIds }
 
-    private fun walkHeader(sheet: List<Seen>): NodeBounds? = sheet.firstOrNull { s ->
+    private fun walkHeader(sheet: List<Seen>): NodeBounds? = walkTitle(sheet)?.bounds
+
+    /** Recorriendo la hoja: su título (por su id o por su texto en cualquiera de sus idiomas). */
+    private fun walkTitle(sheet: List<Seen>): UiNode? = sheet.firstOrNull { s ->
         !s.inFeed && (
             shortViewId(s.node.viewId).let { it.isNotEmpty() && it in profile.sheetIds } ||
                 labelsOf(s.node).any { plain(it.value) in profile.titleLabels }
             )
-    }?.node?.bounds
+    }?.node
 
     private fun walkDivider(sheet: List<Seen>, header: NodeBounds, screenWidth: Int): NodeBounds? =
         sheet.firstOrNull { !it.inFeed && it.node.bounds.top >= header.bottom && isDivider(it.node, screenWidth) }?.node?.bounds
@@ -1360,9 +1569,19 @@ class QuickSender(
     private fun onOwnTargets(dest: Dest, picks: List<Pick>, screen: Screen, now: Long, how: How, where: Found): Step {
         if (picks.size > 1) return failDest(dest, "nombre repetido en la hoja", screen, now, how)
         val pick = picks.first()
+        // Con la fila aún moviéndose tras volverla al principio: la celda, en el mismo sitio en dos lecturas seguidas.
+        if (where == Found.GRID && rowSettling(now)) {
+            val seen = dest.key to pick.click.bounds
+            if (settlingCell != seen) {
+                settlingCell = seen
+                waitWhy = "fila moviéndose"
+                return destTimeoutOr(dest, screen, now, "no encuentro el nombre")
+            }
+        }
         val inside = below(pick.click, config.rowMaxNodes, config.rowMaxDepth)
         val marked = profile.selectedByCheckbox && inside.any { isCheckBox(it) && it.isChecked }
-        val photo = if (dest.target.wantAvatar && !marked) {
+        // Con la fila aún moviéndose (recién vuelta al principio), la foto saldría corrida: hoy no se recorta.
+        val photo = if (dest.target.wantAvatar && !marked && !rowSettling(now)) {
             if (where == Found.GRID) cellPhoto(inside) else AvatarRules.photo(pick.label, dest.target.name, screen.h, config.maxRowAncestors, config.maxRowHeight)
         } else {
             null
@@ -1397,12 +1616,19 @@ class QuickSender(
     /**
      * «Enviar» de la hoja en su propia ventana: el botón exacto ([PlatformProfile.sendLabels]) o el de su id (`tv_send`,
      * en el buscador), pulsable, ancho y en la mitad de abajo. Nunca «Enviar a» (el título) ni «Crear grupo».
+     *
+     * 1.10.1, en cualquier idioma: si ni el id ni las palabras lo dan, **por su sitio** ([siteSend]): desde el título, la
+     * columna de la hoja y, en ella, el único botón pulsable y ancho de debajo del campo del mensaje, con alguien marcado. Al
+     * atajo de texto solo se le piden el español, el inglés y las palabras que casan con el título de la hoja («Envoyer à» →
+     * «Envoyer»; en turco o coreano el título es la propia palabra), no las dos docenas en cada tick.
      */
     private fun ownSendStep(screen: Screen, now: Long): Step {
         if (finder != null) {
             val byId = { fullIds(profile.sendIds).flatMap { screen.sheetOnlyId(it) }.filter { isOwnSend(it, screen) } }
+            fun byWords(words: List<String>) =
+                words.firstNotNullOfOrNull { q -> screen.sheetOnlyText(q).filter { isOwnSend(it, screen) }.ifEmpty { null } }.orEmpty()
             val byText = {
-                profile.sendLabels.firstNotNullOfOrNull { q -> screen.sheetOnlyText(q).filter { isOwnSend(it, screen) }.ifEmpty { null } }.orEmpty()
+                byWords(profile.sendWords.take(PRIMARY_WORDS)).ifEmpty { if (searchOpen) emptyList() else byWords(titleSendWords(screen)) }
             }
             // En el buscador lleva `tv_send`; en la hoja, su id cambia con cada versión: por sus palabras.
             val all = if (searchOpen) byId().ifEmpty { byText() } else byText().ifEmpty { byId() }
@@ -1410,16 +1636,67 @@ class QuickSender(
                 fastHits++
                 return clickSend(send.node, fast = true, now)
             }
+            // Por su sitio, desde el título de la hoja de contactos (en el buscador, `tv_send` o el recorrido).
+            val site = if (searchOpen) null else ownHeader(screen)?.node?.let { siteSendNear(it, screen) }
+            if (site != null) {
+                fastHits++
+                return clickSend(site, fast = true, now)
+            }
         }
         if (!walkAllowed(now)) return paused(now).let { timeoutOr(now, "no encuentro enviar") }
         val sheet = ownSheetOf(screen.outside) ?: return finish(false, "la hoja se ha cerrado", now)
-        return sheet.filter { isOwnSend(it, screen) }.maxByOrNull { it.node.bounds.top }?.let { clickSend(it.node, fast = false, now) }
-            ?: timeoutOr(now, "no encuentro enviar")
+        val visible = sheet.filter { !it.inFeed }
+        val send = visible.filter { isOwnSend(it, screen) }.maxByOrNull { it.node.bounds.top }?.node ?: siteSend(visible.map { it.node }, screen)
+        return send?.let { clickSend(it, fast = false, now) } ?: timeoutOr(now, "no encuentro enviar")
+    }
+
+    /**
+     * Las palabras de «Enviar» (fuera del español y el inglés) que casan con el título de la hoja (normalizado, empieza por
+     * ellas): el idioma de la hoja dice cuál pedir. Una consulta de más (el título), solo si las primeras no salieron.
+     */
+    private fun titleSendWords(screen: Screen): List<String> {
+        val title = ownHeader(screen)?.node?.text?.toString()?.let(::plain)?.takeIf { it.isNotEmpty() } ?: return emptyList()
+        return profile.sendWords.drop(PRIMARY_WORDS).filter { w -> plain(w).let { it.isNotEmpty() && title.startsWith(it) } }
+    }
+
+    /** [siteSend] en la columna de la hoja: el antepasado del título que llega hasta abajo (como mucho unos niveles). */
+    private fun siteSendNear(title: UiNode, screen: Screen): UiNode? {
+        var column = title.parent
+        repeat(SITE_MAX_ANCESTORS) {
+            val c = column ?: return null
+            if (c.bounds.bottom >= screen.h * SITE_COLUMN_BOTTOM && c.bounds.width >= screen.w * SITE_COLUMN_WIDTH) {
+                return siteSend(below(c, SITE_MAX_NODES, SITE_MAX_DEPTH), screen)
+            }
+            column = c.parent
+        }
+        return null
+    }
+
+    /**
+     * 1.10.1, «Enviar» por su **sitio**, en cualquier idioma (TikTok 47.7: el `Button` de abajo, en la hoja con id ofuscado y
+     * en el buscador `tv_send`). De [nodes] (los de la hoja): con alguien marcado (un `CheckBox` marcado), el campo del mensaje
+     * (el de más abajo) y, debajo de él, el **único** nodo pulsable, ancho (como «Enviar») y en la mitad de abajo que no es un
+     * campo, ni un emoji de reacción (la cuadrícula), ni el título, ni «Crear grupo». Dos o más: no está claro y no se pulsa
+     * ninguno. Los contenedores que llevan el campo dentro empiezan por encima de él y no cuentan; las opciones (repostear…) y
+     * los contactos van por encima del campo.
+     */
+    private fun siteSend(nodes: List<UiNode>, screen: Screen): UiNode? {
+        if (nodes.none { isCheckBox(it) && it.isChecked }) return null
+        val message = nodes.filter { isField(it) && it.isVisible && !it.bounds.isEmpty }.maxByOrNull { it.bounds.top } ?: return null
+        val grids = nodes.filter { it.className?.contains("GridView") == true }.map { it.bounds }
+        val candidates = nodes.filter { n ->
+            val b = n.bounds
+            n.isClickable && n.isVisible && !isField(n) && !b.isEmpty && b.top >= message.bounds.bottom && b != shareBounds &&
+                grids.none { g -> b.left >= g.left && b.right <= g.right && b.top >= g.top && b.bottom <= g.bottom } && !inGrid(n) &&
+                !isTitleId(n) && labelsOf(n).none { l -> plain(l.value).let { it in profile.titleLabels || RecipientDetector.CREATE_GROUP.matches(it) } } &&
+                sendButtonWidth(n) >= screen.w * config.wideSend && b.centerY >= screen.h / 2
+        }.distinctBy { it.bounds }
+        return candidates.singleOrNull()
     }
 
     private fun isOwnSend(seen: Seen, screen: Screen): Boolean {
         val n = seen.node
-        if (seen.inFeed || seen.inField || isField(n) || !n.isClickable || n.bounds == shareBounds) return false
+        if (seen.inFeed || seen.inField || isField(n) || !n.isClickable || n.bounds == shareBounds || isTitleId(n)) return false
         val labels = labelsOf(n).map { plain(it.value) }
         val byId = shortViewId(n.viewId).let { it.isNotEmpty() && it in profile.sendIds }
         if (!byId && labels.none { it in profile.sendLabels }) return false
@@ -1433,13 +1710,24 @@ class QuickSender(
      */
     private fun ownConfirmSent(screen: Screen, now: Long): Step {
         if (screen.sheetRoot() == null) return finish(true, "enviado", now, How.FAST)
-        if (finder != null) {
-            val stillThere = (fullIds(profile.sendIds).flatMap { screen.sheetOnlyId(it) } + profile.sendLabels.flatMap { screen.sheetOnlyText(it) })
-                .any { it.node.bounds == sentBounds && isOwnSend(it, screen) }
+        // El «Enviar» pulsado (en el mismo sitio, pulsable): por su id y por su propia etiqueta (1.10.1: no por todas las
+        // palabras, que serían dos docenas de consultas; y uno encontrado por su sitio puede no llevar ninguna conocida).
+        fun isSent(seen: Seen) = !seen.inFeed && seen.node.bounds == sentBounds && seen.node.isClickable && !isField(seen.node)
+        if (finder != null && (sentWord != null || sentById)) {
+            val stillThere = (fullIds(profile.sendIds).flatMap { screen.sheetOnlyId(it) } + sentWord?.let { screen.sheetOnlyText(it) }.orEmpty())
+                .any(::isSent)
             if (!stillThere) return finish(true, "enviado", now, How.FAST)
+        } else if (finder != null) {
+            // Revisión de la 1.10.1: un «Enviar» encontrado por su sitio, sin etiqueta ni id conocido, no se puede pedir al atajo
+            // (antes «no está» = «enviado» en el primer tick). ¿Sigue en su sitio? Si no se sabe, el recorrido mira sus límites.
+            val again = if (searchOpen) null else ownHeader(screen)?.node?.let { siteSendNear(it, screen) }
+            if (again?.bounds != sentBounds && walkAllowed(now)) {
+                val sheet = ownSheetOf(screen.outside) ?: return finish(true, "enviado", now, How.WALK)
+                if (sheet.none(::isSent)) return finish(true, "enviado", now, How.WALK)
+            }
         } else if (walkAllowed(now)) {
             val sheet = ownSheetOf(screen.outside) ?: return finish(true, "enviado", now, How.WALK)
-            if (sheet.none { it.node.bounds == sentBounds && isOwnSend(it, screen) }) return finish(true, "enviado", now, How.WALK)
+            if (sheet.none(::isSent)) return finish(true, "enviado", now, How.WALK)
         }
         return if (now - phaseSince > config.confirmMs) finish(false, "no se confirma el envío", now) else wait("sin confirmar")
     }
@@ -1792,15 +2080,24 @@ class QuickSender(
 
         fun sheetOnlyId(viewId: String): List<Seen> = sheetRoot()?.let { i -> fast("i:$viewId", only = i) { f, root -> f.byViewId(root, viewId) } }.orEmpty()
 
-        /** Hoja en su propia ventana: [id] en todas las ventanas menos la del visor (la hoja nunca está en ella). */
-        fun awayId(viewId: String): List<Seen> {
-            val skip = feedWindow ?: return id(viewId)
-            return fast("i:$viewId", skip = skip) { f, root -> f.byViewId(root, viewId) }
+        /** [id] solo en la ventana [window] (su `windowId` o su posición): una llamada. */
+        fun windowOnlyId(window: Int, viewId: String): List<Seen> =
+            roots.indices.firstOrNull { keyOf(it) == window }?.let { i -> fast("i:$viewId", only = i) { f, root -> f.byViewId(root, viewId) } }.orEmpty()
+
+        /**
+         * Hoja en su propia ventana: [id] en todas las ventanas menos la del visor (la hoja nunca está en ella) y, si se dice,
+         * menos [also] (1.10.1: la de la hoja, ya mirada, al buscar el buscador en otra).
+         */
+        fun awayId(viewId: String, also: Int? = null): List<Seen> {
+            val skip = feedWindow
+            if (skip == null && also == null) return id(viewId)
+            return fast("i:$viewId", skip = skip, skipToo = also) { f, root -> f.byViewId(root, viewId) }
         }
 
-        fun awayText(query: String): List<Seen> {
-            val skip = feedWindow ?: return text(query)
-            return fast("t:$query", skip = skip) { f, root -> f.byText(root, query) }
+        fun awayText(query: String, also: Int? = null): List<Seen> {
+            val skip = feedWindow
+            if (skip == null && also == null) return text(query)
+            return fast("t:$query", skip = skip, skipToo = also) { f, root -> f.byText(root, query) }
         }
 
         /** Índice de la raíz de la ventana de la hoja, o `null` si no está (o no se sabe cuál es). */
@@ -1817,17 +2114,20 @@ class QuickSender(
             key: String,
             only: Int? = null,
             skip: Int? = null,
+            skipToo: Int? = null,
             find: (UiFinder, UiNode) -> List<UiNode>,
         ): List<Seen> {
             val f = finder ?: return emptyList()
-            val scoped = only != null || skip != null
+            val scoped = only != null || skip != null || skipToo != null
             val cacheKey = when {
                 only != null -> "s${keyOf(only)}|$key"
-                skip != null -> "a$skip|$key"
+                skip != null || skipToo != null -> "a$skip,$skipToo|$key"
                 else -> key
             }
             return cache.getOrPut(cacheKey) {
-                val picked = roots.indices.filter { i -> (only == null || i == only) && (skip == null || keyOf(i) != skip) }
+                val picked = roots.indices.filter { i ->
+                    (only == null || i == only) && (skip == null || keyOf(i) != skip) && (skipToo == null || keyOf(i) != skipToo)
+                }
                 // Una consulta por búsqueda hecha (las acotadas, solo si se pidió a alguna ventana).
                 if (!scoped || picked.isNotEmpty()) queries++
                 timed({ queryMs += it }) {
@@ -2095,6 +2395,25 @@ class QuickSender(
 
         /** Lado mínimo (px) de la foto de una celda o fila para recortarla. */
         private const val MIN_PHOTO_PX = 48
+
+        /**
+         * 1.10.1, hoja en su propia ventana: de las palabras de un botón (lupa, «Enviar»), cuántas se piden siempre al atajo de
+         * texto (las primeras: el español y el inglés). Las demás, solo si casan con lo que ya se ve, o en el recorrido.
+         */
+        private const val PRIMARY_WORDS = 2
+
+        /**
+         * 1.10.1: tras volver la fila de contactos al principio, lo que se le deja para moverse (RecyclerView anima una página
+         * en ~0,6 s) mirando el nombre antes de ir a la lupa.
+         */
+        private const val ROW_SCROLL_SETTLE_MS = 700L
+
+        /** 1.10.1, «Enviar» por su sitio: la columna de la hoja es el antepasado del título que llega a esta altura y anchura. */
+        private const val SITE_MAX_ANCESTORS = 3
+        private const val SITE_COLUMN_BOTTOM = 0.85f
+        private const val SITE_COLUMN_WIDTH = 0.9f
+        private const val SITE_MAX_NODES = 200
+        private const val SITE_MAX_DEPTH = 8
         private val SEND_QUERIES = listOf("Enviar", "Send", "Envia", "Envoyer", "Invia", "Senden", "Verzenden", "Versturen", "Bidali")
         private val UNDO_QUERIES = listOf("Deshacer", "Undo", "Enviad", "Sent", "Desf", "Annul", "Envoy", "Inviat", "Gesendet")
 

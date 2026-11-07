@@ -49,6 +49,18 @@ interface UiNode {
     /** 1.10.0: marcado (`isChecked`, el `CheckBox` de un contacto elegido en la hoja de TikTok). */
     val isChecked: Boolean get() = false
 
+    /**
+     * 1.10.1: una lista que se puede desplazar hacia atrás (`ACTION_SCROLL_BACKWARD` entre sus acciones), es decir, que no
+     * empieza en su primer elemento (TikTok abre a veces la fila de contactos de la hoja ya desplazada).
+     */
+    val canScrollBackward: Boolean get() = false
+
+    /**
+     * 1.10.1: la desplaza hacia atrás (`ACTION_SCROLL_BACKWARD`; una página). `true` si Android lo acepta. La única acción que
+     * pide un [UiNode] por sí mismo: el envío rápido vuelve así la fila de contactos de TikTok al principio.
+     */
+    fun scrollBackward(): Boolean = false
+
     companion object {
         const val NO_WINDOW = -1
     }

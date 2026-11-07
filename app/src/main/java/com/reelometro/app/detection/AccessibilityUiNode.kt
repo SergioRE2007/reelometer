@@ -19,6 +19,10 @@ class AccessibilityUiNode(
     override val windowId: Int get() = safe { node.windowId } ?: UiNode.NO_WINDOW
     override val isClickable: Boolean get() = safe { node.isClickable } ?: false
     override val isChecked: Boolean get() = safe { node.isChecked } ?: false
+    override val canScrollBackward: Boolean
+        get() = safe { node.actionList.any { it.id == AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD } } ?: false
+
+    override fun scrollBackward(): Boolean = safe { node.performAction(AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD) } ?: false
 
     override val bounds: NodeBounds by lazy {
         safe {

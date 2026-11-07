@@ -15,17 +15,17 @@
     <!-- Acción de TalkBack: enviar a dos a la vez. %1$s esta burbuja, %2$s otra persona o grupo fijado. -->
     <string name="quicksend_pair_action">Envoyer à %1$s et à %2$s</string>
     <!-- Acción de TalkBack en cada burbuja (equivale a soltarla en la «X»). -->
-    <string name="quicksend_hide_action">Cacher jusqu’à la vidéo suivante</string>
+    <string name="quicksend_hide_action">Masquer jusqu’à la vidéo suivante</string>
     <!-- Nombre de la ventana de las burbujas (TalkBack la anuncia así). -->
     <string name="quicksend_window_title">Envoi rapide de Reelometer</string>
     <!-- La zona «X» que sale abajo mientras arrastras las burbujas. -->
-    <string name="quicksend_zone_title">Lâche ici pour cacher</string>
+    <string name="quicksend_zone_title">Lâche ici pour masquer</string>
 
     <!-- Pregunta tras esconder las burbujas tres veces seguidas (sale una sola vez).
          «A quién envías» es el nombre del ajuste de la app (settings_recipients_label). -->
-    <string name="quicksend_ask_title">J’éteins l’envoi rapide\u00A0?</string>
-    <string name="quicksend_ask_body">Tu as caché les bulles trois fois de suite. Si tu l’éteins, tu le réactives dans Réglages, sous «\u00A0À qui tu envoies\u00A0».</string>
+    <string name="quicksend_ask_title">Je désactive l’envoi rapide\u00A0?</string>
+    <string name="quicksend_ask_body">Tu as masqué les bulles trois fois de suite. Si tu le désactives, tu pourras le réactiver dans Réglages, sous «\u00A0À qui tu envoies\u00A0».</string>
     <!-- Botones en MAYÚSCULAS, muy cortos. -->
-    <string name="quicksend_ask_turn_off">ÉTEINDRE</string>
+    <string name="quicksend_ask_turn_off">DÉSACTIVER</string>
     <string name="quicksend_ask_keep">GARDER</string>
 </resources>

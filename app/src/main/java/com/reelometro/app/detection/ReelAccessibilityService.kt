@@ -16,6 +16,7 @@ import android.hardware.display.DisplayManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.LocaleList
 import android.os.Looper
 import android.os.PowerManager
 import android.os.SystemClock
@@ -178,6 +179,9 @@ class ReelAccessibilityService : AccessibilityService() {
 
     /** Clics de la app del envío rápido ([quickPlatform]) que no se miran (los provoca él) hasta este instante. */
     private var ignoreClicksUntil = 0L
+
+    /** Cuándo pulsó el envío rápido el «Compartir» del visor (reloj de pared), por si su evento llega con retraso. */
+    private var quickShareClickedAt: Long? = null
 
     private val quickTickRunnable = Runnable {
         quickTickAt = null
@@ -540,6 +544,7 @@ class ReelAccessibilityService : AccessibilityService() {
         if (tracker?.currentPlatform == platform) lastEvidenceAt = now
         if (quickApp(platform)) {
             if (quickBusy && platform == quickPlatform && event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) onQuickSendEvent()
+            if (!quickBusy && event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) checkSheetGone(platform)
             updateOverlay()
         }
     }
@@ -669,14 +674,21 @@ class ReelAccessibilityService : AccessibilityService() {
      * que va a [onShareSheetClicked]; con el ajuste apagado no se lee nada de la hoja ni del destinatario.
      */
     private fun onViewClicked(event: AccessibilityEvent, platform: Platform, pkg: String, now: Long) {
-        if (quickApp(platform) && !quickBusy && quickSendActive()) checkUserSheet(event, platform, now)
-        // Los clics que provoca el envío rápido no cuentan (los apunta él al terminar). Solo los de su app.
+        val sessionStarted = quickApp(platform) && !quickBusy && quickSendActive() && checkUserSheet(event, platform, now)
+        // Los clics que provoca el envío rápido no cuentan (los apunta él al terminar). Solo los de su app. 1.10.1: con el envío
+        // ya terminado, el «Compartir» del visor es del usuario (el envío rápido no pulsa nada al acabar) y sí cuenta.
         if (platform == quickPlatform && (quickBusy || now < ignoreClicksUntil)) {
-            CalibrationLog.log {
-                CalibrationEvent(now, CLICK, pkg, platform, className = event.className?.toString(), decision = false, rule = "envío rápido: clic propio")
+            val viewerShare = !quickBusy && isViewerShare(event, platform)
+            if (RecipientDetector.isOwnQuickClick(quickBusy, now, ignoreClicksUntil, viewerShare, quickShareClickedAt)) {
+                CalibrationLog.log {
+                    CalibrationEvent(now, CLICK, pkg, platform, className = event.className?.toString(), decision = false, rule = "envío rápido: clic propio")
+                }
+                return
             }
-            return
+            CalibrationLog.log { CalibrationEvent(now, INFO, platform = platform, rule = "envío rápido terminado: «Compartir» del visor a mano (cuenta)") }
         }
+        // Ya lo ha recogido checkUserSheet (sesión de «A quién envías» abierta): el propio clic en «Compartir» no es de la hoja.
+        if (sessionStarted) return
         // La hoja de compartir puede tapar el vídeo (o dejarlo en pausa): va antes de mirar si hay vídeo activo.
         if (recordRecipients && recipientDetector.isOpen(now) && recipientDetector.platform == platform) {
             onShareSheetClicked(event, platform, pkg, now)
@@ -722,17 +734,18 @@ class ReelAccessibilityService : AccessibilityService() {
      * ni de la pausa tras un envío rápido, así que un compartir o unos comentarios justo después también cuentan.
      * Otro clic dentro del visor (me gusta, el vídeo…) dice que ya no hay hoja encima: vuelven. Solo botones del
      * visor ([PlatformProfile.feedIds]: `clips_*` en Instagram, `viewpager` en TikTok); lo de la hoja no se mira aquí.
+     * Devuelve si ha abierto una sesión de «A quién envías» (un «Compartir» a mano con el detector en pausa).
      */
-    private fun checkUserSheet(event: AccessibilityEvent, platform: Platform, now: Long) {
-        val profile = PlatformProfile.of(platform) ?: return
-        val node = event.source?.let { AccessibilityUiNode(it) } ?: return
-        if (!recipientDetector.insideFeed(node, profile.feedIds)) return
+    private fun checkUserSheet(event: AccessibilityEvent, platform: Platform, now: Long): Boolean {
+        val profile = PlatformProfile.of(platform) ?: return false
+        val node = event.source?.let { AccessibilityUiNode(it) } ?: return false
+        if (!recipientDetector.insideFeed(node, profile.feedIds)) return false
         if (!shareDetector.opensSheet(node, screenWidth, screenHeight, platform)) {
             if (board.sheetOpen) {
                 board.onSheetClosed()
                 CalibrationLog.log { CalibrationEvent(now, INFO, platform = platform, rule = "envío rápido: clic en el visor (burbujas de vuelta)") }
             }
-            return
+            return false
         }
         board.onUserSheetOpened(now)
         CalibrationLog.log { CalibrationEvent(now, INFO, platform = platform, rule = "envío rápido: hoja abierta a mano (burbujas fuera)") }
@@ -744,7 +757,16 @@ class ReelAccessibilityService : AccessibilityService() {
         ) {
             recipientDetector.start(now, t.currentVideoId, profile = profile)
             snapshotSentBanners(platform, now)
+            return true
         }
+        return false
+    }
+
+    /** ¿Es [event] un clic en el «Compartir» del visor de [platform] (dentro de [PlatformProfile.feedIds])? */
+    private fun isViewerShare(event: AccessibilityEvent, platform: Platform): Boolean {
+        val profile = PlatformProfile.of(platform) ?: return false
+        val node = event.source?.let { AccessibilityUiNode(it) } ?: return false
+        return recipientDetector.insideFeed(node, profile.feedIds) && shareDetector.evaluate(node, screenWidth, screenHeight).isShare
     }
 
     /**
@@ -804,6 +826,8 @@ class ReelAccessibilityService : AccessibilityService() {
             sheetCloseRun++
             shareDetector.onFeedActivity(platform)
             if (quickApp(platform)) board.onSheetClosed()
+            // 1.10.1: la ventana de su aviso «Enviado a …», para que una sesión que empiece a ciegas no lo tome por el suyo.
+            rememberSentBannerWindows(platform)
         }
         debug { "✉ Enviado a ${outcome.names.size} en ${platform.shortName} (${outcome.rule})" }
     }
@@ -822,6 +846,73 @@ class ReelAccessibilityService : AccessibilityService() {
      */
     private var staleSentBanners: Pair<Long, Set<RecipientDetector.SentBanner>>? = null
 
+    /**
+     * 1.10.1: la sesión que empezó en `first` hizo su lectura del principio **a ciegas** (la hoja ya estaba abierta encima y
+     * tapaba el aviso de debajo); `second` es la ventana de esa hoja: solo un aviso de una ventana posterior puede ser de este
+     * envío ([RecipientDetector.freshSentBanners]). Solo se toca en [readScope].
+     */
+    private var blindSheetWindow: Pair<Long, Int>? = null
+
+    /** Ventanas de los avisos vistos tras los envíos ya apuntados ([rememberSentBannerWindows]). Solo se toca en [readScope]. */
+    private val sentBannerWindows = SentBannerWindows()
+
+    /**
+     * Cambia (en el hilo principal) al empezar una sesión de «A quién envías» o un envío rápido: las lecturas de
+     * [rememberSentBannerWindows] que sigan en marcha paran, porque un aviso que salga desde entonces puede ser de un envío
+     * que aún no se ha apuntado.
+     */
+    @Volatile
+    private var sentBannerMemoryGen = 0
+
+    /**
+     * TikTok: acaba de apuntarse un envío (envío rápido terminado, o un `Sent` de «A quién envías»). Su aviso «Enviado a …»
+     * sale enseguida en una ventana nueva: se lee unas veces en poco más de un segundo y se guarda su ventana en
+     * [sentBannerWindows], para que una sesión que empiece a ciegas no lo tome luego por el de su envío. Para en cuanto ve
+     * un aviso de una ventana que no tenía guardada (si solo ve los de envíos anteriores, sigue mirando) o si empieza otra
+     * sesión u otro envío rápido ([sentBannerMemoryGen]).
+     */
+    private fun rememberSentBannerWindows(platform: Platform) {
+        if (recipientProfile(platform)?.sheetOwnWindow != true) return
+        val gen = sentBannerMemoryGen
+        readScope.launch {
+            for (wait in SENT_BANNER_MEMORY_WAITS_MS) {
+                delay(wait)
+                if (gen != sentBannerMemoryGen) return@launch
+                val seen = RecipientDetector.sentBanners(appRoots(platform), AccessibilityUiFinder, bannerQueries())
+                if (seen.isEmpty() || gen != sentBannerMemoryGen) continue
+                val now = SystemClock.uptimeMillis()
+                // Si solo se ven avisos ya recordados (el de un envío anterior que sigue abajo), el de este aún no ha salido.
+                val newWindow = seen.any { it.windowId != UiNode.NO_WINDOW && it.windowId !in sentBannerWindows.known(now) }
+                sentBannerWindows.remember(seen.map { it.windowId }, now)
+                if (newWindow) return@launch
+            }
+        }
+    }
+
+    /**
+     * Las consultas del aviso «Enviado a …» para los idiomas del sistema (todos los de su lista), más español e inglés
+     * ([RecipientDetector.sentBannerQueriesFor]): cada una es una llamada entre procesos por ventana, en el hilo de los pasos
+     * del envío rápido. Se guardan mientras no cambie la lista de idiomas. Además de la del proceso, la del sistema: si el
+     * usuario elige otro idioma solo para esta app, TikTok sigue con el del sistema.
+     */
+    private fun bannerQueries(): List<String> {
+        val system = runCatching { android.content.res.Resources.getSystem().configuration.locales.toLanguageTags() }.getOrDefault("")
+        val tags = LocaleList.getDefault().toLanguageTags() + "," + system
+        val cached = bannerQueriesCache
+        if (cached != null && cached.first == tags) return cached.second
+        val queries = RecipientDetector.sentBannerQueriesFor(tags.split(',').filter { it.isNotBlank() })
+        bannerQueriesCache = tags to queries
+        return queries
+    }
+
+    @Volatile
+    private var bannerQueriesCache: Pair<String, List<String>>? = null
+
+    /** La ventana de la hoja de compartir de [profile] en [roots] (la primera con sus ids), o `null`. */
+    private fun sheetWindowIn(roots: List<UiNode>, profile: PlatformProfile): Int? =
+        roots.firstOrNull { r -> profile.openSheetIds.any { id -> profile.fullIds(id).any { AccessibilityUiFinder.byViewId(r, it).isNotEmpty() } } }
+            ?.windowId?.takeIf { it != UiNode.NO_WINDOW }
+
     /** ¿Sigue abierta en [roots] la hoja de compartir de [profile] (por sus ids, `touch_outside` en TikTok)? */
     private fun sheetOpenIn(roots: List<UiNode>, profile: PlatformProfile): Boolean =
         roots.any { r -> profile.openSheetIds.any { id -> profile.fullIds(id).any { AccessibilityUiFinder.byViewId(r, it).isNotEmpty() } } }
@@ -832,15 +923,19 @@ class ReelAccessibilityService : AccessibilityService() {
      * apuntan para que [watchSheetClose] no los tome por el de esta hoja. Segunda pasada de la revisión: se leen aquí, cuando
      * aún se ve la actividad, porque con la hoja abierta (un diálogo encima) el aviso de debajo no se ve, y al cerrarse la
      * hoja el aviso de este envío sale a los pocos milisegundos del cambio de ventana (leerlo entonces lo daría por viejo).
-     * (Si la sesión empieza con la hoja ya abierta, porque un envío rápido la dejó así, esta lectura no ve el aviso de debajo:
-     * uno de un envío anterior aún a la vista se tomaría por nuevo al cerrar con la «X». Sin arreglar.)
+     * Si la sesión empieza con la hoja ya abierta (un envío rápido la dejó así), esta lectura es a ciegas: no ve el aviso de
+     * debajo. 1.10.1: entonces se guarda la ventana de la hoja ([blindSheetWindow]; el aviso de este envío saldrá en una
+     * posterior) y, en cualquier caso, los avisos de envíos ya apuntados ([sentBannerWindows]) nunca valen como nuevos.
      */
     private fun snapshotSentBanners(platform: Platform, startedAt: Long) {
-        if (recipientProfile(platform)?.sheetOwnWindow != true) return
+        val profile = recipientProfile(platform)?.takeIf { it.sheetOwnWindow } ?: return
+        sentBannerMemoryGen++
         readScope.launch {
-            val seen = RecipientDetector.sentBanners(appRoots(platform), AccessibilityUiFinder)
+            val roots = appRoots(platform)
+            val seen = RecipientDetector.sentBanners(roots, AccessibilityUiFinder, bannerQueries())
             val previous = staleSentBanners?.takeIf { it.first == startedAt }?.second.orEmpty()
             staleSentBanners = startedAt to (previous + seen)
+            if (blindSheetWindow?.first != startedAt) sheetWindowIn(roots, profile)?.let { blindSheetWindow = startedAt to it }
         }
     }
 
@@ -858,7 +953,7 @@ class ReelAccessibilityService : AccessibilityService() {
             val previous = staleSentBanners?.takeIf { it.first == startedAt }?.second ?: return@launch
             val roots = appRoots(platform)
             if (!sheetOpenIn(roots, profile)) return@launch
-            staleSentBanners = startedAt to (previous + RecipientDetector.sentBanners(roots, AccessibilityUiFinder))
+            staleSentBanners = startedAt to (previous + RecipientDetector.sentBanners(roots, AccessibilityUiFinder, bannerQueries()))
         }
     }
 
@@ -869,8 +964,9 @@ class ReelAccessibilityService : AccessibilityService() {
      * si la hoja ya no está y TikTok enseña abajo un aviso «Enviado a …» **nuevo** ([RecipientDetector.sentBanners] y
      * [RecipientDetector.freshSentBanners]): entonces se apunta; si la hoja se cerró sin ese aviso («X», atrás, tocar fuera),
      * no. Los avisos que ya se veían al empezar la sesión ([snapshotSentBanners]) son de un envío anterior y no valen (cada
-     * aviso va en su propia ventana, nueva). El aviso de este envío sale a los pocos milisegundos del cambio de ventana de la
-     * actividad. Solo en las apps cuya hoja va en su propia ventana. (El 7 nov, en una segunda tanda, la misma TikTok 47.7.3
+     * aviso va en su propia ventana, nueva), ni los de envíos ya apuntados ([sentBannerWindows]), ni, si esa lectura fue a
+     * ciegas, los de ventanas anteriores a la hoja ([blindSheetWindow]) (1.10.1). El aviso de este envío sale a los pocos
+     * milisegundos del cambio de ventana de la actividad. Solo en las apps cuya hoja va en su propia ventana. (El 7 nov, en una segunda tanda, la misma TikTok 47.7.3
      * sí emitió el clic de «Enviar», sin nodo, en 2 envíos de 2: entonces lo apunta [onShareSheetClicked], la sesión se cierra,
      * se anula la vigilancia que hubiera ([onRecipientsSent]) y aquí ya no hay nada marcado. Esto queda de red.)
      */
@@ -886,6 +982,9 @@ class ReelAccessibilityService : AccessibilityService() {
             // milisegundos del cambio de ventana y se tomaría por viejo (segunda pasada de la revisión). Sin lectura, todo aviso
             // vale como nuevo, como antes de los arreglos.
             val before = staleSentBanners?.takeIf { it.first == selection.startedAt }?.second.orEmpty()
+            // 1.10.1: si la lectura del principio fue a ciegas, solo avisos de ventanas posteriores a la hoja; y nunca los de
+            // envíos ya apuntados.
+            val newerThan = blindSheetWindow?.takeIf { it.first == selection.startedAt }?.second
             var closed = false
             for (wait in SENT_BANNER_WAITS_MS) {
                 delay(wait)
@@ -893,8 +992,10 @@ class ReelAccessibilityService : AccessibilityService() {
                 val roots = appRoots(platform)
                 if (sheetOpenIn(roots, profile)) continue
                 closed = true
-                val banner = RecipientDetector.freshSentBanners(before, RecipientDetector.sentBanners(roots, AccessibilityUiFinder)).isNotEmpty()
-                if (banner) {
+                val seen = RecipientDetector.sentBanners(roots, AccessibilityUiFinder, bannerQueries())
+                val fresh = RecipientDetector.freshSentBanners(before, seen, sentBannerWindows.known(SystemClock.uptimeMillis()), newerThan)
+                if (fresh.isNotEmpty()) {
+                    sentBannerWindows.remember(fresh.map { it.windowId }, SystemClock.uptimeMillis())
                     withContext(Dispatchers.Main) { onSheetClosedChecked(platform, selection, sent = true, run) }
                     return@launch
                 }
@@ -1560,6 +1661,8 @@ class ReelAccessibilityService : AccessibilityService() {
         // Una comprobación de cierre de la hoja que siga pendiente queda anulada: el aviso «Enviado a …» que salga ahora es
         // de este envío rápido, no de lo que se marcó en esa hoja.
         sheetCloseRun++
+        // Y las lecturas de avisos de un envío anterior paran: lo que salga ahora es de este (se lee al terminar).
+        sentBannerMemoryGen++
         val memory = quickMemory
         memory?.let { it.streak = it.streak.used() }
         val hints = memory?.hints(platform) ?: QuickSender.Hints()
@@ -1828,6 +1931,7 @@ class ReelAccessibilityService : AccessibilityService() {
         val accepted = result.accepted
         val now = System.currentTimeMillis()
         ignoreClicksUntil = now + QUICK_IGNORE_AFTER_MS
+        if ((step as? QuickSender.Step.Click)?.what == "compartir") quickShareClickedAt = now
         // 1.4.2: tras marcar un nombre (Android lo aceptó), «Enviar» se busca ya, sin esperar al reloj. 1.10.0: lo mismo tras
         // la lupa de TikTok (su buscador sale al momento).
         val nameAccepted = accepted == true && (step as? QuickSender.Step.Click)?.what?.let { it.startsWith("nombre") || it == "lupa del buscador" } == true
@@ -1912,6 +2016,8 @@ class ReelAccessibilityService : AccessibilityService() {
             repo?.let { dbScope.launch { runCatching { it.recordRecipients(platform, now, videoId, sent) }.onFailure { e -> debugError("recordRecipients", e) } } }
         }
         val leftOpen = !done.ok && done.sheetOpened
+        // 1.10.1: la ventana de su aviso «Enviado a …», para que una sesión que empiece a ciegas no lo tome por el suyo.
+        if (sent.isNotEmpty() && !leftOpen) rememberSentBannerWindows(platform)
         val profile = recipientProfile(platform)
         if (leftOpen && recordRecipients && profile != null) {
             // Lo que el usuario termine a mano se apunta como siempre (con los fijados ya marcados, si lo estaban).
@@ -2069,6 +2175,57 @@ class ReelAccessibilityService : AccessibilityService() {
         } catch (e: RuntimeException) {
             false
         }
+    }
+
+    /** Cada comprobación de [checkSheetGone]: una nueva deja sin efecto la anterior. Cambia en el hilo principal. */
+    @Volatile
+    private var sheetGoneRun = 0
+
+    /**
+     * 1.10.1: en TikTok la hoja abierta a mano (compartir, comentarios…) es otra ventana y el feed no se mueve al cerrarla con la
+     * «X», atrás o tocando fuera, así que [BubbleBoard.onFeedMoved] no llegaba y las burbujas no volvían hasta tocar el visor.
+     * Con cada cambio de ventana de la app y una hoja abierta, pasado [BubbleBoard.SETTLE_MS] se mira si queda alguna ventana de
+     * la app encima de la del feed ([SheetWindows.sheetAbove]); si no queda ninguna, la hoja se da por cerrada
+     * ([BubbleBoard.onSheetGone]). Con los comentarios u otra hoja abierta (otra ventana encima) siguen fuera. Solo en las apps
+     * cuya hoja va en su propia ventana: en Instagram, todo como antes.
+     */
+    private fun checkSheetGone(platform: Platform) {
+        if (PlatformProfile.of(platform)?.sheetOwnWindow != true) return
+        val openedAt = board.sheetOpenedAt ?: return
+        val feedWindow = feedNode?.takeIf { feedPlatform == platform }?.let { runCatching { it.windowId }.getOrNull() } ?: return
+        val run = ++sheetGoneRun
+        readScope.launch {
+            delay(BubbleBoard.SETTLE_MS)
+            if (run != sheetGoneRun || quickBusy) return@launch
+            if (sheetWindowAbove(feedWindow) != false) return@launch
+            withContext(Dispatchers.Main) {
+                if (run != sheetGoneRun || quickBusy) return@withContext
+                val now = System.currentTimeMillis()
+                if (board.onSheetGone(openedAt, now)) {
+                    CalibrationLog.log { CalibrationEvent(now, INFO, platform = platform, rule = "envío rápido: hoja cerrada, sin ventanas encima del feed (burbujas de vuelta)") }
+                    updateOverlay()
+                }
+            }
+        }
+    }
+
+    /**
+     * [SheetWindows.sheetAbove] con las ventanas de ahora (`null` si no se sabe). Hilo de fondo. Sin leer raíces: una ventana
+     * cuyo alto no se puede leer cuenta como entera (ante la duda, las burbujas siguen fuera).
+     */
+    private fun sheetWindowAbove(feedWindow: Int): Boolean? {
+        val list = try {
+            windows
+        } catch (e: RuntimeException) {
+            return null
+        }
+        val r = Rect()
+        val samples = list.orEmpty().filter { it.type == AccessibilityWindowInfo.TYPE_APPLICATION }.map { w ->
+            r.setEmpty()
+            val height = runCatching { w.getBoundsInScreen(r); r.height() }.getOrDefault(Int.MAX_VALUE)
+            SheetWindows.Sample(w.id, w.layer, height)
+        }
+        return SheetWindows.sheetAbove(samples, feedWindow, screenHeight)
     }
 
     // ── Utilidades ───────────────────────────────────────────────────────────────────────────────
@@ -2256,6 +2413,9 @@ class ReelAccessibilityService : AccessibilityService() {
          * los 0,4 s del toque) y dura unos 5 s (medido el 7 nov por la tarde: aún a 4,2 y 4,7 s del envío; ya no a 5,0 y 6,4 s).
          */
         private val SENT_BANNER_WAITS_MS = listOf(150L, 300L, 450L, 600L)
+
+        /** Lecturas del aviso de un envío ya apuntado ([rememberSentBannerWindows]): a los 150, 400, 800 y 1.500 ms. */
+        private val SENT_BANNER_MEMORY_WAITS_MS = listOf(150L, 250L, 400L, 700L)
 
         /** Lo que se espera, con las burbujas escondidas, a que la pantalla se repinte antes de la captura. */
         private const val CAPTURE_HIDE_MS = 64L

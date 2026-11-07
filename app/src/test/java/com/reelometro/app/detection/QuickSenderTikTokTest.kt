@@ -517,7 +517,11 @@ class QuickSenderTikTokTest {
 
     @Test
     fun `la lupa del feed nunca, aunque la hoja no tenga la suya`() {
-        val noLupa = sheetWith("content-desc=\"Buscar\"" to "content-desc=\"\"")
+        // 1.10.1: sin etiqueta la lupa se encuentra por su sitio; sin la lupa, ni por su sitio (no es pulsable) ni por su nombre.
+        val noLupa = sheetWith(
+            "content-desc=\"Buscar\" checkable=\"false\" checked=\"false\" clickable=\"true\"" to
+                "content-desc=\"\" checkable=\"false\" checked=\"false\" clickable=\"false\"",
+        )
         start(Target("ElRubencio Cuenta secundaria"))
         clickOf(tick(0, feed)); sender.onPerformed(true)
         var now = 100L

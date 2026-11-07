@@ -12,7 +12,7 @@
     <!-- Título grande. -->
     <string name="disclosure_title">Para contar, eu preciso observar.</string>
     <!-- Párrafo principal: qué se lee, para qué y dónde se guarda. -->
-    <string name="disclosure_summary">O Reelometer usa o serviço de acessibilidade do Android para ler a tela do TikTok, do Instagram e do YouTube enquanto você os usa. Assim detecta cada vídeo curto que você vê e guarda, só neste celular, em qual app você o viu, quando, por quanto tempo, quem o publicou e a descrição, para mostrar suas estatísticas.</string>
+    <string name="disclosure_summary">O Reelometer usa o serviço de acessibilidade do Android para ler a tela do TikTok, do Instagram e do YouTube enquanto você os usa. Assim, ele detecta cada vídeo curto que você vê e guarda, só neste celular, em qual app você o viu, quando, por quanto tempo, quem o publicou e a descrição, para mostrar suas estatísticas.</string>
 
     <!-- Bloques con etiqueta en MAYÚSCULAS (poco sitio) y su texto, en este orden. -->
     <!-- «Compartir» cita el botón de Instagram/TikTok/YouTube tal cual (en cada idioma, como lo muestren
@@ -22,7 +22,7 @@
     <!-- «Compartir» y «Enviar» citan los botones de Instagram y TikTok tal cual (en cada idioma, como los
          muestren esas apps en ese idioma). -->
     <string name="disclosure_not_reads_label">O QUE NÃO LÊ</string>
-    <string name="disclosure_not_reads_text">Nada dos outros apps: deles só sabe que você saiu, para parar de contar. Não guarda o que você escreve nem suas mensagens. Só aperta algo por você se você usar o envio rápido do Instagram ou do TikTok, e apenas “Compartilhar”, a pessoa ou o grupo que você fixou e “Enviar”, ao tocar o botão; se não encontrar, procura na barra de pesquisa do menu (no TikTok, tocando antes na lupa). Só com o envio rápido, recorta do menu de compartilhamento a foto de perfil das pessoas ou grupos que você fixa, para mostrá-la no botão; guarda só neste celular e não faz nenhuma outra captura de tela.</string>
+    <string name="disclosure_not_reads_text">Nada dos outros apps: deles ele só sabe que você saiu, para parar de contar. Ele não guarda o que você escreve nem suas mensagens. Só aperta algo por você se você usar o envio rápido do Instagram ou do TikTok, e apenas “Compartilhar”, a pessoa ou o grupo que você fixou e “Enviar”, ao tocar no botão; se não encontrar, ele procura na barra de pesquisa do menu (no TikTok, tocando antes na lupa). Só com o envio rápido, recorta do menu de compartilhamento a foto de perfil das pessoas ou grupos que você fixa, para mostrá-la no botão; ela fica só neste celular e não faz nenhuma outra captura de tela.</string>
     <string name="disclosure_purpose_label">PARA QUÊ</string>
     <string name="disclosure_purpose_text">Só para contar quantos vídeos você vê, por quanto tempo, de quais temas e de quais criadores. Não é usado para publicidade nem para fazer perfis.</string>
     <string name="disclosure_storage_label">ONDE VAI PARAR</string>

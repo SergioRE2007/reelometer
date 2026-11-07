@@ -11,7 +11,7 @@
     <string name="quicksend_sending_description">Invio a %1$s</string>
     <string name="quicksend_sent_description">Inviato a %1$s</string>
     <!-- No ha encontrado algo: si la hoja de compartir se abrió, se queda abierta para terminar a mano. -->
-    <string name="quicksend_failed_description">Non sono riuscito a inviarlo a %1$s</string>
+    <string name="quicksend_failed_description">Invio a %1$s non riuscito</string>
     <!-- Acción de TalkBack: enviar a dos a la vez. %1$s esta burbuja, %2$s otra persona o grupo fijado. -->
     <string name="quicksend_pair_action">Invia a %1$s e a %2$s</string>
     <!-- Acción de TalkBack en cada burbuja (equivale a soltarla en la «X»). -->

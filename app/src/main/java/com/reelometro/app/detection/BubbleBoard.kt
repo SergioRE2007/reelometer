@@ -14,6 +14,9 @@ package com.reelometro.app.detection
  *    como una hoja abierta, pero después de enseñar el fallo un momento ([FAILED_SHOWN_MS]).
  *  - La hoja se da por cerrada cuando el visor se mueve ([onFeedMoved], pasado [SETTLE_MS] desde que se abrió:
  *    al abrirse también puede llegar un movimiento), al enviar desde ella ([onSheetClosed]) o al cambiar de reel.
+ *    En TikTok (1.10.1) la hoja es otra ventana y el visor no se mueve al cerrarla («X», atrás, tocar fuera): tras un
+ *    cambio de ventana, si ya no queda ninguna ventana de la app encima del feed ([SheetWindows.sheetAbove]), el servicio
+ *    llama a [onSheetGone] (con la misma espera [SETTLE_MS]). Los comentarios u otra hoja son otra ventana encima: siguen fuera.
  *  - Mientras se envía, siempre se ven (la hoja abierta es la del propio envío).
  */
 class BubbleBoard {
@@ -34,6 +37,9 @@ class BubbleBoard {
 
     /** Hay una hoja abierta encima del visor (a mano, o la que deja un fallo). */
     val sheetOpen: Boolean get() = sheetSince != null
+
+    /** Desde cuándo está abierta la hoja ([sheetOpen]), o `null`: sirve para descartar una comprobación que llega tarde. */
+    val sheetOpenedAt: Long? get() = sheetSince
 
     fun markOf(name: String): Mark = marks[name] ?: Mark.IDLE
 
@@ -65,6 +71,19 @@ class BubbleBoard {
             sheetSince = null
             hideFrom = null
         }
+    }
+
+    /**
+     * TikTok (1.10.1): ya no hay ninguna ventana de la app encima del feed, así que la hoja que se abrió en [openedAt] se ha
+     * cerrado («X», atrás, tocar fuera). Como [onFeedMoved], no vale justo al abrirse (antes de [SETTLE_MS], la ventana de la
+     * hoja puede no haber salido aún), y una comprobación de una hoja anterior ([openedAt] distinto de [sheetOpenedAt]) no
+     * cierra la de ahora. Devuelve si se ha dado por cerrada.
+     */
+    fun onSheetGone(openedAt: Long, now: Long): Boolean {
+        val since = sheetSince ?: return false
+        if (since != openedAt || now - since < SETTLE_MS) return false
+        onSheetClosed()
+        return true
     }
 
     /** Se ha enviado desde la hoja abierta a mano (y se ha cerrado sola). */
@@ -134,6 +153,29 @@ class BubbleBoard {
 
         /** Lo que se ve el «!» antes de esconderlas, si la hoja se queda abierta para terminar a mano. */
         const val FAILED_SHOWN_MS = 2_000L
+    }
+}
+
+/**
+ * ¿Sigue habiendo una hoja encima del feed? (1.10.1, puro; solo apps cuya hoja va en su propia ventana, TikTok). Medido en
+ * TikTok 47.7.3: la hoja de compartir (y la de comentarios) es un diálogo en otra ventana de la app, encima de la del feed,
+ * y el aviso «Enviado a …» va en una ventana propia, pequeña, abajo.
+ */
+object SheetWindows {
+
+    /** Una ventana de app (`TYPE_APPLICATION`): su id, su capa (más alta = más arriba) y su alto en px. */
+    data class Sample(val id: Int, val layer: Int, val height: Int)
+
+    /**
+     * `true` si encima de la ventana del feed ([feedWindowId]) hay alguna ventana de app que pueda ser una hoja; `false` si
+     * no hay ninguna; `null` si no se sabe (sin ventana del feed, o no está en [windows]): entonces no se cambia nada. No
+     * cuentan las ventanas de menos de un cuarto de [screenHeight] (el aviso «Enviado a …», avisos sueltos). Cuenta también
+     * una ventana de otra app (el selector de Android encima de TikTok): ante la duda, las burbujas siguen fuera, como antes
+     * de la 1.10.1. Así tampoco hace falta leer la raíz de ninguna ventana (llamadas entre procesos en el hilo del envío).
+     */
+    fun sheetAbove(windows: List<Sample>, feedWindowId: Int?, screenHeight: Int): Boolean? {
+        val feed = windows.firstOrNull { it.id == feedWindowId } ?: return null
+        return windows.any { it.id != feed.id && it.layer > feed.layer && it.height >= screenHeight / 4 }
     }
 }
 

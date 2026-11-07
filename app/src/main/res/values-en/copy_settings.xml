@@ -154,11 +154,11 @@
 
     <!-- 1.10.0, envío rápido en Instagram y en TikTok: cada app tiene sus fijados y su sitio para las burbujas.
          Va encima de las dos pestañas con el nombre de cada app (INSTAGRAM, TIKTOK: las marcas no se traducen). -->
-    <string name="settings_quick_send_apps_hint">Each app has its own pinned people and its own spot for the bubbles: your TikTok contacts aren\'t your Instagram ones.</string>
+    <string name="settings_quick_send_apps_hint">Each app has its own pinned people and its own spot for the bubbles: your TikTok contacts aren\'t the same as your Instagram ones.</string>
     <!-- TalkBack de cada pestaña. %1$s el nombre de la app («TikTok», «Instagram»). -->
     <string name="settings_quick_send_app_description">See who\'s pinned on %1$s</string>
     <!-- Sin historial de envíos en esa app todavía: no hay nada que fijar. %1$s el nombre de la app (sale dos veces). -->
-    <string name="settings_quick_send_empty_app">No one to pin on %1$s yet. Share a video by hand on %1$s with “Who you send to” turned on: the people and groups you send to will appear here.</string>
+    <string name="settings_quick_send_empty_app">Nobody to pin on %1$s yet. Share a video on %1$s yourself with “Who you send to” turned on, and the people and groups you send to will show up here.</string>
     <!-- Encima de la lista de personas y grupos para fijar. %1$s el nombre de la app. -->
     <string name="settings_quick_send_list_label_app">Who you send to most on %1$s</string>
     <!-- Bajo RECOLOCAR y tras pulsarlo. %1$s el nombre de la app. -->

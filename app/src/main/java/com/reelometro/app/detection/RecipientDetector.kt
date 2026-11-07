@@ -430,12 +430,59 @@ class RecipientDetector(private val config: Config = Config()) {
         private val BIDI: Set<Char> = (listOf(0x200E, 0x200F) + (0x202A..0x202E) + (0x2066..0x2069)).mapTo(HashSet()) { Char(it) }
 
         /**
-         * El aviso que pone TikTok abajo tras enviar («Enviado a 💿», «Sent to Ana»). Español e inglés vistos o conocidos;
-         * los demás, supuestos. Una sola lista para lo que se pide al atajo de texto (que distingue tildes) y para la regla
-         * ([SENT_BANNER], normalizada): todo aviso que la regla reconoce se puede encontrar.
+         * El aviso «Enviado a …» en un idioma: sus códigos ([codes], como los da `Locale.language`), los prefijos que acepta la
+         * regla ([prefixes], seguidos del nombre: con un espacio, o pegado si [joined]) y lo que se pide al atajo de texto
+         * ([queries]). `findAccessibilityNodeInfosByText` busca una **subcadena** sin mayúsculas (pero con tildes), así que una
+         * consulta vale por todos los prefijos que la contienen («Enviado» por «Enviado a» y «Enviado para»); trae más nodos,
+         * pero la regla los filtra, y cada consulta es una llamada entre procesos por ventana.
          */
-        val SENT_BANNER_QUERIES = listOf("Enviado a", "Enviada a", "Enviado para", "Sent to", "Envoyé à", "Inviato a", "Gesendet an")
-        val SENT_BANNER = Regex("^(?:" + SENT_BANNER_QUERIES.joinToString("|") { Regex.escape(normalize(it)) } + ") .+")
+        internal class BannerLanguage(val codes: List<String>, val prefixes: List<String>, val queries: List<String>, val joined: Boolean = false)
+
+        /**
+         * Español e inglés, vistos o conocidos; los demás, supuestos de memoria, sin fuente verificada: si alguno no es así,
+         * simplemente no se reconoce. Solo idiomas con un prefijo fijo delante del nombre: no los que ponen el nombre delante
+         * (ja, ko) ni los que no lo llevan (tr, ru, uk, hi, th). En chino el nombre va pegado (también se admite con espacio).
+         */
+        internal val SENT_BANNER_LANGUAGES = listOf(
+            BannerLanguage(listOf("es"), listOf("Enviado a", "Enviada a"), listOf("Enviado", "Enviada")),
+            BannerLanguage(listOf("en"), listOf("Sent to"), listOf("Sent to")),
+            BannerLanguage(listOf("pt"), listOf("Enviado para", "Enviada para"), listOf("Enviado", "Enviada")),
+            BannerLanguage(listOf("fr"), listOf("Envoyé à", "Envoyée à"), listOf("Envoyé")),
+            BannerLanguage(listOf("de"), listOf("Gesendet an"), listOf("Gesendet an")),
+            BannerLanguage(listOf("it"), listOf("Inviato a", "Inviata a"), listOf("Inviat")),
+            BannerLanguage(listOf("nl"), listOf("Verzonden naar", "Verstuurd naar"), listOf("Verzonden naar", "Verstuurd naar")),
+            BannerLanguage(listOf("pl"), listOf("Wysłano do"), listOf("Wysłano do")),
+            BannerLanguage(listOf("ar"), listOf("تم الإرسال إلى"), listOf("تم الإرسال إلى")),
+            BannerLanguage(listOf("id", "in"), listOf("Terkirim ke", "Dikirim ke"), listOf("Terkirim ke", "Dikirim ke")),
+            BannerLanguage(listOf("ms"), listOf("Dihantar kepada", "Dihantar ke"), listOf("Dihantar ke")),
+            BannerLanguage(listOf("vi"), listOf("Đã gửi đến", "Đã gửi tới"), listOf("Đã gửi")),
+            BannerLanguage(listOf("zh"), listOf("已发送给", "已傳送給"), listOf("已发送给", "已傳送給"), joined = true),
+            BannerLanguage(listOf("fil", "tl"), listOf("Ipinadala kay", "Naipadala sa"), listOf("Ipinadala kay", "Naipadala sa")),
+            BannerLanguage(listOf("ro"), listOf("Trimis către"), listOf("Trimis către")),
+        )
+
+        /** Los idiomas cuyas consultas se hacen siempre, sea cual sea el del sistema. */
+        private val ALWAYS_BANNER_LANGUAGES = listOf("es", "en")
+
+        /**
+         * Lo que se pide al atajo de texto para encontrar el aviso con el sistema en [languages] (etiquetas o códigos: «es-ES»,
+         * «zh-TW», «fr»): las consultas de esos idiomas y, siempre, las de español e inglés; sin repetir. TikTok sigue el idioma
+         * del sistema salvo que se cambie en la app: un aviso en un idioma que no está aquí no se busca (pero si se encuentra
+         * por otra consulta, la regla lo acepta).
+         */
+        fun sentBannerQueriesFor(languages: List<String>): List<String> {
+            val codes = (languages.map { it.substringBefore('-').substringBefore('_').lowercase() } + ALWAYS_BANNER_LANGUAGES).distinct()
+            return codes.flatMap { code -> SENT_BANNER_LANGUAGES.filter { code in it.codes }.flatMap { it.queries } }.distinct()
+        }
+
+        /** Todas las consultas de todos los idiomas: todo aviso que la regla reconoce contiene, tal cual, alguna. */
+        val SENT_BANNER_QUERIES: List<String> = SENT_BANNER_LANGUAGES.flatMap { it.queries }.distinct()
+
+        /** La regla, normalizada, con los prefijos de todos los idiomas (no cuesta llamadas entre procesos). */
+        val SENT_BANNER = Regex(
+            "^(?:(?:" + SENT_BANNER_LANGUAGES.filter { !it.joined }.flatMap { it.prefixes }.joinToString("|") { Regex.escape(normalize(it)) } + ") .+" +
+                "|(?:" + SENT_BANNER_LANGUAGES.filter { it.joined }.flatMap { it.prefixes }.joinToString("|") { Regex.escape(normalize(it)) } + ") ?.+)",
+        )
 
         /**
          * Lo más largo que puede ser el aviso (normalizado): «Enviado a» y el nombre o los nombres. Un texto más largo es
@@ -459,12 +506,13 @@ class RecipientDetector(private val config: Config = Config()) {
 
         /**
          * Los avisos «Enviado a …» que se ven en [roots] (normalizados, con su ventana), buscados con el atajo de texto de
-         * [finder] ([SENT_BANNER_QUERIES]); nunca el pie del vídeo ([CAPTION_IDS]).
+         * [finder] con [queries] (el servicio pasa las de los idiomas del sistema, [sentBannerQueriesFor]); nunca el pie del
+         * vídeo ([CAPTION_IDS]).
          */
-        fun sentBanners(roots: List<UiNode>, finder: UiFinder): Set<SentBanner> {
+        fun sentBanners(roots: List<UiNode>, finder: UiFinder, queries: List<String> = SENT_BANNER_QUERIES): Set<SentBanner> {
             val out = LinkedHashSet<SentBanner>()
             for (root in roots) {
-                for (query in SENT_BANNER_QUERIES) {
+                for (query in queries) {
                     for (n in finder.byText(root, query)) {
                         if (shortViewId(n.viewId) in CAPTION_IDS) continue
                         listOfNotNull(n.text, n.contentDescription).filter { isSentBanner(it) }
@@ -487,6 +535,37 @@ class RecipientDetector(private val config: Config = Config()) {
          */
         fun freshSentBanners(before: Set<SentBanner>, now: Set<SentBanner>): Set<SentBanner> =
             now.filterTo(LinkedHashSet()) { b -> before.none { old -> old.text == b.text && sameWindow(old.windowId, b.windowId) } }
+
+        /**
+         * [freshSentBanners] y, además (1.10.1), para cuando la lectura del principio fue **a ciegas** (la sesión empezó con la
+         * hoja ya abierta, porque un envío rápido la dejó así: con un diálogo encima el aviso de debajo no se ve):
+         *  - nunca vale un aviso de una ventana de [knownWindows] (las de avisos vistos tras envíos ya apuntados:
+         *    [SentBannerWindows]); cada aviso sale en una ventana nueva, así que esas ventanas no pueden ser de este envío;
+         *  - con [newerThan] (la ventana de la hoja de esta sesión), solo valen avisos de una ventana posterior: los ids de
+         *    ventana crecen (medido, TikTok 47.7.3: 6437, 6458, 6459, 6464), y el aviso de este envío sale después de abrirse
+         *    la hoja. Un aviso sin ventana conocida ([UiNode.NO_WINDOW]) no se descarta por estas dos reglas.
+         */
+        fun freshSentBanners(before: Set<SentBanner>, now: Set<SentBanner>, knownWindows: Set<Int>, newerThan: Int?): Set<SentBanner> =
+            freshSentBanners(before, now).filterTo(LinkedHashSet()) { b ->
+                b.windowId == UiNode.NO_WINDOW || (b.windowId !in knownWindows && (newerThan == null || b.windowId > newerThan))
+            }
+
+        /**
+         * ¿Es un clic que provoca el envío rápido (no cuenta: lo apunta él al terminar)? Mientras está en curso ([quickBusy]),
+         * todos los de su app; acabado, los que lleguen hasta [ignoreUntil] (el último paso más un margen), salvo un clic en el
+         * «Compartir» del visor ([viewerShare]) con el envío ya terminado (1.10.1): el envío rápido no pulsa nada al acabar,
+         * así que ese es del usuario y abre su sesión de «A quién envías». Por si el evento del «Compartir» que pulsó el propio
+         * envío ([ownShareAt], cuándo lo pulsó) llegara con retraso, ese clic sigue siendo propio durante [OWN_SHARE_ECHO_MS].
+         */
+        fun isOwnQuickClick(quickBusy: Boolean, now: Long, ignoreUntil: Long, viewerShare: Boolean, ownShareAt: Long? = null): Boolean {
+            if (quickBusy) return true
+            if (now >= ignoreUntil) return false
+            val echo = ownShareAt != null && now - ownShareAt < OWN_SHARE_ECHO_MS
+            return !viewerShare || echo
+        }
+
+        /** Lo que puede tardar en llegar el evento del clic que pulsó el propio envío rápido. */
+        const val OWN_SHARE_ECHO_MS = 300L
 
         private fun sameWindow(a: Int, b: Int): Boolean = a == b || a == UiNode.NO_WINDOW || b == UiNode.NO_WINDOW
 
@@ -591,5 +670,44 @@ class RecipientDetector(private val config: Config = Config()) {
         )
 
         fun isOption(n: String): Boolean = n in OPTIONS || n.startsWith("compartir en ") || n.startsWith("share to ")
+    }
+}
+
+/**
+ * Las ventanas de los avisos «Enviado a …» de TikTok vistos tras cada envío ya apuntado (envío rápido terminado, o un `Sent`
+ * de «A quién envías»), 1.10.1. Cada aviso sale en una ventana nueva y la conserva mientras se ve (unos 5 s, también con la
+ * hoja encima), así que un aviso de una de estas ventanas nunca es el de un envío posterior ([RecipientDetector.freshSentBanners]).
+ * Acotada: solo las de los últimos [keepMs] y, como mucho, las [max] más recientes. Sin Android; el servicio la usa en un solo hilo.
+ */
+class SentBannerWindows(private val keepMs: Long = KEEP_MS, private val max: Int = MAX) {
+
+    /** Ventana → cuándo se vio por última vez (en el reloj que pase quien llama). */
+    private val seen = LinkedHashMap<Int, Long>()
+
+    /** Se han visto los avisos de [windows] en [now]. Las ventanas desconocidas ([UiNode.NO_WINDOW]) no se guardan. */
+    fun remember(windows: Collection<Int>, now: Long) {
+        for (w in windows) {
+            if (w == UiNode.NO_WINDOW) continue
+            seen.remove(w)
+            seen[w] = now
+        }
+        prune(now)
+    }
+
+    /** Las ventanas recordadas en [now] (las vistas en los últimos [keepMs]). */
+    fun known(now: Long): Set<Int> {
+        prune(now)
+        return seen.keys.toSet()
+    }
+
+    private fun prune(now: Long) {
+        seen.entries.removeAll { now - it.value > keepMs }
+        while (seen.size > max) seen.remove(seen.keys.first())
+    }
+
+    companion object {
+        /** El aviso dura unos 5 s (medido); el doble, de margen. */
+        const val KEEP_MS = 10_000L
+        const val MAX = 8
     }
 }
