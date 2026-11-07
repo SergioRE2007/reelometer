@@ -3,25 +3,25 @@
     <!-- Solo los textos que usa el sistema (manifiesto, servicio, canales, widget).
          Los textos de pantalla viven en com.reelometro.app.copy, con variantes. -->
 
-    <string name="app_name">Reelómetro</string>
+    <string name="app_name">Reelometer</string>
 
     <!-- Servicio de accesibilidad. Se ven en Ajustes > Accesibilidad > Aplicaciones descargadas.
-         Con la etiqueta corta, Android escribe «Usar Reelómetro» en el interruptor y
-         «¿Permitir que Reelómetro pueda controlar totalmente tu dispositivo?» en su aviso:
+         Con la etiqueta corta, Android escribe «Usar Reelometer» en el interruptor y
+         «¿Permitir que Reelometer pueda controlar totalmente tu dispositivo?» en su aviso:
          la guía del onboarding (OnboardingCopy) cita esos textos tal cual. -->
-    <string name="accessibility_service_label">Reelómetro</string>
+    <string name="accessibility_service_label">Reelometer</string>
     <!-- android:summary (API 24+): subtítulo bajo el nombre en la lista de servicios. -->
     <string name="accessibility_service_summary">Conta os vídeos curtos que você vê. Tudo fica no seu celular.</string>
     <!-- android:intro (API 31+): entradilla en la página del servicio. -->
     <string name="accessibility_service_intro">Conta os vídeos que você vê no TikTok, no Instagram Reels e no YouTube Shorts. Nada sai do seu celular.</string>
     <!-- android:description: texto completo de la página del servicio. -->
-    <string name="accessibility_service_description">O Reelómetro usa este serviço para contar os vídeos curtos que você vê no TikTok, no Instagram Reels e no YouTube Shorts. Enquanto você usa esses três apps, ele detecta quando você passa para o próximo vídeo e lê o nome do criador, a descrição e as hashtags para saber de que tema é. Se você ativar «Para quem você envia» nas Configurações, no Instagram ele também lê o nome da pessoa ou do grupo para quem você envia um vídeo. Dos outros apps não lê nada: só percebe que você saiu, para parar de contar. Se você também ativar «Envio rápido», no Instagram ele coloca um botão sobre os reels e, ao tocá-lo, lê os nomes da folha de compartilhar para encontrar quem você fixou e aperta por você apenas «Compartilhar», essa pessoa ou grupo e «Enviar» (se não encontrar, escreve o nome na busca da folha); fora isso, não aperta nada por você. Só com o envio rápido, recorta da folha de compartilhar a foto de perfil das pessoas ou grupos que você fixa, para mostrá-la no botão; ela fica só neste celular e não faz nenhuma outra captura de tela. Não guarda o que você escreve. Tudo fica guardado somente neste celular e nunca é enviado a lugar nenhum: o app não tem permissão para usar a internet. Você pode desativar quando quiser.</string>
+    <string name="accessibility_service_description">O Reelometer usa este serviço para contar os vídeos curtos que você vê no TikTok, no Instagram Reels e no YouTube Shorts. Enquanto você usa esses três apps, ele detecta quando você passa para o próximo vídeo e lê o nome do criador, a descrição e as hashtags para saber de que tema é. Se você ativar “Para quem você envia” nas Configurações, no Instagram ele também lê o nome da pessoa ou do grupo para quem você envia um vídeo. Dos outros apps não lê nada: só percebe que você saiu, para parar de contar. Se você também ativar “Envio rápido”, no Instagram ele coloca um botão sobre os reels e, ao tocá-lo, lê os nomes do menu de compartilhamento para encontrar quem você fixou e aperta por você apenas “Compartilhar”, essa pessoa ou grupo e “Enviar” (se não encontrar, digita o nome na busca do menu); fora isso, não aperta nada por você. Só com o envio rápido, recorta do menu de compartilhamento a foto de perfil das pessoas ou grupos que você fixa, para mostrá-la no botão; ela fica só neste celular e não faz nenhuma outra captura de tela. Não guarda o que você escreve. Tudo fica guardado somente neste celular e nunca é enviado a lugar nenhum: o app não tem permissão para usar a internet. Você pode desativar quando quiser.</string>
 
     <!-- Notificaciones (work/Notifications.kt). «notification_channel_name» y su descripción son el grupo
          «Resúmenes» que reúne en los ajustes del sistema los canales diario y mensual; el de estado del
          servicio queda para un aviso opcional (todavía sin uso). -->
     <string name="notification_channel_name">Resumos</string>
-    <string name="notification_channel_description">Sua conta do dia e o resumo de cada mês.</string>
+    <string name="notification_channel_description">Sua contagem do dia e o resumo de cada mês.</string>
     <string name="notification_channel_daily_name">Resumo diário</string>
     <string name="notification_channel_daily_description">Um aviso por dia, na hora que você escolher, com seus vídeos e seu tempo de hoje.</string>
     <string name="notification_channel_monthly_name">Resumo do mês</string>

@@ -7,7 +7,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="fr">
 
     <!-- Etiqueta en MAYÚSCULAS del marcador animado mientras carga (pocas letras: caben unas 8). -->
-    <string name="state_loading_label">CALCUL</string>
+    <string name="state_loading_label">COMPTAGE</string>
 
     <!-- Frase opcional bajo el marcador mientras carga. -->
     <string-array name="state_loading">
@@ -26,7 +26,7 @@
     <!-- Error genérico al cargar datos; va con el botón REINTENTAR. -->
     <string-array name="state_error">
         <item>Un souci dans les calculs.</item>
-        <item>Impossible de charger ça. La deuxième fois passe souvent.</item>
+        <item>Impossible de charger ça. Ça passe souvent au deuxième essai.</item>
         <item>Erreur de lecture des données. Réessaie.</item>
     </string-array>
 
@@ -37,7 +37,7 @@
          («62 vídeos por encima del objetivo de 150»), sin punto final. -->
     <string name="state_widget_description_goal">%1$s %2$s.</string>
     <!-- Widget con el servicio de accesibilidad desconectado (TalkBack). -->
-    <string name="state_widget_description_off">Reelómetro, sans signal\u00A0: le service est déconnecté.</string>
+    <string name="state_widget_description_off">Reelometer, sans signal\u00A0: le service est déconnecté.</string>
     <!-- Widget grande con la mascota a la vista: %1$s la descripción de arriba, %2$s el estado de
          ánimo de Flap en minúsculas («en forma»). Flap es el nombre propio de la mascota. -->
     <string name="state_widget_with_flap">%1$s Flap\u00A0: %2$s.</string>
@@ -97,9 +97,9 @@
     <string name="state_calibration_how_to_title">Mode d’emploi</string>
     <string-array name="state_calibration_how_to">
         <item>Laisse cet écran ouvert, avec CAPTURER activé, et sors avec le bouton d’accueil.</item>
-        <item>Ouvre TikTok, Instagram ou YouTube et fais le tour lentement : cinq vidéos de suite, un retour en arrière, les commentaires, un profil, le fil normal et la sortie.</item>
+        <item>Ouvre TikTok, Instagram ou YouTube et fais le tour lentement\u00A0: cinq vidéos de suite, un retour en arrière, les commentaires, un profil, le fil normal et la sortie.</item>
         <item>Reviens ici. Dans le fil de vidéos courtes, chaque balayage doit sortir avec FEED ✓ et un VIDEO_START.</item>
-        <item>Hors du fil, FEED ✗. Si quelque chose ne colle pas, partage le journal : le guide de réglage est à la fin de FeedRules.</item>
+        <item>Hors du fil, FEED ✗. Si quelque chose ne colle pas, partage le journal\u00A0: le guide de réglage est à la fin de FeedRules.</item>
     </string-array>
     <!-- Vídeo que todavía se está viendo (en lugar de su duración). -->
     <string name="state_calibration_on_screen">à l’écran</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Servicio de accesibilidad de Reelómetro (detection/ReelAccessibilityService).
+  Servicio de accesibilidad de Reelometer (detection/ReelAccessibilityService).
 
   - packageNames: el sistema SOLO le entrega eventos de TikTok (sus dos paquetes), Instagram y YouTube.
     No recibe nada del resto de apps, ni del teclado, ni del lanzador. Debe coincidir con Platform.packages.

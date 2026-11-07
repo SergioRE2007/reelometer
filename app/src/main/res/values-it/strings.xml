@@ -3,19 +3,19 @@
     <!-- Solo los textos que usa el sistema (manifiesto, servicio, canales, widget).
          Los textos de pantalla viven en com.reelometro.app.copy, con variantes. -->
 
-    <string name="app_name">Reelómetro</string>
+    <string name="app_name">Reelometer</string>
 
     <!-- Servicio de accesibilidad. Se ven en Ajustes > Accesibilidad > Aplicaciones descargadas.
-         Con la etiqueta corta, Android escribe «Usar Reelómetro» en el interruptor y
-         «¿Permitir que Reelómetro pueda controlar totalmente tu dispositivo?» en su aviso:
+         Con la etiqueta corta, Android escribe «Usar Reelometer» en el interruptor y
+         «¿Permitir que Reelometer pueda controlar totalmente tu dispositivo?» en su aviso:
          la guía del onboarding (OnboardingCopy) cita esos textos tal cual. -->
-    <string name="accessibility_service_label">Reelómetro</string>
+    <string name="accessibility_service_label">Reelometer</string>
     <!-- android:summary (API 24+): subtítulo bajo el nombre en la lista de servicios. -->
     <string name="accessibility_service_summary">Conta i video brevi che guardi. Tutto resta sul tuo telefono.</string>
     <!-- android:intro (API 31+): entradilla en la página del servicio. -->
     <string name="accessibility_service_intro">Conta i video che guardi su TikTok, Instagram Reels e YouTube Shorts. Niente esce dal tuo telefono.</string>
     <!-- android:description: texto completo de la página del servicio. -->
-    <string name="accessibility_service_description">Reelómetro usa questo servizio per contare i video brevi che guardi su TikTok, Instagram Reels e YouTube Shorts. Mentre usi queste tre app, riconosce quando passi al video successivo e legge il nome del creatore, la descrizione e gli hashtag per capire di che argomento è. Se attivi «A chi invii» nelle Impostazioni, su Instagram legge anche il nome della persona o del gruppo a cui mandi un video. Delle altre app non legge nulla: nota solo che sei uscito, per smettere di contare. Se attivi anche «Invio rapido», su Instagram mette una bolla sopra i reel e, quando la tocchi, legge i nomi nel foglio di condivisione per trovare la persona che hai fissato e preme per te solo «Condividi», quella persona o gruppo e «Invia» (se non la vede, scrive il suo nome nella ricerca del foglio); oltre a questo, non preme nient’altro per te. Solo con l’invio rapido, ritaglia dal foglio di condivisione la foto profilo delle persone o dei gruppi che fissi, per mostrarla nella loro bolla; la salva solo su questo telefono e non fa nessun’altra cattura dello schermo. Non salva quello che scrivi. Tutto viene salvato solo su questo telefono e non viene mai inviato da nessuna parte: l’app non ha il permesso di usare internet. Puoi disattivarlo quando vuoi.</string>
+    <string name="accessibility_service_description">Reelometer usa questo servizio per contare i video brevi che guardi su TikTok, Instagram Reels e YouTube Shorts. Mentre usi queste tre app, riconosce quando passi al video successivo e legge il nome del creatore, la descrizione e gli hashtag per capire di che argomento è. Se attivi «A chi invii» nelle Impostazioni, su Instagram legge anche il nome della persona o del gruppo a cui mandi un video. Delle altre app non legge nulla: nota solo che sei uscito, per smettere di contare. Se attivi anche «Invio rapido», su Instagram mette una bolla sopra i reel e, quando la tocchi, legge i nomi nel foglio di condivisione per trovare la persona che hai fissato e preme per te solo «Condividi», quella persona o gruppo e «Invia» (se non la vede, scrive il suo nome nella ricerca del foglio); oltre a questo, non preme nient’altro per te. Solo con l’invio rapido, ritaglia dal foglio di condivisione la foto profilo delle persone o dei gruppi che fissi, per mostrarla nella loro bolla; la salva solo su questo telefono e non fa nessun altro screenshot. Non salva quello che scrivi. Tutto viene salvato solo su questo telefono e non viene mai inviato da nessuna parte: l’app non ha il permesso di usare internet. Puoi disattivarlo quando vuoi.</string>
 
     <!-- Notificaciones (work/Notifications.kt). «notification_channel_name» y su descripción son el grupo
          «Resúmenes» que reúne en los ajustes del sistema los canales diario y mensual; el de estado del

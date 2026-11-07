@@ -16,14 +16,14 @@
     <!-- Cabeceras de sección (MAYÚSCULAS, una línea: cortas). -->
     <string name="stats_section_daily">OGNI GIORNO</string>
     <string name="stats_section_calendar">CALENDARIO</string>
-    <string name="stats_section_patterns">SCHEMI</string>
+    <string name="stats_section_patterns">ABITUDINI</string>
     <string name="stats_section_platforms">PIATTAFORME</string>
     <string name="stats_section_categories">CATEGORIE</string>
     <string name="stats_section_creators">CREATORI</string>
     <!-- Ranking de personas y grupos a los que envías vídeos por mensaje en Instagram. -->
     <string name="stats_section_recipients">A CHI INVII</string>
     <!-- Comparativa semanal (pestaña SEMANA). Tiene que caber en una línea con letra grande. -->
-    <string name="stats_section_week_vs">SULLA SETTIMANA PRIMA</string>
+    <string name="stats_section_week_vs">CONTRO LA SETTIMANA PRIMA</string>
     <!-- Leyenda de la línea discontinua de la gráfica semanal (MAYÚSCULAS, corta). -->
     <string name="stats_ghost_legend">SETTIMANA PRIMA</string>
 
@@ -97,17 +97,17 @@
 
     <!-- Tendencia en frase, sin periodo anterior con el que comparar (es el primero contado). -->
     <string-array name="stats_trend_none_week">
-        <item>È la tua prima settimana contata. La prossima avrà con cosa confrontarsi.</item>
+        <item>È la tua prima settimana contata. La prossima avrà un termine di paragone.</item>
         <item>Non c’è ancora una settimana precedente con cui confrontarsi.</item>
         <item>Nessuna settimana precedente con dati. Questo è il punto di partenza.</item>
     </string-array>
     <string-array name="stats_trend_none_month">
-        <item>È il tuo primo mese contato. Il prossimo avrà con cosa confrontarsi.</item>
+        <item>È il tuo primo mese contato. Il prossimo avrà un termine di paragone.</item>
         <item>Non c’è ancora un mese precedente con cui confrontarsi.</item>
         <item>Nessun mese precedente con dati. Questo è il punto di partenza.</item>
     </string-array>
     <string-array name="stats_trend_none_year">
-        <item>È il tuo primo anno contato. Il prossimo avrà con cosa confrontarsi.</item>
+        <item>È il tuo primo anno contato. Il prossimo avrà un termine di paragone.</item>
         <item>Non c’è ancora un anno precedente con cui confrontarsi.</item>
         <item>Nessun anno precedente con dati. Questo è il punto di partenza.</item>
     </string-array>
@@ -158,7 +158,7 @@
         <item>%1$s Ci sono tendenze peggiori.</item>
     </string-array>
     <string-array name="stats_trend_same">
-        <item>%1$s Costanza, si chiama.</item>
+        <item>%1$s Si chiama costanza.</item>
         <item>%1$s Né più né meno.</item>
         <item>%1$s La tua specialità è la regolarità.</item>
     </string-array>
@@ -177,7 +177,7 @@
     </string-array>
     <!-- Racha rota: %1$s es la mejor racha («12 días»). -->
     <string-array name="stats_streak_broken">
-        <item>Serie interrotta. La migliore resta a %1$s: lì aspetta.</item>
+        <item>Serie interrotta. La migliore resta a %1$s: è lì che ti aspetta.</item>
         <item>Fine della serie. Il record, %1$s, non si muove.</item>
         <item>Serie a zero. Sai che puoi arrivare a %1$s.</item>
     </string-array>
@@ -186,24 +186,24 @@
     <string-array name="stats_streak_record">
         <item>%1$s di fila sotto %2$s. La tua serie migliore è questa.</item>
         <item>Serie di %1$s, la migliore finora.</item>
-        <item>%1$s e continua. È il tuo record.</item>
+        <item>%1$s e si continua. È il tuo record.</item>
     </string-array>
     <string-array name="stats_streak_record_one">
         <item>Un giorno sotto %2$s. Così cominciano le serie.</item>
         <item>Serie di %1$s, la migliore finora.</item>
-        <item>%1$s e continua. È il tuo record.</item>
+        <item>%1$s e si continua. È il tuo record.</item>
     </string-array>
     <!-- Racha en curso por debajo del récord: %1$s la racha («4 días»), %2$s el récord
          («12 días»), %3$s lo que falta para igualarlo («8 días»; en _one_left, «1 día»). -->
     <string-array name="stats_streak_ongoing">
         <item>Serie di %1$s. Il record è a %2$s.</item>
         <item>Serie di %1$s. Mancano %3$s per eguagliare il tuo primato.</item>
-        <item>%1$s e continua. La migliore è stata di %2$s.</item>
+        <item>%1$s e si continua. La migliore è stata di %2$s.</item>
     </string-array>
     <string-array name="stats_streak_ongoing_one_left">
         <item>Serie di %1$s. Il record è a %2$s.</item>
         <item>Serie di %1$s. Manca %3$s per eguagliare il tuo primato.</item>
-        <item>%1$s e continua. La migliore è stata di %2$s.</item>
+        <item>%1$s e si continua. La migliore è stata di %2$s.</item>
     </string-array>
 
     <!-- Días de la semana, de lunes a domingo (7, en este orden), para las frases del día débil.
@@ -258,8 +258,8 @@
     </string-array>
     <string-array name="stats_peak_morning">
         <item>La tua ora di punta, %2$s. C’è chi legge il giornale.</item>
-        <item>%1$s: il feed, come colazione.</item>
-        <item>Guardi di più %2$s. Prima del caffè, il pollice.</item>
+        <item>%1$s: il feed a colazione.</item>
+        <item>L’ora in cui guardi di più: %2$s. Prima del caffè, il pollice.</item>
     </string-array>
     <!-- La sobremesa: el rato después de comer (en España, sobre las 14–16 h). -->
     <string-array name="stats_peak_afternoon">
@@ -269,7 +269,7 @@
     </string-array>
     <!-- «de quince en quince segundos»: lo que dura un vídeo corto. -->
     <string-array name="stats_peak_evening">
-        <item>%1$s. L’ora in cui la giornata non regge più altro.</item>
+        <item>%1$s. L’ora in cui la giornata non ha più molto da dare.</item>
         <item>La tua ora di punta, %2$s. La sera scorre di quindici in quindici secondi.</item>
         <item>%1$s: tra quello che c’era da fare e la cena, il feed.</item>
     </string-array>
@@ -292,7 +292,7 @@
     <!-- Primera línea del tooltip de un día anterior al primer registro. -->
     <string name="stats_tooltip_no_data">nessun dato</string>
     <!-- Primera línea del tooltip de un día que todavía no ha llegado. -->
-    <string name="stats_tooltip_future">da venire</string>
+    <string name="stats_tooltip_future">in arrivo</string>
     <!-- Barra semanal (pestaña SIEMPRE): %1$s vídeos, %2$s el lunes de esa semana («27 oct»). -->
     <string name="stats_week_tooltip">%1$s\nsettimana del %2$s</string>
     <!-- Día de la comparativa semanal: %1$s primera línea (vídeos, «sin datos» o «por llegar»),
@@ -348,25 +348,25 @@
         <item>Nessun video quell’anno. Che resti a verbale.</item>
     </string-array>
     <!-- Periodo anterior al primer día con datos: %1$s la fecha del primer día («3 de marzo de 2026»).
-         Reelómetro es el nombre de la app: no se traduce. -->
+         Reelometer es el nombre de la app: no se traduce. -->
     <string-array name="stats_before_history">
         <item>Prima del %1$s non contavo nulla. Non ci conoscevamo ancora.</item>
-        <item>Questo è precedente a Reelómetro. Qui non c’è niente da vedere, letteralmente.</item>
+        <item>Questo è prima di Reelometer. Qui non c’è niente da vedere, letteralmente.</item>
         <item>La tua cronologia comincia il %1$s. Prima, silenzio.</item>
     </string-array>
 
     <!-- Gráficas para TalkBack. Barra o celda de un día: %1$s fecha larga con mayúscula
          («Martes 3 de noviembre»), %2$s vídeos. _max: es el día con más vídeos. -->
     <string name="stats_bar_description">%1$s: %2$s.</string>
-    <string name="stats_bar_description_max">%1$s: %2$s, il giorno con più.</string>
+    <string name="stats_bar_description_max">%1$s: %2$s, il giorno record.</string>
     <string name="stats_heat_cell_description">%1$s: %2$s.</string>
     <!-- Punto de la línea por horas: %1$s hora («23:00»), %2$s vídeos. _max: la hora con más. -->
     <string name="stats_hour_description">%1$s: %2$s.</string>
-    <string name="stats_hour_description_max">%1$s: %2$s, l’ora con più.</string>
+    <string name="stats_hour_description_max">%1$s: %2$s, l’ora record.</string>
     <!-- Resumen de la gráfica diaria: %1$s total de vídeos; en _max, %2$s fecha larga del día con
          más («martes 3 de noviembre») y %3$s sus vídeos (solo la cifra). -->
     <string name="stats_daily_bars_summary">%1$s.</string>
-    <string name="stats_daily_bars_summary_max">%1$s. Il giorno con più, %2$s, con %3$s.</string>
+    <string name="stats_daily_bars_summary_max">%1$s. Il giorno record, %2$s, con %3$s.</string>
 
     <!-- Comparativa semanal para TalkBack: primera frase + segunda (la diferencia), unidas con
          stats_week_vs_description. %1$s vídeos de la semana mostrada («205 vídeos»),

@@ -12,7 +12,7 @@
 
     <!-- Secciones: título en MAYÚSCULAS (cabecera numerada, poco sitio) y descripción bajo él. -->
     <string name="settings_section_goal_title">META</string>
-    <string name="settings_section_goal_description">Um máximo de vídeos por dia. Serve para o «faltam» de Hoje e para as sequências.</string>
+    <string name="settings_section_goal_description">Um máximo de vídeos por dia. Serve para o “faltam” de Hoje e para as sequências.</string>
     <string name="settings_section_notifications_title">AVISOS</string>
     <string name="settings_section_notifications_description">Um resumo por dia, na hora que você escolher, e outro por mês.</string>
     <string name="settings_section_apps_title">QUAIS APPS CONTO</string>
@@ -27,7 +27,7 @@
     <string name="settings_section_privacy_title">PRIVACIDADE</string>
     <string name="settings_section_privacy_description">O que acontece com seus dados, sem letra miúda.</string>
     <string name="settings_section_about_title">SOBRE</string>
-    <string name="settings_section_about_description">O Reelómetro não tem nenhuma relação com TikTok, Instagram nem YouTube. Só conta o que você vê neles.</string>
+    <string name="settings_section_about_description">O Reelometer não tem nenhuma relação com o TikTok, o Instagram ou o YouTube. Só conta o que você vê neles.</string>
 
     <!-- Antetítulo de los diálogos que salen de una sección: «05 · TUS DATOS». %1$s el número de la
          sección («05»), %2$s su título (ya en MAYÚSCULAS). -->
@@ -83,7 +83,7 @@
 
     <string name="settings_daily_label">Resumo diário</string>
     <!-- Bajo el resumen diario: «Tu cuenta del día, a las 21:30.». %1$s la hora con su preposición («a las 21:30»). -->
-    <string name="settings_daily_description">Sua conta do dia, %1$s.</string>
+    <string name="settings_daily_description">Sua contagem do dia, %1$s.</string>
     <!-- Línea que abre el selector de hora (a la derecha va la hora, «21:30»). -->
     <string name="settings_time_label">Horário do aviso</string>
     <string name="settings_monthly_label">Resumo mensal</string>
@@ -93,7 +93,7 @@
     <!-- %1$s el objetivo con su palabra («150 vídeos»). -->
     <string name="settings_goal_live_description">Um só aviso por dia, assim que você passar de %1$s.</string>
     <!-- Lo mismo sin objetivo: explica por qué no se puede encender. -->
-    <string name="settings_goal_live_needs_goal">Precisa de uma meta. Coloque lá em cima e eu te aviso assim que você passar dela.</string>
+    <string name="settings_goal_live_needs_goal">Precisa de uma meta. Defina uma lá em cima e eu te aviso assim que você passar dela.</string>
 
     <!-- Selector de la hora del aviso (una hoja). HORA y MINUTOS son etiquetas en MAYÚSCULAS sobre cada rueda. -->
     <string name="settings_time_dialog_title">A que horas eu te aviso?</string>
@@ -106,7 +106,7 @@
     <string name="settings_time_minute_up">Cinco minutos a mais</string>
 
     <!-- Con los avisos bloqueados en Android (va con el botón ABRIR AJUSTES). -->
-    <string name="settings_notifications_blocked">O Android está com os avisos do Reelómetro desativados. Ative-os nas configurações do sistema para recebê-los.</string>
+    <string name="settings_notifications_blocked">O Android está com os avisos do Reelometer desativados. Ative-os nas configurações do sistema para recebê-los.</string>
 
     <!-- ============================================================ 03 apps -->
 
@@ -121,13 +121,13 @@
          con un toque. «Compartir» y «Enviar» citan los botones de Instagram tal cual: en cada idioma,
          como los muestre Instagram en ese idioma. «X» es la zona donde se sueltan las burbujas. -->
     <string name="settings_quick_send_label">Envio rápido</string>
-    <string name="settings_quick_send_description">Só no Instagram. Enquanto você vê reels, aparece uma bolinha para cada pessoa ou grupo que você fixar. Ao tocar nela, eu aperto por você «Compartilhar», esse nome e «Enviar»; se não aparecer na tela, escrevo o nome dele na busca da folha. Só isso. Se algo não bater, eu paro e você termina. Para mostrar a foto na bolinha, eu a recorto da folha de compartilhar quando ela aparece, ou você escolhe uma da sua galeria; fica neste celular. Arraste as bolinhas para onde quiser (embaixo, acima do nome do reel, elas se alinham) ou solte-as no «X» para escondê-las até o próximo reel.</string>
+    <string name="settings_quick_send_description">Só no Instagram. Enquanto você vê reels, aparece uma bolinha para cada pessoa ou grupo que você fixar. Ao tocar nela, eu aperto por você “Compartilhar”, esse nome e “Enviar”; se não aparecer na tela, digito o nome na busca do menu. Só isso. Se algo não bater, eu paro e você termina. Para mostrar a foto na bolinha, eu a recorto do menu de compartilhamento quando ela aparece, ou você escolhe uma da sua galeria; fica neste celular. Arraste as bolinhas para onde quiser (embaixo, acima do nome do reel, elas se alinham) ou solte-as no “X” para escondê-las até o próximo reel.</string>
     <!-- El gesto para enviar a dos personas a la vez. -->
-    <string name="settings_quick_send_pair_hint">Para mandar para duas pessoas ao mesmo tempo, segure uma bolinha até ela se soltar e solte-a em cima da outra. Se você tocar em outra enquanto um envio está em andamento, eu a somo à mesma folha.</string>
+    <string name="settings_quick_send_pair_hint">Para mandar para duas pessoas ao mesmo tempo, segure uma bolinha até ela se soltar e solte-a em cima da outra. Se você tocar em outra enquanto um envio está em andamento, eu a incluo no mesmo menu.</string>
     <!-- Con «A quién envías» apagado, el envío rápido no se puede encender. -->
-    <string name="settings_quick_send_needs_recipients">Para usar, ative antes «Para quem você envia»: o envio rápido procura na folha o nome que você fixou.</string>
+    <string name="settings_quick_send_needs_recipients">Para usar, ative antes “Para quem você envia”: o envio rápido procura no menu o nome que você fixou.</string>
     <!-- Sin historial de envíos todavía: no hay nada que fijar. -->
-    <string name="settings_quick_send_empty">Ainda não há ninguém para fixar. Compartilhe um reel na mão com «Para quem você envia» ativado: aqui vão aparecer as pessoas e os grupos para quem você envia.</string>
+    <string name="settings_quick_send_empty">Ainda não há ninguém para fixar. Compartilhe um reel manualmente com “Para quem você envia” ativado: aqui vão aparecer as pessoas e os grupos para quem você envia.</string>
     <!-- Encima de la lista de personas y grupos para fijar. -->
     <string name="settings_quick_send_list_label">Para quem você mais envia</string>
     <!-- Botones de cada fila, en MAYÚSCULAS y con poco sitio: fijar a alguien / ya fijado. -->
@@ -135,7 +135,7 @@
     <string name="settings_quick_send_pinned">FIXADO</string>
     <!-- Botón en MAYÚSCULAS: devuelve las burbujas a su sitio (borde derecho, a media altura). -->
     <string name="settings_quick_send_relocate">REPOSICIONAR</string>
-    <string name="settings_quick_send_relocate_hint">As bolinhas voltam para a borda direita, na altura do meio.</string>
+    <string name="settings_quick_send_relocate_hint">As bolinhas voltam para a borda direita, na metade da altura.</string>
     <string name="settings_quick_send_relocated">Pronto. Você as verá no lugar no próximo reel.</string>
     <!-- Ya hay el máximo de fijados. %1$s el máximo («3»). -->
     <plurals name="settings_quick_send_full">
@@ -145,18 +145,18 @@
     </plurals>
     <!-- TalkBack, en cada fila. %1$s el nombre de la persona o el grupo. -->
     <string name="settings_quick_send_pin_description">Fixar %1$s no envio rápido</string>
-    <string name="settings_quick_send_unpin_description">Tirar %1$s do envio rápido</string>
+    <string name="settings_quick_send_unpin_description">Remover %1$s do envio rápido</string>
     <!-- Botones en MAYÚSCULAS bajo cada fijado: elegir de la galería la foto de su burbuja, cambiarla o quitarla. -->
     <string name="settings_quick_send_photo_pick">ESCOLHER FOTO</string>
     <string name="settings_quick_send_photo_change">TROCAR FOTO</string>
-    <string name="settings_quick_send_photo_clear">TIRAR FOTO</string>
+    <string name="settings_quick_send_photo_clear">REMOVER FOTO</string>
     <string name="settings_quick_send_photo_set">Foto definida. Você a verá na bolinha; fica só neste celular.</string>
     <string name="settings_quick_send_photo_cleared">Foto removida. Volta a automática ou, se não houver, as iniciais.</string>
     <string name="settings_quick_send_photo_failed">Não consegui abrir essa foto. Tente outra.</string>
     <!-- TalkBack de esos botones. %1$s el nombre de la persona o el grupo. -->
     <string name="settings_quick_send_photo_pick_description">Escolher na galeria a foto da bolinha de %1$s</string>
     <string name="settings_quick_send_photo_change_description">Trocar a foto da bolinha de %1$s por outra da galeria</string>
-    <string name="settings_quick_send_photo_clear_description">Tirar a foto escolhida para %1$s e voltar à automática</string>
+    <string name="settings_quick_send_photo_clear_description">Remover a foto escolhida para %1$s e voltar à automática</string>
 
     <!-- ============================================================ 04 tema e idioma -->
 
@@ -169,7 +169,9 @@
          («Español»); al tocarla se abren los ajustes de idioma de la app en Android. -->
     <string name="settings_language_label">Idioma</string>
     <!-- Línea de ayuda bajo la fila. -->
-    <string name="settings_language_hint">Muda nas configurações do sistema.</string>
+    <string name="settings_language_hint">Escolha em que idioma você vê o app.</string>
+    <string name="settings_language_dialog_title">Em que idioma?</string>
+    <string name="settings_language_system">O do celular</string>
     <!-- TalkBack: lo que hace tocar la fila («Toca dos veces para …»). -->
     <string name="settings_language_open">mudar o idioma do app</string>
 
@@ -209,9 +211,9 @@
         <item quantity="other">%1$s já estavam salvos: não se repetem.</item>
     </plurals>
     <plurals name="settings_import_preview_bad">
-        <item quantity="one">%1$s linha não dá para ler e será pulada.</item>
-        <item quantity="many">%1$s linhas não dá para ler e serão puladas.</item>
-        <item quantity="other">%1$s linhas não dá para ler e serão puladas.</item>
+        <item quantity="one">%1$s linha está ilegível e será pulada.</item>
+        <item quantity="many">%1$s linhas estão ilegíveis e serão puladas.</item>
+        <item quantity="other">%1$s linhas estão ilegíveis e serão puladas.</item>
     </plurals>
     <string name="settings_import_preview_passport">Também traz seu passaporte: selos, desafios e nível.</string>
     <string name="settings_import_preview_settings">As configurações não vão no arquivo: sua meta e seus avisos ficam como estão.</string>
@@ -234,16 +236,48 @@
         <item quantity="other">%1$s já estavam.</item>
     </plurals>
     <plurals name="settings_import_done_bad">
-        <item quantity="one">%1$s linha não deu para ler.</item>
-        <item quantity="many">%1$s linhas não deu para ler.</item>
-        <item quantity="other">%1$s linhas não deu para ler.</item>
+        <item quantity="one">%1$s linha estava ilegível.</item>
+        <item quantity="many">%1$s linhas estavam ilegíveis.</item>
+        <item quantity="other">%1$s linhas estavam ilegíveis.</item>
     </plurals>
     <string name="settings_import_nothing_new">Nada de novo: tudo já estava salvo.</string>
-    <string name="settings_import_not_csv">Este arquivo não é um CSV do Reelómetro. Escolha o que você exportou pelo app.</string>
+    <string name="settings_import_not_csv">Este arquivo não é um CSV do Reelometer. Escolha o que você exportou pelo app.</string>
     <string name="settings_import_empty">O arquivo está vazio: não há vídeos para importar.</string>
-    <string name="settings_import_too_large">O arquivo passa de 50\u00A0MB: não parece uma cópia do Reelómetro.</string>
-    <string name="settings_import_too_broken">Há linhas demais que não dá para ler, então nada foi importado.</string>
+    <string name="settings_import_too_large">O arquivo passa de 50\u00A0MB: não parece uma cópia do Reelometer.</string>
+    <string name="settings_import_too_broken">Há linhas ilegíveis demais, então nada foi importado.</string>
     <string name="settings_import_failed">Não foi possível importar e nada mudou. Tente de novo.</string>
+    <string name="settings_import_dates">Não dá para ler as datas do arquivo: parece que uma planilha mudou o formato delas. Nada foi importado. Tente com o CSV do jeito que o app exportou.</string>
+
+    <!-- Cópia semanal do CSV: interruptor, a pasta escolhida no seletor do Android, a data da última cópia e
+         dois botões. A pasta fica no celular (não é um backup na nuvem). -->
+    <string name="settings_backup_label">Cópia semanal</string>
+    <!-- Sob o interruptor. %1$s quantas cópias ficam guardadas, já formatado («4»). -->
+    <plurals name="settings_backup_description">
+        <item quantity="one">Toda semana eu salvo o mesmo CSV de EXPORTAR numa pasta do seu celular que você escolhe. Fico com %1$s cópia, a mais recente, e não mexo nos seus outros arquivos.</item>
+        <item quantity="many">Toda semana eu salvo o mesmo CSV de EXPORTAR numa pasta do seu celular que você escolhe. Fico com as %1$s últimas cópias e não mexo nos seus outros arquivos.</item>
+        <item quantity="other">Toda semana eu salvo o mesmo CSV de EXPORTAR numa pasta do seu celular que você escolhe. Fico com as %1$s últimas cópias e não mexo nos seus outros arquivos.</item>
+    </plurals>
+    <!-- Linhas de recibo (à direita, o nome da pasta, «Download», e a data). -->
+    <string name="settings_backup_folder_label">Pasta</string>
+    <string name="settings_backup_last_label">Última cópia</string>
+    <string name="settings_backup_last_never">Nenhuma ainda</string>
+    <!-- %1$s a data («7 nov 2026»), %2$s a hora («14:05»). -->
+    <string name="settings_backup_last_value">%1$s, %2$s</string>
+    <!-- Botões em MAIÚSCULAS, curtos. -->
+    <string name="settings_backup_now">COPIAR AGORA</string>
+    <string name="settings_backup_change">TROCAR PASTA</string>
+    <!-- TalkBack da linha da pasta («Toque duas vezes para …»). -->
+    <string name="settings_backup_change_talkback">trocar de pasta</string>
+    <!-- Resultado de COPIAR AGORA. %1$s o nome da pasta («Download»), %2$s os vídeos com a palavra («1.234 vídeos»). -->
+    <string name="settings_backup_done">Cópia feita em %1$s: %2$s.</string>
+    <string name="settings_backup_empty">Ainda não há nada para copiar.</string>
+    <!-- A pasta não existe mais ou o Android retirou a permissão (vai com o botão TROCAR PASTA). -->
+    <string name="settings_backup_no_access">Não consigo gravar na pasta: escolha outra.</string>
+    <string name="settings_backup_failed">Não foi possível fazer a cópia. Tente de novo com COPIAR AGORA.</string>
+    <!-- O Android não deu permissão para a pasta recém-escolhida. -->
+    <string name="settings_backup_pick_failed">O Android não me deixa usar essa pasta: escolha outra.</string>
+    <!-- Vai no fim do diálogo de APAGAR TUDO se a cópia semanal estiver ligada. -->
+    <string name="settings_backup_delete_note">As cópias semanais da sua pasta não são apagadas: essas são suas.</string>
 
     <!-- ============================================================ 06 servicio -->
 
@@ -260,9 +294,9 @@
 
     <!-- Explicación de privacidad: un párrafo corto por <item>, en este orden. -->
     <string-array name="settings_privacy_paragraphs">
-        <item>O Reelómetro conta o que você vê no TikTok, no Instagram e no YouTube com o serviço de acessibilidade do Android. De cada vídeo guarda o app, a hora, por quanto tempo você o viu, o criador e a descrição.</item>
+        <item>O Reelometer conta o que você vê no TikTok, no Instagram e no YouTube com o serviço de acessibilidade do Android. De cada vídeo guarda o app, a hora, por quanto tempo você o viu, o criador e a descrição.</item>
         <item>Tudo fica guardado neste celular. Não há contas, servidores, anúncios nem análises. O app não tem permissão para usar a internet.</item>
-        <item>Seus dados só saem daqui se você mesmo os tirar: ao exportar o CSV ou ao compartilhar seu ticket.</item>
+        <item>Seus dados só saem daqui se você mesmo os tirar: ao exportar o CSV ou ao compartilhar seu cupom.</item>
         <item>Se você desativar o serviço, ele para de contar. Se apagar os dados ou desinstalar o app, eles somem.</item>
     </string-array>
     <!-- Enlace en MAYÚSCULAS. -->
@@ -296,9 +330,9 @@
     <!-- Los nombres de las tipografías y de la licencia no se traducen. -->
     <string name="settings_fonts_license">Tipografias: Bricolage Grotesque, JetBrains Mono e Instrument Serif, com licença SIL Open Font License 1.1.</string>
     <!-- Firma al pie de Ajustes (un guiño: los vídeos cortos duran unos quince segundos). -->
-    <string name="settings_signature">Feito em pedaços de quinze segundos.</string>
+    <string name="settings_signature">Feito nas horas vagas, de quinze em quinze segundos.</string>
     <!-- El proyecto en GitHub. El botón va en MAYÚSCULAS. -->
-    <string name="settings_project_text">O Reelómetro é gratuito, não tem anúncios e é feito por uma só pessoa. O projeto está no GitHub.</string>
+    <string name="settings_project_text">O Reelometer é gratuito, não tem anúncios e é feito por uma só pessoa. O projeto está no GitHub.</string>
     <string name="settings_project_button">VER NO GITHUB</string>
     <string name="settings_project_note">Abre no seu navegador. O app continua sem internet.</string>
     <string name="settings_project_no_browser">Não há nenhum navegador para abrir o link.</string>

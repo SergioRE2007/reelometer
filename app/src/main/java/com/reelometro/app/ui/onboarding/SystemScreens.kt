@@ -4,7 +4,6 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.provider.Settings
 import com.reelometro.app.detection.ReelAccessibilityService
 
@@ -19,7 +18,7 @@ internal object SystemScreens {
         start(context, Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) ||
             start(context, Intent(Settings.ACTION_SETTINGS))
 
-    /** «Información de la aplicación» de Reelómetro (menú ⋮ › «Permitir ajustes restringidos»). */
+    /** «Información de la aplicación» de Reelometer (menú ⋮ › «Permitir ajustes restringidos»). */
     fun openAppInfo(context: Context): Boolean =
         start(
             context,
@@ -32,16 +31,6 @@ internal object SystemScreens {
             context,
             Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName),
         ) || openAppInfo(context)
-
-    /**
-     * Idioma de la app en Android (Android 13+, la fila «Idioma» de Ajustes). Si el móvil no tiene esa
-     * pantalla, la «Información de la aplicación».
-     */
-    fun openAppLanguage(context: Context): Boolean {
-        val opened = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-            start(context, Intent(Settings.ACTION_APP_LOCALE_SETTINGS, Uri.fromParts("package", context.packageName, null)))
-        return opened || openAppInfo(context)
-    }
 
     private fun start(context: Context, intent: Intent): Boolean = try {
         if (context !is android.app.Activity) intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

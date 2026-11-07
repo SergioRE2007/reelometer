@@ -34,6 +34,8 @@ import org.junit.Rule
 import org.junit.Test
 import java.time.LocalDate
 
+private const val WORD_JOINER = '\u2060'
+
 @OptIn(ExperimentalCoroutinesApi::class)
 class StatsViewModelTest {
 
@@ -78,9 +80,14 @@ class StatsViewModelTest {
         advanceUntilIdle()
         val line = (vm.uiState.value as StatsUiState.Content).summary.line
         // Solo se parte tras cada «·», que va pegado (espacio duro) al trozo de antes: nunca empieza una línea.
-        line.split(" · ").forEach { segment -> assertFalse("«$segment» se podría partir", ' ' in segment) }
+        line.split("\u00A0· ").forEach { segment -> assertFalse("«$segment» se podría partir", ' ' in segment) }
+        // Tampoco tras la barra de «103/DÍA»: lleva detrás un WORD JOINER (U+2060), que no se ve.
+        assertTrue("la barra se podría partir", line.contains("/$WORD_JOINER"))
         // El texto es el mismo que el de copy/: solo cambian los espacios de dentro de cada trozo.
-        assertEquals(CopyRules.plain(StatsCopy.summaryLine(205, 205 * 15_000L, 102.5, 15_000)), CopyRules.plain(line))
+        assertEquals(
+            CopyRules.plain(StatsCopy.summaryLine(205, 205 * 15_000L, 102.5, 15_000)),
+            CopyRules.plain(line.replace(WORD_JOINER.toString(), "")),
+        )
     }
 
     @Test

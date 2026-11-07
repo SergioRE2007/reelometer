@@ -431,7 +431,7 @@ class CopyCatalogTest {
             "notification_channel_monthly_description", "widget_description",
         )
         required.forEach { assertTrue("Falta $it", it in strings) }
-        assertEquals("Reelómetro", strings["app_name"])
+        assertEquals("Reelometer", strings["app_name"])
         val description = strings.getValue("accessibility_service_description")
         listOf("TikTok", "Instagram Reels", "YouTube Shorts", "móvil").forEach {
             assertTrue("La descripción del servicio debe mencionar «$it»", it in description)

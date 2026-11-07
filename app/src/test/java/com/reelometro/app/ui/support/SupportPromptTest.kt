@@ -144,7 +144,7 @@ class SupportPromptTest {
 
     @Test
     fun `el error dice donde buscarlo a partir del enlace`() {
-        assertTrue(SupportCopy.openFailed("https://github.com/SergioRE2007/reelometro").endsWith("GitHub: SergioRE2007/reelometro."))
+        assertTrue(SupportCopy.openFailed("https://github.com/SergioRE2007/reelometer").endsWith("GitHub: SergioRE2007/reelometer."))
         assertTrue(SupportCopy.openFailed("https://github.com/otro/repo/").endsWith("GitHub: otro/repo."))
     }
 }

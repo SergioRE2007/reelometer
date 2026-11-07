@@ -616,7 +616,7 @@ private fun TicketSection(index: Int) {
                 .jaggedEdge(c.bgRaised, JaggedSide.Bottom)
                 .padding(start = Space.x5, end = Space.x5, top = Space.x5, bottom = Space.x6),
         ) {
-            Label("Reelómetro · ticket nº 0212")
+            Label("Reelometer · ticket nº 0212")
             Spacer(Modifier.height(Space.x2))
             ReceiptLine("Vídeos", "212")
             ReceiptLine("Tiempo", "47 MIN")

@@ -24,7 +24,7 @@
     </plurals>
     <plurals name="words_hours">
         <item quantity="one">%1$s\u00A0heure</item>
-        <item quantity="many">%1$s\u00A0de\u00A0heures</item>
+        <item quantity="many">%1$s\u00A0d’heures</item>
         <item quantity="other">%1$s\u00A0heures</item>
     </plurals>
     <plurals name="words_minutes">
@@ -52,7 +52,7 @@
     </plurals>
     <plurals name="words_duration_hours">
         <item quantity="one">%1$s\u00A0heure</item>
-        <item quantity="many">%1$s\u00A0de\u00A0heures</item>
+        <item quantity="many">%1$s\u00A0d’heures</item>
         <item quantity="other">%1$s\u00A0heures</item>
     </plurals>
     <!-- «una hora y 12 minutos»: %1$s las horas, %2$s los minutos (ya con sus palabras). -->

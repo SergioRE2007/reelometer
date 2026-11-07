@@ -5,7 +5,7 @@
   celebraciones y el ticket de nivel que se comparte como imagen.
   Tono: aeropuerto, tarjeta de embarque, ironía amable. Premia ver menos y nunca culpa.
   Las millas salen de ver MENOS vídeos (días bajo la referencia, rachas, retos y sellos), nunca de verlos.
-  Nombres propios: «Flap» (la mascota) y «Reelómetro» (la app) no se traducen.
+  Nombres propios: «Flap» (la mascota) y «Reelometer» (la app) no se traducen.
   Cada <string-array> es una situación y cada <item>, una frase alternativa (se elige una por día).
   Puedes poner las que quieras (mínimo 2). \u00A0 es un espacio duro: la cifra y su palabra no se separan.
   «Se pasa a mayúsculas sola» quiere decir que el código la convierte en MAYÚSCULAS: escríbela normal.
@@ -131,7 +131,7 @@
     <string name="passport_level_tagline_frecuente">They already wave at you from the gate.</string>
     <string name="passport_level_tagline_plata">VIP lounge with a view of the runway and no screens.</string>
     <string name="passport_level_tagline_oro">Priority boarding, far from the scroll.</string>
-    <string name="passport_level_tagline_platino">Top of the programme. The scroll watches you leave from the tarmac.</string>
+    <string name="passport_level_tagline_platino">Top of the program. The scroll watches you leave from the tarmac.</string>
 
     <!-- «NIVEL 2 DE 5». %1$s el nivel, %2$s el total. MAYÚSCULAS. -->
     <string name="passport_level_index">LEVEL %1$s OF %2$s</string>
@@ -337,7 +337,7 @@
     <string-array name="passport_challenge_over">
         <item>This challenge is out of reach now. Monday there’s another one, and the ghost doesn’t learn.</item>
         <item>The cap is behind you. Happens to the best.</item>
-        <item>The ghost takes this week. Let’s keep it from getting used to it.</item>
+        <item>The ghost takes this week. Don’t let it get used to it.</item>
     </string-array>
     <!-- En curso, empatado con el fantasma a estas alturas de la semana. -->
     <string-array name="passport_challenge_tie">
@@ -460,11 +460,11 @@
     </string-array>
 
     <!-- Texto que acompaña a la imagen del ticket al compartirla. %1$s el nivel en MAYÚSCULAS («PLATA»).
-         «Reelómetro» es la marca: no se traduce. -->
-    <string name="passport_ticket_share_text">Level %1$s on Reelómetro: miles for watching fewer videos.</string>
+         «Reelometer» es la marca: no se traduce. -->
+    <string name="passport_ticket_share_text">Level %1$s on Reelometer: miles for watching fewer videos.</string>
     <!-- Nombre del archivo de la imagen del ticket (se ve al compartirla). SOLO letras ASCII sin acentos,
          cifras y guiones: sin espacios. %1$s el nivel en minúsculas («plata»; los acentos se quitan solos). -->
-    <string name="passport_ticket_file_name">reelometro-level-%1$s.png</string>
+    <string name="passport_ticket_file_name">reelometer-level-%1$s.png</string>
 
     <!-- ============================================================ aviso de nivel nuevo -->
 

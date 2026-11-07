@@ -225,12 +225,20 @@ object StatsMapper {
         )
     }
 
-    /** La línea solo se puede partir por los « · »: «18 S POR VÍDEO» nunca queda en dos renglones. */
+    /**
+     * La línea solo se puede partir por los « · »: «18 S POR VÍDEO» nunca queda en dos renglones, ni
+     * «201/DÍA» se parte tras la barra (el salto de línea la toma por un sitio válido para cortar).
+     */
     internal fun unbreakableSegments(line: String): String =
         // El «·» va pegado (espacio duro) a lo de antes: si la línea parte, queda al final, no al principio de la siguiente.
-        line.split(SEPARATOR).joinToString(Format.NBSP + "· ") { it.replace(' ', Format.NBSP) }
+        line.split(SEPARATOR).joinToString(Format.NBSP + "· ") {
+            it.replace(' ', Format.NBSP).replace("/", "/$WORD_JOINER")
+        }
 
     private const val SEPARATOR = " · "
+
+    /** U+2060: sin anchura, prohíbe partir la línea en ese punto. */
+    private const val WORD_JOINER = '\u2060'
 
     /** Frente al periodo anterior, en vídeos por día (lo que compara la capa de datos). `null` en «siempre». */
     internal fun trend(stats: PeriodStats): DeltaLine? {

@@ -34,7 +34,7 @@
     <string-array name="notif_daily_zero">
         <item>Dia limpo. Fica registrado.</item>
         <item>Nem um. O placar não tem nada a acrescentar.</item>
-        <item>Hoje o algoritmo ficou com vontade.</item>
+        <item>Hoje o algoritmo ficou na vontade.</item>
     </string-array>
 
     <!-- Con objetivo, pasado: %1$s el objetivo («150»), %2$s los vídeos de hoy («212»), %3$s el
@@ -49,7 +49,7 @@
     <string-array name="notif_daily_under">
         <item>Dentro da meta: %1$s de %2$s.</item>
         <item>%1$s de %2$s, com folga. No total, %3$s.</item>
-        <item>Abaixo de %2$s. Assim, sem mais.</item>
+        <item>Abaixo de %2$s. Simples assim.</item>
     </string-array>
 
     <!-- Día flojo (1–9 vídeos): %1$s el tiempo («2 minutos»), %2$s el tiempo con mayúscula inicial. -->
@@ -64,12 +64,12 @@
     <string-array name="notif_daily_normal">
         <item>%2$s de vídeos. Amanhã, o placar volta a zero.</item>
         <item>%2$s. Um dia normal, e isso já é dizer muito.</item>
-        <item>Isso são %1$s que ninguém vai te devolver.</item>
+        <item>São %1$s que ninguém vai te devolver.</item>
     </string-array>
     <string-array name="notif_daily_normal_one">
         <item>%2$s de vídeos. Amanhã, o placar volta a zero.</item>
         <item>%2$s. Um dia normal, e isso já é dizer muito.</item>
-        <item>Isso é %1$s que ninguém vai te devolver.</item>
+        <item>É %1$s que ninguém vai te devolver.</item>
     </string-array>
 
     <!-- Día alto: %1$s el tiempo con mayúscula inicial («Una hora y 40 minutos»), %2$s una
@@ -99,7 +99,7 @@
 
     <!-- Versión pública (pantalla de bloqueo con «ocultar contenido sensible»): sin cifras. -->
     <string name="notif_daily_public_title">Resumo diário</string>
-    <string name="notif_daily_public_text">Sua conta do dia está pronta.</string>
+    <string name="notif_daily_public_text">Sua contagem do dia está pronta.</string>
 
     <!-- ============================================================ resumen del mes -->
 
@@ -129,7 +129,7 @@
     <string name="notif_monthly_public_text">O resumo do mês está pronto.</string>
 
     <!-- Si Android desconecta el servicio de accesibilidad (aún sin usar). -->
-    <string name="notif_service_lost_title">O Reelómetro parou de contar</string>
+    <string name="notif_service_lost_title">O Reelometer parou de contar</string>
     <string name="notif_service_lost_text">O Android desconectou o serviço de acessibilidade. Toque para conectá-lo de novo.</string>
 
     <!-- ============================================================ aviso al pasar el objetivo -->
@@ -151,7 +151,7 @@
     <string name="notif_level_title">Novo nível: %1$s</string>
     <!-- Texto. Flap es la mascota del Pasaporte (nombre propio, no se traduce). -->
     <string-array name="notif_level">
-        <item>Seu passaporte subiu de categoria. Ganhou vendo menos, fica registrado.</item>
+        <item>Seu passaporte subiu de categoria. Conquistado vendo menos, que fique registrado.</item>
         <item>O Flap espera você no Passaporte com o cartão novo.</item>
         <item>Mais experiência com menos vídeos. O cartão novo está no Passaporte.</item>
     </string-array>

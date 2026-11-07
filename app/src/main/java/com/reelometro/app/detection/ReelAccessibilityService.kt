@@ -1869,7 +1869,7 @@ class ReelAccessibilityService : AccessibilityService() {
         return buildString {
             append(Build.MANUFACTURER).append(' ').append(Build.MODEL)
             append(" · Android ").append(Build.VERSION.RELEASE).append(" (API ").append(Build.VERSION.SDK_INT).append(')')
-            append(" · Reelómetro ").append(BuildConfig.VERSION_NAME)
+            append(" · Reelometer ").append(BuildConfig.VERSION_NAME)
             apps.forEach { append(" · ").append(it) }
         }
     }

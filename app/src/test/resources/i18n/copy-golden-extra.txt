@@ -42,8 +42,8 @@ PassportCopy.TICKET_TITLE → TARJETA DE EMBARQUE
 PassportCopy.TITLE → Pasaporte
 PassportCopy.TOP_LEVEL → NIVEL MÁXIMO: AQUÍ SE ACABA EL PROGRAMA
 PassportCopy.WARMING_UP → CALENTANDO
-ShareCopy.BRAND → REELÓMETRO
-ShareCopy.BRAND_FOOTER → REELÓMETRO · CUENTA LO QUE NO CUENTAS
+ShareCopy.BRAND → REELOMETER
+ShareCopy.BRAND_FOOTER → REELOMETER · CUENTA LO QUE NO CUENTAS
 ShareCopy.CHOOSER_TITLE → Compartir tu ticket
 ShareCopy.STAMP → PAGADO CON TU TIEMPO
 ShareCopy.TAGLINE → CUENTA LO QUE NO CUENTAS
@@ -6836,12 +6836,12 @@ equivalenceLines(2820000, 6) → [TicketLine(label=🚶 KILÓMETROS A PIE, value
 equivalenceLines(2820000, 7) → [TicketLine(label=🚶 KILÓMETROS A PIE, value=3,9), TicketLine(label=😴 SIESTAS, value=1,6), TicketLine(label=🥛 VASOS DE LECHE AL MICROONDAS, value=47)]
 equivalenceLines(2820000, 8) → [TicketLine(label=🚶 KILÓMETROS A PIE, value=3,9), TicketLine(label=🥔 TORTILLAS DE PATATAS, value=1), TicketLine(label=😴 SIESTAS, value=1,6)]
 equivalenceLines(2820000, 9) → [TicketLine(label=🚶 KILÓMETROS A PIE, value=3,9), TicketLine(label=🥔 TORTILLAS DE PATATAS, value=1), TicketLine(label=😴 SIESTAS, value=1,6)]
-fileName(ALL, 2026-03-03) → reelometro-historial.png
-fileName(MONTH, 2026-04-01) → reelometro-abril-2026.png
-fileName(MONTH, 2026-10-01) → reelometro-octubre-2026.png
-fileName(WEEK, 2025-12-29) → reelometro-semana-2025-12-29.png
-fileName(WEEK, 2026-10-26) → reelometro-semana-2026-10-26.png
-fileName(YEAR, 2026-01-01) → reelometro-2026.png
+fileName(ALL, 2026-03-03) → reelometer-historial.png
+fileName(MONTH, 2026-04-01) → reelometer-abril-2026.png
+fileName(MONTH, 2026-10-01) → reelometer-octubre-2026.png
+fileName(WEEK, 2025-12-29) → reelometer-semana-2025-12-29.png
+fileName(WEEK, 2026-10-26) → reelometer-semana-2026-10-26.png
+fileName(YEAR, 2026-01-01) → reelometer-2026.png
 flapDescription(FlapState(mood=CANSADO, previousMood=EN_FORMA, daysUnder=0, daysTracked=0, reference=120, referenceIsGoal=false)) → Flap, tu mascota del pasaporte: cansado. Sin registro esta semana. Frase.
 flapDescription(FlapState(mood=CANSADO, previousMood=EN_FORMA, daysUnder=0, daysTracked=0, reference=150, referenceIsGoal=true)) → Flap, tu mascota del pasaporte: cansado. Sin registro esta semana. Frase.
 flapDescription(FlapState(mood=CANSADO, previousMood=EN_FORMA, daysUnder=0, daysTracked=0, reference=null, referenceIsGoal=false)) → Flap, tu mascota del pasaporte: calentando. Frase.
@@ -10114,60 +10114,60 @@ referenceLine(FlapState(mood=ZOMBI, previousMood=null, daysUnder=5, daysTracked=
 referenceLine(FlapState(mood=ZOMBI, previousMood=null, daysUnder=7, daysTracked=7, reference=120, referenceIsGoal=false)) → TU MEDIA: 120 AL DÍA
 referenceLine(FlapState(mood=ZOMBI, previousMood=null, daysUnder=7, daysTracked=7, reference=150, referenceIsGoal=true)) → TU OBJETIVO: 150 AL DÍA
 referenceLine(FlapState(mood=ZOMBI, previousMood=null, daysUnder=7, daysTracked=7, reference=null, referenceIsGoal=false)) → null
-shareText(ALL, 2026-03-03, 0, 0) → Mi historial en Reelómetro: 0 vídeos y 0 segundos. No se admiten devoluciones. 🧾
-shareText(ALL, 2026-03-03, 0, 104400000) → Mi historial en Reelómetro: 0 vídeos y 29 horas. No se admiten devoluciones. 🧾
-shareText(ALL, 2026-03-03, 0, 2820000) → Mi historial en Reelómetro: 0 vídeos y 47 minutos. No se admiten devoluciones. 🧾
-shareText(ALL, 2026-03-03, 1, 0) → Mi historial en Reelómetro: 1 vídeo y 0 segundos. No se admiten devoluciones. 🧾
-shareText(ALL, 2026-03-03, 1, 104400000) → Mi historial en Reelómetro: 1 vídeo y 29 horas. No se admiten devoluciones. 🧾
-shareText(ALL, 2026-03-03, 1, 2820000) → Mi historial en Reelómetro: 1 vídeo y 47 minutos. No se admiten devoluciones. 🧾
-shareText(ALL, 2026-03-03, 4812, 0) → Mi historial en Reelómetro: 4.812 vídeos y 0 segundos. No se admiten devoluciones. 🧾
-shareText(ALL, 2026-03-03, 4812, 104400000) → Mi historial en Reelómetro: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾
-shareText(ALL, 2026-03-03, 4812, 2820000) → Mi historial en Reelómetro: 4.812 vídeos y 47 minutos. No se admiten devoluciones. 🧾
-shareText(MONTH, 2026-04-01, 0, 0) → Mi abril en Reelómetro: 0 vídeos y 0 segundos. No se admiten devoluciones. 🧾
-shareText(MONTH, 2026-04-01, 0, 104400000) → Mi abril en Reelómetro: 0 vídeos y 29 horas. No se admiten devoluciones. 🧾
-shareText(MONTH, 2026-04-01, 0, 2820000) → Mi abril en Reelómetro: 0 vídeos y 47 minutos. No se admiten devoluciones. 🧾
-shareText(MONTH, 2026-04-01, 1, 0) → Mi abril en Reelómetro: 1 vídeo y 0 segundos. No se admiten devoluciones. 🧾
-shareText(MONTH, 2026-04-01, 1, 104400000) → Mi abril en Reelómetro: 1 vídeo y 29 horas. No se admiten devoluciones. 🧾
-shareText(MONTH, 2026-04-01, 1, 2820000) → Mi abril en Reelómetro: 1 vídeo y 47 minutos. No se admiten devoluciones. 🧾
-shareText(MONTH, 2026-04-01, 4812, 0) → Mi abril en Reelómetro: 4.812 vídeos y 0 segundos. No se admiten devoluciones. 🧾
-shareText(MONTH, 2026-04-01, 4812, 104400000) → Mi abril en Reelómetro: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾
-shareText(MONTH, 2026-04-01, 4812, 2820000) → Mi abril en Reelómetro: 4.812 vídeos y 47 minutos. No se admiten devoluciones. 🧾
-shareText(MONTH, 2026-10-01, 0, 0) → Mi octubre en Reelómetro: 0 vídeos y 0 segundos. No se admiten devoluciones. 🧾
-shareText(MONTH, 2026-10-01, 0, 104400000) → Mi octubre en Reelómetro: 0 vídeos y 29 horas. No se admiten devoluciones. 🧾
-shareText(MONTH, 2026-10-01, 0, 2820000) → Mi octubre en Reelómetro: 0 vídeos y 47 minutos. No se admiten devoluciones. 🧾
-shareText(MONTH, 2026-10-01, 1, 0) → Mi octubre en Reelómetro: 1 vídeo y 0 segundos. No se admiten devoluciones. 🧾
-shareText(MONTH, 2026-10-01, 1, 104400000) → Mi octubre en Reelómetro: 1 vídeo y 29 horas. No se admiten devoluciones. 🧾
-shareText(MONTH, 2026-10-01, 1, 2820000) → Mi octubre en Reelómetro: 1 vídeo y 47 minutos. No se admiten devoluciones. 🧾
-shareText(MONTH, 2026-10-01, 4812, 0) → Mi octubre en Reelómetro: 4.812 vídeos y 0 segundos. No se admiten devoluciones. 🧾
-shareText(MONTH, 2026-10-01, 4812, 104400000) → Mi octubre en Reelómetro: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾
-shareText(MONTH, 2026-10-01, 4812, 2820000) → Mi octubre en Reelómetro: 4.812 vídeos y 47 minutos. No se admiten devoluciones. 🧾
-shareText(WEEK, 2025-12-29, 0, 0) → Mi semana en Reelómetro: 0 vídeos y 0 segundos. No se admiten devoluciones. 🧾
-shareText(WEEK, 2025-12-29, 0, 104400000) → Mi semana en Reelómetro: 0 vídeos y 29 horas. No se admiten devoluciones. 🧾
-shareText(WEEK, 2025-12-29, 0, 2820000) → Mi semana en Reelómetro: 0 vídeos y 47 minutos. No se admiten devoluciones. 🧾
-shareText(WEEK, 2025-12-29, 1, 0) → Mi semana en Reelómetro: 1 vídeo y 0 segundos. No se admiten devoluciones. 🧾
-shareText(WEEK, 2025-12-29, 1, 104400000) → Mi semana en Reelómetro: 1 vídeo y 29 horas. No se admiten devoluciones. 🧾
-shareText(WEEK, 2025-12-29, 1, 2820000) → Mi semana en Reelómetro: 1 vídeo y 47 minutos. No se admiten devoluciones. 🧾
-shareText(WEEK, 2025-12-29, 4812, 0) → Mi semana en Reelómetro: 4.812 vídeos y 0 segundos. No se admiten devoluciones. 🧾
-shareText(WEEK, 2025-12-29, 4812, 104400000) → Mi semana en Reelómetro: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾
-shareText(WEEK, 2025-12-29, 4812, 2820000) → Mi semana en Reelómetro: 4.812 vídeos y 47 minutos. No se admiten devoluciones. 🧾
-shareText(WEEK, 2026-10-26, 0, 0) → Mi semana en Reelómetro: 0 vídeos y 0 segundos. No se admiten devoluciones. 🧾
-shareText(WEEK, 2026-10-26, 0, 104400000) → Mi semana en Reelómetro: 0 vídeos y 29 horas. No se admiten devoluciones. 🧾
-shareText(WEEK, 2026-10-26, 0, 2820000) → Mi semana en Reelómetro: 0 vídeos y 47 minutos. No se admiten devoluciones. 🧾
-shareText(WEEK, 2026-10-26, 1, 0) → Mi semana en Reelómetro: 1 vídeo y 0 segundos. No se admiten devoluciones. 🧾
-shareText(WEEK, 2026-10-26, 1, 104400000) → Mi semana en Reelómetro: 1 vídeo y 29 horas. No se admiten devoluciones. 🧾
-shareText(WEEK, 2026-10-26, 1, 2820000) → Mi semana en Reelómetro: 1 vídeo y 47 minutos. No se admiten devoluciones. 🧾
-shareText(WEEK, 2026-10-26, 4812, 0) → Mi semana en Reelómetro: 4.812 vídeos y 0 segundos. No se admiten devoluciones. 🧾
-shareText(WEEK, 2026-10-26, 4812, 104400000) → Mi semana en Reelómetro: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾
-shareText(WEEK, 2026-10-26, 4812, 2820000) → Mi semana en Reelómetro: 4.812 vídeos y 47 minutos. No se admiten devoluciones. 🧾
-shareText(YEAR, 2026-01-01, 0, 0) → Mi 2026 en Reelómetro: 0 vídeos y 0 segundos. No se admiten devoluciones. 🧾
-shareText(YEAR, 2026-01-01, 0, 104400000) → Mi 2026 en Reelómetro: 0 vídeos y 29 horas. No se admiten devoluciones. 🧾
-shareText(YEAR, 2026-01-01, 0, 2820000) → Mi 2026 en Reelómetro: 0 vídeos y 47 minutos. No se admiten devoluciones. 🧾
-shareText(YEAR, 2026-01-01, 1, 0) → Mi 2026 en Reelómetro: 1 vídeo y 0 segundos. No se admiten devoluciones. 🧾
-shareText(YEAR, 2026-01-01, 1, 104400000) → Mi 2026 en Reelómetro: 1 vídeo y 29 horas. No se admiten devoluciones. 🧾
-shareText(YEAR, 2026-01-01, 1, 2820000) → Mi 2026 en Reelómetro: 1 vídeo y 47 minutos. No se admiten devoluciones. 🧾
-shareText(YEAR, 2026-01-01, 4812, 0) → Mi 2026 en Reelómetro: 4.812 vídeos y 0 segundos. No se admiten devoluciones. 🧾
-shareText(YEAR, 2026-01-01, 4812, 104400000) → Mi 2026 en Reelómetro: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾
-shareText(YEAR, 2026-01-01, 4812, 2820000) → Mi 2026 en Reelómetro: 4.812 vídeos y 47 minutos. No se admiten devoluciones. 🧾
+shareText(ALL, 2026-03-03, 0, 0) → Mi historial en Reelometer: 0 vídeos y 0 segundos. No se admiten devoluciones. 🧾
+shareText(ALL, 2026-03-03, 0, 104400000) → Mi historial en Reelometer: 0 vídeos y 29 horas. No se admiten devoluciones. 🧾
+shareText(ALL, 2026-03-03, 0, 2820000) → Mi historial en Reelometer: 0 vídeos y 47 minutos. No se admiten devoluciones. 🧾
+shareText(ALL, 2026-03-03, 1, 0) → Mi historial en Reelometer: 1 vídeo y 0 segundos. No se admiten devoluciones. 🧾
+shareText(ALL, 2026-03-03, 1, 104400000) → Mi historial en Reelometer: 1 vídeo y 29 horas. No se admiten devoluciones. 🧾
+shareText(ALL, 2026-03-03, 1, 2820000) → Mi historial en Reelometer: 1 vídeo y 47 minutos. No se admiten devoluciones. 🧾
+shareText(ALL, 2026-03-03, 4812, 0) → Mi historial en Reelometer: 4.812 vídeos y 0 segundos. No se admiten devoluciones. 🧾
+shareText(ALL, 2026-03-03, 4812, 104400000) → Mi historial en Reelometer: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾
+shareText(ALL, 2026-03-03, 4812, 2820000) → Mi historial en Reelometer: 4.812 vídeos y 47 minutos. No se admiten devoluciones. 🧾
+shareText(MONTH, 2026-04-01, 0, 0) → Mi abril en Reelometer: 0 vídeos y 0 segundos. No se admiten devoluciones. 🧾
+shareText(MONTH, 2026-04-01, 0, 104400000) → Mi abril en Reelometer: 0 vídeos y 29 horas. No se admiten devoluciones. 🧾
+shareText(MONTH, 2026-04-01, 0, 2820000) → Mi abril en Reelometer: 0 vídeos y 47 minutos. No se admiten devoluciones. 🧾
+shareText(MONTH, 2026-04-01, 1, 0) → Mi abril en Reelometer: 1 vídeo y 0 segundos. No se admiten devoluciones. 🧾
+shareText(MONTH, 2026-04-01, 1, 104400000) → Mi abril en Reelometer: 1 vídeo y 29 horas. No se admiten devoluciones. 🧾
+shareText(MONTH, 2026-04-01, 1, 2820000) → Mi abril en Reelometer: 1 vídeo y 47 minutos. No se admiten devoluciones. 🧾
+shareText(MONTH, 2026-04-01, 4812, 0) → Mi abril en Reelometer: 4.812 vídeos y 0 segundos. No se admiten devoluciones. 🧾
+shareText(MONTH, 2026-04-01, 4812, 104400000) → Mi abril en Reelometer: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾
+shareText(MONTH, 2026-04-01, 4812, 2820000) → Mi abril en Reelometer: 4.812 vídeos y 47 minutos. No se admiten devoluciones. 🧾
+shareText(MONTH, 2026-10-01, 0, 0) → Mi octubre en Reelometer: 0 vídeos y 0 segundos. No se admiten devoluciones. 🧾
+shareText(MONTH, 2026-10-01, 0, 104400000) → Mi octubre en Reelometer: 0 vídeos y 29 horas. No se admiten devoluciones. 🧾
+shareText(MONTH, 2026-10-01, 0, 2820000) → Mi octubre en Reelometer: 0 vídeos y 47 minutos. No se admiten devoluciones. 🧾
+shareText(MONTH, 2026-10-01, 1, 0) → Mi octubre en Reelometer: 1 vídeo y 0 segundos. No se admiten devoluciones. 🧾
+shareText(MONTH, 2026-10-01, 1, 104400000) → Mi octubre en Reelometer: 1 vídeo y 29 horas. No se admiten devoluciones. 🧾
+shareText(MONTH, 2026-10-01, 1, 2820000) → Mi octubre en Reelometer: 1 vídeo y 47 minutos. No se admiten devoluciones. 🧾
+shareText(MONTH, 2026-10-01, 4812, 0) → Mi octubre en Reelometer: 4.812 vídeos y 0 segundos. No se admiten devoluciones. 🧾
+shareText(MONTH, 2026-10-01, 4812, 104400000) → Mi octubre en Reelometer: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾
+shareText(MONTH, 2026-10-01, 4812, 2820000) → Mi octubre en Reelometer: 4.812 vídeos y 47 minutos. No se admiten devoluciones. 🧾
+shareText(WEEK, 2025-12-29, 0, 0) → Mi semana en Reelometer: 0 vídeos y 0 segundos. No se admiten devoluciones. 🧾
+shareText(WEEK, 2025-12-29, 0, 104400000) → Mi semana en Reelometer: 0 vídeos y 29 horas. No se admiten devoluciones. 🧾
+shareText(WEEK, 2025-12-29, 0, 2820000) → Mi semana en Reelometer: 0 vídeos y 47 minutos. No se admiten devoluciones. 🧾
+shareText(WEEK, 2025-12-29, 1, 0) → Mi semana en Reelometer: 1 vídeo y 0 segundos. No se admiten devoluciones. 🧾
+shareText(WEEK, 2025-12-29, 1, 104400000) → Mi semana en Reelometer: 1 vídeo y 29 horas. No se admiten devoluciones. 🧾
+shareText(WEEK, 2025-12-29, 1, 2820000) → Mi semana en Reelometer: 1 vídeo y 47 minutos. No se admiten devoluciones. 🧾
+shareText(WEEK, 2025-12-29, 4812, 0) → Mi semana en Reelometer: 4.812 vídeos y 0 segundos. No se admiten devoluciones. 🧾
+shareText(WEEK, 2025-12-29, 4812, 104400000) → Mi semana en Reelometer: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾
+shareText(WEEK, 2025-12-29, 4812, 2820000) → Mi semana en Reelometer: 4.812 vídeos y 47 minutos. No se admiten devoluciones. 🧾
+shareText(WEEK, 2026-10-26, 0, 0) → Mi semana en Reelometer: 0 vídeos y 0 segundos. No se admiten devoluciones. 🧾
+shareText(WEEK, 2026-10-26, 0, 104400000) → Mi semana en Reelometer: 0 vídeos y 29 horas. No se admiten devoluciones. 🧾
+shareText(WEEK, 2026-10-26, 0, 2820000) → Mi semana en Reelometer: 0 vídeos y 47 minutos. No se admiten devoluciones. 🧾
+shareText(WEEK, 2026-10-26, 1, 0) → Mi semana en Reelometer: 1 vídeo y 0 segundos. No se admiten devoluciones. 🧾
+shareText(WEEK, 2026-10-26, 1, 104400000) → Mi semana en Reelometer: 1 vídeo y 29 horas. No se admiten devoluciones. 🧾
+shareText(WEEK, 2026-10-26, 1, 2820000) → Mi semana en Reelometer: 1 vídeo y 47 minutos. No se admiten devoluciones. 🧾
+shareText(WEEK, 2026-10-26, 4812, 0) → Mi semana en Reelometer: 4.812 vídeos y 0 segundos. No se admiten devoluciones. 🧾
+shareText(WEEK, 2026-10-26, 4812, 104400000) → Mi semana en Reelometer: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾
+shareText(WEEK, 2026-10-26, 4812, 2820000) → Mi semana en Reelometer: 4.812 vídeos y 47 minutos. No se admiten devoluciones. 🧾
+shareText(YEAR, 2026-01-01, 0, 0) → Mi 2026 en Reelometer: 0 vídeos y 0 segundos. No se admiten devoluciones. 🧾
+shareText(YEAR, 2026-01-01, 0, 104400000) → Mi 2026 en Reelometer: 0 vídeos y 29 horas. No se admiten devoluciones. 🧾
+shareText(YEAR, 2026-01-01, 0, 2820000) → Mi 2026 en Reelometer: 0 vídeos y 47 minutos. No se admiten devoluciones. 🧾
+shareText(YEAR, 2026-01-01, 1, 0) → Mi 2026 en Reelometer: 1 vídeo y 0 segundos. No se admiten devoluciones. 🧾
+shareText(YEAR, 2026-01-01, 1, 104400000) → Mi 2026 en Reelometer: 1 vídeo y 29 horas. No se admiten devoluciones. 🧾
+shareText(YEAR, 2026-01-01, 1, 2820000) → Mi 2026 en Reelometer: 1 vídeo y 47 minutos. No se admiten devoluciones. 🧾
+shareText(YEAR, 2026-01-01, 4812, 0) → Mi 2026 en Reelometer: 4.812 vídeos y 0 segundos. No se admiten devoluciones. 🧾
+shareText(YEAR, 2026-01-01, 4812, 104400000) → Mi 2026 en Reelometer: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾
+shareText(YEAR, 2026-01-01, 4812, 2820000) → Mi 2026 en Reelometer: 4.812 vídeos y 47 minutos. No se admiten devoluciones. 🧾
 stampCaption(CINCO_CATEGORIAS, 0) → Sello irónico: no suma, pero cuenta.
 stampCaption(CINCO_CATEGORIAS, 1) → Va a la colección. Sin millas, como debe ser.
 stampCaption(CINCO_CATEGORIAS, 10) → Va a la colección. Sin millas, como debe ser.
@@ -10642,11 +10642,11 @@ stampsCount → 3 DE 23
 streakValue(0) → 0 DÍAS
 streakValue(1) → 1 DÍA
 streakValue(7) → 7 DÍAS
-ticketFileName(FRECUENTE) → reelometro-nivel-frecuente.png
-ticketFileName(ORO) → reelometro-nivel-oro.png
-ticketFileName(PASAJERO) → reelometro-nivel-pasajero.png
-ticketFileName(PLATA) → reelometro-nivel-plata.png
-ticketFileName(PLATINO) → reelometro-nivel-platino.png
+ticketFileName(FRECUENTE) → reelometer-nivel-frecuente.png
+ticketFileName(ORO) → reelometer-nivel-oro.png
+ticketFileName(PASAJERO) → reelometer-nivel-pasajero.png
+ticketFileName(PLATA) → reelometer-nivel-plata.png
+ticketFileName(PLATINO) → reelometer-nivel-platino.png
 ticketFooter(0) → Millas ganadas viendo menos vídeos.
 ticketFooter(1) → Ni una milla salió de hacer scroll.
 ticketFooter(10) → Aquí se sube de nivel mirando menos. Rarezas de esta aerolínea.
@@ -10659,11 +10659,11 @@ ticketFooter(6) → Ni una milla salió de hacer scroll.
 ticketFooter(7) → Millas ganadas viendo menos vídeos.
 ticketFooter(8) → Aquí se sube de nivel mirando menos. Rarezas de esta aerolínea.
 ticketFooter(9) → Millas ganadas viendo menos vídeos.
-ticketShareText(FRECUENTE) → Nivel FRECUENTE en Reelómetro: millas por ver menos vídeos.
-ticketShareText(ORO) → Nivel ORO en Reelómetro: millas por ver menos vídeos.
-ticketShareText(PASAJERO) → Nivel PASAJERO en Reelómetro: millas por ver menos vídeos.
-ticketShareText(PLATA) → Nivel PLATA en Reelómetro: millas por ver menos vídeos.
-ticketShareText(PLATINO) → Nivel PLATINO en Reelómetro: millas por ver menos vídeos.
+ticketShareText(FRECUENTE) → Nivel FRECUENTE en Reelometer: millas por ver menos vídeos.
+ticketShareText(ORO) → Nivel ORO en Reelometer: millas por ver menos vídeos.
+ticketShareText(PASAJERO) → Nivel PASAJERO en Reelometer: millas por ver menos vídeos.
+ticketShareText(PLATA) → Nivel PLATA en Reelometer: millas por ver menos vídeos.
+ticketShareText(PLATINO) → Nivel PLATINO en Reelometer: millas por ver menos vídeos.
 totalLine(104400000) → TicketLine(label=TOTAL, value=29 H)
 totalLine(1800000000) → TicketLine(label=TOTAL, value=500 H)
 totalLine(2820000) → TicketLine(label=TOTAL, value=47 MIN)

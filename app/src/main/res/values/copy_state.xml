@@ -37,7 +37,7 @@
          («62 vídeos por encima del objetivo de 150»), sin punto final. -->
     <string name="state_widget_description_goal">%1$s %2$s.</string>
     <!-- Widget con el servicio de accesibilidad desconectado (TalkBack). -->
-    <string name="state_widget_description_off">Reelómetro, sin señal: el servicio está desconectado.</string>
+    <string name="state_widget_description_off">Reelometer, sin señal: el servicio está desconectado.</string>
     <!-- Widget grande con la mascota a la vista: %1$s la descripción de arriba, %2$s el estado de
          ánimo de Flap en minúsculas («en forma»). Flap es el nombre propio de la mascota. -->
     <string name="state_widget_with_flap">%1$s Flap: %2$s.</string>

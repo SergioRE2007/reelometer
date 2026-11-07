@@ -20,7 +20,7 @@
     <string-array name="state_empty">
         <item>Nada por aqui. Por enquanto.</item>
         <item>Ainda não há nada para contar.</item>
-        <item>Aqui não tem nada. Fica registrado em ata.</item>
+        <item>Aqui não tem nada. Que fique registrado.</item>
     </string-array>
 
     <!-- Error genérico al cargar datos; va con el botón REINTENTAR. -->
@@ -37,7 +37,7 @@
          («62 vídeos por encima del objetivo de 150»), sin punto final. -->
     <string name="state_widget_description_goal">%1$s %2$s.</string>
     <!-- Widget con el servicio de accesibilidad desconectado (TalkBack). -->
-    <string name="state_widget_description_off">Reelómetro, sem sinal: o serviço está desconectado.</string>
+    <string name="state_widget_description_off">Reelometer, sem sinal: o serviço está desconectado.</string>
     <!-- Widget grande con la mascota a la vista: %1$s la descripción de arriba, %2$s el estado de
          ánimo de Flap en minúsculas («en forma»). Flap es el nombre propio de la mascota. -->
     <string name="state_widget_with_flap">%1$s Flap: %2$s.</string>

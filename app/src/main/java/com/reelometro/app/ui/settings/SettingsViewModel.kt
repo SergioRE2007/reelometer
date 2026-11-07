@@ -12,6 +12,10 @@ import com.reelometro.app.copy.SettingsCopy
 import com.reelometro.app.data.Platform
 import com.reelometro.app.data.CsvRead
 import com.reelometro.app.data.ReelRepository
+import com.reelometro.app.data.backup.BackupError
+import com.reelometro.app.data.backup.BackupOutcome
+import com.reelometro.app.data.backup.BackupRules
+import com.reelometro.app.data.backup.CsvBackup
 import com.reelometro.app.data.export.ImportError
 import com.reelometro.app.data.export.ImportMode
 import com.reelometro.app.data.export.ImportPreview
@@ -54,7 +58,10 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
+import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 /** Datos de uso que necesita Ajustes (interfaz para probar el ViewModel sin Room). */
 interface UsageData {
@@ -130,6 +137,18 @@ interface SettingsSystem {
 
     /** QUITAR FOTO: borra la foto elegida de [name] (vuelve la recortada de la hoja). En el hilo de E/S. */
     fun clearQuickSendPhoto(name: String) {}
+
+    /**
+     * Copia semanal: se queda con el permiso persistente de la carpeta [uri] recién elegida y devuelve su nombre, o
+     * `null` si Android no lo da. En el hilo de E/S.
+     */
+    fun takeBackupFolder(uri: String): String? = null
+
+    /** Suelta el permiso de una carpeta de copias que ya no se usa. */
+    fun releaseBackupFolder(uri: String) {}
+
+    /** Escribe la copia de hoy en [uri] (el mismo CSV que EXPORTAR) y rota las viejas. En el hilo de E/S; no lanza. */
+    suspend fun writeBackup(uri: String): BackupOutcome = BackupOutcome.Failed(BackupError.FAILED)
 }
 
 class AndroidSettingsSystem(context: Context) : SettingsSystem {
@@ -181,6 +200,12 @@ class AndroidSettingsSystem(context: Context) : SettingsSystem {
     override fun clearQuickSendPhoto(name: String) {
         AvatarStore(app).clearChosen(name)
     }
+
+    override fun takeBackupFolder(uri: String): String? = CsvBackup.takeFolder(app, uri)
+
+    override fun releaseBackupFolder(uri: String) = CsvBackup.releaseFolder(app, uri)
+
+    override suspend fun writeBackup(uri: String): BackupOutcome = CsvBackup.write(app, uri)
 
     override fun onPassportModeChanged(enabled: Boolean) {
         WidgetUpdater.requestUpdate(app)
@@ -268,6 +293,14 @@ data class SettingsState(
     val quickSendMoved: Boolean = false,
     /** Confirmación de RECOLOCAR. */
     val quickSendMessage: String? = null,
+    /** Copia semanal del CSV encendida (hay carpeta). */
+    val backupOn: Boolean = false,
+    /** Nombre de la carpeta de las copias («Download»). */
+    val backupFolderName: String? = null,
+    /** Hora local de la última copia; `null` si todavía no hay ninguna. */
+    val backupLast: LocalDateTime? = null,
+    /** Por qué falló la última copia (se enseña con CAMBIAR CARPETA). */
+    val backupError: BackupError? = null,
 ) {
     /** El envío rápido necesita «A quién envías» encendido. */
     val quickSendAvailable: Boolean get() = recordRecipients
@@ -305,6 +338,9 @@ sealed interface SettingsEffect {
 
     /** Abrir el selector de archivos para elegir el CSV que se importa. */
     data object PickImportFile : SettingsEffect
+
+    /** Abrir el selector de carpetas del sistema (`ACTION_OPEN_DOCUMENT_TREE`) para la copia semanal. */
+    data object PickBackupFolder : SettingsEffect
 }
 
 /**
@@ -405,6 +441,10 @@ class SettingsViewModel(
         quickSendLines = (top + s.quickSendTargets).distinct().map { QuickSendLine(it, it in s.quickSendTargets) },
         quickSendMoved = s.quickSendBubble != null,
         quickSendMessage = l.quickSendMessage,
+        backupOn = s.backupFolder != null,
+        backupFolderName = s.backupFolderName,
+        backupLast = s.backupLastMs?.let { Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDateTime() },
+        backupError = s.backupError.takeIf { s.backupFolder != null },
     )
 
     private val current: SettingsState? get() = (state.value as? SettingsUiState.Content)?.settings
@@ -633,6 +673,76 @@ class SettingsViewModel(
                 it.copy(busy = false, dataMessage = if (ok) SettingsCopy.DELETE_DONE else SettingsCopy.DELETE_FAILED)
             }
         }
+    }
+
+    // ------------------------------------------------------------------ copia semanal del CSV
+
+    /**
+     * Interruptor «Copia semanal»: encenderlo abre el selector de carpetas (sigue apagado hasta que se elige una);
+     * apagarlo olvida la carpeta y suelta su permiso. Las copias que ya hay se quedan en la carpeta.
+     */
+    fun setBackup(on: Boolean) {
+        if (on) {
+            requestBackupFolder()
+            return
+        }
+        viewModelScope.launch {
+            val old = settings.current().backupFolder
+            settings.setBackupFolder(null, null)
+            if (old != null) withContext(io) { system.releaseBackupFolder(old) }
+        }
+    }
+
+    /** CAMBIAR CARPETA (o encender la copia): abre el selector de carpetas del sistema. */
+    fun requestBackupFolder() {
+        if (local.value.busy) return
+        _effects.trySend(SettingsEffect.PickBackupFolder)
+    }
+
+    /** Carpeta elegida en el selector: se queda con su permiso, la guarda y hace ya la primera copia. */
+    fun onBackupFolderPicked(uri: String) {
+        if (local.value.busy) return
+        local.update { it.copy(busy = true, dataMessage = null) }
+        viewModelScope.launch {
+            val name = withContext(io) { system.takeBackupFolder(uri) }
+            if (name == null) {
+                local.update { it.copy(busy = false, dataMessage = SettingsCopy.BACKUP_PICK_FAILED) }
+                return@launch
+            }
+            val old = settings.current().backupFolder
+            settings.setBackupFolder(uri, name)
+            if (old != null && old != uri) withContext(io) { system.releaseBackupFolder(old) }
+            copyBackup(uri, name)
+        }
+    }
+
+    /** COPIAR AHORA. */
+    fun backupNow() {
+        if (local.value.busy) return
+        local.update { it.copy(busy = true, dataMessage = null) }
+        viewModelScope.launch {
+            val s = settings.current()
+            val folder = s.backupFolder
+            if (folder == null) {
+                local.update { it.copy(busy = false) }
+                return@launch
+            }
+            copyBackup(folder, s.backupFolderName.orEmpty())
+        }
+    }
+
+    /** Hace la copia (con `busy` ya puesto), apunta el resultado y lo dice. Un fallo queda en el aviso fijo. */
+    private suspend fun copyBackup(folder: String, name: String) {
+        val outcome = runCatching { withContext(io) { system.writeBackup(folder) } }
+            .getOrElse { BackupOutcome.Failed(BackupRules.classify(it)) }
+        runCatching { settings.recordBackup(folder, outcome, clock()) }
+        local.update {
+            it.copy(
+                busy = false,
+                dataMessage = if (outcome is BackupOutcome.Failed) null else SettingsCopy.backupResult(outcome, name),
+            )
+        }
+        if (outcome is BackupOutcome.Done) _effects.send(SettingsEffect.Confirm)
     }
 
     // ------------------------------------------------------------------ importar CSV (1.6.0)

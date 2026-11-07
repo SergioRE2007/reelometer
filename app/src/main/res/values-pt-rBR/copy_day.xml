@@ -27,7 +27,7 @@
 
     <!-- Con objetivo, pasado: %1$s lo que se pasó («62 vídeos»), %2$s el objetivo, %3$s los vídeos del día. -->
     <string-array name="day_goal_over">
-        <item>Nesse dia você passou em %1$s.</item>
+        <item>Nesse dia você passou %1$s da meta.</item>
         <item>Meta: %2$s. Nesse dia: %3$s.</item>
         <item>%1$s acima da meta. Acontece.</item>
     </string-array>
@@ -72,7 +72,7 @@
     <string-array name="day_normal">
         <item>%1$s e %2$s. Um dia normal, o que já é dizer muito.</item>
         <item>Nesse dia: %2$s de vídeo.</item>
-        <item>%3$s. Nem bem, nem mal.</item>
+        <item>%3$s. Nem fede, nem cheira.</item>
     </string-array>
 
     <!-- Día alto: %1$s los vídeos, %2$s el tiempo con mayúscula inicial, %3$s el tiempo, %4$s una
@@ -81,22 +81,22 @@
     <string-array name="day_high">
         <item>%1$s. Nesse dia o algoritmo fez hora extra.</item>
         <item>%2$s de vídeo. Dava pra %4$s.</item>
-        <item>Nesse dia se foram %3$s. Assim, sem mais.</item>
+        <item>Nesse dia se foram %3$s. Simples assim.</item>
     </string-array>
     <string-array name="day_high_noeq">
         <item>%1$s. Nesse dia o algoritmo fez hora extra.</item>
         <item>%2$s de vídeo. Um dia longo.</item>
-        <item>Nesse dia se foram %3$s. Assim, sem mais.</item>
+        <item>Nesse dia se foram %3$s. Simples assim.</item>
     </string-array>
     <string-array name="day_high_one">
         <item>%1$s. Nesse dia o algoritmo fez hora extra.</item>
         <item>%2$s de vídeo. Dava pra %4$s.</item>
-        <item>Nesse dia se foi %3$s. Assim, sem mais.</item>
+        <item>Nesse dia se foi %3$s. Simples assim.</item>
     </string-array>
     <string-array name="day_high_one_noeq">
         <item>%1$s. Nesse dia o algoritmo fez hora extra.</item>
         <item>%2$s de vídeo. Um dia longo.</item>
-        <item>Nesse dia se foi %3$s. Assim, sem mais.</item>
+        <item>Nesse dia se foi %3$s. Simples assim.</item>
     </string-array>
 
     <!-- Día extremo: %1$s los vídeos, %2$s el tiempo con mayúscula inicial. -->

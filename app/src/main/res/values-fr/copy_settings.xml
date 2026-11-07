@@ -27,7 +27,7 @@
     <string name="settings_section_privacy_title">CONFIDENTIALITÉ</string>
     <string name="settings_section_privacy_description">Ce qui arrive à tes données, sans petits caractères.</string>
     <string name="settings_section_about_title">À PROPOS</string>
-    <string name="settings_section_about_description">Reelómetro n’a aucun lien avec TikTok, Instagram ni YouTube. Il compte seulement ce que tu y vois.</string>
+    <string name="settings_section_about_description">Reelometer n’a aucun lien avec TikTok, Instagram ou YouTube. Il compte seulement ce que tu y vois.</string>
 
     <!-- Antetítulo de los diálogos que salen de una sección: «05 · TUS DATOS». %1$s el número de la
          sección («05»), %2$s su título (ya en MAYÚSCULAS). -->
@@ -77,7 +77,7 @@
     <string name="settings_goal_line">Vidéos par jour</string>
     <!-- Interruptor del modo Pasaporte (un juego que premia ver menos; «Flap» es su mascota, no se traduce). -->
     <string name="settings_passport_label">Mode passeport</string>
-    <string name="settings_passport_description">Un onglet de plus avec Flap, des niveaux et des tampons qui se gagnent en regardant moins. Si tu le désactives, il disparaît complètement : l’onglet, son alerte et Flap du widget.</string>
+    <string name="settings_passport_description">Un onglet de plus avec Flap, des niveaux et des tampons qui se gagnent en regardant moins. Si tu le désactives, il disparaît complètement\u00A0: l’onglet, son alerte et Flap du widget.</string>
 
     <!-- ============================================================ 02 avisos -->
 
@@ -106,12 +106,12 @@
     <string name="settings_time_minute_up">Cinq minutes de plus</string>
 
     <!-- Con los avisos bloqueados en Android (va con el botón ABRIR AJUSTES). -->
-    <string name="settings_notifications_blocked">Android a désactivé les alertes de Reelómetro. Active-les dans les paramètres du système pour les recevoir.</string>
+    <string name="settings_notifications_blocked">Android a désactivé les alertes de Reelometer. Active-les dans les paramètres du système pour les recevoir.</string>
 
     <!-- ============================================================ 03 apps -->
 
     <!-- Con todas las apps apagadas. -->
-    <string name="settings_all_apps_off">Tu les as toutes éteintes. Donc il n’y a rien à compter.</string>
+    <string name="settings_all_apps_off">Tu les as toutes éteintes. Du coup, plus rien à compter.</string>
 
     <!-- Interruptor «A quién envías» (solo Instagram). «Estadísticas» es la pestaña de la app. -->
     <string name="settings_recipients_label">À qui tu envoies</string>
@@ -121,13 +121,13 @@
          con un toque. «Compartir» y «Enviar» citan los botones de Instagram tal cual: en cada idioma,
          como los muestre Instagram en ese idioma. «X» es la zona donde se sueltan las burbujas. -->
     <string name="settings_quick_send_label">Envoi rapide</string>
-    <string name="settings_quick_send_description">Seulement sur Instagram. Pendant que tu regardes des reels, une bulle apparaît pour chaque personne ou groupe que tu épingles. En la touchant, j’appuie pour toi sur «\u00A0Partager\u00A0», sur ce nom, puis sur «\u00A0Envoyer\u00A0» ; si ce n’est pas visible, j’écris son nom dans la recherche de la feuille. Rien de plus. Si quelque chose ne colle pas, je m’arrête et tu termines. Pour afficher sa photo dans la bulle, je la découpe dans la feuille de partage quand elle est visible, ou tu choisis une photo de ta galerie ; elle reste dans ce téléphone. Fais-les glisser où tu veux (en bas, au-dessus du nom du reel, elles se mettent en file) ou lâche-les sur la «\u00A0X\u00A0» pour les cacher jusqu’au reel suivant.</string>
+    <string name="settings_quick_send_description">Seulement sur Instagram. Pendant que tu regardes des reels, une bulle apparaît pour chaque personne ou groupe que tu épingles. En la touchant, j’appuie pour toi sur «\u00A0Partager\u00A0», sur ce nom, puis sur «\u00A0Envoyer\u00A0»\u00A0; si ce n’est pas visible, j’écris son nom dans la recherche de la feuille. Rien de plus. Si quelque chose ne colle pas, je m’arrête et tu termines. Pour afficher sa photo dans la bulle, je la découpe dans la feuille de partage quand elle est visible, ou tu choisis une photo de ta galerie\u00A0; elle reste dans ce téléphone. Fais-les glisser où tu veux (en bas, au-dessus du nom du reel, elles se mettent en file) ou lâche-les sur la «\u00A0X\u00A0» pour les cacher jusqu’au reel suivant.</string>
     <!-- El gesto para enviar a dos personas a la vez. -->
     <string name="settings_quick_send_pair_hint">Pour l’envoyer à deux personnes à la fois, maintiens une bulle jusqu’à ce qu’elle se détache et lâche-la sur l’autre. Si tu en touches une autre pendant l’envoi, je l’ajoute à la même feuille.</string>
     <!-- Con «A quién envías» apagado, el envío rápido no se puede encender. -->
-    <string name="settings_quick_send_needs_recipients">Pour l’utiliser, active d’abord «\u00A0À qui tu envoies\u00A0» : l’envoi rapide cherche dans la feuille le nom que tu épingles.</string>
+    <string name="settings_quick_send_needs_recipients">Pour l’utiliser, active d’abord «\u00A0À qui tu envoies\u00A0»\u00A0: l’envoi rapide cherche dans la feuille le nom que tu épingles.</string>
     <!-- Sin historial de envíos todavía: no hay nada que fijar. -->
-    <string name="settings_quick_send_empty">Il n’y a encore personne à épingler. Partage un reel à la main avec «\u00A0À qui tu envoies\u00A0» activé : les personnes et les groupes à qui tu envoies apparaîtront ici.</string>
+    <string name="settings_quick_send_empty">Il n’y a encore personne à épingler. Partage un reel à la main avec «\u00A0À qui tu envoies\u00A0» activé\u00A0: les personnes et les groupes à qui tu envoies apparaîtront ici.</string>
     <!-- Encima de la lista de personas y grupos para fijar. -->
     <string name="settings_quick_send_list_label">Ceux à qui tu envoies le plus</string>
     <!-- Botones de cada fila, en MAYÚSCULAS y con poco sitio: fijar a alguien / ya fijado. -->
@@ -150,7 +150,7 @@
     <string name="settings_quick_send_photo_pick">CHOISIR PHOTO</string>
     <string name="settings_quick_send_photo_change">CHANGER</string>
     <string name="settings_quick_send_photo_clear">RETIRER</string>
-    <string name="settings_quick_send_photo_set">Photo mise. Tu la verras dans sa bulle ; elle reste uniquement dans ce téléphone.</string>
+    <string name="settings_quick_send_photo_set">Photo ajoutée. Tu la verras dans sa bulle\u00A0; elle reste uniquement dans ce téléphone.</string>
     <string name="settings_quick_send_photo_cleared">Photo retirée. L’automatique revient ou, à défaut, les initiales.</string>
     <string name="settings_quick_send_photo_failed">Je n’ai pas pu ouvrir cette photo. Essaie-en une autre.</string>
     <!-- TalkBack de esos botones. %1$s el nombre de la persona o el grupo. -->
@@ -169,7 +169,9 @@
          («Español»); al tocarla se abren los ajustes de idioma de la app en Android. -->
     <string name="settings_language_label">Langue</string>
     <!-- Línea de ayuda bajo la fila. -->
-    <string name="settings_language_hint">Ça se change dans les paramètres du système.</string>
+    <string name="settings_language_hint">Choisis la langue dans laquelle tu vois l’application.</string>
+    <string name="settings_language_dialog_title">Quelle langue\u00A0?</string>
+    <string name="settings_language_system">Celle du téléphone</string>
     <!-- TalkBack: lo que hace tocar la fila («Toca dos veces para …»). -->
     <string name="settings_language_open">changer la langue de l’application</string>
 
@@ -191,16 +193,16 @@
     <!-- Cuerpo del diálogo de borrado. %1$s los vídeos con su palabra («212 vídeos»), %2$s el tiempo
          («3 horas y 12 minutos»). El plural va por el número de vídeos. -->
     <plurals name="settings_delete_dialog_body">
-        <item quantity="one">%1$s et %2$s d’historique seront effacés. Impossible de revenir en arrière, et aucune copie ailleurs, parce qu’il n’y a nulle part ailleurs. Tes réglages restent tels quels.</item>
-        <item quantity="many">%1$s et %2$s d’historique seront effacés. Impossible de revenir en arrière, et aucune copie ailleurs, parce qu’il n’y a nulle part ailleurs. Tes réglages restent tels quels.</item>
-        <item quantity="other">%1$s et %2$s d’historique seront effacés. Impossible de revenir en arrière, et aucune copie ailleurs, parce qu’il n’y a nulle part ailleurs. Tes réglages restent tels quels.</item>
+        <item quantity="one">Cela effacera %1$s et %2$s d’historique. Impossible de revenir en arrière, et aucune copie ailleurs, parce qu’il n’y a nulle part ailleurs. Tes réglages restent tels quels.</item>
+        <item quantity="many">Cela effacera %1$s et %2$s d’historique. Impossible de revenir en arrière, et aucune copie ailleurs, parce qu’il n’y a nulle part ailleurs. Tes réglages restent tels quels.</item>
+        <item quantity="other">Cela effacera %1$s et %2$s d’historique. Impossible de revenir en arrière, et aucune copie ailleurs, parce qu’il n’y a nulle part ailleurs. Tes réglages restent tels quels.</item>
     </plurals>
     <string name="settings_delete_done">Effacé. Compteur à zéro.</string>
     <string name="settings_delete_failed">Impossible d’effacer. Réessaie.</string>
 
     <!-- Importar el CSV (1.6.0). Descripción junto a IMPORTAR CSV. -->
     <string name="settings_import_description">Nouveau téléphone, ou tu as réinitialisé celui-ci\u00A0? Importe ici le CSV que tu as exporté et ton historique revient.</string>
-    <string name="settings_import_busy">Import du fichier</string>
+    <string name="settings_import_busy">Importation du fichier</string>
     <string name="settings_import_dialog_title">Importer ce fichier\u00A0?</string>
     <string name="settings_import_preview">Le fichier contient %1$s (%2$s).</string>
     <plurals name="settings_import_preview_present">
@@ -217,11 +219,11 @@
     <string name="settings_import_preview_settings">Les réglages ne sont pas dans le fichier\u00A0: ton objectif et tes alertes restent tels quels.</string>
     <string name="settings_import_modes">AJOUTER met ce qui est nouveau en plus de ce que tu as déjà. TOUT REMPLACER efface ce qu’il y a maintenant et ne garde que le fichier.</string>
     <string name="settings_import_replace_title">Tout remplacer\u00A0?</string>
-    <string name="settings_import_replace_body_empty">Aucune vidéo enregistrée\u00A0: le fichier restera.</string>
+    <string name="settings_import_replace_body_empty">Aucune vidéo enregistrée\u00A0: il ne restera que le contenu du fichier.</string>
     <plurals name="settings_import_replace_body">
-        <item quantity="one">%1$s et %2$s d’historique seront effacés, et seul le fichier restera. Impossible de revenir en arrière.</item>
-        <item quantity="many">%1$s et %2$s d’historique seront effacés, et seul le fichier restera. Impossible de revenir en arrière.</item>
-        <item quantity="other">%1$s et %2$s d’historique seront effacés, et seul le fichier restera. Impossible de revenir en arrière.</item>
+        <item quantity="one">Cela effacera %1$s et %2$s d’historique, et seul le contenu du fichier restera. Impossible de revenir en arrière.</item>
+        <item quantity="many">Cela effacera %1$s et %2$s d’historique, et seul le contenu du fichier restera. Impossible de revenir en arrière.</item>
+        <item quantity="other">Cela effacera %1$s et %2$s d’historique, et seul le contenu du fichier restera. Impossible de revenir en arrière.</item>
     </plurals>
     <plurals name="settings_import_done">
         <item quantity="one">Importé\u00A0: %1$s.</item>
@@ -238,31 +240,63 @@
         <item quantity="many">%1$s lignes étaient illisibles.</item>
         <item quantity="other">%1$s lignes étaient illisibles.</item>
     </plurals>
-    <string name="settings_import_nothing_new">Rien de nouveau00A0: tout était déjà enregistré.</string>
-    <string name="settings_import_not_csv">Ce fichier n’est pas un CSV de Reelómetro. Choisis celui que tu as exporté depuis l’appli.</string>
+    <string name="settings_import_nothing_new">Rien de nouveau\u00A0: tout était déjà enregistré.</string>
+    <string name="settings_import_not_csv">Ce fichier n’est pas un CSV de Reelometer. Choisis celui que tu as exporté depuis l’appli.</string>
     <string name="settings_import_empty">Le fichier est vide\u00A0: aucune vidéo à importer.</string>
-    <string name="settings_import_too_large">Le fichier dépasse 50\u00A0Mo\u00A0: ça ne ressemble pas à une copie de Reelómetro.</string>
+    <string name="settings_import_too_large">Le fichier dépasse 50\u00A0Mo\u00A0: ça ne ressemble pas à une copie de Reelometer.</string>
     <string name="settings_import_too_broken">Trop de lignes sont illisibles, donc rien n’a été importé.</string>
     <string name="settings_import_failed">Impossible d’importer, et rien n’a changé. Réessaie.</string>
+    <string name="settings_import_dates">Les dates du fichier sont illisibles : un tableur semble avoir changé leur format. Rien n’a été importé. Essaie avec le CSV tel que l’app l’a exporté.</string>
+
+    <!-- Copie hebdomadaire du CSV : interrupteur, le dossier choisi dans le sélecteur d’Android, la date de la
+         dernière copie et deux boutons. Le dossier est sur le téléphone (ce n’est pas une sauvegarde dans le cloud). -->
+    <string name="settings_backup_label">Copie hebdomadaire</string>
+    <!-- Sous l’interrupteur. %1$s combien de copies sont gardées, déjà formaté («4»). -->
+    <plurals name="settings_backup_description">
+        <item quantity="one">Chaque semaine, j’enregistre le même CSV qu’EXPORTER dans un dossier de ton téléphone que tu choisis. Je garde %1$s copie, la plus récente, et je ne touche pas à tes autres fichiers.</item>
+        <item quantity="many">Chaque semaine, j’enregistre le même CSV qu’EXPORTER dans un dossier de ton téléphone que tu choisis. Je garde les %1$s dernières copies et je ne touche pas à tes autres fichiers.</item>
+        <item quantity="other">Chaque semaine, j’enregistre le même CSV qu’EXPORTER dans un dossier de ton téléphone que tu choisis. Je garde les %1$s dernières copies et je ne touche pas à tes autres fichiers.</item>
+    </plurals>
+    <!-- Lignes de ticket (à droite, le nom du dossier, «Download», et la date). -->
+    <string name="settings_backup_folder_label">Dossier</string>
+    <string name="settings_backup_last_label">Dernière copie</string>
+    <string name="settings_backup_last_never">Aucune pour l’instant</string>
+    <!-- %1$s la date («7 nov. 2026»), %2$s l’heure («14:05»). -->
+    <string name="settings_backup_last_value">%1$s, %2$s</string>
+    <!-- Boutons en MAJUSCULES, courts. -->
+    <string name="settings_backup_now">COPIER MAINTENANT</string>
+    <string name="settings_backup_change">CHANGER DE DOSSIER</string>
+    <!-- TalkBack de la ligne du dossier («Appuie deux fois pour …»). -->
+    <string name="settings_backup_change_talkback">changer de dossier</string>
+    <!-- Résultat de COPIER MAINTENANT. %1$s le nom du dossier («Download»), %2$s les vidéos avec leur mot («1 234 vidéos»). -->
+    <string name="settings_backup_done">Copie faite dans %1$s\u00A0: %2$s.</string>
+    <string name="settings_backup_empty">Rien à copier pour l’instant.</string>
+    <!-- Le dossier n’existe plus ou Android a retiré l’autorisation (va avec le bouton CHANGER DE DOSSIER). -->
+    <string name="settings_backup_no_access">Je ne peux pas écrire dans le dossier\u00A0: choisis-en un autre.</string>
+    <string name="settings_backup_failed">La copie n’a pas pu être faite. Réessaie avec COPIER MAINTENANT.</string>
+    <!-- Android n’a pas donné l’autorisation pour le dossier qui vient d’être choisi. -->
+    <string name="settings_backup_pick_failed">Android ne me laisse pas utiliser ce dossier\u00A0: choisis-en un autre.</string>
+    <!-- Ajout\u00E9 \u00E0 la fin du dialogue TOUT EFFACER si la copie hebdomadaire est activ\u00E9e. -->
+    <string name="settings_backup_delete_note">Les copies hebdomadaires de ton dossier ne sont pas effac\u00E9es\u00A0: elles sont \u00E0 toi.</string>
 
     <!-- ============================================================ 06 servicio -->
 
     <!-- Línea de estado: «Permiso de accesibilidad ······ CONECTADO». -->
     <string name="settings_service_line">Service d’accessibilité</string>
     <!-- %1$s la lista de apps activadas («TikTok, Reels y Shorts»). -->
-    <string name="settings_service_connected">Je compte dans %1$s.</string>
+    <string name="settings_service_connected">Je compte sur %1$s.</string>
     <!-- «Accesibilidad» es el menú de los ajustes de Android, tal como lo llama Android en ese idioma. -->
     <string name="settings_service_disconnected">Sans le service, je ne compte rien. Active-le dans Accessibilité.</string>
     <!-- Enlace en MAYÚSCULAS para volver a leer qué lee la app y para qué. -->
-    <string name="settings_service_disclosure_link">CE QU’ELLE LIT ET POURQUOI</string>
+    <string name="settings_service_disclosure_link">CE QU’IL LIT ET POURQUOI</string>
 
     <!-- ============================================================ 07 privacidad -->
 
     <!-- Explicación de privacidad: un párrafo corto por <item>, en este orden. -->
     <string-array name="settings_privacy_paragraphs">
-        <item>Reelómetro compte ce que tu vois sur TikTok, Instagram et YouTube grâce au service d’accessibilité d’Android. Pour chaque vidéo, l’application garde l’app, l’heure, le temps que tu l’as regardée, le créateur et la description.</item>
+        <item>Reelometer compte ce que tu vois sur TikTok, Instagram et YouTube grâce au service d’accessibilité d’Android. Pour chaque vidéo, l’application enregistre l’app, l’heure, combien de temps tu l’as regardée, le créateur et la description.</item>
         <item>Tout est enregistré dans ce téléphone. Pas de comptes, de serveurs, de publicités ni d’analyses. L’application n’a pas l’autorisation d’utiliser internet.</item>
-        <item>Tes données ne sortent d’ici que si tu le décides : en exportant le CSV ou en partageant ton ticket.</item>
+        <item>Tes données ne sortent d’ici que si tu le décides\u00A0: en exportant le CSV ou en partageant ton ticket.</item>
         <item>Si tu désactives le service, je ne compte plus. Si tu effaces les données ou désinstalles l’application, elles disparaissent.</item>
     </string-array>
     <!-- Enlace en MAYÚSCULAS. -->
@@ -294,11 +328,11 @@
     <string name="settings_replay_tour">REVOIR LA VISITE</string>
     <string name="settings_licenses_label">LICENCES</string>
     <!-- Los nombres de las tipografías y de la licencia no se traducen. -->
-    <string name="settings_fonts_license">Polices : Bricolage Grotesque, JetBrains Mono et Instrument Serif, sous licence SIL Open Font License 1.1.</string>
+    <string name="settings_fonts_license">Polices\u00A0: Bricolage Grotesque, JetBrains Mono et Instrument Serif, sous licence SIL Open Font License 1.1.</string>
     <!-- Firma al pie de Ajustes (un guiño: los vídeos cortos duran unos quince segundos). -->
     <string name="settings_signature">Fait par petits bouts de quinze secondes.</string>
     <!-- El proyecto en GitHub. El botón va en MAYÚSCULAS. -->
-    <string name="settings_project_text">Reelómetro est gratuit, sans publicité, et il est fait par une seule personne. Le projet est sur GitHub.</string>
+    <string name="settings_project_text">Reelometer est gratuit, sans publicité, et il est fait par une seule personne. Le projet est sur GitHub.</string>
     <string name="settings_project_button">VOIR SUR GITHUB</string>
     <string name="settings_project_note">Ça s’ouvre dans ton navigateur. L’application reste sans internet.</string>
     <string name="settings_project_no_browser">Aucun navigateur ne peut ouvrir ce lien.</string>

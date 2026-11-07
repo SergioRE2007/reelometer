@@ -11,7 +11,7 @@
 
     <!-- Calendario de colores por día (TalkBack). %1$s el día más alto, ya dicho («212 vídeos, martes 3 nov»). -->
     <string name="ui_calendar_description_empty">Calendário: sem dados</string>
-    <string name="ui_calendar_description">Calendário. Dia mais alto: %1$s</string>
+    <string name="ui_calendar_description">Calendário. Dia com mais vídeos: %1$s</string>
 
     <!-- Gráfico de barras por día (TalkBack). %1$s el día con más vídeos, ya dicho. -->
     <string name="ui_daily_bars_description_empty">Barras por dia: sem dados</string>

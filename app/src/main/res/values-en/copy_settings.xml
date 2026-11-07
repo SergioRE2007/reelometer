@@ -27,7 +27,7 @@
     <string name="settings_section_privacy_title">PRIVACY</string>
     <string name="settings_section_privacy_description">What happens to your data, with no fine print.</string>
     <string name="settings_section_about_title">ABOUT</string>
-    <string name="settings_section_about_description">Reelómetro has nothing to do with TikTok, Instagram or YouTube. It only counts what you see on them.</string>
+    <string name="settings_section_about_description">Reelometer has nothing to do with TikTok, Instagram or YouTube. It only counts what you see on them.</string>
 
     <!-- Antetítulo de los diálogos que salen de una sección: «05 · TUS DATOS». %1$s el número de la
          sección («05»), %2$s su título (ya en MAYÚSCULAS). -->
@@ -99,18 +99,18 @@
     <string name="settings_time_hour">HOUR</string>
     <string name="settings_time_minute">MINUTES</string>
     <!-- TalkBack: botones de las ruedas (las horas van de una en una y los minutos, de cinco en cinco). -->
-    <string name="settings_time_hour_down">One hour less</string>
-    <string name="settings_time_hour_up">One hour more</string>
-    <string name="settings_time_minute_down">Five minutes less</string>
-    <string name="settings_time_minute_up">Five minutes more</string>
+    <string name="settings_time_hour_down">One hour earlier</string>
+    <string name="settings_time_hour_up">One hour later</string>
+    <string name="settings_time_minute_down">Five minutes earlier</string>
+    <string name="settings_time_minute_up">Five minutes later</string>
 
     <!-- Con los avisos bloqueados en Android (va con el botón ABRIR AJUSTES). -->
-    <string name="settings_notifications_blocked">Android has Reelómetro\'s notifications turned off. Turn them on in the system settings to receive them.</string>
+    <string name="settings_notifications_blocked">Android has Reelometer\'s notifications turned off. Turn them on in the system settings to receive them.</string>
 
     <!-- ============================================================ 03 apps -->
 
     <!-- Con todas las apps apagadas. -->
-    <string name="settings_all_apps_off">You\'ve turned them all off. So there\'s nothing to count.</string>
+    <string name="settings_all_apps_off">You\'ve turned them all off. That leaves nothing to count.</string>
 
     <!-- Interruptor «A quién envías» (solo Instagram). «Estadísticas» es la pestaña de la app. -->
     <string name="settings_recipients_label">Who you send to</string>
@@ -167,15 +167,17 @@
          («Español»); al tocarla se abren los ajustes de idioma de la app en Android. -->
     <string name="settings_language_label">Language</string>
     <!-- Línea de ayuda bajo la fila. -->
-    <string name="settings_language_hint">Change it in the system settings.</string>
+    <string name="settings_language_hint">Choose the language you see the app in.</string>
+    <string name="settings_language_dialog_title">Which language?</string>
+    <string name="settings_language_system">Same as the phone</string>
     <!-- TalkBack: lo que hace tocar la fila («Toca dos veces para …»). -->
     <string name="settings_language_open">change the app language</string>
 
     <!-- ============================================================ 05 tus datos -->
 
     <!-- Resumen de lo guardado, en líneas de ticket (a la derecha, la cifra). -->
-    <string name="settings_data_count_label">Videos saved</string>
-    <string name="settings_data_time_label">Time saved</string>
+    <string name="settings_data_count_label">Videos stored</string>
+    <string name="settings_data_time_label">Time stored</string>
     <string name="settings_export_description">Your history in one file: open it in a spreadsheet or import it on another phone.</string>
 
     <!-- %1$s los vídeos exportados con su palabra («12.408 vídeos»). -->
@@ -196,7 +198,7 @@
     <string name="settings_delete_failed">Couldn\'t delete. Try again.</string>
 
     <!-- Importar el CSV (1.6.0). Descripción junto a IMPORTAR CSV. -->
-    <string name="settings_import_description">New phone, or did you reset this one? Import the CSV you exported here and your history comes back.</string>
+    <string name="settings_import_description">New phone, or did you reset this one? Import the CSV you exported and your history comes back.</string>
     <string name="settings_import_busy">Importing the file</string>
     <string name="settings_import_dialog_title">Import this file?</string>
     <string name="settings_import_preview">The file has %1$s (%2$s).</string>
@@ -210,12 +212,12 @@
     </plurals>
     <string name="settings_import_preview_passport">It also brings your passport: stamps, challenges and level.</string>
     <string name="settings_import_preview_settings">Settings aren\'t in the file: your goal and your alerts stay as they are.</string>
-    <string name="settings_import_modes">ADD puts what\'s new on top of what you already have. REPLACE ALL deletes what\'s here now and keeps only the file.</string>
+    <string name="settings_import_modes">ADD puts what\'s new on top of what you already have. REPLACE ALL deletes what\'s here now and keeps only what\'s in the file.</string>
     <string name="settings_import_replace_title">Replace everything?</string>
-    <string name="settings_import_replace_body_empty">There are no saved videos: the file\'s will stay.</string>
+    <string name="settings_import_replace_body_empty">No saved videos: you\'ll be left with what\'s in the file.</string>
     <plurals name="settings_import_replace_body">
-        <item quantity="one">This will delete %1$s and %2$s of history, and only the file will stay. It can\'t be undone.</item>
-        <item quantity="other">This will delete %1$s and %2$s of history, and only the file will stay. It can\'t be undone.</item>
+        <item quantity="one">This will delete %1$s and %2$s of history, and only what\'s in the file will remain. It can\'t be undone.</item>
+        <item quantity="other">This will delete %1$s and %2$s of history, and only what\'s in the file will remain. It can\'t be undone.</item>
     </plurals>
     <plurals name="settings_import_done">
         <item quantity="one">Imported: %1$s.</item>
@@ -230,18 +232,49 @@
         <item quantity="other">%1$s lines couldn\'t be read.</item>
     </plurals>
     <string name="settings_import_nothing_new">Nothing new: everything was already saved.</string>
-    <string name="settings_import_not_csv">This file isn\'t a Reelómetro CSV. Pick the one you exported from the app.</string>
+    <string name="settings_import_not_csv">This file isn\'t a Reelometer CSV. Pick the one you exported from the app.</string>
     <string name="settings_import_empty">The file is empty: there are no videos to import.</string>
-    <string name="settings_import_too_large">The file is over 50\u00A0MB: it doesn\'t look like a Reelómetro copy.</string>
+    <string name="settings_import_too_large">The file is over 50\u00A0MB: it doesn\'t look like a Reelometer copy.</string>
     <string name="settings_import_too_broken">Too many lines can\'t be read, so nothing was imported.</string>
     <string name="settings_import_failed">Couldn\'t import, and nothing has changed. Try again.</string>
+    <string name="settings_import_dates">The dates in the file can\'t be read: a spreadsheet seems to have changed their format. Nothing was imported. Try the CSV just as the app exported it.</string>
+
+    <!-- Weekly CSV backup: switch, the folder the user picks in Android\'s picker, the date of the last copy
+         and two buttons. The folder is on the phone (it is not a cloud backup). -->
+    <string name="settings_backup_label">Weekly backup</string>
+    <!-- Under the switch. %1$s how many copies are kept, already formatted («4»). -->
+    <plurals name="settings_backup_description">
+        <item quantity="one">Every week I save the same CSV as EXPORT to a folder on your phone that you choose. I keep %1$s copy, the latest, and never touch your other files.</item>
+        <item quantity="other">Every week I save the same CSV as EXPORT to a folder on your phone that you choose. I keep the last %1$s copies and never touch your other files.</item>
+    </plurals>
+    <!-- Receipt lines (on the right, the folder name, «Download», and the date). -->
+    <string name="settings_backup_folder_label">Folder</string>
+    <string name="settings_backup_last_label">Last copy</string>
+    <string name="settings_backup_last_never">None yet</string>
+    <!-- %1$s the date («7 Nov 2026»), %2$s the time («14:05»). -->
+    <string name="settings_backup_last_value">%1$s, %2$s</string>
+    <!-- Buttons in CAPITALS, short. -->
+    <string name="settings_backup_now">COPY NOW</string>
+    <string name="settings_backup_change">CHANGE FOLDER</string>
+    <!-- TalkBack for the folder line («Double-tap to …»). -->
+    <string name="settings_backup_change_talkback">change folder</string>
+    <!-- Result of COPY NOW. %1$s the folder name («Download»), %2$s the videos with their word («1,234 videos»). -->
+    <string name="settings_backup_done">Copied to %1$s: %2$s.</string>
+    <string name="settings_backup_empty">Nothing to copy yet.</string>
+    <!-- The folder is gone or Android has revoked access (goes with the CHANGE FOLDER button). -->
+    <string name="settings_backup_no_access">I can\'t write to the folder: choose another one.</string>
+    <string name="settings_backup_failed">The copy couldn\'t be made. Try again with COPY NOW.</string>
+    <!-- Android didn\'t grant access to the folder just picked. -->
+    <string name="settings_backup_pick_failed">Android won\'t let me use that folder: choose another one.</string>
+    <!-- Added at the end of the DELETE ALL dialog when the weekly backup is on. -->
+    <string name="settings_backup_delete_note">The weekly copies in your folder aren\'t deleted: those are yours.</string>
 
     <!-- ============================================================ 06 servicio -->
 
     <!-- Línea de estado: «Permiso de accesibilidad ······ CONECTADO». -->
     <string name="settings_service_line">Accessibility permission</string>
     <!-- %1$s la lista de apps activadas («TikTok, Reels y Shorts»). -->
-    <string name="settings_service_connected">Counting in %1$s.</string>
+    <string name="settings_service_connected">Counting on %1$s.</string>
     <!-- «Accesibilidad» es el menú de los ajustes de Android, tal como lo llama Android en ese idioma. -->
     <string name="settings_service_disconnected">Without the service I can\'t count anything. Turn it on in Accessibility.</string>
     <!-- Enlace en MAYÚSCULAS para volver a leer qué lee la app y para qué. -->
@@ -251,9 +284,9 @@
 
     <!-- Explicación de privacidad: un párrafo corto por <item>, en este orden. -->
     <string-array name="settings_privacy_paragraphs">
-        <item>Reelómetro counts what you watch on TikTok, Instagram and YouTube using Android\'s accessibility service. For each video, the app keeps the app, the time, how long you watched it, the creator and the description.</item>
+        <item>Reelometer counts what you watch on TikTok, Instagram and YouTube using Android\'s accessibility service. For each video, the app keeps the app, the time, how long you watched it, the creator and the description.</item>
         <item>Everything is stored on this phone. There are no accounts, no servers, no ads and no analytics. The app has no permission to use the internet.</item>
-        <item>Your data leaves here only if you take it out yourself: when you export the CSV or share your ticket.</item>
+        <item>Your data leaves here only if you take it out yourself: when you export the CSV or share your receipt.</item>
         <item>If you turn off the service, it stops counting. If you delete the data or uninstall the app, it disappears.</item>
     </string-array>
     <!-- Enlace en MAYÚSCULAS. -->
@@ -288,7 +321,7 @@
     <!-- Firma al pie de Ajustes (un guiño: los vídeos cortos duran unos quince segundos). -->
     <string name="settings_signature">Made in fifteen-second bursts.</string>
     <!-- El proyecto en GitHub. El botón va en MAYÚSCULAS. -->
-    <string name="settings_project_text">Reelómetro is free, has no ads and is made by one person. The project is on GitHub.</string>
+    <string name="settings_project_text">Reelometer is free, has no ads and is made by one person. The project is on GitHub.</string>
     <string name="settings_project_button">VIEW ON GITHUB</string>
     <string name="settings_project_note">It opens in your browser. The app still has no internet.</string>
     <string name="settings_project_no_browser">There is no browser to open the link.</string>

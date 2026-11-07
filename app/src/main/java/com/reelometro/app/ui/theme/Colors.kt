@@ -6,7 +6,7 @@ import androidx.compose.ui.graphics.compositeOver
 import com.reelometro.app.data.Platform
 
 /**
- * Paleta de Reelómetro (ver docs/DESIGN.md §1). Un único acento: [signal].
+ * Paleta de Reelometer (ver docs/DESIGN.md §1). Un único acento: [signal].
  * Nunca escribas colores literales en pantallas: usa siempre `ReelTheme.colors`.
  */
 @Immutable

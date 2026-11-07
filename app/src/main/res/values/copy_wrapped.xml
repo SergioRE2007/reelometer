@@ -36,7 +36,7 @@
         <item>El primer resumen llegará en cuanto haya algo que contar.</item>
     </string-array>
 
-    <!-- Etiqueta de la portada (MAYÚSCULAS): «REELÓMETRO · OCTUBRE 2026». %1$s el nombre de la app,
+    <!-- Etiqueta de la portada (MAYÚSCULAS): «REELOMETER · OCTUBRE 2026». %1$s el nombre de la app,
          %2$s el periodo («OCTUBRE 2026», «27 OCT – 2 NOV», «2026», «DESDE EL 3 MAR 2026»). -->
     <string name="wrapped_cover_label">%1$s · %2$s</string>
     <!-- Pista discreta de la portada (MAYÚSCULAS, una línea en letra pequeña). -->

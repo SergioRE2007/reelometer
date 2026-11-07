@@ -23,7 +23,7 @@
 
     <!-- Título grande (juego de palabras: la app cuenta lo que tú no cuentas). -->
     <string name="onboarding_what_title">Counts what you don\'t.</string>
-    <string name="onboarding_what_body">Reelómetro counts the short videos you watch on TikTok, Instagram Reels and YouTube Shorts: how many, how long, on which topics and from which creators. The data is yours; the conclusions are too.</string>
+    <string name="onboarding_what_body">Reelometer counts the short videos you watch on TikTok, Instagram Reels and YouTube Shorts: how many, how long, on which topics and from which creators. The data is yours; the conclusions are too.</string>
     <!-- Bajo el marcador de demostración, en MAYÚSCULAS: «47 MIN DE PANTALLA». %1$s el tiempo («47 MIN»). -->
     <string name="onboarding_demo_time">%1$s OF SCREEN TIME</string>
     <!-- TalkBack del marcador de demostración. %1$s los vídeos con su palabra («212 vídeos»). -->
@@ -54,14 +54,14 @@
     <!-- ABRIR ACCESIBILIDAD es el botón de esta misma pantalla (igual que el botón de la app). -->
     <string name="onboarding_guide_step_1">Tap OPEN ACCESSIBILITY: I\'ll take you to Android\'s settings.</string>
     <!-- «Aplicaciones descargadas», «Aplicaciones instaladas» y «Servicios instalados» citan los menús de
-         Android tal cual; en cada idioma, los que muestre Android en ese idioma. «Reelómetro» no se traduce. -->
-    <string name="onboarding_guide_step_2">Look for “Reelómetro” under “Downloaded apps”. On some phones it is under “Installed apps” or “Installed services”.</string>
-    <!-- «Usar Reelómetro» cita el interruptor de Android tal cual; en cada idioma, el que muestre Android en ese idioma. -->
-    <string name="onboarding_guide_step_3">Tap “Reelómetro” and turn on “Use Reelómetro”.</string>
-    <!-- «pueda controlar totalmente tu dispositivo» cita el aviso de Android («¿Permitir que Reelómetro pueda
+         Android tal cual; en cada idioma, los que muestre Android en ese idioma. «Reelometer» no se traduce. -->
+    <string name="onboarding_guide_step_2">Look for “Reelometer” under “Downloaded apps”. On some phones it is under “Installed apps” or “Installed services”.</string>
+    <!-- «Usar Reelometer» cita el interruptor de Android tal cual; en cada idioma, el que muestre Android en ese idioma. -->
+    <string name="onboarding_guide_step_3">Tap “Reelometer” and turn on “Use Reelometer”.</string>
+    <!-- «pueda controlar totalmente tu dispositivo» cita el aviso de Android («¿Permitir que Reelometer pueda
          controlar totalmente tu dispositivo?») y «Permitir», su botón: tal cual; en cada idioma, como lo
          muestre Android en ese idioma. -->
-    <string name="onboarding_guide_step_4">Android will ask whether you allow Reelómetro to “have full control of your device”. It is the standard prompt for any accessibility service: Reelómetro looks and counts, and only taps for you if you use Instagram quick send. Tap “Allow”.</string>
+    <string name="onboarding_guide_step_4">Android will ask whether you allow Reelometer to “have full control of your device”. It is the standard prompt for any accessibility service: Reelometer looks and counts, and only taps for you if you use Instagram quick send. Tap “Allow”.</string>
     <!-- OK es lo que muestra el marcador de la pantalla al conectar (onboarding_guide_connected_counter). -->
     <string name="onboarding_guide_step_5">Come back here. If the counter says OK, you\'re done.</string>
 
@@ -85,7 +85,7 @@
     </string-array>
 
     <!-- Bajo el «OK»: qué pasa ahora. «Hoy» es la pantalla principal de la app. -->
-    <string name="onboarding_guide_connected_body">Use TikTok, Instagram or YouTube as usual. I\'ll keep adding up on Today.</string>
+    <string name="onboarding_guide_connected_body">Use TikTok, Instagram or YouTube as usual. I\'ll keep count in Today.</string>
 
     <!-- TalkBack del marcador de estado. -->
     <string name="onboarding_guide_status_connected">Service connected</string>
@@ -93,7 +93,7 @@
 
     <!-- Enlace en MAYÚSCULAS a la ayuda. «AJUSTE RESTRINGIDO» cita el aviso de Android tal cual (aquí en
          mayúsculas); en cada idioma, el que muestre Android en ese idioma. -->
-    <string name="onboarding_restricted_link">IS IT SAYING “RESTRICTED SETTING”?</string>
+    <string name="onboarding_restricted_link">SEEING “RESTRICTED SETTING”?</string>
 
     <!-- ============================================================ 3b. «Ajuste restringido» (Android 13+) -->
 
@@ -110,9 +110,9 @@
     <!-- «Permitir ajustes restringidos» cita la opción del menú de Android tal cual; en cada idioma, la que
          muestre Android en ese idioma. -->
     <string name="onboarding_restricted_step_3">Tap “Allow restricted settings” and confirm with your PIN, pattern or fingerprint.</string>
-    <!-- «Usar Reelómetro» cita el interruptor de Android y «Accesibilidad», su menú: tal cual; en cada
+    <!-- «Usar Reelometer» cita el interruptor de Android y «Accesibilidad», su menú: tal cual; en cada
          idioma, como los muestre Android en ese idioma. -->
-    <string name="onboarding_restricted_step_4">Go back to Accessibility and turn on “Use Reelómetro”.</string>
+    <string name="onboarding_restricted_step_4">Go back to Accessibility and turn on “Use Reelometer”.</string>
     <!-- «Permitir ajustes restringidos» cita la opción del menú de Android tal cual; en cada idioma, la que
          muestre Android en ese idioma. -->
     <string name="onboarding_restricted_note">“Allow restricted settings” only appears after Android has blocked you once. If you can\'t see it, try turning the service on first and then come back here.</string>

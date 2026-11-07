@@ -93,7 +93,7 @@
     <string name="button_import_replace_confirm">SUBSTITUIR</string>
     <string name="button_see_summary">VER RESUMO</string>
     <string name="button_see_permission">VER A PERMISSÃO</string>
-    <string name="button_remove_goal">TIRAR META</string>
+    <string name="button_remove_goal">REMOVER META</string>
     <string name="button_set_goal">DEFINIR META</string>
     <string name="button_done">PRONTO</string>
     <string name="button_back">VOLTAR</string>

@@ -30,8 +30,8 @@
     <!-- Frase de titular: %1$s es el infinitivo con la cantidad («leer 14 libros»). Se elige una por día. -->
     <string-array name="eq_sentence">
         <item>Avec ce temps, tu pourrais %1$s.</item>
-        <item>Ça te donnait de quoi %1$s.</item>
-        <item>Ça fait de quoi %1$s.</item>
+        <item>De quoi %1$s.</item>
+        <item>Il y a de quoi %1$s.</item>
         <item>Avec ça, tu aurais pu %1$s.</item>
     </string-array>
     <!-- Titular cuando aún no hay tiempo que comparar (menos de un segundo). -->
@@ -61,13 +61,13 @@
         <item quantity="many">presque %1$s\u00A0de licences</item>
         <item quantity="other">presque %1$s\u00A0licences</item>
     </plurals>
-    <string name="eq_degree_percent">le %1$s d’une licence</string>
-    <string name="eq_degree_less">moins du %1$s d’une licence</string>
+    <string name="eq_degree_percent">%1$s d’une licence</string>
+    <string name="eq_degree_less">moins de %1$s d’une licence</string>
     <string name="eq_degree_quarter">un quart de licence</string>
     <string name="eq_degree_half">une demi-licence</string>
     <string name="eq_degree_three_quarters">trois quarts de licence</string>
     <string name="eq_degree_label">LICENCES</string>
-    <string name="eq_degree_basis">Base: 240\u00A0ECTS × 25\u00A0h (système LMD)</string>
+    <string name="eq_degree_basis">Base\u00A0: 240\u00A0ECTS × 25\u00A0h (système LMD)</string>
 
     <!-- MÁSTERES: se cuenta por unidades (máster / másteres). -->
     <string name="eq_master_do">faire %1$s</string>
@@ -91,13 +91,13 @@
         <item quantity="many">presque %1$s\u00A0de masters</item>
         <item quantity="other">presque %1$s\u00A0masters</item>
     </plurals>
-    <string name="eq_master_percent">le %1$s d’un master</string>
-    <string name="eq_master_less">moins du %1$s d’un master</string>
+    <string name="eq_master_percent">%1$s d’un master</string>
+    <string name="eq_master_less">moins de %1$s d’un master</string>
     <string name="eq_master_quarter">un quart de master</string>
     <string name="eq_master_half">un demi-master</string>
     <string name="eq_master_three_quarters">trois quarts de master</string>
     <string name="eq_master_label">MASTERS</string>
-    <string name="eq_master_basis">Base: 60\u00A0ECTS × 25\u00A0h (master d’un an)</string>
+    <string name="eq_master_basis">Base\u00A0: 60\u00A0ECTS × 25\u00A0h (master d’un an)</string>
 
     <!-- IDIOMAS: se cuenta por unidades (idioma / idiomas). -->
     <string name="eq_language_do">apprendre %1$s</string>
@@ -121,13 +121,13 @@
         <item quantity="many">presque %1$s\u00A0de langues</item>
         <item quantity="other">presque %1$s\u00A0langues</item>
     </plurals>
-    <string name="eq_language_percent">le %1$s d’une langue</string>
-    <string name="eq_language_less">moins du %1$s d’une langue</string>
+    <string name="eq_language_percent">%1$s d’une langue</string>
+    <string name="eq_language_less">moins de %1$s d’une langue</string>
     <string name="eq_language_quarter">un quart de langue</string>
     <string name="eq_language_half">une demi-langue</string>
     <string name="eq_language_three_quarters">trois quarts de langue</string>
     <string name="eq_language_label">LANGUES</string>
-    <string name="eq_language_basis">Base: FSI, ~600–750\u00A0h pour les langues de catégorie I</string>
+    <string name="eq_language_basis">Base\u00A0: FSI, ~600–750\u00A0h pour les langues de catégorie I</string>
 
     <!-- BOOTCAMPS DE PROGRAMACIÓN: se cuenta por unidades (bootcamp / bootcamps). -->
     <string name="eq_coding_do">faire %1$s</string>
@@ -151,13 +151,13 @@
         <item quantity="many">presque %1$s\u00A0de bootcamps de programmation</item>
         <item quantity="other">presque %1$s\u00A0bootcamps de programmation</item>
     </plurals>
-    <string name="eq_coding_percent">le %1$s d’un bootcamp de programmation</string>
-    <string name="eq_coding_less">moins du %1$s d’un bootcamp de programmation</string>
+    <string name="eq_coding_percent">%1$s d’un bootcamp de programmation</string>
+    <string name="eq_coding_less">moins de %1$s d’un bootcamp de programmation</string>
     <string name="eq_coding_quarter">un quart de bootcamp de programmation</string>
     <string name="eq_coding_half">un demi-bootcamp de programmation</string>
     <string name="eq_coding_three_quarters">trois quarts de bootcamp de programmation</string>
     <string name="eq_coding_label">BOOTCAMPS DE PROGRAMMATION</string>
-    <string name="eq_coding_basis">Base: bootcamp intensif de programmation, ~400\u00A0h</string>
+    <string name="eq_coding_basis">Base\u00A0: bootcamp intensif de programmation, ~400\u00A0h</string>
 
     <!-- ============================================================ lectura -->
 
@@ -183,13 +183,13 @@
         <item quantity="many">presque %1$s\u00A0de livres</item>
         <item quantity="other">presque %1$s\u00A0livres</item>
     </plurals>
-    <string name="eq_book_percent">le %1$s d’un livre</string>
-    <string name="eq_book_less">moins du %1$s d’un livre</string>
+    <string name="eq_book_percent">%1$s d’un livre</string>
+    <string name="eq_book_less">moins de %1$s d’un livre</string>
     <string name="eq_book_quarter">un quart de livre</string>
     <string name="eq_book_half">un demi-livre</string>
     <string name="eq_book_three_quarters">trois quarts de livre</string>
     <string name="eq_book_label">LIVRES</string>
-    <string name="eq_book_basis">Base: roman d’environ 90\u00A0000 mots à 250 mots/min ≈ 6\u00A0h</string>
+    <string name="eq_book_basis">Base\u00A0: roman d’environ 90\u00A0000 mots à 250 mots/min ≈ 6\u00A0h</string>
 
     <!-- EL QUIJOTE: obra o trayecto que se repite («el Quijote entero», contado en veces). -->
     <string name="eq_quijote_do">lire %1$s</string>
@@ -213,13 +213,13 @@
         <item quantity="many">Don Quichotte en entier presque %1$s\u00A0de fois</item>
         <item quantity="other">Don Quichotte en entier presque %1$s\u00A0fois</item>
     </plurals>
-    <string name="eq_quijote_percent">le %1$s de Don Quichotte</string>
-    <string name="eq_quijote_less">moins du %1$s de Don Quichotte</string>
+    <string name="eq_quijote_percent">%1$s de Don Quichotte</string>
+    <string name="eq_quijote_less">moins de %1$s de Don Quichotte</string>
     <string name="eq_quijote_quarter">un quart de Don Quichotte</string>
     <string name="eq_quijote_half">la moitié de Don Quichotte</string>
     <string name="eq_quijote_three_quarters">trois quarts de Don Quichotte</string>
     <string name="eq_quijote_label">DON QUICHOTTE</string>
-    <string name="eq_quijote_basis">Base: les deux parties, ~380\u00A0000 mots à 250 mots/min ≈ 25\u00A0h</string>
+    <string name="eq_quijote_basis">Base\u00A0: les deux parties, ~380\u00A0000 mots à 250 mots/min ≈ 25\u00A0h</string>
 
     <!-- EN BUSCA DEL TIEMPO PERDIDO: obra o trayecto que se repite («En busca del tiempo perdido», contado en veces). -->
     <string name="eq_proust_do">lire %1$s</string>
@@ -243,13 +243,13 @@
         <item quantity="many">À la recherche du temps perdu presque %1$s\u00A0de fois</item>
         <item quantity="other">À la recherche du temps perdu presque %1$s\u00A0fois</item>
     </plurals>
-    <string name="eq_proust_percent">le %1$s d’À la recherche du temps perdu</string>
-    <string name="eq_proust_less">moins du %1$s d’À la recherche du temps perdu</string>
+    <string name="eq_proust_percent">%1$s d’À la recherche du temps perdu</string>
+    <string name="eq_proust_less">moins de %1$s d’À la recherche du temps perdu</string>
     <string name="eq_proust_quarter">un quart d’À la recherche du temps perdu</string>
     <string name="eq_proust_half">la moitié d’À la recherche du temps perdu</string>
     <string name="eq_proust_three_quarters">trois quarts d’À la recherche du temps perdu</string>
     <string name="eq_proust_label">À LA RECHERCHE DU TEMPS PERDU</string>
-    <string name="eq_proust_basis">Base: 7\u00A0tomes, ~1\u00A0270\u00A0000 mots à 250 mots/min ≈ 85\u00A0h</string>
+    <string name="eq_proust_basis">Base\u00A0: 7\u00A0tomes, ~1\u00A0270\u00A0000 mots à 250 mots/min ≈ 85\u00A0h</string>
 
     <!-- ============================================================ pantalla (de la grande) -->
 
@@ -275,13 +275,13 @@
         <item quantity="many">Game of Thrones en entier presque %1$s\u00A0de fois</item>
         <item quantity="other">Game of Thrones en entier presque %1$s\u00A0fois</item>
     </plurals>
-    <string name="eq_got_percent">le %1$s de Game of Thrones</string>
-    <string name="eq_got_less">moins du %1$s de Game of Thrones</string>
+    <string name="eq_got_percent">%1$s de Game of Thrones</string>
+    <string name="eq_got_less">moins de %1$s de Game of Thrones</string>
     <string name="eq_got_quarter">un quart de Game of Thrones</string>
     <string name="eq_got_half">la moitié de Game of Thrones</string>
     <string name="eq_got_three_quarters">trois quarts de Game of Thrones</string>
     <string name="eq_got_label">GAME OF THRONES</string>
-    <string name="eq_got_basis">Base: 8\u00A0saisons, 73\u00A0épisodes ≈ 70\u00A0h</string>
+    <string name="eq_got_basis">Base\u00A0: 8\u00A0saisons, 73\u00A0épisodes ≈ 70\u00A0h</string>
 
     <!-- SAGA DE HARRY POTTER: obra o trayecto que se repite («la saga de Harry Potter entera», contado en veces). -->
     <string name="eq_harry_potter_do">voir %1$s</string>
@@ -305,13 +305,13 @@
         <item quantity="many">la saga Harry Potter en entier presque %1$s\u00A0de fois</item>
         <item quantity="other">la saga Harry Potter en entier presque %1$s\u00A0fois</item>
     </plurals>
-    <string name="eq_harry_potter_percent">le %1$s de la saga Harry Potter</string>
-    <string name="eq_harry_potter_less">moins du %1$s de la saga Harry Potter</string>
+    <string name="eq_harry_potter_percent">%1$s de la saga Harry Potter</string>
+    <string name="eq_harry_potter_less">moins de %1$s de la saga Harry Potter</string>
     <string name="eq_harry_potter_quarter">un quart de la saga Harry Potter</string>
     <string name="eq_harry_potter_half">la moitié de la saga Harry Potter</string>
     <string name="eq_harry_potter_three_quarters">trois quarts de la saga Harry Potter</string>
     <string name="eq_harry_potter_label">SAGA HARRY POTTER</string>
-    <string name="eq_harry_potter_basis">Base: 8\u00A0films, 1\u00A0179\u00A0min ≈ 19\u00A0h 40\u00A0min</string>
+    <string name="eq_harry_potter_basis">Base\u00A0: 8\u00A0films, 1\u00A0179\u00A0min ≈ 19\u00A0h 40\u00A0min</string>
 
     <!-- EL SEÑOR DE LOS ANILLOS: obra o trayecto que se repite («El Señor de los Anillos en versión extendida», contado en veces). -->
     <string name="eq_lotr_do">voir %1$s</string>
@@ -335,13 +335,13 @@
         <item quantity="many">Le Seigneur des anneaux version longue presque %1$s\u00A0de fois</item>
         <item quantity="other">Le Seigneur des anneaux version longue presque %1$s\u00A0fois</item>
     </plurals>
-    <string name="eq_lotr_percent">le %1$s du Seigneur des anneaux version longue</string>
-    <string name="eq_lotr_less">moins du %1$s du Seigneur des anneaux version longue</string>
+    <string name="eq_lotr_percent">%1$s du Seigneur des anneaux version longue</string>
+    <string name="eq_lotr_less">moins de %1$s du Seigneur des anneaux version longue</string>
     <string name="eq_lotr_quarter">un quart du Seigneur des anneaux version longue</string>
     <string name="eq_lotr_half">la moitié du Seigneur des anneaux version longue</string>
     <string name="eq_lotr_three_quarters">trois quarts du Seigneur des anneaux version longue</string>
     <string name="eq_lotr_label">LE SEIGNEUR DES ANNEAUX</string>
-    <string name="eq_lotr_basis">Base: trilogie en version longue, 726\u00A0min ≈ 12\u00A0h</string>
+    <string name="eq_lotr_basis">Base\u00A0: trilogie en version longue, 726\u00A0min ≈ 12\u00A0h</string>
 
     <!-- PELÍCULAS: se cuenta por unidades (película / películas, femenino). -->
     <string name="eq_movie_do">voir %1$s</string>
@@ -365,13 +365,13 @@
         <item quantity="many">presque %1$s\u00A0de films</item>
         <item quantity="other">presque %1$s\u00A0films</item>
     </plurals>
-    <string name="eq_movie_percent">le %1$s d’un film</string>
-    <string name="eq_movie_less">moins du %1$s d’un film</string>
+    <string name="eq_movie_percent">%1$s d’un film</string>
+    <string name="eq_movie_less">moins de %1$s d’un film</string>
     <string name="eq_movie_quarter">un quart de film</string>
     <string name="eq_movie_half">un demi-film</string>
     <string name="eq_movie_three_quarters">trois quarts de film</string>
     <string name="eq_movie_label">FILMS</string>
-    <string name="eq_movie_basis">Base: film moyen ≈ 2\u00A0h</string>
+    <string name="eq_movie_basis">Base\u00A0: film moyen ≈ 2\u00A0h</string>
 
     <!-- PARTIDOS DE FÚTBOL: se cuenta por unidades (partido / partidos). -->
     <string name="eq_football_do">voir %1$s</string>
@@ -395,13 +395,13 @@
         <item quantity="many">presque %1$s\u00A0de matchs de football</item>
         <item quantity="other">presque %1$s\u00A0matchs de football</item>
     </plurals>
-    <string name="eq_football_percent">le %1$s d’un match de football</string>
-    <string name="eq_football_less">moins du %1$s d’un match de football</string>
+    <string name="eq_football_percent">%1$s d’un match de football</string>
+    <string name="eq_football_less">moins de %1$s d’un match de football</string>
     <string name="eq_football_quarter">un quart de match de football</string>
     <string name="eq_football_half">un demi-match de football</string>
     <string name="eq_football_three_quarters">trois quarts de match de football</string>
     <string name="eq_football_label">MATCHS DE FOOTBALL</string>
-    <string name="eq_football_basis">Base: 90\u00A0min + 15\u00A0min de pause ≈ 1\u00A0h 45\u00A0min</string>
+    <string name="eq_football_basis">Base\u00A0: 90\u00A0min + 15\u00A0min de pause ≈ 1\u00A0h 45\u00A0min</string>
 
     <!-- ============================================================ deporte y viajes -->
 
@@ -427,13 +427,13 @@
         <item quantity="many">presque %1$s\u00A0de marathons</item>
         <item quantity="other">presque %1$s\u00A0marathons</item>
     </plurals>
-    <string name="eq_marathon_percent">le %1$s d’un marathon</string>
-    <string name="eq_marathon_less">moins du %1$s d’un marathon</string>
+    <string name="eq_marathon_percent">%1$s d’un marathon</string>
+    <string name="eq_marathon_less">moins de %1$s d’un marathon</string>
     <string name="eq_marathon_quarter">un quart de marathon</string>
     <string name="eq_marathon_half">un semi-marathon</string>
     <string name="eq_marathon_three_quarters">trois quarts de marathon</string>
     <string name="eq_marathon_label">MARATHONS</string>
-    <string name="eq_marathon_basis">Base: 42,195\u00A0km à allure populaire ≈ 4\u00A0h 30\u00A0min</string>
+    <string name="eq_marathon_basis">Base\u00A0: 42,195\u00A0km à allure populaire ≈ 4\u00A0h 30\u00A0min</string>
 
     <!-- CAMINO DE SANTIAGO: obra o trayecto que se repite («el Camino de Santiago entero», contado en veces). -->
     <string name="eq_camino_do">faire %1$s</string>
@@ -457,13 +457,13 @@
         <item quantity="many">le chemin de Compostelle en entier presque %1$s\u00A0de fois</item>
         <item quantity="other">le chemin de Compostelle en entier presque %1$s\u00A0fois</item>
     </plurals>
-    <string name="eq_camino_percent">le %1$s du chemin de Compostelle</string>
-    <string name="eq_camino_less">moins du %1$s du chemin de Compostelle</string>
+    <string name="eq_camino_percent">%1$s du chemin de Compostelle</string>
+    <string name="eq_camino_less">moins de %1$s du chemin de Compostelle</string>
     <string name="eq_camino_quarter">un quart du chemin de Compostelle</string>
     <string name="eq_camino_half">la moitié du chemin de Compostelle</string>
     <string name="eq_camino_three_quarters">trois quarts du chemin de Compostelle</string>
     <string name="eq_camino_label">CHEMIN DE COMPOSTELLE</string>
-    <string name="eq_camino_basis">Base: voie française, ~780\u00A0km à 4\u00A0km/h ≈ 195\u00A0h de marche</string>
+    <string name="eq_camino_basis">Base\u00A0: voie française, ~780\u00A0km à 4\u00A0km/h ≈ 195\u00A0h de marche</string>
 
     <!-- MADRID–TOLEDO A PIE: obra o trayecto que se repite («de Madrid a Toledo», contado en veces). -->
     <string name="eq_toledo_do">marcher %1$s</string>
@@ -487,13 +487,13 @@
         <item quantity="many">de Paris à Fontainebleau presque %1$s\u00A0de fois</item>
         <item quantity="other">de Paris à Fontainebleau presque %1$s\u00A0fois</item>
     </plurals>
-    <string name="eq_toledo_percent">le %1$s du chemin de Paris à Fontainebleau</string>
-    <string name="eq_toledo_less">moins du %1$s du chemin de Paris à Fontainebleau</string>
+    <string name="eq_toledo_percent">%1$s du chemin de Paris à Fontainebleau</string>
+    <string name="eq_toledo_less">moins de %1$s du chemin de Paris à Fontainebleau</string>
     <string name="eq_toledo_quarter">un quart du chemin de Paris à Fontainebleau</string>
     <string name="eq_toledo_half">la moitié du chemin de Paris à Fontainebleau</string>
     <string name="eq_toledo_three_quarters">trois quarts du chemin de Paris à Fontainebleau</string>
     <string name="eq_toledo_label">PARIS–FONTAINEBLEAU À PIED</string>
-    <string name="eq_toledo_basis">Base: ~72\u00A0km à 5\u00A0km/h ≈ 14,4\u00A0h</string>
+    <string name="eq_toledo_basis">Base\u00A0: ~72\u00A0km à 5\u00A0km/h ≈ 14,4\u00A0h</string>
 
     <!-- AVE MADRID–BARCELONA: obra o trayecto que se repite («de Madrid a Barcelona», contado en veces). -->
     <string name="eq_ave_do">prendre l’Eurostar %1$s</string>
@@ -517,13 +517,13 @@
         <item quantity="many">de Paris à Londres presque %1$s\u00A0de fois</item>
         <item quantity="other">de Paris à Londres presque %1$s\u00A0fois</item>
     </plurals>
-    <string name="eq_ave_percent">le %1$s du trajet de Paris à Londres</string>
-    <string name="eq_ave_less">moins du %1$s du trajet de Paris à Londres</string>
+    <string name="eq_ave_percent">%1$s du trajet de Paris à Londres</string>
+    <string name="eq_ave_less">moins de %1$s du trajet de Paris à Londres</string>
     <string name="eq_ave_quarter">un quart du trajet de Paris à Londres</string>
     <string name="eq_ave_half">la moitié du trajet de Paris à Londres</string>
     <string name="eq_ave_three_quarters">trois quarts du trajet de Paris à Londres</string>
     <string name="eq_ave_label">PARIS–LONDRES EN EUROSTAR</string>
-    <string name="eq_ave_basis">Base: Eurostar direct, contrôles compris ≈ 2\u00A0h 30\u00A0min</string>
+    <string name="eq_ave_basis">Base\u00A0: Eurostar direct, contrôles compris ≈ 2\u00A0h 30\u00A0min</string>
 
     <!-- VUELO MADRID–NUEVA YORK: obra o trayecto que se repite («de Madrid a Nueva York», contado en veces). -->
     <string name="eq_flight_do">voler %1$s</string>
@@ -547,13 +547,13 @@
         <item quantity="many">de Paris à New York presque %1$s\u00A0de fois</item>
         <item quantity="other">de Paris à New York presque %1$s\u00A0fois</item>
     </plurals>
-    <string name="eq_flight_percent">le %1$s du vol de Paris à New York</string>
-    <string name="eq_flight_less">moins du %1$s du vol de Paris à New York</string>
+    <string name="eq_flight_percent">%1$s du vol de Paris à New York</string>
+    <string name="eq_flight_less">moins de %1$s du vol de Paris à New York</string>
     <string name="eq_flight_quarter">un quart du vol de Paris à New York</string>
     <string name="eq_flight_half">la moitié du vol de Paris à New York</string>
     <string name="eq_flight_three_quarters">trois quarts du vol de Paris à New York</string>
     <string name="eq_flight_label">VOL PARIS–NEW YORK</string>
-    <string name="eq_flight_basis">Base: vol direct ≈ 8\u00A0h</string>
+    <string name="eq_flight_basis">Base\u00A0: vol direct ≈ 8\u00A0h</string>
 
     <!-- KILÓMETROS A PIE: distancia a pie, en kilómetros o, por debajo de uno, en metros. -->
     <string name="eq_walk_do">marcher %1$s</string>
@@ -590,7 +590,7 @@
         <item quantity="other">moins de %1$s\u00A0mètres</item>
     </plurals>
     <string name="eq_walk_label">KILOMÈTRES À PIED</string>
-    <string name="eq_walk_basis">Base: 5\u00A0km/h, pas normal</string>
+    <string name="eq_walk_basis">Base\u00A0: 5\u00A0km/h, pas normal</string>
 
     <!-- ============================================================ cocina, música y sofá -->
 
@@ -616,13 +616,13 @@
         <item quantity="many">presque %1$s\u00A0de quiches lorraines</item>
         <item quantity="other">presque %1$s\u00A0quiches lorraines</item>
     </plurals>
-    <string name="eq_tortilla_percent">le %1$s d’une quiche lorraine</string>
-    <string name="eq_tortilla_less">moins du %1$s d’une quiche lorraine</string>
+    <string name="eq_tortilla_percent">%1$s d’une quiche lorraine</string>
+    <string name="eq_tortilla_less">moins de %1$s d’une quiche lorraine</string>
     <string name="eq_tortilla_quarter">un quart de quiche lorraine</string>
     <string name="eq_tortilla_half">une demi-quiche lorraine</string>
     <string name="eq_tortilla_three_quarters">trois quarts de quiche lorraine</string>
     <string name="eq_tortilla_label">QUICHES LORRAINES</string>
-    <string name="eq_tortilla_basis">Base: pâte, garniture et cuisson ≈ 45\u00A0min</string>
+    <string name="eq_tortilla_basis">Base\u00A0: pâte, garniture et cuisson ≈ 45\u00A0min</string>
 
     <!-- COCIDOS: se cuenta por unidades (cocido madrileño / cocidos madrileños). -->
     <string name="eq_cocido_do">faire %1$s</string>
@@ -646,13 +646,13 @@
         <item quantity="many">presque %1$s\u00A0de pots-au-feu</item>
         <item quantity="other">presque %1$s\u00A0pots-au-feu</item>
     </plurals>
-    <string name="eq_cocido_percent">le %1$s d’un pot-au-feu</string>
-    <string name="eq_cocido_less">moins du %1$s d’un pot-au-feu</string>
+    <string name="eq_cocido_percent">%1$s d’un pot-au-feu</string>
+    <string name="eq_cocido_less">moins de %1$s d’un pot-au-feu</string>
     <string name="eq_cocido_quarter">un quart de pot-au-feu</string>
     <string name="eq_cocido_half">un demi-pot-au-feu</string>
     <string name="eq_cocido_three_quarters">trois quarts de pot-au-feu</string>
     <string name="eq_cocido_label">POT-AU-FEU</string>
-    <string name="eq_cocido_basis">Base: 3\u00A0h 30\u00A0min à petit feu (le trempage ne compte pas)</string>
+    <string name="eq_cocido_basis">Base\u00A0: 3\u00A0h 30\u00A0min à petit feu (le trempage ne compte pas)</string>
 
     <!-- HUEVOS DUROS: se cuenta por unidades (huevo duro / huevos duros). -->
     <string name="eq_egg_do">cuire %1$s</string>
@@ -676,13 +676,13 @@
         <item quantity="many">presque %1$s\u00A0d’œufs durs</item>
         <item quantity="other">presque %1$s\u00A0œufs durs</item>
     </plurals>
-    <string name="eq_egg_percent">le %1$s d’un œuf dur</string>
-    <string name="eq_egg_less">moins du %1$s d’un œuf dur</string>
+    <string name="eq_egg_percent">%1$s d’un œuf dur</string>
+    <string name="eq_egg_less">moins de %1$s d’un œuf dur</string>
     <string name="eq_egg_quarter">un quart d’œuf dur</string>
     <string name="eq_egg_half">un demi-œuf dur</string>
     <string name="eq_egg_three_quarters">trois quarts d’œuf dur</string>
     <string name="eq_egg_label">ŒUFS DURS</string>
-    <string name="eq_egg_basis">Base: 10\u00A0min de cuisson</string>
+    <string name="eq_egg_basis">Base\u00A0: 10\u00A0min de cuisson</string>
 
     <!-- VASOS DE LECHE AL MICROONDAS: se cuenta por unidades (vaso / vasos). -->
     <string name="eq_milk_do">réchauffer %1$s</string>
@@ -706,13 +706,13 @@
         <item quantity="many">presque %1$s\u00A0de verres de lait au micro-ondes</item>
         <item quantity="other">presque %1$s\u00A0verres de lait au micro-ondes</item>
     </plurals>
-    <string name="eq_milk_percent">le %1$s d’un verre de lait au micro-ondes</string>
-    <string name="eq_milk_less">moins du %1$s d’un verre de lait au micro-ondes</string>
+    <string name="eq_milk_percent">%1$s d’un verre de lait au micro-ondes</string>
+    <string name="eq_milk_less">moins de %1$s d’un verre de lait au micro-ondes</string>
     <string name="eq_milk_quarter">un quart de verre de lait au micro-ondes</string>
     <string name="eq_milk_half">un demi-verre de lait au micro-ondes</string>
     <string name="eq_milk_three_quarters">trois quarts de verre de lait au micro-ondes</string>
     <string name="eq_milk_label">VERRES DE LAIT AU MICRO-ONDES</string>
-    <string name="eq_milk_basis">Base: 1\u00A0min à pleine puissance</string>
+    <string name="eq_milk_basis">Base\u00A0: 1\u00A0min à pleine puissance</string>
 
     <!-- BOHEMIAN RHAPSODY: obra o trayecto que se repite («Bohemian Rhapsody», contado en veces). -->
     <string name="eq_bohemian_do">écouter %1$s</string>
@@ -736,13 +736,13 @@
         <item quantity="many">Bohemian Rhapsody presque %1$s\u00A0de fois</item>
         <item quantity="other">Bohemian Rhapsody presque %1$s\u00A0fois</item>
     </plurals>
-    <string name="eq_bohemian_percent">le %1$s de Bohemian Rhapsody</string>
-    <string name="eq_bohemian_less">moins du %1$s de Bohemian Rhapsody</string>
+    <string name="eq_bohemian_percent">%1$s de Bohemian Rhapsody</string>
+    <string name="eq_bohemian_less">moins de %1$s de Bohemian Rhapsody</string>
     <string name="eq_bohemian_quarter">un quart de Bohemian Rhapsody</string>
     <string name="eq_bohemian_half">la moitié de Bohemian Rhapsody</string>
     <string name="eq_bohemian_three_quarters">trois quarts de Bohemian Rhapsody</string>
     <string name="eq_bohemian_label">BOHEMIAN RHAPSODY</string>
-    <string name="eq_bohemian_basis">Base: 5\u00A0min 55\u00A0s, version studio</string>
+    <string name="eq_bohemian_basis">Base\u00A0: 5\u00A0min 55\u00A0s, version studio</string>
 
     <!-- SIESTAS: se cuenta por unidades (siesta / siestas, femenino). -->
     <string name="eq_nap_do">faire %1$s</string>
@@ -766,13 +766,13 @@
         <item quantity="many">presque %1$s\u00A0de siestes</item>
         <item quantity="other">presque %1$s\u00A0siestes</item>
     </plurals>
-    <string name="eq_nap_percent">le %1$s d’une sieste</string>
-    <string name="eq_nap_less">moins du %1$s d’une sieste</string>
+    <string name="eq_nap_percent">%1$s d’une sieste</string>
+    <string name="eq_nap_less">moins de %1$s d’une sieste</string>
     <string name="eq_nap_quarter">un quart de sieste</string>
     <string name="eq_nap_half">une demi-sieste</string>
     <string name="eq_nap_three_quarters">trois quarts de sieste</string>
     <string name="eq_nap_label">SIESTES</string>
-    <string name="eq_nap_basis">Base: sieste de 30\u00A0min (sans pyjama)</string>
+    <string name="eq_nap_basis">Base\u00A0: sieste de 30\u00A0min (sans pyjama)</string>
 
     <!-- NOCHES DEL TIRÓN: se cuenta por unidades (noche / noches, femenino). -->
     <string name="eq_sleep_do">dormir %1$s</string>
@@ -796,13 +796,13 @@
         <item quantity="many">presque %1$s\u00A0de nuits d’une traite</item>
         <item quantity="other">presque %1$s\u00A0nuits d’une traite</item>
     </plurals>
-    <string name="eq_sleep_percent">le %1$s d’une nuit d’une traite</string>
-    <string name="eq_sleep_less">moins du %1$s d’une nuit d’une traite</string>
+    <string name="eq_sleep_percent">%1$s d’une nuit d’une traite</string>
+    <string name="eq_sleep_less">moins de %1$s d’une nuit d’une traite</string>
     <string name="eq_sleep_quarter">un quart de nuit d’une traite</string>
     <string name="eq_sleep_half">une demi-nuit d’une traite</string>
     <string name="eq_sleep_three_quarters">trois quarts de nuit d’une traite</string>
     <string name="eq_sleep_label">NUITS D’UNE TRAITE</string>
-    <string name="eq_sleep_basis">Base: 8\u00A0h par nuit</string>
+    <string name="eq_sleep_basis">Base\u00A0: 8\u00A0h par nuit</string>
 
     <!-- JORNADAS LABORALES: se cuenta por unidades (jornada laboral / jornadas laborales, femenino). -->
     <string name="eq_workday_do">faire %1$s</string>
@@ -826,11 +826,11 @@
         <item quantity="many">presque %1$s\u00A0de journées de travail</item>
         <item quantity="other">presque %1$s\u00A0journées de travail</item>
     </plurals>
-    <string name="eq_workday_percent">le %1$s d’une journée de travail</string>
-    <string name="eq_workday_less">moins du %1$s d’une journée de travail</string>
+    <string name="eq_workday_percent">%1$s d’une journée de travail</string>
+    <string name="eq_workday_less">moins de %1$s d’une journée de travail</string>
     <string name="eq_workday_quarter">un quart de journée de travail</string>
     <string name="eq_workday_half">une demi-journée de travail</string>
     <string name="eq_workday_three_quarters">trois quarts de journée de travail</string>
     <string name="eq_workday_label">JOURNÉES DE TRAVAIL</string>
-    <string name="eq_workday_basis">Base: journée complète de 8\u00A0h</string>
+    <string name="eq_workday_basis">Base\u00A0: journée complète de 8\u00A0h</string>
 </resources>

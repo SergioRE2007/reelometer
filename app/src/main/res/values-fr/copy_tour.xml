@@ -13,7 +13,7 @@
     <string name="tour_step">ÉTAPE %1$s SUR %2$s</string>
 
     <!-- TalkBack: título del panel y de los botones. -->
-    <string name="tour_pane_title">Visite de Reelómetro</string>
+    <string name="tour_pane_title">Visite de Reelometer</string>
     <string name="tour_skip_description">Passer la visite</string>
     <string name="tour_next_description">Étape suivante de la visite</string>
     <string name="tour_done_description">Terminer la visite</string>
@@ -38,7 +38,7 @@
     <string name="tour_comparison_text_empty">Quand quelques jours seront comptés, tu verras ici où tu en es par rapport à ton jour moyen à cette même heure.</string>
     <string name="tour_stats_bars_text">Maintiens le doigt sur une barre et fais glisser pour voir le chiffre exact de chaque jour.</string>
     <string name="tour_wrapped_text">Ta semaine, ton mois et ton année, racontés comme une histoire. Avec ticket à partager, si tu oses.</string>
-    <string name="tour_passport_text">Flap et tes tampons. Ici, l’expérience se gagne en regardant moins, jamais plus.</string>
+    <string name="tour_passport_text">Flap et tes tampons. Ici, l’expérience se gagne en regardant moins, pas plus.</string>
     <string name="tour_settings_text">Objectif, alertes et thème, ici en haut. Sept appuis sur la version ouvrent le calibrage.</string>
 
     <!-- Lo que anuncia TalkBack al llegar a cada paso: «Paso 2 de 6. A esta hora. Cómo vas…».

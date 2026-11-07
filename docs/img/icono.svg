@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="18 18 72 72" width="144" height="144">
-  <!-- Icono de Reelómetro (copia de res/drawable/ic_launcher_foreground.xml para el README). -->
+  <!-- Icono de Reelometer (copia de res/drawable/ic_launcher_foreground.xml para el README). -->
   <defs>
     <clipPath id="arriba"><path d="M0,0H108V53H0Z"/></clipPath>
     <clipPath id="abajo"><path d="M0,55.35H108V108H0Z"/></clipPath>

@@ -27,7 +27,7 @@
     <string name="settings_section_privacy_title">PRIVACIDAD</string>
     <string name="settings_section_privacy_description">Qué pasa con tus datos, sin letra pequeña.</string>
     <string name="settings_section_about_title">ACERCA DE</string>
-    <string name="settings_section_about_description">Reelómetro no tiene relación con TikTok, Instagram ni YouTube. Solo cuenta lo que ves en ellas.</string>
+    <string name="settings_section_about_description">Reelometer no tiene relación con TikTok, Instagram ni YouTube. Solo cuenta lo que ves en ellas.</string>
 
     <!-- Antetítulo de los diálogos que salen de una sección: «05 · TUS DATOS». %1$s el número de la
          sección («05»), %2$s su título (ya en MAYÚSCULAS). -->
@@ -106,7 +106,7 @@
     <string name="settings_time_minute_up">Cinco minutos más</string>
 
     <!-- Con los avisos bloqueados en Android (va con el botón ABRIR AJUSTES). -->
-    <string name="settings_notifications_blocked">Android tiene los avisos de Reelómetro desactivados. Actívalos en los ajustes del sistema para recibirlos.</string>
+    <string name="settings_notifications_blocked">Android tiene los avisos de Reelometer desactivados. Actívalos en los ajustes del sistema para recibirlos.</string>
 
     <!-- ============================================================ 03 apps -->
 
@@ -166,10 +166,15 @@
     <string name="settings_theme_light">CLARO</string>
 
     <!-- Fila «Idioma» (Android 13 o más): a la derecha, el nombre del idioma actual en su propio idioma
-         («Español»); al tocarla se abren los ajustes de idioma de la app en Android. -->
+         («Español»); al tocarla se abre un diálogo de la app para elegirlo. -->
     <string name="settings_language_label">Idioma</string>
     <!-- Línea de ayuda bajo la fila. -->
-    <string name="settings_language_hint">Se cambia en los ajustes del sistema.</string>
+    <string name="settings_language_hint">Elige en qué idioma ves la app.</string>
+    <!-- Título del diálogo para elegir el idioma. Debajo, la lista: los idiomas van con su nombre en su
+         propio idioma («English», «Français»), no se traducen. -->
+    <string name="settings_language_dialog_title">¿En qué idioma?</string>
+    <!-- Primera opción del diálogo: seguir el idioma del sistema del móvil. -->
+    <string name="settings_language_system">El del móvil</string>
     <!-- TalkBack: lo que hace tocar la fila («Toca dos veces para …»). -->
     <string name="settings_language_open">cambiar el idioma de la app</string>
 
@@ -246,11 +251,43 @@
         <item quantity="other">%1$s líneas no se entendían.</item>
     </plurals>
     <string name="settings_import_nothing_new">No había nada nuevo: todo ya estaba guardado.</string>
-    <string name="settings_import_not_csv">Este archivo no es un CSV de Reelómetro. Elige el que exportaste desde la app.</string>
+    <string name="settings_import_not_csv">Este archivo no es un CSV de Reelometer. Elige el que exportaste desde la app.</string>
     <string name="settings_import_empty">El archivo está vacío: no hay vídeos que importar.</string>
-    <string name="settings_import_too_large">El archivo pasa de 50\u00A0MB: no parece una copia de Reelómetro.</string>
+    <string name="settings_import_too_large">El archivo pasa de 50\u00A0MB: no parece una copia de Reelometer.</string>
     <string name="settings_import_too_broken">Hay demasiadas líneas que no se entienden, así que no se ha importado nada.</string>
     <string name="settings_import_failed">No se ha podido importar y no ha cambiado nada. Prueba otra vez.</string>
+    <string name="settings_import_dates">Las fechas del archivo no se entienden: parece que una hoja de cálculo les ha cambiado el formato. No se ha importado nada. Prueba con el CSV tal y como salió de la app.</string>
+
+    <!-- Copia semanal del CSV: interruptor, la carpeta que elige el usuario en el selector de Android, la fecha
+         de la última copia y dos botones. La carpeta es del móvil (no es una copia en la nube). -->
+    <string name="settings_backup_label">Copia semanal</string>
+    <!-- Bajo el interruptor. %1$s cuántas copias se guardan, ya formateado («4»). -->
+    <plurals name="settings_backup_description">
+        <item quantity="one">Cada semana guardo el mismo CSV de EXPORTAR en una carpeta de tu móvil que eliges tú. Me quedo con %1$s copia, la más reciente, y no toco tus otros archivos.</item>
+        <item quantity="many">Cada semana guardo el mismo CSV de EXPORTAR en una carpeta de tu móvil que eliges tú. Me quedo con las %1$s últimas copias y no toco tus otros archivos.</item>
+        <item quantity="other">Cada semana guardo el mismo CSV de EXPORTAR en una carpeta de tu móvil que eliges tú. Me quedo con las %1$s últimas copias y no toco tus otros archivos.</item>
+    </plurals>
+    <!-- Líneas de ticket (a la derecha, el nombre de la carpeta, «Download», y la fecha). -->
+    <string name="settings_backup_folder_label">Carpeta</string>
+    <string name="settings_backup_last_label">Última copia</string>
+    <string name="settings_backup_last_never">Todavía ninguna</string>
+    <!-- %1$s la fecha («7 nov 2026»), %2$s la hora («14:05»). -->
+    <string name="settings_backup_last_value">%1$s, %2$s</string>
+    <!-- Botones en MAYÚSCULAS, con poco sitio. -->
+    <string name="settings_backup_now">COPIAR AHORA</string>
+    <string name="settings_backup_change">CAMBIAR CARPETA</string>
+    <!-- TalkBack de la línea de la carpeta («Toca dos veces para …»). -->
+    <string name="settings_backup_change_talkback">cambiar de carpeta</string>
+    <!-- Resultado de COPIAR AHORA. %1$s el nombre de la carpeta («Download»), %2$s los vídeos con su palabra («1.234 vídeos»). -->
+    <string name="settings_backup_done">Copia hecha en %1$s: %2$s.</string>
+    <string name="settings_backup_empty">No hay nada que copiar todavía.</string>
+    <!-- La carpeta ya no existe o Android ha retirado el permiso (va con el botón CAMBIAR CARPETA). -->
+    <string name="settings_backup_no_access">No puedo escribir en la carpeta: elige otra.</string>
+    <string name="settings_backup_failed">No se ha podido hacer la copia. Prueba otra vez con COPIAR AHORA.</string>
+    <!-- Android no ha dado permiso para la carpeta recién elegida. -->
+    <string name="settings_backup_pick_failed">Android no me deja usar esa carpeta: elige otra.</string>
+    <!-- Se añade al final del diálogo de BORRAR TODO si la copia semanal está encendida. -->
+    <string name="settings_backup_delete_note">Las copias semanales de tu carpeta no se borran: esas son tuyas.</string>
 
     <!-- ============================================================ 06 servicio -->
 
@@ -267,7 +304,7 @@
 
     <!-- Explicación de privacidad: un párrafo corto por <item>, en este orden. -->
     <string-array name="settings_privacy_paragraphs">
-        <item>Reelómetro cuenta lo que ves en TikTok, Instagram y YouTube con el servicio de accesibilidad de Android. De cada vídeo guarda la app, la hora, cuánto lo viste, el creador y la descripción.</item>
+        <item>Reelometer cuenta lo que ves en TikTok, Instagram y YouTube con el servicio de accesibilidad de Android. De cada vídeo guarda la app, la hora, cuánto lo viste, el creador y la descripción.</item>
         <item>Todo se guarda en este móvil. No hay cuentas, ni servidores, ni anuncios, ni analítica. La app no tiene permiso para usar internet.</item>
         <item>Tus datos solo salen de aquí si los sacas tú: al exportar el CSV o al compartir tu ticket.</item>
         <item>Si desactivas el servicio, deja de contar. Si borras los datos o desinstalas la app, desaparecen.</item>
@@ -305,7 +342,7 @@
     <!-- Firma al pie de Ajustes (un guiño: los vídeos cortos duran unos quince segundos). -->
     <string name="settings_signature">Hecho a ratos de quince segundos.</string>
     <!-- El proyecto en GitHub. El botón va en MAYÚSCULAS. -->
-    <string name="settings_project_text">Reelómetro es gratis, no tiene anuncios y lo hace una sola persona. El proyecto está en GitHub.</string>
+    <string name="settings_project_text">Reelometer es gratis, no tiene anuncios y lo hace una sola persona. El proyecto está en GitHub.</string>
     <string name="settings_project_button">VER EN GITHUB</string>
     <string name="settings_project_note">Se abre en tu navegador. La app sigue sin internet.</string>
     <string name="settings_project_no_browser">No hay ningún navegador para abrir el enlace.</string>

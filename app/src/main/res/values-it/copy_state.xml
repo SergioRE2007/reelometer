@@ -7,12 +7,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="it">
 
     <!-- Etiqueta en MAYÚSCULAS del marcador animado mientras carga (pocas letras: caben unas 8). -->
-    <string name="state_loading_label">CALCOLO</string>
+    <string name="state_loading_label">CONTEGGIO</string>
 
     <!-- Frase opcional bajo el marcador mientras carga. -->
     <string-array name="state_loading">
         <item>Faccio i conti.</item>
-        <item>Sommo.</item>
+        <item>Sto sommando.</item>
         <item>Conto, che è il mio mestiere.</item>
     </string-array>
 
@@ -26,7 +26,7 @@
     <!-- Error genérico al cargar datos; va con el botón REINTENTAR. -->
     <string-array name="state_error">
         <item>Qualcosa è andato storto nei conti.</item>
-        <item>Non riesco a caricare questo. Di solito al secondo tentativo va.</item>
+        <item>Non sono riuscito a caricarlo. Di solito al secondo tentativo va.</item>
         <item>Errore nella lettura dei dati. Riprova.</item>
     </string-array>
 
@@ -37,7 +37,7 @@
          («62 vídeos por encima del objetivo de 150»), sin punto final. -->
     <string name="state_widget_description_goal">%1$s %2$s.</string>
     <!-- Widget con el servicio de accesibilidad desconectado (TalkBack). -->
-    <string name="state_widget_description_off">Reelómetro, senza segnale: il servizio è disconnesso.</string>
+    <string name="state_widget_description_off">Reelometer, senza segnale: il servizio è disconnesso.</string>
     <!-- Widget grande con la mascota a la vista: %1$s la descripción de arriba, %2$s el estado de
          ánimo de Flap en minúsculas («en forma»). Flap es el nombre propio de la mascota. -->
     <string name="state_widget_with_flap">%1$s Flap: %2$s.</string>

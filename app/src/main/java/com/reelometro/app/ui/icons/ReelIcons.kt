@@ -13,7 +13,7 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 /**
- * Iconos propios de Reelómetro (docs/DESIGN.md §5). Nada de Material Icons.
+ * Iconos propios de Reelometer (docs/DESIGN.md §5). Nada de Material Icons.
  *
  * Reglas de la familia:
  *  - Rejilla de 24 dp; formas cuadradas en 4–20, círculos de radio 8,5–9, padding de 2 dp.

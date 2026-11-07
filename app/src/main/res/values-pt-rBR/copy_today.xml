@@ -24,7 +24,7 @@
     <string name="today_empty_creators">Sem criadores ainda.</string>
 
     <!-- TalkBack del marcador con el servicio de accesibilidad desconectado. -->
-    <string name="today_service_off_description">Sem sinal: o serviço do Reelómetro está desconectado.</string>
+    <string name="today_service_off_description">Sem sinal: o serviço do Reelometer está desconectado.</string>
 
     <!-- Cabecera en MAYÚSCULAS (se pasa a mayúsculas sola): «HOY · MARTES 3 NOV». %1$s día de la
          semana, %2$s fecha corta («3 nov» o «3 nov 2025»). -->
@@ -42,16 +42,16 @@
 
     <!-- Cero vídeos el primer día (recién instalada). -->
     <string-array name="today_zero_first">
-        <item>Tudo pronto. O primeiro vídeo que você ver abre a conta.</item>
-        <item>Marcador zerado. Daqui pra frente, tudo conta.</item>
-        <item>Aqui vai aparecer cada vídeo que você ver. Por enquanto, silêncio.</item>
+        <item>Tudo pronto. O primeiro vídeo que você vir abre o placar.</item>
+        <item>Placar zerado. Daqui pra frente, tudo conta.</item>
+        <item>Aqui vai aparecer cada vídeo que você vir. Por enquanto, silêncio.</item>
     </string-array>
 
     <!-- Cero vídeos hoy (con historial). -->
     <string-array name="today_zero">
         <item>Por enquanto, quem ganha é você.</item>
         <item>Zero. O algoritmo ainda está esperando você.</item>
-        <item>Marcador zerado. Que dure o que tiver que durar.</item>
+        <item>Placar zerado. Que dure o que tiver que durar.</item>
         <item>Nenhum vídeo. Isso também conta.</item>
         <item>Hoje, por enquanto, nada a declarar.</item>
     </string-array>
@@ -76,30 +76,30 @@
     <string-array name="today_goal_over">
         <item>%1$s acima da sua meta. A meta era outra.</item>
         <item>Meta: %2$s. Realidade: %3$s.</item>
-        <item>Você passou em %1$s. Ninguém controla isso. Bom, eu controlo.</item>
+        <item>Você passou %1$s da meta. Ninguém está contando. Bom, eu estou.</item>
         <item>Você ultrapassou a meta. Nesse caso, ultrapassar não era a ideia.</item>
-        <item>%3$s de %2$s. As contas não fecham, mas eu fecho.</item>
+        <item>%3$s de %2$s. As contas não fecham, mas eu continuo contando.</item>
     </string-array>
 
     <!-- Justo en el objetivo: %1$s el objetivo. -->
     <string-array name="today_goal_at">
         <item>No limite: %1$s. Nem um a mais, por enquanto.</item>
-        <item>%1$s de %1$s. O que vier agora é gorjeta.</item>
-        <item>Meta cravada. A partir daqui, cada vídeo vai no vermelho.</item>
+        <item>%1$s de %1$s. O que vier agora é de brinde.</item>
+        <item>Meta cravada. A partir daqui, cada vídeo fica no vermelho.</item>
     </string-array>
 
     <!-- Cerca del objetivo (a menos del 20 %): %1$s lo que queda («20 vídeos»), %2$s los vídeos de
          hoy, %3$s el objetivo. _one: queda un solo vídeo. -->
     <string-array name="today_goal_near">
         <item>Faltam %1$s para a meta. Você que sabe.</item>
-        <item>%2$s de %3$s. Pouca margem sobrando.</item>
-        <item>A %1$s do limite. O marcador não julga; só conta.</item>
+        <item>%2$s de %3$s. Sobra pouca margem.</item>
+        <item>A %1$s do limite. O placar não julga; só conta.</item>
         <item>Margem restante: %1$s. Gaste como quiser.</item>
     </string-array>
     <string-array name="today_goal_near_one">
         <item>Falta %1$s para a meta. Você que sabe.</item>
-        <item>%2$s de %3$s. Pouca margem sobrando.</item>
-        <item>A %1$s do limite. O marcador não julga; só conta.</item>
+        <item>%2$s de %3$s. Sobra pouca margem.</item>
+        <item>A %1$s do limite. O placar não julga; só conta.</item>
         <item>Margem restante: %1$s. Gaste como quiser.</item>
     </string-array>
 
@@ -108,14 +108,14 @@
     <string-array name="today_first">
         <item>%1$s. Aquecendo.</item>
         <item>Você começou leve: %2$s.</item>
-        <item>%1$s e %2$s. Ninguém percebeu.</item>
+        <item>%1$s e %2$s. Ninguém ia notar.</item>
         <item>Pouca coisa, por enquanto: %1$s.</item>
         <item>Isso mal começou. Por enquanto, %1$s.</item>
     </string-array>
     <string-array name="today_first_notime">
         <item>%1$s. Aquecendo.</item>
         <item>Você começou leve.</item>
-        <item>%1$s. Ninguém percebeu.</item>
+        <item>%1$s. Ninguém ia notar.</item>
         <item>Pouca coisa, por enquanto: %1$s.</item>
         <item>Isso mal começou. Por enquanto, %1$s.</item>
     </string-array>
@@ -124,14 +124,14 @@
          %3$s el tiempo con mayúscula inicial (para empezar la frase con él).
          _one: el tiempo es singular («un minuto», «una hora y 12 minutos»): «Eso es…». -->
     <string-array name="today_normal">
-        <item>Isso são %2$s que ninguém vai te devolver.</item>
+        <item>São %2$s que ninguém vai te devolver.</item>
         <item>%3$s. O tempo voa, sobretudo em pedaços de quinze segundos.</item>
         <item>%1$s, um atrás do outro. Igual pipoca.</item>
         <item>Você já soma %2$s. O dia ainda não disse a última palavra.</item>
         <item>%1$s. Nem tantos, nem tão poucos, por enquanto.</item>
     </string-array>
     <string-array name="today_normal_one">
-        <item>Isso é %2$s que ninguém vai te devolver.</item>
+        <item>É %2$s que ninguém vai te devolver.</item>
         <item>%3$s. O tempo voa, sobretudo em pedaços de quinze segundos.</item>
         <item>%1$s, um atrás do outro. Igual pipoca.</item>
         <item>Você já soma %2$s. O dia ainda não disse a última palavra.</item>
@@ -143,29 +143,29 @@
          %5$s los vídeos («212 vídeos»), %6$s la distancia deslizada con el pulgar (today_metres).
          _one: el tiempo es singular («una hora y 40 minutos»). _noeq: sin equivalencia (no uses %4$s). -->
     <string-array name="today_high">
-        <item>Hoje você já soma %1$s. Isso são %2$s que ninguém vai te devolver.</item>
+        <item>Hoje você já soma %1$s. São %2$s que ninguém vai te devolver.</item>
         <item>%3$s. Dava pra %4$s.</item>
         <item>%5$s. A essa altura, o algoritmo já sabe como você gosta do café.</item>
         <item>%5$s: uns %6$s de polegar.</item>
         <item>%3$s de tela, em doses de quinze segundos.</item>
     </string-array>
     <string-array name="today_high_one">
-        <item>Hoje você já soma %1$s. Isso é %2$s que ninguém vai te devolver.</item>
+        <item>Hoje você já soma %1$s. É %2$s que ninguém vai te devolver.</item>
         <item>%3$s. Dava pra %4$s.</item>
         <item>%5$s. A essa altura, o algoritmo já sabe como você gosta do café.</item>
         <item>%5$s: uns %6$s de polegar.</item>
         <item>%3$s de tela, em doses de quinze segundos.</item>
     </string-array>
     <string-array name="today_high_noeq">
-        <item>Hoje você já soma %1$s. Isso são %2$s que ninguém vai te devolver.</item>
-        <item>%3$s de tela. Bem que dá pra chamar de um tempão.</item>
+        <item>Hoje você já soma %1$s. São %2$s que ninguém vai te devolver.</item>
+        <item>%3$s de tela. Não é pouca coisa.</item>
         <item>%5$s. A essa altura, o algoritmo já sabe como você gosta do café.</item>
         <item>%5$s: uns %6$s de polegar.</item>
         <item>%3$s de tela, em doses de quinze segundos.</item>
     </string-array>
     <string-array name="today_high_one_noeq">
-        <item>Hoje você já soma %1$s. Isso é %2$s que ninguém vai te devolver.</item>
-        <item>%3$s de tela. Bem que dá pra chamar de um tempão.</item>
+        <item>Hoje você já soma %1$s. É %2$s que ninguém vai te devolver.</item>
+        <item>%3$s de tela. Não é pouca coisa.</item>
         <item>%5$s. A essa altura, o algoritmo já sabe como você gosta do café.</item>
         <item>%5$s: uns %6$s de polegar.</item>
         <item>%3$s de tela, em doses de quinze segundos.</item>
@@ -177,14 +177,14 @@
     <string-array name="today_extreme">
         <item>%1$s. O algoritmo manda lembranças.</item>
         <item>%2$s. Isso já não é passatempo, é turno de trabalho.</item>
-        <item>Hoje você já soma %1$s. Se isso fosse trabalho, já estaria pedindo hora extra.</item>
+        <item>Hoje você já soma %1$s. Se isso fosse trabalho, já dava pra pedir hora extra.</item>
         <item>%2$s de vídeo. Dava pra %3$s.</item>
         <item>%1$s. Seu polegar percorreu %4$s. Você, bem menos.</item>
     </string-array>
     <string-array name="today_extreme_noeq">
         <item>%1$s. O algoritmo manda lembranças.</item>
         <item>%2$s. Isso já não é passatempo, é turno de trabalho.</item>
-        <item>Hoje você já soma %1$s. Se isso fosse trabalho, já estaria pedindo hora extra.</item>
+        <item>Hoje você já soma %1$s. Se isso fosse trabalho, já dava pra pedir hora extra.</item>
         <item>%2$s de vídeo. E subindo.</item>
         <item>%1$s. Seu polegar percorreu %4$s. Você, bem menos.</item>
     </string-array>
@@ -306,7 +306,7 @@
     <!-- «HORA PUNTA 23:00 · 41 VÍDEOS» (MAYÚSCULAS, se pasa sola). %1$s la hora, %2$s los vídeos. -->
     <string name="today_peak_hour">HORA DE PICO %1$s · %2$s</string>
 
-    <!-- Banda «desde que usas Reelómetro» (MAYÚSCULAS, se pasa sola): «DESDE EL 3 MAR: 12.408 VÍDEOS · 61 H».
+    <!-- Banda «desde que usas Reelometer» (MAYÚSCULAS, se pasa sola): «DESDE EL 3 MAR: 12.408 VÍDEOS · 61 H».
          %1$s desde cuándo (today_since_*), %2$s los vídeos, %3$s el tiempo corto. -->
     <string name="today_since_band">%1$s: %2$s · %3$s</string>
     <!-- La banda dicha (TalkBack): «Desde el 3 de marzo: 12.408 vídeos y 61 horas.». %1$s desde
@@ -330,7 +330,7 @@
     <string-array name="today_service_off">
         <item>Sem a permissão de acessibilidade eu não vejo nada. O que, aliás, é o que você espera de um app desses.</item>
         <item>O serviço está desconectado. O que você vê agora não conta. Literalmente.</item>
-        <item>Sem permissão, o marcador fica às escuras. Conecte e seguimos de onde paramos.</item>
+        <item>Sem permissão, o placar fica no escuro. Conecte e seguimos de onde paramos.</item>
         <item>O Android desconectou o serviço. Às vezes ele faz isso. Um toque e volta.</item>
         <item>Agora mesmo você poderia ver mil vídeos e aqui não aconteceria nada.</item>
     </string-array>
@@ -338,12 +338,12 @@
     <string-array name="today_service_never">
         <item>Para começar a contar eu preciso de uma permissão. Explico qual e para quê, sem letra miúda.</item>
         <item>Ainda não tenho permissão para olhar, então não conto nada. Você decide.</item>
-        <item>Sem a permissão de acessibilidade, este marcador é decoração. Bonita, mas decoração.</item>
+        <item>Sem a permissão de acessibilidade, este placar é enfeite. Bonito, mas enfeite.</item>
     </string-array>
     <!-- Todas las apps apagadas en Ajustes («Qué apps cuento»). -->
     <string-array name="today_no_platforms">
         <item>Você desligou todos os apps em Configurações. Assim não tem nada para contar.</item>
-        <item>Não estou contando nenhum app. Assim, qualquer um.</item>
-        <item>Nenhum app ativado em Configurações. O marcador, de férias.</item>
+        <item>Não estou contando nenhum app. Assim até eu.</item>
+        <item>Nenhum app ativado em Configurações. O placar, de férias.</item>
     </string-array>
 </resources>

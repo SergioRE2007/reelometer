@@ -29,7 +29,7 @@
     <!-- Frase de titular: %1$s es el infinitivo con la cantidad («leer 14 libros»). Se elige una por día. -->
     <string-array name="eq_sentence">
         <item>Con quel tempo potevi %1$s.</item>
-        <item>Ti bastava per %1$s.</item>
+        <item>Bastava per %1$s.</item>
         <item>Con quel tempo avresti potuto %1$s.</item>
     </string-array>
     <!-- Titular cuando aún no hay tiempo que comparar (menos de un segundo). -->
@@ -810,7 +810,7 @@
     <string name="eq_sleep_basis">Base: 8\u00A0h per notte</string>
 
     <!-- JORNADAS LABORALES: se cuenta por unidades (jornada laboral / jornadas laborales, femenino). -->
-    <string name="eq_workday_do">sprecare %1$s</string>
+    <string name="eq_workday_do">fare %1$s</string>
     <plurals name="eq_workday_n">
         <item quantity="one">una giornata lavorativa</item>
         <item quantity="many">%1$s\u00A0giornate lavorative</item>

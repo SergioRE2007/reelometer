@@ -5,7 +5,7 @@
   celebraciones y el ticket de nivel que se comparte como imagen.
   Tono: aeropuerto, tarjeta de embarque, ironía amable. Premia ver menos y nunca culpa.
   Las millas salen de ver MENOS vídeos (días bajo la referencia, rachas, retos y sellos), nunca de verlos.
-  Nombres propios: «Flap» (la mascota) y «Reelómetro» (la app) no se traducen.
+  Nombres propios: «Flap» (la mascota) y «Reelometer» (la app) no se traducen.
   Cada <string-array> es una situación y cada <item>, una frase alternativa (se elige una por día).
   Puedes poner las que quieras (mínimo 2). \u00A0 es un espacio duro: la cifra y su palabra no se separan.
   «Se pasa a mayúsculas sola» quiere decir que el código la convierte en MAYÚSCULAS: escríbela normal.
@@ -43,7 +43,7 @@
         <item>Flap è in gran forma. Anche tu, anche se non sembra.</item>
         <item>Flap non si ricorda più cosa fosse lo scroll.</item>
         <item>Flap ha ricominciato a guardare dal finestrino.</item>
-        <item>Flap si è iscritto a correre. Per ora regge.</item>
+        <item>Flap si è dato alla corsa. Per ora regge.</item>
     </string-array>
     <!-- Frase de Flap normal. -->
     <string-array name="passport_phrase_normal">
@@ -66,8 +66,8 @@
         <item>Flap cammina con le braccia in avanti.</item>
         <item>Flap ormai dice solo «ancora uno».</item>
         <item>Flap è uno zombie dello scroll. Guarisce con un giorno tranquillo.</item>
-        <item>Flap non muore. Sta solo attraversando una brutta serie.</item>
-        <item>Flap si riprende appena passa un giorno.</item>
+        <item>Flap non muore. Sta solo attraversando un brutto periodo.</item>
+        <item>Flap si riprende appena centri un giorno.</item>
     </string-array>
     <!-- Frase mientras Flap calienta (sin objetivo ni historial suficiente). -->
     <string-array name="passport_phrase_warming">
@@ -78,7 +78,7 @@
     </string-array>
     <!-- Frase cuando Flap vuelve de zombi a normal o mejor. -->
     <string-array name="passport_phrase_recovered">
-        <item>Flap è tornato dal mondo dei vivi.</item>
+        <item>Flap è tornato dal regno degli scroll.</item>
         <item>Né zombie né niente: Flap si è ripreso.</item>
         <item>Flap ha ricominciato a sbattere le palpebre normalmente.</item>
         <item>Flap è tornato. Dice di non ricordare nulla.</item>
@@ -129,7 +129,7 @@
     <string name="passport_level_code_platino">PLT</string>
 
     <!-- Lema irónico de cada nivel (bajo el nombre en la tarjeta de embarque). -->
-    <string name="passport_level_tagline_pasajero">Appena imbarcato. Tutto il viaggio davanti.</string>
+    <string name="passport_level_tagline_pasajero">Check-in appena fatto. Tutto il viaggio davanti.</string>
     <string name="passport_level_tagline_frecuente">Ti salutano già al gate.</string>
     <string name="passport_level_tagline_plata">Sala VIP con vista sulla pista e senza schermi.</string>
     <string name="passport_level_tagline_oro">Imbarco prioritario, lontano dallo scroll.</string>
@@ -210,7 +210,7 @@
     <string name="passport_stamp_primer_reto">PRIMA SFIDA</string>
     <string name="passport_stamp_cuatro_retos">QUATTRO SFIDE</string>
     <!-- Flap pasa de zombi a normal. -->
-    <string name="passport_stamp_regreso">TORNATO</string>
+    <string name="passport_stamp_regreso">DI RITORNO</string>
     <!-- Una semana entera contando. -->
     <string name="passport_stamp_primera_semana">SETTIMANA COMPLETA</string>
     <string name="passport_stamp_wrapped_compartido">RIEPILOGO INVIATO</string>
@@ -239,7 +239,7 @@
     <string name="passport_stamp_kind_ironico">SENZA MIGLIA</string>
 
     <!-- Pista de cada sello: cómo se consigue (también explica el que ya tienes). -->
-    <string name="passport_stamp_hint_primer_dia">Chiudi un giorno in linea con il tuo obiettivo o sotto.</string>
+    <string name="passport_stamp_hint_primer_dia">Chiudi un giorno entro il tuo obiettivo.</string>
     <string name="passport_stamp_hint_medio_dia">Chiudi un giorno sotto la metà del tuo obiettivo.</string>
     <string name="passport_stamp_hint_dia_en_blanco">Passa un giorno intero senza video brevi, con il servizio attivo.</string>
     <string name="passport_stamp_hint_fin_de_semana">Sabato e domenica della stessa settimana, entrambi sotto il tuo obiettivo.</string>
@@ -261,9 +261,9 @@
     <string name="passport_stamp_hint_primer_ascenso">Passa da passeggero a frequente.</string>
     <string name="passport_stamp_hint_madrugador">Scatta se guardi video tra le 3 e le 5 del mattino. Meglio non cercarlo.</string>
     <!-- %1$s es «1.000 vídeos». -->
-    <string name="passport_stamp_hint_mil_videos">Arriva a %1$s in totale. Ci arriverà da solo.</string>
+    <string name="passport_stamp_hint_mil_videos">Arriva a %1$s in totale. Arriverà da solo.</string>
     <!-- %1$s es «10.000 vídeos». -->
-    <string name="passport_stamp_hint_diez_mil_videos">Arriva a %1$s in totale. Non c\'è fretta.</string>
+    <string name="passport_stamp_hint_diez_mil_videos">Arriva a %1$s in totale. Anche qui, nessuna fretta.</string>
     <!-- TikTok, Reels y Shorts son marcas: no se traducen. -->
     <string name="passport_stamp_hint_tres_plataformas">TikTok, Reels e Shorts nello stesso giorno. Non dà miglia.</string>
     <string name="passport_stamp_hint_cinco_categorias">Cinque categorie diverse in una settimana. Vario, almeno.</string>
@@ -271,7 +271,7 @@
     <string name="passport_stamp_hint_maraton">Più di %1$s in una sola ora. Speriamo che tu non lo veda mai.</string>
 
     <!-- Nota bajo la pista cuando no hay objetivo: la referencia es la media. -->
-    <string name="passport_reference_note">Senza obiettivo, conta la tua media delle 4 settimane precedenti.</string>
+    <string name="passport_reference_note">Senza obiettivo, si usa la tua media delle 4 settimane precedenti.</string>
 
     <!-- Estado y kickers del detalle de un sello, en MAYÚSCULAS. -->
     <string name="passport_stamp_pending">IN ATTESA</string>
@@ -340,9 +340,9 @@
     </string-array>
     <!-- En curso, pero ya por encima del tope (ya no se puede ganar). -->
     <string-array name="passport_challenge_over">
-        <item>Questa sfida non è più possibile. Lunedì ce n\'è un\'altra e il fantasma non impara.</item>
+        <item>Questa sfida ormai è andata. Lunedì ce n\'è un\'altra e il fantasma non impara.</item>
         <item>Il tetto è rimasto indietro. Capita nelle migliori famiglie.</item>
-        <item>Questa settimana se la prende il fantasma. Non abituarti.</item>
+        <item>Questa settimana se la prende il fantasma. Che non ci prenda l’abitudine.</item>
     </string-array>
     <!-- En curso, empatado con el fantasma a estas alturas de la semana. -->
     <string-array name="passport_challenge_tie">
@@ -366,7 +366,7 @@
     <string-array name="passport_challenge_warmup">
         <item>La sfida parte quando ci sarà una settimana intera con cui confrontarsi.</item>
         <item>Il tuo fantasma non esiste ancora: gli serve una settimana completa di storico.</item>
-        <item>Senza settimana precedente non c\'è fantasma. Il lunedì dopo, sì.</item>
+        <item>Senza settimana precedente non c\'è fantasma. Lunedì prossimo, sì.</item>
     </string-array>
 
     <!-- Leyenda de la gráfica del reto, MAYÚSCULAS y en una línea. -->
@@ -465,11 +465,11 @@
     </string-array>
 
     <!-- Texto que acompaña a la imagen del ticket al compartirla. %1$s el nivel en MAYÚSCULAS («PLATA»).
-         «Reelómetro» es la marca: no se traduce. -->
-    <string name="passport_ticket_share_text">Livello %1$s su Reelómetro: miglia per guardare meno video.</string>
+         «Reelometer» es la marca: no se traduce. -->
+    <string name="passport_ticket_share_text">Livello %1$s su Reelometer: miglia per aver guardato meno video.</string>
     <!-- Nombre del archivo de la imagen del ticket (se ve al compartirla). SOLO letras ASCII sin acentos,
          cifras y guiones: sin espacios. %1$s el nivel en minúsculas («plata»; los acentos se quitan solos). -->
-    <string name="passport_ticket_file_name">reelometro-livello-%1$s.png</string>
+    <string name="passport_ticket_file_name">reelometer-livello-%1$s.png</string>
 
     <!-- ============================================================ aviso de nivel nuevo -->
 

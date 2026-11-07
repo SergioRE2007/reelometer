@@ -17,7 +17,7 @@
     <!-- Acción de TalkBack en cada burbuja (equivale a soltarla en la «X»). -->
     <string name="quicksend_hide_action">Hide until the next reel</string>
     <!-- Nombre de la ventana de las burbujas (TalkBack la anuncia así). -->
-    <string name="quicksend_window_title">Reelómetro quick send</string>
+    <string name="quicksend_window_title">Reelometer quick send</string>
     <!-- La zona «X» que sale abajo mientras arrastras las burbujas. -->
     <string name="quicksend_zone_title">Drop here to hide</string>
 

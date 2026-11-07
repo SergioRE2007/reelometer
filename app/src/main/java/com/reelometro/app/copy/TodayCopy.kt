@@ -199,7 +199,7 @@ object TodayCopy {
     fun platformValue(count: Int, totalMs: Long): String = "${Format.integer(count)} · ${Words.durationLabel(totalMs)}"
 
     /**
-     * Banda a sangre «desde que usas Reelómetro»: «DESDE EL 3 MAR: 12.408 VÍDEOS · 61 H»,
+     * Banda a sangre «desde que usas Reelometer»: «DESDE EL 3 MAR: 12.408 VÍDEOS · 61 H»,
      * «DESDE HOY: …», «DESDE AYER: …», «DESDE EL 3 MAR 2025: …».
      */
     fun sinceBand(firstDay: LocalDate, today: LocalDate, count: Long, totalMs: Long): String =

@@ -65,7 +65,7 @@
     <string name="words_list_last">%1$s e %2$s</string>
     <!-- Igual, cuando el último empieza por el sonido /i/ («Reels e Instagram»). Si tu idioma no
          cambia nada, copia la de arriba. -->
-    <string name="words_list_last_i">%1$s ed %2$s</string>
+    <string name="words_list_last_i">%1$s e %2$s</string>
 
     <!-- Hora dentro de una frase: «a las 23:00»; %1$s es la hora («23:00»). -->
     <string name="words_at_time">alle %1$s</string>

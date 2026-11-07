@@ -49,7 +49,7 @@
     <string-array name="notif_daily_under">
         <item>Entro l’obiettivo: %1$s su %2$s.</item>
         <item>%1$s su %2$s, con margine. In tutto, %3$s.</item>
-        <item>Sotto %2$s. Così, senza altro.</item>
+        <item>Sotto %2$s. Così, semplicemente.</item>
     </string-array>
 
     <!-- Día flojo (1–9 vídeos): %1$s el tiempo («2 minutos»), %2$s el tiempo con mayúscula inicial. -->
@@ -63,19 +63,19 @@
          _one: el tiempo es singular («una hora y 12 minutos», «un minuto»). -->
     <string-array name="notif_daily_normal">
         <item>%2$s di video. Domani il contatore torna a zero.</item>
-        <item>%2$s. Una giornata normale, che è già dire.</item>
+        <item>%2$s. Una giornata normale, il che è tutto dire.</item>
         <item>Sono %1$s che nessuno ti restituirà.</item>
     </string-array>
     <string-array name="notif_daily_normal_one">
         <item>%2$s di video. Domani il contatore torna a zero.</item>
-        <item>%2$s. Una giornata normale, che è già dire.</item>
+        <item>%2$s. Una giornata normale, il che è tutto dire.</item>
         <item>È %1$s che nessuno ti restituirà.</item>
     </string-array>
 
     <!-- Día alto: %1$s el tiempo con mayúscula inicial («Una hora y 40 minutos»), %2$s una
          equivalencia en infinitivo («leer 14 libros»). _noeq: sin equivalencia (no uses %2$s). -->
     <string-array name="notif_daily_high">
-        <item>%1$s. Con quello ti bastava per %2$s.</item>
+        <item>%1$s. Con quello potevi %2$s.</item>
         <item>%1$s di schermo. L’algoritmo è entusiasta.</item>
         <item>%1$s. Una buona giornata per l’algoritmo.</item>
     </string-array>
@@ -88,7 +88,7 @@
     <!-- Día extremo: igual que el alto (%1$s el tiempo con mayúscula, %2$s la equivalencia). -->
     <string-array name="notif_daily_extreme">
         <item>%1$s. Questo è già un turno di lavoro.</item>
-        <item>%1$s di video. Ti bastava per %2$s.</item>
+        <item>%1$s di video. Abbastanza per %2$s.</item>
         <item>%1$s. Domani si ricomincia da capo.</item>
     </string-array>
     <string-array name="notif_daily_extreme_noeq">
@@ -119,7 +119,7 @@
     <!-- Texto del resumen mensual: %1$s los vídeos («4.812 vídeos»), %2$s el tiempo («29 horas»).
          Tocar abre el resumen del mes. -->
     <string-array name="notif_monthly">
-        <item>%1$s e %2$s. Tocca per vederlo intero.</item>
+        <item>%1$s e %2$s. Tocca per vederlo tutto.</item>
         <item>%1$s, %2$s e un creatore preferito. Tocca per vedere il riepilogo.</item>
         <item>Il riepilogo è pronto: %1$s in %2$s.</item>
     </string-array>
@@ -129,7 +129,7 @@
     <string name="notif_monthly_public_text">Il riepilogo del mese è pronto.</string>
 
     <!-- Si Android desconecta el servicio de accesibilidad (aún sin usar). -->
-    <string name="notif_service_lost_title">Reelómetro ha smesso di contare</string>
+    <string name="notif_service_lost_title">Reelometer ha smesso di contare</string>
     <string name="notif_service_lost_text">Android ha disconnesso il servizio di accessibilità. Tocca per ricollegarlo.</string>
 
     <!-- ============================================================ aviso al pasar el objetivo -->

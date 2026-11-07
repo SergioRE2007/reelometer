@@ -5,7 +5,7 @@
   celebraciones y el ticket de nivel que se comparte como imagen.
   Tono: aeropuerto, tarjeta de embarque, ironía amable. Premia ver menos y nunca culpa.
   Las millas salen de ver MENOS vídeos (días bajo la referencia, rachas, retos y sellos), nunca de verlos.
-  Nombres propios: «Flap» (la mascota) y «Reelómetro» (la app) no se traducen.
+  Nombres propios: «Flap» (la mascota) y «Reelometer» (la app) no se traducen.
   Cada <string-array> es una situación y cada <item>, una frase alternativa (se elige una por día).
   Puedes poner las que quieras (mínimo 2). \u00A0 es un espacio duro: la cifra y su palabra no se separan.
   «Se pasa a mayúsculas sola» quiere decir que el código la convierte en MAYÚSCULAS: escríbela normal.
@@ -40,16 +40,16 @@
 
     <!-- Frase de Flap en forma (la semana va bien). -->
     <string-array name="passport_phrase_fit">
-        <item>Flap está com sobra esta semana.</item>
+        <item>Flap está de boa esta semana.</item>
         <item>Flap está em plena forma. Você também, mesmo que não pareça.</item>
         <item>Flap nem lembra mais o que era scroll.</item>
         <item>Flap voltou a olhar pela janelinha.</item>
-        <item>Flap se inscreveu para correr. Por enquanto, vai.</item>
+        <item>Flap se inscreveu para correr. Por enquanto, está indo bem.</item>
     </string-array>
     <!-- Frase de Flap normal. -->
     <string-array name="passport_phrase_normal">
         <item>Flap vai levando.</item>
-        <item>Flap, nem bem nem mal.</item>
+        <item>Flap, nem fede nem cheira.</item>
         <item>Flap segura a onda.</item>
         <item>Flap está igualzinho à sua semana: normal.</item>
         <item>Flap, nem bem, nem mal. Flap, só isso.</item>
@@ -65,7 +65,7 @@
     <!-- Frase de Flap zombi (mucho scroll). Sin culpa: siempre se puede recuperar. -->
     <string-array name="passport_phrase_zombie">
         <item>Flap anda com os braços esticados para a frente.</item>
-        <item>Flap só consegue dizer «mais um».</item>
+        <item>Flap só consegue dizer “mais um”.</item>
         <item>Flap é um zumbi do scroll. Um dia tranquilo cura.</item>
         <item>Flap não morreu. Só está passando por uma fase ruim.</item>
         <item>Flap se recupera assim que você tiver um dia tranquilo.</item>
@@ -79,7 +79,7 @@
     </string-array>
     <!-- Frase cuando Flap vuelve de zombi a normal o mejor. -->
     <string-array name="passport_phrase_recovered">
-        <item>Flap voltou lá de dentro dos scrolls.</item>
+        <item>Flap voltou do mundo dos scrolls.</item>
         <item>Nem zumbi nem nada: Flap se recuperou.</item>
         <item>Flap voltou a piscar normalmente.</item>
         <item>Flap voltou. Diz que não lembra de nada.</item>
@@ -200,10 +200,10 @@
     <!-- Sábado y domingo bajo el objetivo («finde» = fin de semana, coloquial). -->
     <string name="passport_stamp_fin_de_semana">FDS LIMPO</string>
     <!-- Rachas de días seguidos bajo el objetivo. -->
-    <string name="passport_stamp_racha_3">SÉRIE DE\u00A03</string>
-    <string name="passport_stamp_racha_7">SÉRIE DE\u00A07</string>
-    <string name="passport_stamp_racha_14">SÉRIE DE\u00A014</string>
-    <string name="passport_stamp_racha_30">SÉRIE DE\u00A030</string>
+    <string name="passport_stamp_racha_3">SEQUÊNCIA DE\u00A03</string>
+    <string name="passport_stamp_racha_7">SEQUÊNCIA DE\u00A07</string>
+    <string name="passport_stamp_racha_14">SEQUÊNCIA DE\u00A014</string>
+    <string name="passport_stamp_racha_30">SEQUÊNCIA DE\u00A030</string>
     <!-- Una semana un 20 % por debajo de la anterior. %1$s es «−20 %». -->
     <string name="passport_stamp_semana_menos_20">SEMANA %1$s</string>
     <!-- Un mes con menos vídeos que el anterior. -->
@@ -215,7 +215,7 @@
     <!-- Una semana entera contando. -->
     <string name="passport_stamp_primera_semana">SEMANA COMPLETA</string>
     <string name="passport_stamp_wrapped_compartido">RESUMO ENVIADO</string>
-    <string name="passport_stamp_ticket_guardado">INGRESSO SALVO</string>
+    <string name="passport_stamp_ticket_guardado">CUPOM SALVO</string>
     <!-- Primer ascenso de nivel (despegar, como un avión). -->
     <string name="passport_stamp_primer_ascenso">DECOLAGEM</string>
     <!-- Irónico: vídeos de madrugada. -->
@@ -249,16 +249,16 @@
     <string name="passport_stamp_hint_racha_14">Catorze dias seguidos dentro da sua meta.</string>
     <string name="passport_stamp_hint_racha_30">Trinta dias seguidos dentro da sua meta. Sem pressa.</string>
     <!-- %1$s es «20 %». -->
-    <string name="passport_stamp_hint_semana_menos_20">Uma semana com %1$s a menos de vídeos que a anterior.</string>
+    <string name="passport_stamp_hint_semana_menos_20">Uma semana com %1$s menos vídeos que a anterior.</string>
     <string name="passport_stamp_hint_mes_a_la_baja">Um mês com menos vídeos que o mês anterior.</string>
     <!-- «El fantasma» es el usuario la semana pasada (contra quien compite en el reto semanal). -->
     <string name="passport_stamp_hint_primer_reto">Vença seu primeiro desafio semanal contra o fantasma.</string>
     <string name="passport_stamp_hint_cuatro_retos">Vença quatro desafios semanais. Não precisam ser seguidos.</string>
-    <string name="passport_stamp_hint_regreso">Que o Flap saia do zumbi e volte ao normal ou melhor.</string>
+    <string name="passport_stamp_hint_regreso">Faça o Flap passar de zumbi a normal ou melhor.</string>
     <string name="passport_stamp_hint_primera_semana">Uma semana inteira com o serviço contando.</string>
     <!-- «Resumen» es el nombre de una pestaña de la app: usa el mismo que en la barra de navegación. -->
     <string name="passport_stamp_hint_wrapped_compartido">Compartilhe um resumo pela aba Resumo.</string>
-    <string name="passport_stamp_hint_ticket_guardado">Salve no celular o ingresso de um resumo.</string>
+    <string name="passport_stamp_hint_ticket_guardado">Salve no celular o cupom de um resumo.</string>
     <string name="passport_stamp_hint_primer_ascenso">Suba de passageiro para frequente.</string>
     <string name="passport_stamp_hint_madrugador">Acontece se você vir vídeos entre as 3h e as 5h da manhã. Melhor nem procurar.</string>
     <!-- %1$s es «1.000 vídeos». -->
@@ -272,7 +272,7 @@
     <string name="passport_stamp_hint_maraton">Mais de %1$s numa única hora. Tomara que você nunca veja isso.</string>
 
     <!-- Nota bajo la pista cuando no hay objetivo: la referencia es la media. -->
-    <string name="passport_reference_note">Sem meta, conta sua média das 4 semanas anteriores.</string>
+    <string name="passport_reference_note">Sem meta, vale a sua média das 4 semanas anteriores.</string>
 
     <!-- Estado y kickers del detalle de un sello, en MAYÚSCULAS. -->
     <string name="passport_stamp_pending">PENDENTE</string>
@@ -337,7 +337,7 @@
     <string-array name="passport_challenge_lost">
         <item>Dessa vez o fantasma levou a melhor. Na segunda, revanche.</item>
         <item>Não deu: %1$s de um teto de %2$s. Acontece com as melhores famílias.</item>
-        <item>O fantasma ganhou essa. Ninguém mais conta, só este app.</item>
+        <item>O fantasma ganhou essa. Ninguém está contando, só este app.</item>
     </string-array>
     <!-- En curso, pero ya por encima del tope (ya no se puede ganar). -->
     <string-array name="passport_challenge_over">
@@ -466,11 +466,11 @@
     </string-array>
 
     <!-- Texto que acompaña a la imagen del ticket al compartirla. %1$s el nivel en MAYÚSCULAS («PLATA»).
-         «Reelómetro» es la marca: no se traduce. -->
-    <string name="passport_ticket_share_text">Nível %1$s no Reelómetro: milhas por assistir menos vídeos.</string>
+         «Reelometer» es la marca: no se traduce. -->
+    <string name="passport_ticket_share_text">Nível %1$s no Reelometer: milhas por assistir menos vídeos.</string>
     <!-- Nombre del archivo de la imagen del ticket (se ve al compartirla). SOLO letras ASCII sin acentos,
          cifras y guiones: sin espacios. %1$s el nivel en minúsculas («plata»; los acentos se quitan solos). -->
-    <string name="passport_ticket_file_name">reelometro-nivel-%1$s.png</string>
+    <string name="passport_ticket_file_name">reelometer-nivel-%1$s.png</string>
 
     <!-- ============================================================ aviso de nivel nuevo -->
 

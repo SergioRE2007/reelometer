@@ -7,20 +7,20 @@
   final del texto que se comparte): consérvalos.
   Las etiquetas del ticket van en MAYÚSCULAS, en tipografía monoespaciada y con poco sitio (la cifra
   va a la derecha en la misma línea).
-  «Reelómetro» / «REELÓMETRO» es la marca: no se traduce.
+  «Reelometer» / «REELOMETER» es la marca: no se traduce.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
 
     <!-- Cabecera del ticket: la marca, en MAYÚSCULAS. No se traduce. -->
-    <string name="share_brand">REELÓMETRO</string>
+    <string name="share_brand">REELOMETER</string>
     <!-- Subtítulo del ticket, MAYÚSCULAS. -->
     <string name="share_title">YOUR TIME RECEIPT</string>
     <!-- Sello rotado sobre el ticket (como el «PAGADO» de una factura), MAYÚSCULAS y corto. -->
     <string name="share_stamp">PAID WITH YOUR TIME</string>
     <!-- Lema de la marca, MAYÚSCULAS. Juego de palabras: «contar» es medir y también decir en voz alta
          (cuenta los vídeos que no le cuentas a nadie). Si no se puede mantener, busca un lema breve equivalente. -->
-    <string name="share_tagline">COUNT WHAT YOU DON’T TELL</string>
-    <!-- Pie de marca: «REELÓMETRO · CUENTA LO QUE NO CUENTAS». %1$s la marca, %2$s el lema. -->
+    <string name="share_tagline">COUNTS WHAT YOU DON’T</string>
+    <!-- Pie de marca: «REELOMETER · CUENTA LO QUE NO CUENTAS». %1$s la marca, %2$s el lema. -->
     <string name="share_brand_footer">%1$s · %2$s</string>
 
     <!-- Título del selector de compartir de Android. -->
@@ -50,22 +50,22 @@
 
     <!-- Texto que acompaña a la imagen al compartir (en redes o mensajería), termina con el emoji del
          ticket. %1$s los vídeos («4.812 vídeos»), %2$s el tiempo («29 horas»). -->
-    <string name="share_text_week">My week on Reelómetro: %1$s and %2$s. No refunds. 🧾</string>
+    <string name="share_text_week">My week on Reelometer: %1$s and %2$s. No refunds. 🧾</string>
     <!-- %1$s el mes («octubre»), %2$s los vídeos, %3$s el tiempo. -->
-    <string name="share_text_month">My %1$s on Reelómetro: %2$s and %3$s. No refunds. 🧾</string>
+    <string name="share_text_month">My %1$s on Reelometer: %2$s and %3$s. No refunds. 🧾</string>
     <!-- %1$s el año («2026»), %2$s los vídeos, %3$s el tiempo. -->
-    <string name="share_text_year">My %1$s on Reelómetro: %2$s and %3$s. No refunds. 🧾</string>
+    <string name="share_text_year">My %1$s on Reelometer: %2$s and %3$s. No refunds. 🧾</string>
     <!-- Todo el historial. %1$s los vídeos, %2$s el tiempo. -->
-    <string name="share_text_all">My full history on Reelómetro: %1$s and %2$s. No refunds. 🧾</string>
+    <string name="share_text_all">My full history on Reelometer: %1$s and %2$s. No refunds. 🧾</string>
 
     <!-- Nombre del archivo de la imagen (se ve al compartirla). SOLO letras ASCII sin acentos, cifras y
          guiones: sin espacios. %1$s la fecha del lunes («2026-10-27»). -->
-    <string name="share_file_week">reelometro-week-%1$s.png</string>
+    <string name="share_file_week">reelometer-week-%1$s.png</string>
     <!-- %1$s el mes en minúsculas («octubre»; si lleva acentos se quitan solos), %2$s el año. -->
-    <string name="share_file_month">reelometro-%1$s-%2$s.png</string>
+    <string name="share_file_month">reelometer-%1$s-%2$s.png</string>
     <!-- %1$s el año. -->
-    <string name="share_file_year">reelometro-%1$s.png</string>
-    <string name="share_file_all">reelometro-full-history.png</string>
+    <string name="share_file_year">reelometer-%1$s.png</string>
+    <string name="share_file_all">reelometer-full-history.png</string>
 
     <!-- TalkBack de la vista previa de la imagen: «Ticket de octubre de 2026: 4.812 vídeos y 29 horas.».
          Semana: %1$s y %2$s el primer y el último día («27 oct», «2 nov»), %3$s vídeos, %4$s tiempo. -->

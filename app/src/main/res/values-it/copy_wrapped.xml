@@ -31,12 +31,12 @@
 
     <!-- Hub sin ningún periodo con datos. -->
     <string-array name="wrapped_hub_empty">
-        <item>Non c’è ancora niente da riassumere. Torna quando avrai qualche giorno.</item>
-        <item>Senza dati non c’è riassunto. E per ora di dati non ce ne sono.</item>
-        <item>Il primo riassunto arriverà appena ci sarà qualcosa da contare.</item>
+        <item>Non c’è ancora niente da riassumere. Torna tra qualche giorno.</item>
+        <item>Senza dati non c’è riepilogo. E per ora di dati non ce ne sono.</item>
+        <item>Il primo riepilogo arriverà appena ci sarà qualcosa da contare.</item>
     </string-array>
 
-    <!-- Etiqueta de la portada (MAYÚSCULAS): «REELÓMETRO · OCTUBRE 2026». %1$s el nombre de la app,
+    <!-- Etiqueta de la portada (MAYÚSCULAS): «REELOMETER · OCTUBRE 2026». %1$s el nombre de la app,
          %2$s el periodo («OCTUBRE 2026», «27 OCT – 2 NOV», «2026», «DESDE EL 3 MAR 2026»). -->
     <string name="wrapped_cover_label">%1$s · %2$s</string>
     <!-- Pista discreta de la portada (MAYÚSCULAS, una línea en letra pequeña). -->
@@ -70,9 +70,9 @@
 
     <!-- Diapositiva del total, sin vídeos. -->
     <string-array name="wrapped_total_zero">
-        <item>Nemmeno un video. Questo riassunto sarà corto.</item>
+        <item>Nemmeno un video. Questo riepilogo sarà corto.</item>
         <item>Zero video. Poco da contare, e questo già dice molto.</item>
-        <item>Niente. Nemmeno uno. Il riassunto più corto della storia.</item>
+        <item>Niente. Nemmeno uno. Il riepilogo più corto della storia.</item>
     </string-array>
     <!-- Menos de 5 vídeos: %1$s los vídeos («3 vídeos»). -->
     <string-array name="wrapped_total_tiny">
@@ -85,13 +85,13 @@
          _one_day: el periodo es de un solo día (la tercera frase no habla de media). -->
     <string-array name="wrapped_total">
         <item>%1$s. Uno dietro l’altro.</item>
-        <item>Hai scorso verso l’alto %2$s.</item>
+        <item>Hai scrollato %2$s verso l’alto.</item>
         <item>Una media di %3$s al giorno, festivi inclusi.</item>
         <item>%1$s in %4$s. I conti sono chiari.</item>
     </string-array>
     <string-array name="wrapped_total_one_day">
         <item>%1$s. Uno dietro l’altro.</item>
-        <item>Hai scorso verso l’alto %2$s.</item>
+        <item>Hai scrollato %2$s verso l’alto.</item>
         <item>%1$s in un solo giorno. Non è poco.</item>
         <item>%1$s in %4$s. I conti sono chiari.</item>
     </string-array>
@@ -116,7 +116,7 @@
          infinitivo («leer 14 libros»), %3$s el tiempo en minutos. _noeq: sin equivalencia (no
          uses %2$s). «de quince en quince segundos»: lo que dura un vídeo corto. -->
     <string-array name="wrapped_time_hours">
-        <item>%1$s. Ti bastava per %2$s.</item>
+        <item>%1$s. Abbastanza per %2$s.</item>
         <item>%1$s. O, detto altrimenti, %3$s.</item>
         <item>%1$s, di quindici in quindici secondi.</item>
     </string-array>
@@ -128,14 +128,14 @@
     <!-- Menos de una hora: %1$s el tiempo con mayúscula («47 minutos»). -->
     <string-array name="wrapped_time_minutes">
         <item>%1$s. Poca roba, per quello che poteva essere.</item>
-        <item>%1$s. Nemmeno per un film.</item>
+        <item>%1$s. Non basta nemmeno per un film.</item>
         <item>%1$s, di quindici in quindici secondi.</item>
     </string-array>
 
     <!-- Diapositiva de equivalencias (MAYÚSCULAS): debajo van frases en infinitivo
          («Leer 14 libros.»), así que la etiqueta tiene que pedir un infinitivo. -->
     <string name="wrapped_equivalences_label">CON QUEL TEMPO POTRESTI</string>
-    <string name="wrapped_equivalences_empty">Tempo così poco che non c’è niente con cui confrontarlo.</string>
+    <string name="wrapped_equivalences_empty">Così poco tempo che non c’è niente con cui confrontarlo.</string>
 
     <!-- Creador n.º 1: %1$s el usuario con arroba («@pepito»), %2$s los vídeos («312 vídeos»),
          %3$s solo la cifra («312»). -->
@@ -153,7 +153,7 @@
     </string-array>
 
     <!-- Diapositiva de categoría (MAYÚSCULAS). -->
-    <string name="wrapped_category_label">CHE HAI GUARDATO DI PIÙ</string>
+    <string name="wrapped_category_label">COSA HAI GUARDATO DI PIÙ</string>
     <!-- La mayoría de vídeos sin categoría: %1$s el porcentaje («60 %»). -->
     <string-array name="wrapped_category_otros">
         <item>La maggior parte, senza categoria. I tuoi gusti sono un mistero persino per me.</item>
@@ -170,7 +170,7 @@
     </string-array>
     <!-- Remate propio de cada categoría (la frase extra de wrapped_category). -->
     <!-- «echar aire por la nariz»: la risa mínima. -->
-    <string name="wrapped_category_zinger_humor">Hai riso parecchio. O, come minimo, hai sbuffato dal naso.</string>
+    <string name="wrapped_category_zinger_humor">Hai riso parecchio. O, come minimo, hai fatto una risatina col naso.</string>
     <string name="wrapped_category_zinger_deporte">Tanto sport. Visto, però sport.</string>
     <string name="wrapped_category_zinger_fitness">Routine in palestra viste dal divano. Conta come riscaldamento.</string>
     <string name="wrapped_category_zinger_comida">Ricette, tante. Cucinate, quello è un altro conto.</string>
@@ -181,22 +181,22 @@
     <string name="wrapped_category_zinger_aprendizaje">Video per imparare. Qualcosa sarà rimasto.</string>
     <string name="wrapped_category_zinger_tecnologia">Tanti gadget. Questo telefono, per inciso, regge bene.</string>
     <string name="wrapped_category_zinger_belleza">Routine in dieci passi, viste in dieci secondi.</string>
-    <string name="wrapped_category_zinger_animales">Animali. Il meglio di internet, non lo nego.</string>
+    <string name="wrapped_category_zinger_animales">Animali. Il meglio di internet, inutile negarlo.</string>
     <string name="wrapped_category_zinger_viajes">Hai visto mezzo mondo. Dal divano, ma mezzo mondo.</string>
     <!-- Juego de palabras: «caballos» de potencia del motor. -->
     <string name="wrapped_category_zinger_motor">Tanti cavalli. Di quelli a motore.</string>
     <!-- Alude a «el tiempo es dinero». -->
-    <string name="wrapped_category_zinger_dinero">Consigli sui soldi, a bizzeffe. Il tempo, per inciso, è denaro anche lui.</string>
+    <string name="wrapped_category_zinger_dinero">Consigli sui soldi, a bizzeffe. Il tempo, per inciso, è denaro.</string>
     <string name="wrapped_category_zinger_noticias">Notizie in verticale e in trenta secondi. Ogni giorno, a modo tuo.</string>
     <string name="wrapped_category_zinger_relaciones">Consigli di coppia, tanti. Applicati, questo non lo conto.</string>
 
     <!-- El día con más vídeos del periodo: %1$s la fecha larga («martes 14 de octubre»),
          %2$s la misma con mayúscula, %3$s los vídeos («612 vídeos»). -->
     <string-array name="wrapped_worst_day">
-        <item>Il tuo giorno peggiore: %1$s, con %3$s.</item>
+        <item>Il tuo giorno peggiore: il %1$s, con %3$s.</item>
         <item>%2$s: %3$s. Quel giorno ha vinto l’algoritmo.</item>
-        <item>Il record del periodo: %3$s, %1$s. Cos’è successo? Non lo so: io conto soltanto.</item>
-        <item>%3$s in un solo giorno: %1$s. Ci sono giorni così.</item>
+        <item>Il record del periodo: %3$s, il %1$s. Cos’è successo? Non lo so: io conto soltanto.</item>
+        <item>%3$s in un solo giorno: il %1$s. Ci sono giorni così.</item>
     </string-array>
 
     <!-- Reparto por plataformas (nombres cortos: TikTok, Reels, Shorts; no se traducen). -->
@@ -236,17 +236,17 @@
     <!-- Cierre de un periodo que sigue abierto (o de «siempre»). «El marcador» es la cifra grande
          de la app, como el marcador de un partido. -->
     <string-array name="wrapped_closing_open_week">
-        <item>Questo è quanto va di settimana. Il contatore continua a contare.</item>
+        <item>Ecco la settimana fin qui. Il contatore continua a contare.</item>
         <item>Riepilogo provvisorio: la settimana non è ancora finita.</item>
         <item>Fine del riepilogo, per ora. Quello che ne fai è affar tuo.</item>
     </string-array>
     <string-array name="wrapped_closing_open_month">
-        <item>Questo è quanto va di mese. Il contatore continua a contare.</item>
+        <item>Ecco il mese fin qui. Il contatore continua a contare.</item>
         <item>Riepilogo provvisorio: il mese non è ancora finito.</item>
         <item>Fine del riepilogo, per ora. Quello che ne fai è affar tuo.</item>
     </string-array>
     <string-array name="wrapped_closing_open_year">
-        <item>Questo è quanto va di anno. Il contatore continua a contare.</item>
+        <item>Ecco l’anno fin qui. Il contatore continua a contare.</item>
         <item>Riepilogo provvisorio: l’anno non è ancora finito.</item>
         <item>Fine del riepilogo, per ora. Quello che ne fai è affar tuo.</item>
     </string-array>

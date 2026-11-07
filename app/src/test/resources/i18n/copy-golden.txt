@@ -7330,7 +7330,7 @@ DisclosureCopy.SECTIONS.label → PARA QUÉ
 DisclosureCopy.SECTIONS.label → QUÉ LEE
 DisclosureCopy.SECTIONS.label → QUÉ NO LEE
 DisclosureCopy.SECTIONS.label → TÚ MANDAS
-DisclosureCopy.SUMMARY → Reelómetro usa el servicio de accesibilidad de Android para leer la pantalla de TikTok, Instagram y YouTube mientras las usas. Así detecta cada vídeo corto que ves y guarda, solo en este móvil, en qué app lo viste, cuándo, durante cuánto tiempo, quién lo publicó y su descripción, para mostrarte tus estadísticas.
+DisclosureCopy.SUMMARY → Reelometer usa el servicio de accesibilidad de Android para leer la pantalla de TikTok, Instagram y YouTube mientras las usas. Así detecta cada vídeo corto que ves y guarda, solo en este móvil, en qué app lo viste, cuándo, durante cuánto tiempo, quién lo publicó y su descripción, para mostrarte tus estadísticas.
 DisclosureCopy.TITLE → Para contar, tengo que mirar.
 DisclosureCopy.fullText → ACEPTAR Y ACTIVAR
 DisclosureCopy.fullText → AHORA NO
@@ -7344,7 +7344,7 @@ DisclosureCopy.fullText → Para contar, tengo que mirar.
 DisclosureCopy.fullText → Puedes desactivar el permiso cuando quieras en Ajustes > Accesibilidad y borrar todos los datos desde la propia app.
 DisclosureCopy.fullText → QUÉ LEE
 DisclosureCopy.fullText → QUÉ NO LEE
-DisclosureCopy.fullText → Reelómetro usa el servicio de accesibilidad de Android para leer la pantalla de TikTok, Instagram y YouTube mientras las usas. Así detecta cada vídeo corto que ves y guarda, solo en este móvil, en qué app lo viste, cuándo, durante cuánto tiempo, quién lo publicó y su descripción, para mostrarte tus estadísticas.
+DisclosureCopy.fullText → Reelometer usa el servicio de accesibilidad de Android para leer la pantalla de TikTok, Instagram y YouTube mientras las usas. Así detecta cada vídeo corto que ves y guarda, solo en este móvil, en qué app lo viste, cuándo, durante cuánto tiempo, quién lo publicó y su descripción, para mostrarte tus estadísticas.
 DisclosureCopy.fullText → Si aceptas, te llevo a los ajustes de Android para activar el permiso. Si no, la app no podrá contar nada; puedes activarlo más adelante desde Hoy o desde Ajustes.
 DisclosureCopy.fullText → Solo para contarte cuántos vídeos ves, cuánto tiempo, de qué temas y de qué creadores. No se usa para publicidad ni para hacer perfiles.
 DisclosureCopy.fullText → TÚ MANDAS
@@ -9627,7 +9627,7 @@ NotificationCopy.monthly(99, 60000) → 99 vídeos y un minuto. Toca para verlo
 NotificationCopy.monthly(99, 60000) → 99 vídeos, un minuto y un creador favorito. Toca para ver el resumen.
 NotificationCopy.monthly(99, 60000) → El resumen está listo: 99 vídeos en un minuto.
 NotificationCopy.serviceLost.text → Android ha desconectado el servicio de accesibilidad. Toca para volver a conectarlo.
-NotificationCopy.serviceLost.title → Reelómetro ha dejado de contar
+NotificationCopy.serviceLost.title → Reelometer ha dejado de contar
 OnboardingCopy.FINAL_BUTTON → EMPEZAR
 OnboardingCopy.FINAL_TITLE → Un aviso al día. Y un límite, si quieres.
 OnboardingCopy.GOAL_BODY → Un máximo de vídeos al día. Con él, el marcador te dice cuánto te queda y lleva la cuenta de tus rachas. Sin él, solo cuenta.
@@ -9669,7 +9669,7 @@ OnboardingCopy.RESTRICTED_LINK → ¿TE SALE «AJUSTE RESTRINGIDO»?
 OnboardingCopy.RESTRICTED_NOTE → «Permitir ajustes restringidos» solo aparece después de que Android te haya bloqueado una vez. Si no lo ves, intenta activar el servicio primero y vuelve aquí.
 OnboardingCopy.RESTRICTED_TITLE → ¿Android dice «Ajuste restringido»?
 OnboardingCopy.SKIP → SALTAR
-OnboardingCopy.WHAT_BODY → Reelómetro cuenta los vídeos cortos que ves en TikTok, Instagram Reels y YouTube Shorts: cuántos, cuánto tiempo, de qué temas y de qué creadores. El dato es tuyo; las conclusiones, también.
+OnboardingCopy.WHAT_BODY → Reelometer cuenta los vídeos cortos que ves en TikTok, Instagram Reels y YouTube Shorts: cuántos, cuánto tiempo, de qué temas y de qué creadores. El dato es tuyo; las conclusiones, también.
 OnboardingCopy.WHAT_TITLE → Cuenta lo que no cuentas.
 OnboardingCopy.goalChosen(0) → Sin objetivo: solo contar.
 OnboardingCopy.goalChosen(1) → Como mucho, 1 al día.
@@ -9701,14 +9701,14 @@ OnboardingCopy.notifyDaily(6) → A las 06:30, tu cuenta del día.
 OnboardingCopy.notifyDaily(7) → A las 07:30, tu cuenta del día.
 OnboardingCopy.notifyDaily(8) → A las 08:30, tu cuenta del día.
 OnboardingCopy.notifyDaily(9) → A las 09:30, tu cuenta del día.
-OnboardingCopy.step → Android preguntará si permites que Reelómetro «pueda controlar totalmente tu dispositivo». Es el aviso estándar de cualquier servicio de accesibilidad: Reelómetro mira y cuenta, y solo pulsa por ti si usas el envío rápido de Instagram. Toca «Permitir».
-OnboardingCopy.step → Busca «Reelómetro» en «Aplicaciones descargadas». En algunos móviles está dentro de «Aplicaciones instaladas» o «Servicios instalados».
+OnboardingCopy.step → Android preguntará si permites que Reelometer «pueda controlar totalmente tu dispositivo». Es el aviso estándar de cualquier servicio de accesibilidad: Reelometer mira y cuenta, y solo pulsa por ti si usas el envío rápido de Instagram. Toca «Permitir».
+OnboardingCopy.step → Busca «Reelometer» en «Aplicaciones descargadas». En algunos móviles está dentro de «Aplicaciones instaladas» o «Servicios instalados».
 OnboardingCopy.step → En «Información de la aplicación», toca el menú ⋮ de arriba a la derecha.
 OnboardingCopy.step → Pulsa ABRIR ACCESIBILIDAD: te llevo a los ajustes de Android.
 OnboardingCopy.step → Pulsa ABRIR INFORMACIÓN DE LA APP.
 OnboardingCopy.step → Toca «Permitir ajustes restringidos» y confirma con tu PIN, patrón o huella.
-OnboardingCopy.step → Toca «Reelómetro» y activa «Usar Reelómetro».
-OnboardingCopy.step → Vuelve a Accesibilidad y activa «Usar Reelómetro».
+OnboardingCopy.step → Toca «Reelometer» y activa «Usar Reelometer».
+OnboardingCopy.step → Vuelve a Accesibilidad y activa «Usar Reelometer».
 OnboardingCopy.step → Vuelve aquí. Si el marcador dice OK, ya está.
 OnboardingCopy.stepLabel → PASO 3 DE 4
 QuickSendCopy.ASK_BODY → Has escondido las burbujas tres veces seguidas. Si lo apagas, lo vuelves a encender en Ajustes, debajo de «A quién envías».
@@ -9716,7 +9716,7 @@ QuickSendCopy.ASK_KEEP → SEGUIR
 QuickSendCopy.ASK_TITLE → ¿Apago el envío rápido?
 QuickSendCopy.ASK_TURN_OFF → APAGAR
 QuickSendCopy.HIDE_ACTION → Esconder hasta el siguiente reel
-QuickSendCopy.WINDOW_TITLE → Envío rápido de Reelómetro
+QuickSendCopy.WINDOW_TITLE → Envío rápido de Reelometer
 QuickSendCopy.ZONE_TITLE → Suelta aquí para esconder
 QuickSendCopy.boton → APAGAR
 QuickSendCopy.boton → RECOLOCAR
@@ -9727,6 +9727,14 @@ QuickSendCopy.sendingDescription → Enviando a Los del piso
 QuickSendCopy.sentDescription → Enviado a Los del piso
 SettingsCopy.ALL_APPS_OFF → Has apagado todas. Así no hay nada que contar.
 SettingsCopy.APP_NOT_INSTALLED → NO INSTALADA
+SettingsCopy.BACKUP_CHANGE → CAMBIAR CARPETA
+SettingsCopy.BACKUP_CHANGE_TALKBACK → cambiar de carpeta
+SettingsCopy.BACKUP_DESCRIPTION → Cada semana guardo el mismo CSV de EXPORTAR en una carpeta de tu móvil que eliges tú. Me quedo con las 4 últimas copias y no toco tus otros archivos.
+SettingsCopy.BACKUP_FOLDER_LABEL → Carpeta
+SettingsCopy.BACKUP_LABEL → Copia semanal
+SettingsCopy.BACKUP_LAST_LABEL → Última copia
+SettingsCopy.BACKUP_NOW → COPIAR AHORA
+SettingsCopy.BACKUP_PICK_FAILED → Android no me deja usar esa carpeta: elige otra.
 SettingsCopy.CALIBRATION_ALREADY → La calibración ya estaba desbloqueada.
 SettingsCopy.CALIBRATION_ENTRY → CALIBRACIÓN
 SettingsCopy.CALIBRATION_UNLOCKED → Calibración desbloqueada. Está al final de Ajustes.
@@ -9790,11 +9798,11 @@ SettingsCopy.MONTHLY_DESCRIPTION → El día 1, el mes anterior contado, con su 
 SettingsCopy.MONTHLY_LABEL → Resumen mensual
 SettingsCopy.NOTIFICATIONS_ALLOW → PERMITIR AVISOS
 SettingsCopy.NOTIFICATIONS_ASK → Para avisarte, Android necesita tu permiso. Solo lo uso para esto.
-SettingsCopy.NOTIFICATIONS_BLOCKED → Android tiene los avisos de Reelómetro desactivados. Actívalos en los ajustes del sistema para recibirlos.
+SettingsCopy.NOTIFICATIONS_BLOCKED → Android tiene los avisos de Reelometer desactivados. Actívalos en los ajustes del sistema para recibirlos.
 SettingsCopy.NOTIFICATIONS_OPEN → ABRIR AJUSTES
 SettingsCopy.PASSPORT_DESCRIPTION → Una pestaña más con Flap, niveles y sellos que se ganan viendo menos. Si lo apagas, desaparece del todo: la pestaña, su aviso y Flap en el widget.
 SettingsCopy.PASSPORT_LABEL → Modo pasaporte
-SettingsCopy.PRIVACY_PARAGRAPHS → Reelómetro cuenta lo que ves en TikTok, Instagram y YouTube con el servicio de accesibilidad de Android. De cada vídeo guarda la app, la hora, cuánto lo viste, el creador y la descripción.
+SettingsCopy.PRIVACY_PARAGRAPHS → Reelometer cuenta lo que ves en TikTok, Instagram y YouTube con el servicio de accesibilidad de Android. De cada vídeo guarda la app, la hora, cuánto lo viste, el creador y la descripción.
 SettingsCopy.PRIVACY_PARAGRAPHS → Si desactivas el servicio, deja de contar. Si borras los datos o desinstalas la app, desaparecen.
 SettingsCopy.PRIVACY_PARAGRAPHS → Todo se guarda en este móvil. No hay cuentas, ni servidores, ni anuncios, ni analítica. La app no tiene permiso para usar internet.
 SettingsCopy.PRIVACY_PARAGRAPHS → Tus datos solo salen de aquí si los sacas tú: al exportar el CSV o al compartir tu ticket.
@@ -9802,7 +9810,7 @@ SettingsCopy.PRIVACY_POLICY_LINK → POLÍTICA DE PRIVACIDAD COMPLETA
 SettingsCopy.PROJECT_BUTTON → VER EN GITHUB
 SettingsCopy.PROJECT_NOTE → Se abre en tu navegador. La app sigue sin internet.
 SettingsCopy.PROJECT_NO_BROWSER → No hay ningún navegador para abrir el enlace.
-SettingsCopy.PROJECT_TEXT → Reelómetro es gratis, no tiene anuncios y lo hace una sola persona. El proyecto está en GitHub.
+SettingsCopy.PROJECT_TEXT → Reelometer es gratis, no tiene anuncios y lo hace una sola persona. El proyecto está en GitHub.
 SettingsCopy.QUICK_SEND_DESCRIPTION → Solo en Instagram. Mientras ves reels, sale una burbuja por cada persona o grupo que fijes. Al tocarla, pulso por ti «Compartir», ese nombre y «Enviar»; si no sale a la vista, escribo su nombre en el buscador de la hoja. Nada más. Si algo no cuadra, paro y terminas tú. Para enseñar su foto en la burbuja, la recorto de la hoja de compartir cuando sale a la vista, o eliges tú una de tu galería; se queda en este móvil. Arrástralas a donde quieras (abajo, encima del nombre del reel, se ponen en fila) o suéltalas en la «X» para esconderlas hasta el siguiente reel.
 SettingsCopy.QUICK_SEND_EMPTY → Aún no hay a quién fijar. Comparte un reel a mano con «A quién envías» encendido: aquí saldrán las personas y los grupos a los que envías.
 SettingsCopy.QUICK_SEND_LABEL → Envío rápido
@@ -9982,7 +9990,7 @@ SettingsCopy.exportDone(299) → Exportado: 299 vídeos.
 SettingsCopy.exportDone(300) → Exportado: 300 vídeos.
 SettingsCopy.exportDone(9) → Exportado: 9 vídeos.
 SettingsCopy.exportDone(99) → Exportado: 99 vídeos.
-SettingsCopy.exportFileName → reelometro-2026-11-03.csv
+SettingsCopy.exportFileName → reelometer-2026-11-03.csv
 SettingsCopy.goalValue(0) → SIN OBJETIVO
 SettingsCopy.goalValue(150) → 150 AL DÍA
 SettingsCopy.goalValue(2000) → 2.000 AL DÍA
@@ -9994,7 +10002,7 @@ SettingsCopy.section.description → El marcador luce más a oscuras, pero tú m
 SettingsCopy.section.description → El permiso de accesibilidad es lo que me deja contar. Aquí ves si está activo.
 SettingsCopy.section.description → Lo que apagues aquí deja de contarse al momento. Lo ya contado se queda.
 SettingsCopy.section.description → Qué pasa con tus datos, sin letra pequeña.
-SettingsCopy.section.description → Reelómetro no tiene relación con TikTok, Instagram ni YouTube. Solo cuenta lo que ves en ellas.
+SettingsCopy.section.description → Reelometer no tiene relación con TikTok, Instagram ni YouTube. Solo cuenta lo que ves en ellas.
 SettingsCopy.section.description → Todo lo contado vive en este móvil. Puedes llevártelo a otro, traerlo de vuelta o borrarlo.
 SettingsCopy.section.description → Un máximo de vídeos al día. Sirve para el «te quedan» de Hoy y para las rachas.
 SettingsCopy.section.description → Un resumen al día, a la hora que elijas, y otro cada mes.
@@ -10011,8 +10019,8 @@ SettingsCopy.serviceConnected → Contando en TikTok.
 SettingsCopy.serviceConnected → Has apagado todas. Así no hay nada que contar.
 SettingsCopy.serviceStatus → CONECTADO
 SettingsCopy.versionLabel → VERSIÓN 1.0.0
-ShareCopy.BRAND → REELÓMETRO
-ShareCopy.BRAND_FOOTER → REELÓMETRO · CUENTA LO QUE NO CUENTAS
+ShareCopy.BRAND → REELOMETER
+ShareCopy.BRAND_FOOTER → REELOMETER · CUENTA LO QUE NO CUENTAS
 ShareCopy.CHOOSER_TITLE → Compartir tu ticket
 ShareCopy.STAMP → PAGADO CON TU TIEMPO
 ShareCopy.TAGLINE → CUENTA LO QUE NO CUENTAS
@@ -10024,10 +10032,10 @@ ShareCopy.equivalenceLines.label → 🥾 MADRID–TOLEDO A PIE
 ShareCopy.equivalenceLines.value → ×1,5
 ShareCopy.equivalenceLines.value → ×2
 ShareCopy.equivalenceLines.value → ×294
-ShareCopy.fileName(ALL) → reelometro-historial.png
-ShareCopy.fileName(MONTH) → reelometro-octubre-2026.png
-ShareCopy.fileName(WEEK) → reelometro-semana-2026-10-27.png
-ShareCopy.fileName(YEAR) → reelometro-2026.png
+ShareCopy.fileName(ALL) → reelometer-historial.png
+ShareCopy.fileName(MONTH) → reelometer-octubre-2026.png
+ShareCopy.fileName(WEEK) → reelometer-semana-2026-10-27.png
+ShareCopy.fileName(YEAR) → reelometer-2026.png
 ShareCopy.imageDescription(ALL) → Ticket de todo tu historial: 4.812 vídeos y 29 horas.
 ShareCopy.imageDescription(MONTH) → Ticket de octubre de 2026: 4.812 vídeos y 29 horas.
 ShareCopy.imageDescription(WEEK) → Ticket de la semana del 1 oct al 31 oct: 4.812 vídeos y 29 horas.
@@ -10050,10 +10058,10 @@ ShareCopy.periodLine(ALL) → DESDE EL 29 DIC 2025
 ShareCopy.periodLine(MONTH) → DICIEMBRE 2025
 ShareCopy.periodLine(WEEK) → 29 DIC 2025 – 4 ENE 2026
 ShareCopy.periodLine(YEAR) → 2025
-ShareCopy.shareText(ALL) → Mi historial en Reelómetro: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾
-ShareCopy.shareText(MONTH) → Mi octubre en Reelómetro: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾
-ShareCopy.shareText(WEEK) → Mi semana en Reelómetro: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾
-ShareCopy.shareText(YEAR) → Mi 2026 en Reelómetro: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾
+ShareCopy.shareText(ALL) → Mi historial en Reelometer: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾
+ShareCopy.shareText(MONTH) → Mi octubre en Reelometer: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾
+ShareCopy.shareText(WEEK) → Mi semana en Reelometer: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾
+ShareCopy.shareText(YEAR) → Mi 2026 en Reelometer: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾
 ShareCopy.totalLine → 29 H
 StateCopy.LOADING_DESCRIPTION → Cargando
 StateCopy.LOADING_LABEL → CONTANDO
@@ -10516,7 +10524,7 @@ StatsCopy.streakValue(99) → 99 DÍAS
 StatsCopy.summaryLine → VÍDEO · 0 S · 0,1/DÍA · 0 S POR VÍDEO
 StatsCopy.summaryLine → VÍDEO · 10 H · 0,1/DÍA · 10 H POR VÍDEO
 StatsCopy.summaryLine → VÍDEO · 15 S · 0,1/DÍA · 15 S POR VÍDEO
-StatsCopy.summaryLine → VÍDEO · 1 H 12 MIN · 0,1/DÍA · 1 H 12 MIN POR VÍDEO
+StatsCopy.summaryLine → VÍDEO · 1 H 12 MIN · 0,1/DÍA · 1 H 12 MIN POR VÍDEO
 StatsCopy.summaryLine → VÍDEO · 1 MIN · 0,1/DÍA · 1 MIN POR VÍDEO
 StatsCopy.summaryLine → VÍDEO · 3 H · 0,1/DÍA · 3 H POR VÍDEO
 StatsCopy.summaryLine → VÍDEO · 47 MIN · 0,1/DÍA · 47 MIN POR VÍDEO
@@ -10533,7 +10541,7 @@ StatsCopy.summaryLine → VÍDEOS · 0 S · 176/DÍA · 0 S POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 0 S · 30/DÍA · 0 S POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 0 S · 43/DÍA · 0 S POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 10 H · 0,3/DÍA · 5 H POR VÍDEO
-StatsCopy.summaryLine → VÍDEOS · 10 H · 1,3/DÍA · 1 H 6 MIN POR VÍDEO
+StatsCopy.summaryLine → VÍDEOS · 10 H · 1,3/DÍA · 1 H 6 MIN POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 10 H · 1,4/DÍA · 1 H POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 10 H · 1.429/DÍA · 4 S POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 10 H · 14/DÍA · 6 MIN POR VÍDEO
@@ -10548,15 +10556,15 @@ StatsCopy.summaryLine → VÍDEOS · 15 S · 14/DÍA · 0 S POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 15 S · 176/DÍA · 0 S POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 15 S · 30/DÍA · 0 S POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 15 S · 43/DÍA · 0 S POR VÍDEO
-StatsCopy.summaryLine → VÍDEOS · 1 H 12 MIN · 0,3/DÍA · 36 MIN POR VÍDEO
-StatsCopy.summaryLine → VÍDEOS · 1 H 12 MIN · 1,3/DÍA · 8 MIN POR VÍDEO
-StatsCopy.summaryLine → VÍDEOS · 1 H 12 MIN · 1,4/DÍA · 7 MIN POR VÍDEO
-StatsCopy.summaryLine → VÍDEOS · 1 H 12 MIN · 1.429/DÍA · 0 S POR VÍDEO
-StatsCopy.summaryLine → VÍDEOS · 1 H 12 MIN · 14/DÍA · 43 S POR VÍDEO
-StatsCopy.summaryLine → VÍDEOS · 1 H 12 MIN · 14/DÍA · 44 S POR VÍDEO
-StatsCopy.summaryLine → VÍDEOS · 1 H 12 MIN · 176/DÍA · 4 S POR VÍDEO
-StatsCopy.summaryLine → VÍDEOS · 1 H 12 MIN · 30/DÍA · 20 S POR VÍDEO
-StatsCopy.summaryLine → VÍDEOS · 1 H 12 MIN · 43/DÍA · 14 S POR VÍDEO
+StatsCopy.summaryLine → VÍDEOS · 1 H 12 MIN · 0,3/DÍA · 36 MIN POR VÍDEO
+StatsCopy.summaryLine → VÍDEOS · 1 H 12 MIN · 1,3/DÍA · 8 MIN POR VÍDEO
+StatsCopy.summaryLine → VÍDEOS · 1 H 12 MIN · 1,4/DÍA · 7 MIN POR VÍDEO
+StatsCopy.summaryLine → VÍDEOS · 1 H 12 MIN · 1.429/DÍA · 0 S POR VÍDEO
+StatsCopy.summaryLine → VÍDEOS · 1 H 12 MIN · 14/DÍA · 43 S POR VÍDEO
+StatsCopy.summaryLine → VÍDEOS · 1 H 12 MIN · 14/DÍA · 44 S POR VÍDEO
+StatsCopy.summaryLine → VÍDEOS · 1 H 12 MIN · 176/DÍA · 4 S POR VÍDEO
+StatsCopy.summaryLine → VÍDEOS · 1 H 12 MIN · 30/DÍA · 20 S POR VÍDEO
+StatsCopy.summaryLine → VÍDEOS · 1 H 12 MIN · 43/DÍA · 14 S POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 1 MIN · 0,3/DÍA · 30 S POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 1 MIN · 1,3/DÍA · 7 S POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 1 MIN · 1,4/DÍA · 6 S POR VÍDEO
@@ -10565,7 +10573,7 @@ StatsCopy.summaryLine → VÍDEOS · 1 MIN · 14/DÍA · 1 S POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 1 MIN · 176/DÍA · 0 S POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 1 MIN · 30/DÍA · 0 S POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 1 MIN · 43/DÍA · 0 S POR VÍDEO
-StatsCopy.summaryLine → VÍDEOS · 3 H · 0,3/DÍA · 1 H 30 MIN POR VÍDEO
+StatsCopy.summaryLine → VÍDEOS · 3 H · 0,3/DÍA · 1 H 30 MIN POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 3 H · 1,3/DÍA · 20 MIN POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 3 H · 1,4/DÍA · 18 MIN POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 3 H · 1.429/DÍA · 1 S POR VÍDEO
@@ -10585,12 +10593,12 @@ StatsCopy.summaryLine → VÍDEOS · 5.000 H · 0,3/DÍA · 2.500 H POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 5.000 H · 1,3/DÍA · 555 H POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 5.000 H · 1,4/DÍA · 500 H POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 5.000 H · 1.429/DÍA · 30 MIN POR VÍDEO
-StatsCopy.summaryLine → VÍDEOS · 5.000 H · 14/DÍA · 50 H 30 MIN POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 5.000 H · 14/DÍA · 50 H POR VÍDEO
-StatsCopy.summaryLine → VÍDEOS · 5.000 H · 176/DÍA · 4 H 3 MIN POR VÍDEO
-StatsCopy.summaryLine → VÍDEOS · 5.000 H · 30/DÍA · 23 H 35 MIN POR VÍDEO
-StatsCopy.summaryLine → VÍDEOS · 5.000 H · 43/DÍA · 16 H 40 MIN POR VÍDEO
-StatsCopy.summaryLine → VÍDEOS · 5.000 H · 43/DÍA · 16 H 43 MIN POR VÍDEO
+StatsCopy.summaryLine → VÍDEOS · 5.000 H · 14/DÍA · 50 H 30 MIN POR VÍDEO
+StatsCopy.summaryLine → VÍDEOS · 5.000 H · 176/DÍA · 4 H 3 MIN POR VÍDEO
+StatsCopy.summaryLine → VÍDEOS · 5.000 H · 30/DÍA · 23 H 35 MIN POR VÍDEO
+StatsCopy.summaryLine → VÍDEOS · 5.000 H · 43/DÍA · 16 H 40 MIN POR VÍDEO
+StatsCopy.summaryLine → VÍDEOS · 5.000 H · 43/DÍA · 16 H 43 MIN POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 59 S · 0,3/DÍA · 30 S POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 59 S · 1,3/DÍA · 7 S POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 59 S · 1,4/DÍA · 6 S POR VÍDEO
@@ -10599,9 +10607,9 @@ StatsCopy.summaryLine → VÍDEOS · 59 S · 14/DÍA · 1 S POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 59 S · 176/DÍA · 0 S POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 59 S · 30/DÍA · 0 S POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 59 S · 43/DÍA · 0 S POR VÍDEO
-StatsCopy.summaryLine → VÍDEOS · 61 H · 0,3/DÍA · 30 H 30 MIN POR VÍDEO
-StatsCopy.summaryLine → VÍDEOS · 61 H · 1,3/DÍA · 6 H 46 MIN POR VÍDEO
-StatsCopy.summaryLine → VÍDEOS · 61 H · 1,4/DÍA · 6 H 6 MIN POR VÍDEO
+StatsCopy.summaryLine → VÍDEOS · 61 H · 0,3/DÍA · 30 H 30 MIN POR VÍDEO
+StatsCopy.summaryLine → VÍDEOS · 61 H · 1,3/DÍA · 6 H 46 MIN POR VÍDEO
+StatsCopy.summaryLine → VÍDEOS · 61 H · 1,4/DÍA · 6 H 6 MIN POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 61 H · 1.429/DÍA · 22 S POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 61 H · 14/DÍA · 36 MIN POR VÍDEO
 StatsCopy.summaryLine → VÍDEOS · 61 H · 176/DÍA · 2 MIN POR VÍDEO
@@ -10925,7 +10933,7 @@ TodayCopy.SECTION_CATEGORIES → LO QUE MÁS VES
 TodayCopy.SECTION_CREATORS → QUIÉN TE LO PONE
 TodayCopy.SECTION_HOURS → TU DÍA, HORA A HORA
 TodayCopy.SECTION_PLATFORMS → PLATAFORMAS
-TodayCopy.SERVICE_OFF_DESCRIPTION → Sin señal: el servicio de Reelómetro está desconectado.
+TodayCopy.SERVICE_OFF_DESCRIPTION → Sin señal: el servicio de Reelometer está desconectado.
 TodayCopy.SERVICE_OFF_LABEL → SIN SEÑAL
 TodayCopy.SINCE_BAND_ACTION → Ver tus estadísticas
 TodayCopy.comparison.description → 134 veces tu domingo medio a esta hora.
@@ -26334,7 +26342,7 @@ TodayCopy.sinceBandDescription → Desde el 3 de marzo de 2025: 9 vídeos y 59�
 TodayCopy.sinceBandDescription → Desde el 3 de marzo de 2025: 9 vídeos y 61 horas.
 TodayCopy.sinceBandDescription → Desde el 3 de marzo de 2025: 9 vídeos y un minuto.
 TodayCopy.sinceBandDescription → Desde el 3 de marzo de 2025: 9 vídeos y una hora y 12 minutos.
-WidgetCopy.DESCRIPTION_OFF → Reelómetro, sin señal: el servicio está desconectado.
+WidgetCopy.DESCRIPTION_OFF → Reelometer, sin señal: el servicio está desconectado.
 WidgetCopy.LABEL → HOY
 WidgetCopy.NO_SIGNAL → SIN SEÑAL
 WidgetCopy.PLACEHOLDER → – – –
@@ -26779,10 +26787,10 @@ WrappedCopy.closing(YEAR, false) → Y esto es lo que va de año. El marcador si
 WrappedCopy.closing(YEAR, true) → 2026, cerrado. Sin devoluciones.
 WrappedCopy.closing(YEAR, true) → Esto fue 2026. 2027 ya ha empezado a contar.
 WrappedCopy.closing(YEAR, true) → Hasta aquí 2026. El marcador sigue.
-WrappedCopy.coverLabel(ALL) → REELÓMETRO · DESDE EL 1 OCT 2026
-WrappedCopy.coverLabel(MONTH) → REELÓMETRO · OCTUBRE 2026
-WrappedCopy.coverLabel(WEEK) → REELÓMETRO · 1 – 31 OCT
-WrappedCopy.coverLabel(YEAR) → REELÓMETRO · 2026
+WrappedCopy.coverLabel(ALL) → REELOMETER · DESDE EL 1 OCT 2026
+WrappedCopy.coverLabel(MONTH) → REELOMETER · OCTUBRE 2026
+WrappedCopy.coverLabel(WEEK) → REELOMETER · 1 – 31 OCT
+WrappedCopy.coverLabel(YEAR) → REELOMETER · 2026
 WrappedCopy.coverTitle(ALL) → Desde el principio, vídeo a vídeo.
 WrappedCopy.coverTitle(ALL) → Todo, contado.
 WrappedCopy.coverTitle(ALL) → Tu historial completo, en cifras.
@@ -28662,61 +28670,61 @@ state.loading[8] → Sumando.
 state.loading[9] → Haciendo cuentas.
 stats.beforeHistory[0] → Antes del 3 de marzo de 2026 no contaba nada. Todavía no nos conocíamos.
 stats.beforeHistory[10] → Antes del 3 de marzo de 2026 no contaba nada. Todavía no nos conocíamos.
-stats.beforeHistory[11] → Esto es de antes de Reelómetro. Aquí no hay nada que ver, literalmente.
+stats.beforeHistory[11] → Esto es de antes de Reelometer. Aquí no hay nada que ver, literalmente.
 stats.beforeHistory[12] → Tu historial empieza el 3 de marzo de 2026. Antes, silencio.
-stats.beforeHistory[13] → Esto es de antes de Reelómetro. Aquí no hay nada que ver, literalmente.
+stats.beforeHistory[13] → Esto es de antes de Reelometer. Aquí no hay nada que ver, literalmente.
 stats.beforeHistory[14] → Antes del 3 de marzo de 2026 no contaba nada. Todavía no nos conocíamos.
-stats.beforeHistory[15] → Esto es de antes de Reelómetro. Aquí no hay nada que ver, literalmente.
+stats.beforeHistory[15] → Esto es de antes de Reelometer. Aquí no hay nada que ver, literalmente.
 stats.beforeHistory[16] → Antes del 3 de marzo de 2026 no contaba nada. Todavía no nos conocíamos.
 stats.beforeHistory[17] → Tu historial empieza el 3 de marzo de 2026. Antes, silencio.
-stats.beforeHistory[18] → Esto es de antes de Reelómetro. Aquí no hay nada que ver, literalmente.
+stats.beforeHistory[18] → Esto es de antes de Reelometer. Aquí no hay nada que ver, literalmente.
 stats.beforeHistory[19] → Tu historial empieza el 3 de marzo de 2026. Antes, silencio.
-stats.beforeHistory[1] → Esto es de antes de Reelómetro. Aquí no hay nada que ver, literalmente.
+stats.beforeHistory[1] → Esto es de antes de Reelometer. Aquí no hay nada que ver, literalmente.
 stats.beforeHistory[20] → Antes del 3 de marzo de 2026 no contaba nada. Todavía no nos conocíamos.
 stats.beforeHistory[21] → Tu historial empieza el 3 de marzo de 2026. Antes, silencio.
-stats.beforeHistory[22] → Esto es de antes de Reelómetro. Aquí no hay nada que ver, literalmente.
+stats.beforeHistory[22] → Esto es de antes de Reelometer. Aquí no hay nada que ver, literalmente.
 stats.beforeHistory[23] → Antes del 3 de marzo de 2026 no contaba nada. Todavía no nos conocíamos.
 stats.beforeHistory[24] → Tu historial empieza el 3 de marzo de 2026. Antes, silencio.
-stats.beforeHistory[25] → Esto es de antes de Reelómetro. Aquí no hay nada que ver, literalmente.
+stats.beforeHistory[25] → Esto es de antes de Reelometer. Aquí no hay nada que ver, literalmente.
 stats.beforeHistory[26] → Antes del 3 de marzo de 2026 no contaba nada. Todavía no nos conocíamos.
-stats.beforeHistory[27] → Esto es de antes de Reelómetro. Aquí no hay nada que ver, literalmente.
+stats.beforeHistory[27] → Esto es de antes de Reelometer. Aquí no hay nada que ver, literalmente.
 stats.beforeHistory[28] → Antes del 3 de marzo de 2026 no contaba nada. Todavía no nos conocíamos.
 stats.beforeHistory[29] → Tu historial empieza el 3 de marzo de 2026. Antes, silencio.
 stats.beforeHistory[2] → Tu historial empieza el 3 de marzo de 2026. Antes, silencio.
-stats.beforeHistory[30] → Esto es de antes de Reelómetro. Aquí no hay nada que ver, literalmente.
+stats.beforeHistory[30] → Esto es de antes de Reelometer. Aquí no hay nada que ver, literalmente.
 stats.beforeHistory[31] → Antes del 3 de marzo de 2026 no contaba nada. Todavía no nos conocíamos.
 stats.beforeHistory[32] → Tu historial empieza el 3 de marzo de 2026. Antes, silencio.
 stats.beforeHistory[33] → Antes del 3 de marzo de 2026 no contaba nada. Todavía no nos conocíamos.
 stats.beforeHistory[34] → Tu historial empieza el 3 de marzo de 2026. Antes, silencio.
-stats.beforeHistory[35] → Esto es de antes de Reelómetro. Aquí no hay nada que ver, literalmente.
+stats.beforeHistory[35] → Esto es de antes de Reelometer. Aquí no hay nada que ver, literalmente.
 stats.beforeHistory[36] → Tu historial empieza el 3 de marzo de 2026. Antes, silencio.
-stats.beforeHistory[37] → Esto es de antes de Reelómetro. Aquí no hay nada que ver, literalmente.
+stats.beforeHistory[37] → Esto es de antes de Reelometer. Aquí no hay nada que ver, literalmente.
 stats.beforeHistory[38] → Antes del 3 de marzo de 2026 no contaba nada. Todavía no nos conocíamos.
-stats.beforeHistory[39] → Esto es de antes de Reelómetro. Aquí no hay nada que ver, literalmente.
+stats.beforeHistory[39] → Esto es de antes de Reelometer. Aquí no hay nada que ver, literalmente.
 stats.beforeHistory[3] → Antes del 3 de marzo de 2026 no contaba nada. Todavía no nos conocíamos.
 stats.beforeHistory[40] → Antes del 3 de marzo de 2026 no contaba nada. Todavía no nos conocíamos.
 stats.beforeHistory[41] → Tu historial empieza el 3 de marzo de 2026. Antes, silencio.
 stats.beforeHistory[42] → Antes del 3 de marzo de 2026 no contaba nada. Todavía no nos conocíamos.
 stats.beforeHistory[43] → Tu historial empieza el 3 de marzo de 2026. Antes, silencio.
-stats.beforeHistory[44] → Esto es de antes de Reelómetro. Aquí no hay nada que ver, literalmente.
+stats.beforeHistory[44] → Esto es de antes de Reelometer. Aquí no hay nada que ver, literalmente.
 stats.beforeHistory[45] → Tu historial empieza el 3 de marzo de 2026. Antes, silencio.
-stats.beforeHistory[46] → Esto es de antes de Reelómetro. Aquí no hay nada que ver, literalmente.
+stats.beforeHistory[46] → Esto es de antes de Reelometer. Aquí no hay nada que ver, literalmente.
 stats.beforeHistory[47] → Antes del 3 de marzo de 2026 no contaba nada. Todavía no nos conocíamos.
 stats.beforeHistory[48] → Tu historial empieza el 3 de marzo de 2026. Antes, silencio.
 stats.beforeHistory[49] → Antes del 3 de marzo de 2026 no contaba nada. Todavía no nos conocíamos.
-stats.beforeHistory[4] → Esto es de antes de Reelómetro. Aquí no hay nada que ver, literalmente.
-stats.beforeHistory[50] → Esto es de antes de Reelómetro. Aquí no hay nada que ver, literalmente.
+stats.beforeHistory[4] → Esto es de antes de Reelometer. Aquí no hay nada que ver, literalmente.
+stats.beforeHistory[50] → Esto es de antes de Reelometer. Aquí no hay nada que ver, literalmente.
 stats.beforeHistory[51] → Antes del 3 de marzo de 2026 no contaba nada. Todavía no nos conocíamos.
-stats.beforeHistory[52] → Esto es de antes de Reelómetro. Aquí no hay nada que ver, literalmente.
+stats.beforeHistory[52] → Esto es de antes de Reelometer. Aquí no hay nada que ver, literalmente.
 stats.beforeHistory[53] → Tu historial empieza el 3 de marzo de 2026. Antes, silencio.
-stats.beforeHistory[54] → Esto es de antes de Reelómetro. Aquí no hay nada que ver, literalmente.
+stats.beforeHistory[54] → Esto es de antes de Reelometer. Aquí no hay nada que ver, literalmente.
 stats.beforeHistory[55] → Antes del 3 de marzo de 2026 no contaba nada. Todavía no nos conocíamos.
 stats.beforeHistory[56] → Tu historial empieza el 3 de marzo de 2026. Antes, silencio.
 stats.beforeHistory[57] → Antes del 3 de marzo de 2026 no contaba nada. Todavía no nos conocíamos.
 stats.beforeHistory[58] → Tu historial empieza el 3 de marzo de 2026. Antes, silencio.
-stats.beforeHistory[59] → Esto es de antes de Reelómetro. Aquí no hay nada que ver, literalmente.
+stats.beforeHistory[59] → Esto es de antes de Reelometer. Aquí no hay nada que ver, literalmente.
 stats.beforeHistory[5] → Tu historial empieza el 3 de marzo de 2026. Antes, silencio.
-stats.beforeHistory[6] → Esto es de antes de Reelómetro. Aquí no hay nada que ver, literalmente.
+stats.beforeHistory[6] → Esto es de antes de Reelometer. Aquí no hay nada que ver, literalmente.
 stats.beforeHistory[7] → Tu historial empieza el 3 de marzo de 2026. Antes, silencio.
 stats.beforeHistory[8] → Antes del 3 de marzo de 2026 no contaba nada. Todavía no nos conocíamos.
 stats.beforeHistory[9] → Tu historial empieza el 3 de marzo de 2026. Antes, silencio.

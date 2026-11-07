@@ -17,8 +17,8 @@ android {
         applicationId = "com.reelometro.app"
         minSdk = 26
         targetSdk = 37
-        versionCode = 13
-        versionName = "1.7.0"
+        versionCode = 16
+        versionName = "1.9.0"
     }
 
     androidResources {
@@ -63,7 +63,7 @@ android {
             }
         }
     } else {
-        logger.info("Reelómetro: sin llave debug fija; las APK debug se firman con la clave debug del equipo")
+        logger.info("Reelometer: sin llave debug fija; las APK debug se firman con la clave debug del equipo")
     }
 
     buildTypes {

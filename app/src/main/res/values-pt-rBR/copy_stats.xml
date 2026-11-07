@@ -21,7 +21,7 @@
     <string name="stats_section_categories">CATEGORIAS</string>
     <string name="stats_section_creators">CRIADORES</string>
     <!-- Ranking de personas y grupos a los que envías vídeos por mensaje en Instagram. -->
-    <string name="stats_section_recipients">PARA QUEM VOCÊ MANDA</string>
+    <string name="stats_section_recipients">PARA QUEM VOCÊ ENVIA</string>
     <!-- Comparativa semanal (pestaña SEMANA). Tiene que caber en una línea con letra grande. -->
     <string name="stats_section_week_vs">CONTRA A SEMANA ANTERIOR</string>
     <!-- Leyenda de la línea discontinua de la gráfica semanal (MAYÚSCULAS, corta). -->
@@ -115,33 +115,33 @@
     <string-array name="stats_trend_from_zero_week">
         <item>A semana anterior, zero. Esta, não.</item>
         <item>Você vinha de uma semana em branco.</item>
-        <item>Partia do zero. Não mais.</item>
+        <item>Você partia do zero. Agora não mais.</item>
     </string-array>
     <string-array name="stats_trend_from_zero_month">
         <item>O mês anterior, zero. Este, não.</item>
         <item>Você vinha de um mês em branco.</item>
-        <item>Partia do zero. Não mais.</item>
+        <item>Você partia do zero. Agora não mais.</item>
     </string-array>
     <string-array name="stats_trend_from_zero_year">
         <item>O ano anterior, zero. Este, não.</item>
         <item>Você vinha de um ano em branco.</item>
-        <item>Partia do zero. Não mais.</item>
+        <item>Você partia do zero. Agora não mais.</item>
     </string-array>
     <!-- Cero vídeos en este periodo y en el anterior. -->
     <string-array name="stats_trend_both_zero_week">
         <item>Igual à semana anterior: nada.</item>
-        <item>Zero agora e zero antes. Constância, chama-se.</item>
-        <item>Sem vídeos nem agora nem antes.</item>
+        <item>Zero agora e zero antes. O nome disso é constância.</item>
+        <item>Nenhum vídeo, nem agora nem antes.</item>
     </string-array>
     <string-array name="stats_trend_both_zero_month">
         <item>Igual ao mês anterior: nada.</item>
-        <item>Zero agora e zero antes. Constância, chama-se.</item>
-        <item>Sem vídeos nem agora nem antes.</item>
+        <item>Zero agora e zero antes. O nome disso é constância.</item>
+        <item>Nenhum vídeo, nem agora nem antes.</item>
     </string-array>
     <string-array name="stats_trend_both_zero_year">
         <item>Igual ao ano anterior: nada.</item>
-        <item>Zero agora e zero antes. Constância, chama-se.</item>
-        <item>Sem vídeos nem agora nem antes.</item>
+        <item>Zero agora e zero antes. O nome disso é constância.</item>
+        <item>Nenhum vídeo, nem agora nem antes.</item>
     </string-array>
     <!-- Tendencia con remate. %1$s es la comparación ya en frase, con su punto final
          («Un 12 % más que la semana anterior.»). up: más vídeos (malo); down: menos (bueno);
@@ -158,7 +158,7 @@
         <item>%1$s Já houve tendências piores.</item>
     </string-array>
     <string-array name="stats_trend_same">
-        <item>%1$s Constância, chama-se.</item>
+        <item>%1$s O nome disso é constância.</item>
         <item>%1$s Nem mais, nem menos.</item>
         <item>%1$s A sua praia é a regularidade.</item>
     </string-array>
@@ -258,8 +258,8 @@
     </string-array>
     <string-array name="stats_peak_morning">
         <item>Sua hora de pico, %2$s. Tem gente que lê o jornal.</item>
-        <item>%1$s: o feed, como café da manhã.</item>
-        <item>Onde você mais assiste é %2$s. Antes do café, o polegar.</item>
+        <item>%1$s: o feed no café da manhã.</item>
+        <item>Seu horário campeão: %2$s. Antes do café, o polegar.</item>
     </string-array>
     <!-- La sobremesa: el rato después de comer (en España, sobre las 14–16 h). -->
     <string-array name="stats_peak_afternoon">
@@ -274,7 +274,7 @@
         <item>%1$s: entre o que tinha para fazer e o jantar, o feed.</item>
     </string-array>
     <string-array name="stats_peak_late">
-        <item>%1$s. O clássico «mais um e eu durmo».</item>
+        <item>%1$s. O clássico “mais um e eu durmo”.</item>
         <item>Sua hora de pico, %2$s. A cama é o lugar favorito do algoritmo.</item>
         <item>%1$s: a hora do último vídeo. E do próximo.</item>
     </string-array>
@@ -348,25 +348,25 @@
         <item>Nem um vídeo naquele ano. Que fique registrado.</item>
     </string-array>
     <!-- Periodo anterior al primer día con datos: %1$s la fecha del primer día («3 de marzo de 2026»).
-         Reelómetro es el nombre de la app: no se traduce. -->
+         Reelometer es el nombre de la app: no se traduce. -->
     <string-array name="stats_before_history">
-        <item>Antes de %1$s não contava nada. Ainda não nos conhecíamos.</item>
-        <item>Isto é de antes do Reelómetro. Aqui não há nada para ver, literalmente.</item>
+        <item>Antes de %1$s eu não contava nada. Ainda não nos conhecíamos.</item>
+        <item>Isto é de antes do Reelometer. Aqui não há nada para ver, literalmente.</item>
         <item>Seu histórico começa em %1$s. Antes, silêncio.</item>
     </string-array>
 
     <!-- Gráficas para TalkBack. Barra o celda de un día: %1$s fecha larga con mayúscula
          («Martes 3 de noviembre»), %2$s vídeos. _max: es el día con más vídeos. -->
     <string name="stats_bar_description">%1$s: %2$s.</string>
-    <string name="stats_bar_description_max">%1$s: %2$s, o dia com mais.</string>
+    <string name="stats_bar_description_max">%1$s: %2$s, o dia recorde.</string>
     <string name="stats_heat_cell_description">%1$s: %2$s.</string>
     <!-- Punto de la línea por horas: %1$s hora («23:00»), %2$s vídeos. _max: la hora con más. -->
     <string name="stats_hour_description">%1$s: %2$s.</string>
-    <string name="stats_hour_description_max">%1$s: %2$s, a hora com mais.</string>
+    <string name="stats_hour_description_max">%1$s: %2$s, a hora recorde.</string>
     <!-- Resumen de la gráfica diaria: %1$s total de vídeos; en _max, %2$s fecha larga del día con
          más («martes 3 de noviembre») y %3$s sus vídeos (solo la cifra). -->
     <string name="stats_daily_bars_summary">%1$s.</string>
-    <string name="stats_daily_bars_summary_max">%1$s. O dia com mais, %2$s, com %3$s.</string>
+    <string name="stats_daily_bars_summary_max">%1$s. O dia recorde, %2$s, com %3$s.</string>
 
     <!-- Comparativa semanal para TalkBack: primera frase + segunda (la diferencia), unidas con
          stats_week_vs_description. %1$s vídeos de la semana mostrada («205 vídeos»),

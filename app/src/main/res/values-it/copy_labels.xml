@@ -80,7 +80,7 @@
     <!-- Abre los ajustes de accesibilidad de Android. -->
     <string name="button_open_accessibility">APRI ACCESSIBILITÀ</string>
     <!-- Abre la pantalla «Información de la app» de Android. -->
-    <string name="button_open_app_info">APRI INFORMAZIONI SULL’APP</string>
+    <string name="button_open_app_info">APRI INFO APP</string>
     <string name="button_allow_notifications">CONSENTI NOTIFICHE</string>
     <string name="button_cancel">ANNULLA</string>
     <string name="button_close">CHIUDI</string>
@@ -90,10 +90,10 @@
     <string name="button_import_add">AGGIUNGI</string>
     <string name="button_import_replace">SOSTITUISCI TUTTO</string>
     <!-- Botón de confirmar en «¿Sustituir todo?»: corto, cabe junto al icono con la fuente al 130 %. -->
-    <string name="button_import_replace_confirm">SOSTITUIRE</string>
+    <string name="button_import_replace_confirm">SOSTITUISCI</string>
     <string name="button_see_summary">VEDI RIEPILOGO</string>
     <string name="button_see_permission">VEDI IL PERMESSO</string>
-    <string name="button_remove_goal">TOGLI OBIETTIVO</string>
+    <string name="button_remove_goal">RIMUOVI OBIETTIVO</string>
     <string name="button_set_goal">IMPOSTA OBIETTIVO</string>
     <string name="button_done">FATTO</string>
     <string name="button_back">INDIETRO</string>

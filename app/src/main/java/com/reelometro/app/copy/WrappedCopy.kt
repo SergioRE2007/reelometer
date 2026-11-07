@@ -59,7 +59,7 @@ object WrappedCopy {
 
     // ------------------------------------------------------------------ portada
 
-    /** «REELÓMETRO · OCTUBRE 2026», «REELÓMETRO · 27 OCT – 2 NOV», «REELÓMETRO · 2026», «REELÓMETRO · DESDE EL 3 MAR 2026». */
+    /** «REELOMETER · OCTUBRE 2026», «REELOMETER · 27 OCT – 2 NOV», «REELOMETER · 2026», «REELOMETER · DESDE EL 3 MAR 2026». */
     fun coverLabel(period: CopyPeriod, start: LocalDate, end: LocalDate): String {
         val what = when (period) {
             CopyPeriod.WEEK -> Format.upper(Format.range(start, end))

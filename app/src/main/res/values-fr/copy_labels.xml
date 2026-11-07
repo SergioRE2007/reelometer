@@ -18,7 +18,7 @@
     <string name="label_no_signal">SANS SIGNAL</string>
     <!-- La hora del día con más vídeos. -->
     <string name="label_peak_hour">HEURE DE POINTE</string>
-    <string name="label_weak_day">JOUR CALME</string>
+    <string name="label_weak_day">JOUR FAIBLE</string>
     <string name="label_worst_day">PIRE JOUR</string>
     <!-- Racha: días seguidos cumpliendo el objetivo. -->
     <string name="label_streak">SÉRIE</string>
@@ -59,7 +59,7 @@
     <string name="label_no">NON</string>
 
     <!-- Pestañas de la barra inferior (MAYÚSCULAS, muy poco sitio). -->
-    <string name="label_tab_today">AUJ.</string>
+    <string name="label_tab_today">AUJOURD’HUI</string>
     <string name="label_tab_stats">STATS</string>
     <!-- Resumen del periodo en diapositivas, tipo «historias». -->
     <string name="label_tab_wrapped">BILAN</string>
@@ -70,7 +70,7 @@
     <string name="button_connect">CONNECTER</string>
     <string name="button_retry">RÉESSAYER</string>
     <string name="button_share">PARTAGER</string>
-    <string name="button_save">GARDER</string>
+    <string name="button_save">ENREGISTRER</string>
     <string name="button_next">SUIVANT</string>
     <string name="button_start">COMMENCER</string>
     <!-- Acepta el aviso de accesibilidad y abre los ajustes para activar el servicio. -->
@@ -80,7 +80,7 @@
     <!-- Abre los ajustes de accesibilidad de Android. -->
     <string name="button_open_accessibility">OUVRIR L’ACCESSIBILITÉ</string>
     <!-- Abre la pantalla «Información de la app» de Android. -->
-    <string name="button_open_app_info">OUVRIR LES INFOS DE L’APP</string>
+    <string name="button_open_app_info">OUVRIR LES INFOS DE L’APPLI</string>
     <string name="button_allow_notifications">AUTORISER LES ALERTES</string>
     <string name="button_cancel">ANNULER</string>
     <string name="button_close">FERMER</string>

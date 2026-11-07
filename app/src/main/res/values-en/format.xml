@@ -16,7 +16,7 @@
 
     <!-- Duraciones cortas: «312 h», «1 h 12 min», «47 min», «45 s». %1$s y %2$s son cifras. -->
     <string name="format_hours">%1$s\u00A0h</string>
-    <string name="format_hours_minutes">%1$s\u00A0h %2$s\u00A0min</string>
+    <string name="format_hours_minutes">%1$s\u00A0h\u00A0%2$s\u00A0min</string>
     <string name="format_minutes">%1$s\u00A0min</string>
     <string name="format_seconds">%1$s\u00A0s</string>
 

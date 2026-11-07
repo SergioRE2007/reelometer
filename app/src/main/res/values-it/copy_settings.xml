@@ -15,19 +15,19 @@
     <string name="settings_section_goal_description">Un massimo di video al giorno. Serve per il «ti restano» di Oggi e per le serie.</string>
     <string name="settings_section_notifications_title">AVVISI</string>
     <string name="settings_section_notifications_description">Un riepilogo al giorno, all’ora che scegli, e uno al mese.</string>
-    <string name="settings_section_apps_title">COSA CONTO</string>
+    <string name="settings_section_apps_title">QUALI APP CONTO</string>
     <string name="settings_section_apps_description">Quello che spegni qui smette di essere contato all’istante. Quello già contato resta.</string>
     <!-- Sección del tema (claro, oscuro o el del sistema); también lleva la fila del idioma. -->
     <string name="settings_section_theme_title">TEMA</string>
-    <string name="settings_section_theme_description">Il tabellone si vede meglio al buio, ma decidi tu.</string>
+    <string name="settings_section_theme_description">Il contatore rende di più al buio, ma decidi tu.</string>
     <string name="settings_section_data_title">I TUOI DATI</string>
     <string name="settings_section_data_description">Tutto quello che ho contato sta su questo telefono. Puoi portartelo via, riportarlo qui o cancellarlo.</string>
     <string name="settings_section_service_title">SERVIZIO</string>
     <string name="settings_section_service_description">Il permesso di accessibilità è quello che mi fa contare. Qui vedi se è attivo.</string>
     <string name="settings_section_privacy_title">PRIVACY</string>
-    <string name="settings_section_privacy_description">Cosa succede ai tuoi dati, senza caratteri piccoli.</string>
+    <string name="settings_section_privacy_description">Cosa succede ai tuoi dati, senza scritte in piccolo.</string>
     <string name="settings_section_about_title">INFO</string>
-    <string name="settings_section_about_description">Reelómetro non ha niente a che vedere con TikTok, Instagram o YouTube. Conta solo quello che vedi lì.</string>
+    <string name="settings_section_about_description">Reelometer non ha niente a che vedere con TikTok, Instagram o YouTube. Conta solo quello che vedi lì.</string>
 
     <!-- Antetítulo de los diálogos que salen de una sección: «05 · TUS DATOS». %1$s el número de la
          sección («05»), %2$s su título (ya en MAYÚSCULAS). -->
@@ -106,7 +106,7 @@
     <string name="settings_time_minute_up">Cinque minuti in più</string>
 
     <!-- Con los avisos bloqueados en Android (va con el botón ABRIR AJUSTES). -->
-    <string name="settings_notifications_blocked">Android ha disattivato gli avvisi di Reelómetro. Attivali nelle impostazioni del sistema per riceverli.</string>
+    <string name="settings_notifications_blocked">Android ha disattivato gli avvisi di Reelometer. Attivali nelle impostazioni del sistema per riceverli.</string>
 
     <!-- ============================================================ 03 apps -->
 
@@ -123,7 +123,7 @@
     <string name="settings_quick_send_label">Invio rapido</string>
     <string name="settings_quick_send_description">Solo su Instagram. Mentre guardi i reel compare una bolla per ogni persona o gruppo che fissi. Quando la tocchi, premo per te «Condividi», quel nome e «Invia»; se non lo vedo, scrivo il suo nome nella ricerca del foglio. Niente di più. Se qualcosa non torna, mi fermo e finisci tu. Per mostrare la sua foto nella bolla, la ritaglio dal foglio di condivisione quando compare, oppure scegli tu una foto dalla galleria; resta su questo telefono. Trascinale dove vuoi (in basso, sopra il nome del reel, si mettono in fila) o rilasciale sulla «X» per nasconderle fino al reel successivo.</string>
     <!-- El gesto para enviar a dos personas a la vez. -->
-    <string name="settings_quick_send_pair_hint">Per mandarlo a due persone insieme, tieni premuta una bolla finché non si stacca e rilasciala sopra l’altra. Se ne tocchi un’altra mentre invia, la aggiungo allo stesso foglio.</string>
+    <string name="settings_quick_send_pair_hint">Per mandarlo a due persone insieme, tieni premuta una bolla finché non si stacca e rilasciala sopra l’altra. Se ne tocchi un’altra mentre sto inviando, la aggiungo allo stesso foglio.</string>
     <!-- Con «A quién envías» apagado, el envío rápido no se puede encender. -->
     <string name="settings_quick_send_needs_recipients">Per usarlo, attiva prima «A chi invii»: l’invio rapido cerca nel foglio il nome che fissi.</string>
     <!-- Sin historial de envíos todavía: no hay nada que fijar. -->
@@ -169,15 +169,17 @@
          («Español»); al tocarla se abren los ajustes de idioma de la app en Android. -->
     <string name="settings_language_label">Lingua</string>
     <!-- Línea de ayuda bajo la fila. -->
-    <string name="settings_language_hint">Si cambia nelle impostazioni del sistema.</string>
+    <string name="settings_language_hint">Scegli in che lingua vedi l’app.</string>
+    <string name="settings_language_dialog_title">In che lingua?</string>
+    <string name="settings_language_system">Quella del telefono</string>
     <!-- TalkBack: lo que hace tocar la fila («Toca dos veces para …»). -->
     <string name="settings_language_open">cambiare la lingua dell’app</string>
 
     <!-- ============================================================ 05 tus datos -->
 
     <!-- Resumen de lo guardado, en líneas de ticket (a la derecha, la cifra). -->
-    <string name="settings_data_count_label">Video salvati</string>
-    <string name="settings_data_time_label">Tempo salvato</string>
+    <string name="settings_data_count_label">Video registrati</string>
+    <string name="settings_data_time_label">Tempo registrato</string>
     <string name="settings_export_description">La tua cronologia in un file: aprilo in un foglio di calcolo o importalo su un altro telefono.</string>
 
     <!-- %1$s los vídeos exportados con su palabra («12.408 vídeos»). -->
@@ -239,11 +241,43 @@
         <item quantity="other">%1$s righe non si leggevano.</item>
     </plurals>
     <string name="settings_import_nothing_new">Niente di nuovo: era già tutto salvato.</string>
-    <string name="settings_import_not_csv">Questo file non è un CSV di Reelómetro. Scegli quello che hai esportato dall’app.</string>
+    <string name="settings_import_not_csv">Questo file non è un CSV di Reelometer. Scegli quello che hai esportato dall’app.</string>
     <string name="settings_import_empty">Il file è vuoto: non ci sono video da importare.</string>
-    <string name="settings_import_too_large">Il file supera i 50\u00A0MB: non sembra una copia di Reelómetro.</string>
+    <string name="settings_import_too_large">Il file supera i 50\u00A0MB: non sembra una copia di Reelometer.</string>
     <string name="settings_import_too_broken">Troppe righe non si leggono, quindi non è stato importato niente.</string>
     <string name="settings_import_failed">Non è stato possibile importare e non è cambiato niente. Riprova.</string>
+    <string name="settings_import_dates">Le date del file non si leggono: sembra che un foglio di calcolo ne abbia cambiato il formato. Non è stato importato niente. Prova con il CSV così come l’ha esportato l’app.</string>
+
+    <!-- Copia settimanale del CSV: interruttore, la cartella scelta nel selettore di Android, la data dell’ultima
+         copia e due pulsanti. La cartella è sul telefono (non è un backup nel cloud). -->
+    <string name="settings_backup_label">Copia settimanale</string>
+    <!-- Sotto l’interruttore. %1$s quante copie si tengono, già formattato («4»). -->
+    <plurals name="settings_backup_description">
+        <item quantity="one">Ogni settimana salvo lo stesso CSV di ESPORTA in una cartella del tuo telefono che scegli tu. Tengo %1$s copia, la più recente, e non tocco gli altri tuoi file.</item>
+        <item quantity="many">Ogni settimana salvo lo stesso CSV di ESPORTA in una cartella del tuo telefono che scegli tu. Tengo le ultime %1$s copie e non tocco gli altri tuoi file.</item>
+        <item quantity="other">Ogni settimana salvo lo stesso CSV di ESPORTA in una cartella del tuo telefono che scegli tu. Tengo le ultime %1$s copie e non tocco gli altri tuoi file.</item>
+    </plurals>
+    <!-- Righe dello scontrino (a destra, il nome della cartella, «Download», e la data). -->
+    <string name="settings_backup_folder_label">Cartella</string>
+    <string name="settings_backup_last_label">Ultima copia</string>
+    <string name="settings_backup_last_never">Ancora nessuna</string>
+    <!-- %1$s la data («7 nov 2026»), %2$s l’ora («14:05»). -->
+    <string name="settings_backup_last_value">%1$s, %2$s</string>
+    <!-- Pulsanti in MAIUSCOLO, brevi. -->
+    <string name="settings_backup_now">COPIA ORA</string>
+    <string name="settings_backup_change">CAMBIA CARTELLA</string>
+    <!-- TalkBack della riga della cartella («Tocca due volte per …»). -->
+    <string name="settings_backup_change_talkback">cambiare cartella</string>
+    <!-- Risultato di COPIA ORA. %1$s il nome della cartella («Download»), %2$s i video con la loro parola («1.234 video»). -->
+    <string name="settings_backup_done">Copia fatta in %1$s: %2$s.</string>
+    <string name="settings_backup_empty">Non c’è ancora niente da copiare.</string>
+    <!-- La cartella non esiste più o Android ha tolto il permesso (va con il pulsante CAMBIA CARTELLA). -->
+    <string name="settings_backup_no_access">Non riesco a scrivere nella cartella: scegline un’altra.</string>
+    <string name="settings_backup_failed">Non è stato possibile fare la copia. Riprova con COPIA ORA.</string>
+    <!-- Android non ha dato il permesso per la cartella appena scelta. -->
+    <string name="settings_backup_pick_failed">Android non mi lascia usare quella cartella: scegline un’altra.</string>
+    <!-- Si aggiunge alla fine della finestra di CANCELLA TUTTO se la copia settimanale è attiva. -->
+    <string name="settings_backup_delete_note">Le copie settimanali nella tua cartella non vengono cancellate: quelle sono tue.</string>
 
     <!-- ============================================================ 06 servicio -->
 
@@ -260,9 +294,9 @@
 
     <!-- Explicación de privacidad: un párrafo corto por <item>, en este orden. -->
     <string-array name="settings_privacy_paragraphs">
-        <item>Reelómetro conta quello che vedi su TikTok, Instagram e YouTube con il servizio di accessibilità di Android. Di ogni video salva l’app, l’ora, quanto l’hai visto, il creatore e la descrizione.</item>
+        <item>Reelometer conta quello che vedi su TikTok, Instagram e YouTube con il servizio di accessibilità di Android. Di ogni video salva l’app, l’ora, quanto l’hai visto, il creatore e la descrizione.</item>
         <item>Tutto viene salvato su questo telefono. Niente account, niente server, niente pubblicità, niente analisi. L’app non ha il permesso di usare internet.</item>
-        <item>I tuoi dati escono da qui solo se li porti fuori tu: esportando il CSV o condividendo il tuo ticket.</item>
+        <item>I tuoi dati escono da qui solo se li porti fuori tu: esportando il CSV o condividendo il tuo scontrino.</item>
         <item>Se disattivi il servizio, smette di contare. Se cancelli i dati o disinstalli l’app, spariscono.</item>
     </string-array>
     <!-- Enlace en MAYÚSCULAS. -->
@@ -291,14 +325,14 @@
     <string name="settings_licenses_title">Licenze</string>
     <!-- Botones en MAYÚSCULAS: volver a ver la introducción y el recorrido guiado. -->
     <string name="settings_replay_onboarding">RIVEDI L’INTRODUZIONE</string>
-    <string name="settings_replay_tour">RIVEDI IL GIRO GUIDATO</string>
+    <string name="settings_replay_tour">RIVEDI IL TOUR</string>
     <string name="settings_licenses_label">LICENZE</string>
     <!-- Los nombres de las tipografías y de la licencia no se traducen. -->
     <string name="settings_fonts_license">Font: Bricolage Grotesque, JetBrains Mono e Instrument Serif, con licenza SIL Open Font License 1.1.</string>
     <!-- Firma al pie de Ajustes (un guiño: los vídeos cortos duran unos quince segundos). -->
-    <string name="settings_signature">Fatto a ritagli da quindici secondi.</string>
+    <string name="settings_signature">Fatto nei ritagli di tempo, quindici secondi alla volta.</string>
     <!-- El proyecto en GitHub. El botón va en MAYÚSCULAS. -->
-    <string name="settings_project_text">Reelómetro è gratis, non ha pubblicità e lo fa una sola persona. Il progetto è su GitHub.</string>
+    <string name="settings_project_text">Reelometer è gratis, non ha pubblicità e lo fa una sola persona. Il progetto è su GitHub.</string>
     <string name="settings_project_button">VEDI SU GITHUB</string>
     <string name="settings_project_note">Si apre nel browser. L’app continua a non avere internet.</string>
     <string name="settings_project_no_browser">Non c’è nessun browser per aprire il link.</string>

@@ -348,10 +348,10 @@
         <item>Ni un vídeo ese año. Que conste en acta.</item>
     </string-array>
     <!-- Periodo anterior al primer día con datos: %1$s la fecha del primer día («3 de marzo de 2026»).
-         Reelómetro es el nombre de la app: no se traduce. -->
+         Reelometer es el nombre de la app: no se traduce. -->
     <string-array name="stats_before_history">
         <item>Antes del %1$s no contaba nada. Todavía no nos conocíamos.</item>
-        <item>Esto es de antes de Reelómetro. Aquí no hay nada que ver, literalmente.</item>
+        <item>Esto es de antes de Reelometer. Aquí no hay nada que ver, literalmente.</item>
         <item>Tu historial empieza el %1$s. Antes, silencio.</item>
     </string-array>
 

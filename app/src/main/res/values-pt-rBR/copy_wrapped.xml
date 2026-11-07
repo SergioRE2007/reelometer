@@ -31,12 +31,12 @@
 
     <!-- Hub sin ningún periodo con datos. -->
     <string-array name="wrapped_hub_empty">
-        <item>Ainda não há nada para resumir. Volte quando tiver passado alguns dias.</item>
+        <item>Ainda não há nada para resumir. Volte daqui a alguns dias.</item>
         <item>Sem dados não há resumo. E por enquanto não há dados.</item>
         <item>O primeiro resumo chega assim que houver algo para contar.</item>
     </string-array>
 
-    <!-- Etiqueta de la portada (MAYÚSCULAS): «REELÓMETRO · OCTUBRE 2026». %1$s el nombre de la app,
+    <!-- Etiqueta de la portada (MAYÚSCULAS): «REELOMETER · OCTUBRE 2026». %1$s el nombre de la app,
          %2$s el periodo («OCTUBRE 2026», «27 OCT – 2 NOV», «2026», «DESDE 3 MAR 2026»). -->
     <string name="wrapped_cover_label">%1$s · %2$s</string>
     <!-- Pista discreta de la portada (MAYÚSCULAS, una línea en letra pequeña). -->
@@ -109,33 +109,33 @@
          %4$s el tiempo en minutos («1.740 minutos»). -->
     <string-array name="wrapped_time_days">
         <item>%1$s. Mais de %2$s, sem dormir nem comer.</item>
-        <item>%1$s de tela ou, o que é o mesmo, %3$s.</item>
-        <item>%1$s. Ou, dizendo de outro jeito, %4$s.</item>
+        <item>%1$s de tela ou, o que dá no mesmo, %3$s.</item>
+        <item>%1$s. Ou, em outras palavras, %4$s.</item>
     </string-array>
     <!-- De 1 a 24 horas: %1$s el tiempo con mayúscula («5 horas»), %2$s una equivalencia en
          infinitivo («leer 14 libros»), %3$s el tiempo en minutos. _noeq: sin equivalencia (no
          uses %2$s). «de quince en quince segundos»: lo que dura un vídeo corto. -->
     <string-array name="wrapped_time_hours">
         <item>%1$s. Dava para %2$s.</item>
-        <item>%1$s. Ou, dizendo de outro jeito, %3$s.</item>
+        <item>%1$s. Ou, em outras palavras, %3$s.</item>
         <item>%1$s, de quinze em quinze segundos.</item>
     </string-array>
     <string-array name="wrapped_time_hours_noeq">
         <item>%1$s. Um bom tempo.</item>
-        <item>%1$s. Ou, dizendo de outro jeito, %3$s.</item>
+        <item>%1$s. Ou, em outras palavras, %3$s.</item>
         <item>%1$s, de quinze em quinze segundos.</item>
     </string-array>
     <!-- Menos de una hora: %1$s el tiempo con mayúscula («47 minutos»). -->
     <string-array name="wrapped_time_minutes">
         <item>%1$s. Pouca coisa, para o que poderia ser.</item>
-        <item>%1$s. Nem para um filme.</item>
+        <item>%1$s. Não dá nem um filme.</item>
         <item>%1$s, de quinze em quinze segundos.</item>
     </string-array>
 
     <!-- Diapositiva de equivalencias (MAYÚSCULAS): debajo van frases en infinitivo
          («Leer 14 libros.»), así que la etiqueta tiene que pedir un infinitivo. -->
     <string name="wrapped_equivalences_label">COM ESSE TEMPO VOCÊ PODERIA</string>
-    <string name="wrapped_equivalences_empty">Tempo tão pouco que não há com o que comparar.</string>
+    <string name="wrapped_equivalences_empty">Tão pouco tempo que não há com o que comparar.</string>
 
     <!-- Creador n.º 1: %1$s el usuario con arroba («@pepito»), %2$s los vídeos («312 vídeos»),
          %3$s solo la cifra («312»). -->
@@ -153,7 +153,7 @@
     </string-array>
 
     <!-- Diapositiva de categoría (MAYÚSCULAS). -->
-    <string name="wrapped_category_label">O QUE MAIS VIU</string>
+    <string name="wrapped_category_label">O QUE VOCÊ MAIS VIU</string>
     <!-- La mayoría de vídeos sin categoría: %1$s el porcentaje («60 %»). -->
     <string-array name="wrapped_category_otros">
         <item>A maioria, sem classificação. Seu gosto é um mistério até para mim.</item>
@@ -165,7 +165,7 @@
          de cada categoría (wrapped_category_zinger_*). -->
     <string-array name="wrapped_category">
         <item>O que mais você viu: %1$s. %2$s de tudo.</item>
-        <item>%1$s, com %2$s. Já sabemos do que é o seu feed.</item>
+        <item>%1$s, com %2$s. Já sabemos do que se trata o seu feed.</item>
         <item>Seu feed fala de %3$s: %2$s.</item>
     </string-array>
     <!-- Remate propio de cada categoría (la frase extra de wrapped_category). -->
@@ -186,7 +186,7 @@
     <!-- Juego de palabras: «caballos» de potencia del motor. -->
     <string name="wrapped_category_zinger_motor">Muitos cavalos. Dos de motor.</string>
     <!-- Alude a «el tiempo es dinero». -->
-    <string name="wrapped_category_zinger_dinero">Dicas de dinheiro, a montes. O tempo, aliás, também é.</string>
+    <string name="wrapped_category_zinger_dinero">Dicas de dinheiro, a montes. Tempo, aliás, também é dinheiro.</string>
     <string name="wrapped_category_zinger_noticias">Notícias na vertical e em trinta segundos. Em dia, do seu jeito.</string>
     <string name="wrapped_category_zinger_relaciones">Dicas de relacionamento, muitas. Aplicadas, aí já não conto.</string>
 
@@ -236,47 +236,47 @@
     <!-- Cierre de un periodo que sigue abierto (o de «siempre»). «El marcador» es la cifra grande
          de la app, como el marcador de un partido. -->
     <string-array name="wrapped_closing_open_week">
-        <item>Isto é o que vai da semana. O marcador continua contando.</item>
+        <item>Essa é a semana até agora. O placar continua contando.</item>
         <item>Resumo provisório: a semana ainda não acabou.</item>
-        <item>Fim do resumo, por enquanto. O que você faz com ele é com você.</item>
+        <item>Fim do resumo, por enquanto. O que fazer com ele é com você.</item>
     </string-array>
     <string-array name="wrapped_closing_open_month">
-        <item>Isto é o que vai do mês. O marcador continua contando.</item>
+        <item>Esse é o mês até agora. O placar continua contando.</item>
         <item>Resumo provisório: o mês ainda não acabou.</item>
-        <item>Fim do resumo, por enquanto. O que você faz com ele é com você.</item>
+        <item>Fim do resumo, por enquanto. O que fazer com ele é com você.</item>
     </string-array>
     <string-array name="wrapped_closing_open_year">
-        <item>Isto é o que vai do ano. O marcador continua contando.</item>
+        <item>Esse é o ano até agora. O placar continua contando.</item>
         <item>Resumo provisório: o ano ainda não acabou.</item>
-        <item>Fim do resumo, por enquanto. O que você faz com ele é com você.</item>
+        <item>Fim do resumo, por enquanto. O que fazer com ele é com você.</item>
     </string-array>
     <string-array name="wrapped_closing_open_all">
-        <item>Isto é tudo, por enquanto. O marcador continua contando.</item>
+        <item>Isto é tudo, por enquanto. O placar continua contando.</item>
         <item>Resumo provisório: isto ainda não acabou.</item>
-        <item>Fim do resumo, por enquanto. O que você faz com ele é com você.</item>
+        <item>Fim do resumo, por enquanto. O que fazer com ele é com você.</item>
     </string-array>
     <!-- Cierre de un mes terminado: %1$s el mes («octubre»), %2$s el mes siguiente con mayúscula
          («Noviembre»), %3$s el mes con mayúscula («Octubre»). «Sin devoluciones»: como en una tienda. -->
     <string-array name="wrapped_closing_month">
         <item>Esse foi %1$s. %2$s já começou a contar.</item>
-        <item>Até aqui, %1$s. O marcador continua.</item>
+        <item>Até aqui, %1$s. O placar continua.</item>
         <item>%3$s, encerrado. Sem devoluções.</item>
-        <item>Fim do resumo. O que você faz com ele é com você.</item>
+        <item>Fim do resumo. O que fazer com ele é com você.</item>
     </string-array>
     <string-array name="wrapped_closing_week">
         <item>Essa foi a sua semana. A próxima já começou a contar.</item>
         <item>Semana encerrada. Sem devoluções.</item>
-        <item>Até aqui a semana. O marcador continua.</item>
+        <item>Até aqui a semana. O placar continua.</item>
     </string-array>
     <!-- Cierre de un año terminado: %1$s el año («2025»), %2$s el siguiente («2026»). -->
     <string-array name="wrapped_closing_year">
         <item>Esse foi %1$s. %2$s já começou a contar.</item>
-        <item>Até aqui, %1$s. O marcador continua.</item>
+        <item>Até aqui, %1$s. O placar continua.</item>
         <item>%1$s, encerrado. Sem devoluções.</item>
     </string-array>
 
     <!-- Avisos tras guardar o compartir la imagen final (el «ticket», como un recibo). -->
-    <string name="wrapped_saved">Recibo salvo.</string>
+    <string name="wrapped_saved">Cupom salvo.</string>
     <string name="wrapped_save_failed">Não foi possível salvar a imagem. Tente de novo.</string>
     <string name="wrapped_share_failed">Não foi possível preparar a imagem. Tente de novo.</string>
 </resources>

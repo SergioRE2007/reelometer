@@ -149,7 +149,7 @@ object CalibrationLog {
     fun exportText(): String {
         val list = events.value
         return buildString {
-            appendLine("Reelómetro · registro de calibración")
+            appendLine("Reelometer · registro de calibración")
             environment?.let { appendLine(it) }
             appendLine("${list.size} eventos (del más antiguo al más reciente)")
             appendLine()

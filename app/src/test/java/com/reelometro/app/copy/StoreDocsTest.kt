@@ -60,7 +60,7 @@ class StoreDocsTest {
     fun `la política de privacidad existe y tiene contacto`() {
         val privacy = projectFile("PRIVACY.md").readText()
         assertTrue("PRIVACY.md tiene huecos sin rellenar", "[NOMBRE" !in privacy && "[EMAIL" !in privacy)
-        assertTrue("PRIVACY.md debería dar una forma de contacto", privacy.contains("github.com/SergioRE2007/reelometro/issues"))
+        assertTrue("PRIVACY.md debería dar una forma de contacto", privacy.contains("github.com/SergioRE2007/reelometer/issues"))
         listOf("accesibilidad", "internet", "borrar", "menores", "CSV").forEach {
             assertTrue("PRIVACY.md debería hablar de «$it»", privacy.contains(it, ignoreCase = true))
         }

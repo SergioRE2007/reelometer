@@ -1,7 +1,6 @@
 package com.reelometro.app.ui.settings
 
 import android.graphics.Bitmap
-import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -27,6 +26,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,8 +50,11 @@ import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
+import com.reelometro.app.copy.AppLanguage
 import com.reelometro.app.copy.A11y
+import com.reelometro.app.copy.Buttons
 import com.reelometro.app.copy.DisclosureCopy
 import com.reelometro.app.copy.SettingsCopy
 import com.reelometro.app.copy.SettingsSection
@@ -80,9 +83,10 @@ import com.reelometro.app.ui.components.TicketDividerStyle
 import com.reelometro.app.ui.components.flap.ErrorState
 import com.reelometro.app.ui.components.flap.FlapLoader
 import com.reelometro.app.AppLinks
+import com.reelometro.app.ui.icons.ReelIcon
 import com.reelometro.app.ui.icons.ReelIcons
+import com.reelometro.app.ui.components.pressable
 import com.reelometro.app.ui.onboarding.InlineNotice
-import com.reelometro.app.ui.onboarding.SystemScreens
 import com.reelometro.app.ui.onboarding.goalStep
 import com.reelometro.app.ui.onboarding.revealIn
 import com.reelometro.app.ui.onboarding.revealOut
@@ -142,6 +146,12 @@ class SettingsActions(
     val onImportConfirm: (ImportMode) -> Unit = {},
     /** CANCELAR en la vista previa. */
     val onImportCancel: () -> Unit = {},
+    /** Interruptor «Copia semanal» (05): encenderlo abre el selector de carpetas. */
+    val onBackup: (Boolean) -> Unit = {},
+    /** COPIAR AHORA (05). */
+    val onBackupNow: () -> Unit = {},
+    /** CAMBIAR CARPETA (05). */
+    val onBackupChangeFolder: () -> Unit = {},
 )
 
 /**
@@ -346,7 +356,7 @@ private fun SettingsList(s: SettingsState, actions: SettingsActions) {
         onDismiss = { deleteDialog = false },
         kicker = SettingsCopy.dialogKicker(SettingsCopy.DATA),
         title = SettingsCopy.DELETE_DIALOG_TITLE,
-        text = SettingsCopy.deleteDialogBody(s.totals.count.toLong(), s.totals.totalMs),
+        text = SettingsCopy.deleteDialogBody(s.totals.count.toLong(), s.totals.totalMs, s.backupOn),
         confirmLabel = SettingsCopy.DELETE_CONFIRM,
         dismissLabel = SettingsCopy.DELETE_CANCEL,
         destructive = true,
@@ -405,20 +415,66 @@ private fun Feedback(text: String?, modifier: Modifier = Modifier) {
 
 /**
  * Fila «Idioma» bajo el tema (solo Android 13+, donde cada app puede tener su idioma): a la derecha,
- * el idioma de los textos en su propio idioma; al tocarla, la pantalla de idioma de la app en Android.
+ * el idioma de los textos en su propio idioma; al tocarla, un diálogo de la app para elegirlo (la
+ * pantalla de Android mezcla idiomas de otras apps y del teclado, ver [AppLanguage]).
  */
 @Composable
 private fun LanguageLine() {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+    if (!AppLanguage.available) return
     val context = LocalContext.current
+    var open by rememberSaveable { mutableStateOf(false) }
     Spacer(Modifier.height(Space.x4))
     ReceiptLine(
         label = SettingsCopy.languageLabel(),
         value = SettingsCopy.languageValue(),
-        onClick = { SystemScreens.openAppLanguage(context) },
+        onClick = { open = true },
         onClickLabel = SettingsCopy.languageOpen(),
     )
     Text(SettingsCopy.languageHint(), style = ReelTheme.type.bodySmall, color = ReelTheme.colors.textMuted)
+
+    val options = remember(open) { if (open) AppLanguage.options(context, SettingsCopy.languageSystem()) else emptyList() }
+    val current = remember(open) { if (open) AppLanguage.selectedTag(context) else null }
+    var picked by remember(open) { mutableStateOf(current) }
+    ReelDialog(
+        visible = open,
+        onDismiss = { open = false },
+        kicker = SettingsCopy.dialogKicker(SettingsCopy.THEME),
+        title = SettingsCopy.languageDialogTitle(),
+        confirmLabel = Buttons.DONE,
+        dismissLabel = Buttons.CANCEL,
+        onConfirm = {
+            open = false
+            if (picked != current) AppLanguage.set(context, picked)
+        },
+    ) {
+        Column(Modifier.fillMaxWidth().selectableGroup()) {
+            options.forEach { option ->
+                LanguageOptionRow(option.label, selected = option.tag == picked, onSelect = { picked = option.tag })
+            }
+        }
+    }
+}
+
+/** Una opción del diálogo de idioma: el nombre y, si es la elegida, la marca en el acento. */
+@Composable
+private fun LanguageOptionRow(label: String, selected: Boolean, onSelect: () -> Unit) {
+    val colors = ReelTheme.colors
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .heightIn(min = Space.touch)
+            .pressable(onClick = onSelect, role = Role.RadioButton)
+            .semantics { this.selected = selected },
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            label,
+            style = ReelTheme.type.body,
+            color = if (selected) colors.text else colors.textMuted,
+            modifier = Modifier.weight(1f),
+        )
+        if (selected) ReelIcon(ReelIcons.Check, contentDescription = null, tint = colors.signal)
+    }
 }
 
 // ====================================================================== 01 objetivo
@@ -795,6 +851,7 @@ private fun DataSection(s: SettingsState, actions: SettingsActions, onDelete: ()
         Spacer(Modifier.height(Space.x3))
         FlapLoader(style = type.displayL, contentDescription = SettingsCopy.IMPORT_BUSY)
     }
+    BackupBlock(s, actions)
     Spacer(Modifier.height(Space.x5))
     Text(SettingsCopy.DELETE_DESCRIPTION, style = type.bodySmall, color = colors.textMuted)
     Spacer(Modifier.height(Space.x2))
@@ -806,6 +863,66 @@ private fun DataSection(s: SettingsState, actions: SettingsActions, onDelete: ()
         enabled = !s.busy,
     )
     Feedback(s.dataMessage)
+}
+
+/**
+ * Copia semanal del CSV: el interruptor y, encendida, la carpeta (tocarla la cambia), la última copia, el aviso si
+ * no se puede escribir y COPIAR AHORA / CAMBIAR CARPETA.
+ */
+@Composable
+private fun BackupBlock(s: SettingsState, actions: SettingsActions) {
+    val colors = ReelTheme.colors
+    val type = ReelTheme.type
+    Spacer(Modifier.height(Space.x5))
+    SwitchLine(SettingsCopy.BACKUP_LABEL, checked = s.backupOn, onCheckedChange = actions.onBackup, enabled = !s.busy)
+    Text(SettingsCopy.BACKUP_DESCRIPTION, style = type.bodySmall, color = colors.textMuted)
+    AnimatedVisibility(
+        visible = s.backupOn,
+        enter = revealIn(ReelTheme.reducedMotion),
+        exit = revealOut(ReelTheme.reducedMotion),
+    ) {
+        Column {
+            Spacer(Modifier.height(Space.x2))
+            ReceiptLine(
+                label = SettingsCopy.BACKUP_FOLDER_LABEL,
+                value = s.backupFolderName.orEmpty(),
+                onClick = if (s.busy) null else actions.onBackupChangeFolder,
+                onClickLabel = SettingsCopy.BACKUP_CHANGE_TALKBACK,
+            )
+            ReceiptLine(
+                label = SettingsCopy.BACKUP_LAST_LABEL,
+                value = SettingsCopy.backupLast(s.backupLast),
+                valueColor = if (s.backupLast == null) colors.textMuted else colors.text,
+            )
+            s.backupError?.let { error ->
+                InlineNotice(
+                    text = SettingsCopy.backupError(error),
+                    actionLabel = SettingsCopy.BACKUP_CHANGE,
+                    onAction = actions.onBackupChangeFolder,
+                    actionIcon = ReelIcons.External,
+                    modifier = Modifier.padding(top = Space.x3),
+                )
+            }
+            Spacer(Modifier.height(Space.x3))
+            ReelButton(
+                SettingsCopy.BACKUP_NOW,
+                onClick = actions.onBackupNow,
+                style = ReelButtonStyle.Secondary,
+                icon = ReelIcons.Copy,
+                enabled = !s.busy,
+            )
+            // Con el aviso, CAMBIAR CARPETA ya va en él: no se repite debajo.
+            if (s.backupError == null) {
+                Spacer(Modifier.height(Space.x2))
+                ReelButton(
+                    SettingsCopy.BACKUP_CHANGE,
+                    onClick = actions.onBackupChangeFolder,
+                    style = ReelButtonStyle.Ghost,
+                    enabled = !s.busy,
+                )
+            }
+        }
+    }
 }
 
 /**

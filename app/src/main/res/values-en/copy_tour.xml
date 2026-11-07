@@ -13,7 +13,7 @@
     <string name="tour_step">STEP %1$s OF %2$s</string>
 
     <!-- TalkBack: título del panel y de los botones. -->
-    <string name="tour_pane_title">Reelómetro tour</string>
+    <string name="tour_pane_title">Reelometer tour</string>
     <string name="tour_skip_description">Skip the tour</string>
     <string name="tour_next_description">Next step of the tour</string>
     <string name="tour_done_description">Finish the tour</string>
@@ -33,12 +33,12 @@
 
     <!-- Frase de cada paso. -->
     <string name="tour_counter_text">Your videos for today. The counter goes up with each one and goes back to zero at midnight.</string>
-    <string name="tour_comparison_text">How you are doing against your average day at this same hour. No judgment, just numbers.</string>
+    <string name="tour_comparison_text">How you\'re doing compared with your average day at this same hour. No judgment, just numbers.</string>
     <!-- Lo mismo cuando aún no hay comparación (faltan días): no señala nada. -->
-    <string name="tour_comparison_text_empty">Once a few days are counted, you will see here how you are doing against your average day at this same hour.</string>
+    <string name="tour_comparison_text_empty">Once a few days are counted, you\'ll see here how you\'re doing compared with your average day at this same hour.</string>
     <string name="tour_stats_bars_text">Hold your finger on a bar and slide to see the exact figure for each day.</string>
-    <string name="tour_wrapped_text">Your week, your month and your year, told like a story. With a ticket to share, if you dare.</string>
-    <string name="tour_passport_text">Flap and your stamps. Here you earn by watching less, never more.</string>
+    <string name="tour_wrapped_text">Your week, your month and your year, told like a story. With a receipt to share, if you dare.</string>
+    <string name="tour_passport_text">Flap and your stamps. Here you earn XP by watching less, never more.</string>
     <string name="tour_settings_text">Goal, alerts and theme, up here. Seven taps on the version open the calibration.</string>
 
     <!-- Lo que anuncia TalkBack al llegar a cada paso: «Paso 2 de 6. A esta hora. Cómo vas…».

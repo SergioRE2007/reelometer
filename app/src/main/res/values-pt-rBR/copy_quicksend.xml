@@ -17,14 +17,14 @@
     <!-- Acción de TalkBack en cada burbuja (equivale a soltarla en la «X»). -->
     <string name="quicksend_hide_action">Esconder até o próximo reel</string>
     <!-- Nombre de la ventana de las burbujas (TalkBack la anuncia así). -->
-    <string name="quicksend_window_title">Envio rápido do Reelómetro</string>
+    <string name="quicksend_window_title">Envio rápido do Reelometer</string>
     <!-- La zona «X» que sale abajo mientras arrastras las burbujas. -->
     <string name="quicksend_zone_title">Solte aqui para esconder</string>
 
     <!-- Pregunta tras esconder las burbujas tres veces seguidas (sale una sola vez).
          «A quién envías» es el nombre del ajuste de la app (settings_recipients_label). -->
     <string name="quicksend_ask_title">Desligo o envio rápido?</string>
-    <string name="quicksend_ask_body">Você escondeu as bolinhas três vezes seguidas. Se desligar, pode religar nas Configurações, embaixo de «Para quem você envia».</string>
+    <string name="quicksend_ask_body">Você escondeu as bolinhas três vezes seguidas. Se desligar, pode religar nas Configurações, embaixo de “Para quem você envia”.</string>
     <!-- Botones en MAYÚSCULAS, muy cortos. -->
     <string name="quicksend_ask_turn_off">DESLIGAR</string>
     <string name="quicksend_ask_keep">MANTER</string>

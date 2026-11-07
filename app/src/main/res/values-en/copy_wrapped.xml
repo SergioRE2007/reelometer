@@ -6,7 +6,7 @@
   mejor cortas. Cada <string-array> de frases es una situación y cada <item>, una frase
   alternativa (se elige una por periodo). Puedes poner las que quieras (mínimo 2). Los arrays con
   sufijo (_noeq, _one_day…) son la misma situación en otro caso: mismo sentido en cada posición.
-  00A0 es un espacio duro: mantenlo.
+  \u00A0 es un espacio duro: mantenlo.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
 
@@ -36,7 +36,7 @@
         <item>The first recap will arrive as soon as there’s something to count.</item>
     </string-array>
 
-    <!-- Etiqueta de la portada (MAYÚSCULAS): «REELÓMETRO · OCTUBRE 2026». %1$s el nombre de la app,
+    <!-- Etiqueta de la portada (MAYÚSCULAS): «REELOMETER · OCTUBRE 2026». %1$s el nombre de la app,
          %2$s el periodo («OCTUBRE 2026», «27 OCT – 2 NOV», «2026», «DESDE EL 3 MAR 2026»). -->
     <string name="wrapped_cover_label">%1$s · %2$s</string>
     <!-- Pista discreta de la portada (MAYÚSCULAS, una línea en letra pequeña). -->
@@ -48,7 +48,7 @@
     <string-array name="wrapped_cover_month">
         <item>Your %2$s, counted.</item>
         <item>%2$s, in numbers.</item>
-        <item>Gone with %2$s.</item>
+        <item>Gone with the wind, %2$s edition.</item>
         <item>%2$s, video by video.</item>
     </string-array>
     <string-array name="wrapped_cover_week">
@@ -87,21 +87,21 @@
         <item>%1$s. One after another.</item>
         <item>You swiped up %2$s.</item>
         <item>An average of %3$s a day, holidays included.</item>
-        <item>%1$s in %4$s. Plain maths.</item>
+        <item>%1$s in %4$s. Simple math.</item>
     </string-array>
     <string-array name="wrapped_total_one_day">
         <item>%1$s. One after another.</item>
         <item>You swiped up %2$s.</item>
         <item>%1$s in a single day. That’s something.</item>
-        <item>%1$s in %4$s. Plain maths.</item>
+        <item>%1$s in %4$s. Simple math.</item>
     </string-array>
 
     <!-- Días enteros que suma el tiempo (va en wrapped_time_days): «un día entero» con 1;
          con más, el plural con su cifra («2 días enteros»). -->
     <string name="wrapped_time_one_whole_day">one whole day</string>
     <plurals name="wrapped_time_whole_days">
-        <item quantity="one">%1$s00A0whole day</item>
-        <item quantity="other">%1$s00A0whole days</item>
+        <item quantity="one">%1$s\u00A0whole day</item>
+        <item quantity="other">%1$s\u00A0whole days</item>
     </plurals>
     <!-- Diapositiva del tiempo, 24 horas o más: %1$s el tiempo con mayúscula («29 horas»),
          %2$s los días enteros («un día entero»), %3$s jornadas de trabajo («3,6 jornadas de 8 horas»),
@@ -127,7 +127,7 @@
     <!-- Menos de una hora: %1$s el tiempo con mayúscula («47 minutos»). -->
     <string-array name="wrapped_time_minutes">
         <item>%1$s. Not much, all things considered.</item>
-        <item>%1$s. Not even a movie.</item>
+        <item>%1$s. Not even a movie’s worth.</item>
         <item>%1$s, fifteen seconds at a time.</item>
     </string-array>
 
@@ -172,7 +172,7 @@
     <string name="wrapped_category_zinger_humor">You laughed a lot. Or at least you snorted.</string>
     <string name="wrapped_category_zinger_deporte">Lots of sport. Watched, but still sport.</string>
     <string name="wrapped_category_zinger_fitness">Gym routines, watched from the couch. That counts as a warm-up.</string>
-    <string name="wrapped_category_zinger_comida">Recipes, loads. Cooked, that’s a different tally.</string>
+    <string name="wrapped_category_zinger_comida">Recipes, loads. Cooked? That’s another story.</string>
     <string name="wrapped_category_zinger_musica">Your feed has its own soundtrack.</string>
     <!-- «ya si eso, otro día»: coletilla coloquial para algo que no se va a hacer. -->
     <string name="wrapped_category_zinger_baile">Lots of dancing. The steps? Maybe another day.</string>
@@ -186,13 +186,13 @@
     <string name="wrapped_category_zinger_motor">Lots of horsepower. The engine kind.</string>
     <!-- Alude a «el tiempo es dinero». -->
     <string name="wrapped_category_zinger_dinero">Money tips by the bucketload. Time, by the way, is money too.</string>
-    <string name="wrapped_category_zinger_noticias">News in vertical and in thirty seconds. Daily, your way.</string>
+    <string name="wrapped_category_zinger_noticias">News, vertical and thirty seconds long. Up to date, your way.</string>
     <string name="wrapped_category_zinger_relaciones">Relationship advice, plenty. Applied? That’s not on the record.</string>
 
     <!-- El día con más vídeos del periodo: %1$s la fecha larga («martes 14 de octubre»),
          %2$s la misma con mayúscula, %3$s los vídeos («612 vídeos»). -->
     <string-array name="wrapped_worst_day">
-        <item>Your worst day: on %1$s, with %3$s.</item>
+        <item>Your worst day: %1$s, with %3$s.</item>
         <item>%2$s: %3$s. The algorithm won that day.</item>
         <item>The record for the period: %3$s, on %1$s. What happened? No idea; I just count.</item>
         <item>%3$s in a single day: %1$s. Some days are like that.</item>
@@ -235,22 +235,22 @@
     <!-- Cierre de un periodo que sigue abierto (o de «siempre»). «El marcador» es la cifra grande
          de la app, como el marcador de un partido. -->
     <string-array name="wrapped_closing_open_week">
-        <item>This is where the week stands. The score keeps counting.</item>
+        <item>This is where the week stands. The counter keeps counting.</item>
         <item>Provisional recap: the week isn’t over yet.</item>
         <item>End of the recap, for now. What you do with it is up to you.</item>
     </string-array>
     <string-array name="wrapped_closing_open_month">
-        <item>This is where the month stands. The score keeps counting.</item>
+        <item>This is where the month stands. The counter keeps counting.</item>
         <item>Provisional recap: the month isn’t over yet.</item>
         <item>End of the recap, for now. What you do with it is up to you.</item>
     </string-array>
     <string-array name="wrapped_closing_open_year">
-        <item>This is where the year stands. The score keeps counting.</item>
+        <item>This is where the year stands. The counter keeps counting.</item>
         <item>Provisional recap: the year isn’t over yet.</item>
         <item>End of the recap, for now. What you do with it is up to you.</item>
     </string-array>
     <string-array name="wrapped_closing_open_all">
-        <item>That’s all, for now. The score keeps counting.</item>
+        <item>That’s all, for now. The counter keeps counting.</item>
         <item>Provisional recap: this isn’t over yet.</item>
         <item>End of the recap, for now. What you do with it is up to you.</item>
     </string-array>
@@ -258,24 +258,24 @@
          («Noviembre»), %3$s el mes con mayúscula («Octubre»). «Sin devoluciones»: como en una tienda. -->
     <string-array name="wrapped_closing_month">
         <item>This was %3$s. %2$s has already started counting.</item>
-        <item>So far, %3$s. The score keeps going.</item>
+        <item>That’s it for %3$s. The counter keeps going.</item>
         <item>%3$s, closed. No returns.</item>
         <item>End of the recap. What you do with it is up to you.</item>
     </string-array>
     <string-array name="wrapped_closing_week">
         <item>That was your week. The next one has already started counting.</item>
         <item>Week closed. No returns.</item>
-        <item>That’s the week. The score keeps going.</item>
+        <item>That’s the week. The counter keeps going.</item>
     </string-array>
     <!-- Cierre de un año terminado: %1$s el año («2025»), %2$s el siguiente («2026»). -->
     <string-array name="wrapped_closing_year">
         <item>That was %1$s. %2$s has already started counting.</item>
-        <item>So far, %1$s. The score keeps going.</item>
+        <item>That’s it for %1$s. The counter keeps going.</item>
         <item>%1$s, closed. No returns.</item>
     </string-array>
 
     <!-- Avisos tras guardar o compartir la imagen final (el «ticket», como un recibo). -->
-    <string name="wrapped_saved">Ticket saved.</string>
+    <string name="wrapped_saved">Receipt saved.</string>
     <string name="wrapped_save_failed">The image couldn’t be saved. Try again.</string>
     <string name="wrapped_share_failed">The image couldn’t be prepared. Try again.</string>
 </resources>

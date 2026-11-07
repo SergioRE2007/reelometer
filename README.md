@@ -2,9 +2,9 @@
 
 [English](README.en.md) · **Español**
 
-<img src="docs/img/icono.svg" width="112" alt="Icono de Reelómetro">
+<img src="docs/img/icono.svg" width="112" alt="Icono de Reelometer">
 
-# Reelómetro
+# Reelometer
 
 **El marcador de tus vídeos cortos.**
 
@@ -32,7 +32,7 @@ de qué temas y de quién. Todo se queda en tu móvil.
 
 > *Hoy llevas 212. Eso son 47 minutos que nadie te va a devolver.*
 
-Reelómetro no bloquea apps ni te echa sermones. Solo te pone el marcador delante.
+Reelometer no bloquea apps ni te echa sermones. Solo te pone el marcador delante.
 
 ## Qué hace
 
@@ -49,7 +49,7 @@ Reelómetro no bloquea apps ni te echa sermones. Solo te pone el marcador delant
 | **Objetivo** | Si quieres, un límite diario: el marcador te dice cuánto te queda y lleva tus rachas. |
 | **A quién envías** | Solo en Instagram y solo si lo enciendes (viene apagado): cuenta a qué personas y grupos mandas reels, para ver con quién compartes más. |
 | **Envío rápido** | También en Instagram y también apagado de serie. Fija a tus personas o grupos de siempre y sobre los reels salen unas burbujas con su foto: un toque y el reel se envía solo, en menos de un segundo. Las burbujas se colocan donde quieras, puedes mandar a dos a la vez soltando una encima de otra y la foto de cada burbuja puede ser la de su perfil o una que elijas de tu galería. |
-| **Tus datos** | Exporta todo a CSV, impórtalo en otro móvil (o tras restablecer este) sin duplicar nada, o bórralo con un botón. |
+| **Tus datos** | Exporta todo a CSV, impórtalo en otro móvil (o tras restablecer este) sin duplicar nada, o bórralo con un botón. Si quieres, una copia semanal del CSV en una carpeta del móvil que eliges tú (se quedan las 4 últimas). |
 
 <div align="center">
 <img src="docs/img/hoy-claro.png" width="24%" alt="Pantalla Hoy en tema claro">
@@ -59,7 +59,7 @@ Reelómetro no bloquea apps ni te echa sermones. Solo te pone el marcador delant
 
 ## Privacidad
 
-Reelómetro usa el **servicio de accesibilidad** de Android para saber cuándo pasas de vídeo. Es un permiso
+Reelometer usa el **servicio de accesibilidad** de Android para saber cuándo pasas de vídeo. Es un permiso
 potente, así que la app está hecha para no poder abusar de él:
 
 - **No tiene permiso `INTERNET`.** No puede enviar nada a ningún sitio, ni aunque quisiera.
@@ -114,25 +114,25 @@ envío rápido, que imitan el cristal para no desentonar encima de Instagram. El
 ## Instalar
 
 No está en Google Play (todavía). Descarga la APK de la última versión en
-[Releases](https://github.com/SergioRE2007/reelometro/releases) y ábrela en el móvil:
+[Releases](https://github.com/SergioRE2007/reelometer/releases) y ábrela en el móvil:
 
 1. Android te pedirá permitir «instalar apps desconocidas» al navegador o al gestor de archivos: acéptalo e instala.
 2. En Android 13 o superior, el interruptor del servicio de accesibilidad sale gris («Ajuste restringido») porque la
-   app no viene de Google Play. Ve a Ajustes del sistema › Apps › Reelómetro › ⋮ › **Permitir ajustes restringidos**
+   app no viene de Google Play. Ve a Ajustes del sistema › Apps › Reelometer › ⋮ › **Permitir ajustes restringidos**
    y vuelve a activarlo. La propia app te guía.
 3. Las versiones nuevas se instalan encima y conservan tus datos. Para cambiar de móvil: Ajustes › Tus datos ›
    **Exportar CSV** en el viejo e **Importar CSV** en el nuevo.
 
 Requisitos: Android 8.0 (API 26) o superior. Idiomas: español de España, inglés, portugués de Brasil, francés e
-italiano (sigue el del móvil; en Android 13 o superior se puede elegir en Ajustes › Apps › Reelómetro › Idioma).
+italiano (sigue el del móvil; en Android 13 o superior se puede elegir dentro de la app, en Ajustes › Tema › Idioma).
 
 ## Compilar
 
 Necesitas Android Studio (o su JDK) y el SDK de Android.
 
 ```bash
-git clone https://github.com/SergioRE2007/reelometro.git
-cd reelometro
+git clone https://github.com/SergioRE2007/reelometer.git
+cd reelometer
 ./gradlew assembleDebug testDebugUnitTest   # APK debug + tests JVM
 ./gradlew assembleRelease                   # release sin firmar
 ```
@@ -162,7 +162,7 @@ app/src/main/java/com/reelometro/app/
 
 ## Estado
 
-Versión **1.7.0**. Con honestidad:
+Versión **1.8.0**. Con honestidad:
 
 - **Probado en un móvil real** (un Pixel con Android 17): TikTok e Instagram cuentan bien. El envío rápido de
   Instagram está medido envío a envío: entre 0,5 y 0,93 s a una persona y 1,4–1,6 s a un grupo que hay que buscar
@@ -184,11 +184,11 @@ Versión **1.7.0**. Con honestidad:
   (798 vídeos: entran todos y, al repetir, ninguno se duplica).
 - **1.7.0**: las gráficas se recorren deslizando el dedo en horizontal (sin mantener pulsado) y Ajustes tiene un
   índice arriba que salta a cada sección; el envío rápido y las herramientas van plegados. Probado en el emulador.
-- Compila y pasa sus 830 tests JVM. Las capturas de este README usan datos de ejemplo.
+- Compila y pasa sus 871 tests JVM. Las capturas de este README usan datos de ejemplo.
 
 ## Apoyar el proyecto
 
-Reelómetro lo hace un estudiante en sus ratos libres. Es gratis, no tiene anuncios y no tiene internet. Si te sirve y
+Reelometer lo hace un estudiante en sus ratos libres. Es gratis, no tiene anuncios y no tiene internet. Si te sirve y
 te apetece, puedes invitarle a un café.
 
 <a href="https://www.buymeacoffee.com/Lopuzno"><img src="https://img.shields.io/badge/Buy_Me_a_Coffee-invítame_a_un_café-FF5A1F?style=flat-square&logo=buymeacoffee&logoColor=11100E" alt="Invítame a un café en Buy Me a Coffee"></a>
@@ -201,5 +201,5 @@ tienen su propia licencia (SIL Open Font License 1.1).
 
 ## Aviso
 
-Reelómetro es un proyecto independiente. No está afiliado, patrocinado ni respaldado por TikTok, Instagram,
+Reelometer es un proyecto independiente. No está afiliado, patrocinado ni respaldado por TikTok, Instagram,
 YouTube ni sus empresas. Los nombres se usan solo para indicar con qué apps funciona.

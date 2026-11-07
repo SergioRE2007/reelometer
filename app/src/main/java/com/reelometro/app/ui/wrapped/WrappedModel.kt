@@ -36,7 +36,7 @@ internal val PeriodStats.countedDays: Int get() = trackedDays.coerceAtLeast(1)
 internal val PeriodStats.trackedCounts: List<Float>
     get() = days.filter { it.tracked }.map { it.count.toFloat() }
 
-/** «REELÓMETRO · OCTUBRE 2026», la cabecera de la historia. */
+/** «REELOMETER · OCTUBRE 2026», la cabecera de la historia. */
 internal fun PeriodStats.storyLabel(): String = WrappedCopy.coverLabel(ref.kind.copyPeriod(), span.start, span.end)
 
 // ====================================================================== hub

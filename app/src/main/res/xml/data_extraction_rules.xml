@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Reelómetro no sube nada a ningún sitio: ni la base de datos ni los ajustes entran en la copia
+    Reelometer no sube nada a ningún sitio: ni la base de datos ni los ajustes entran en la copia
     de seguridad de Google ni en la transferencia entre dispositivos (ver PRIVACY.md).
 -->
 <data-extraction-rules>

@@ -34,7 +34,7 @@ import kotlin.math.roundToInt
 /**
  * Ticket del nivel nuevo (1080 × 1920, `android.graphics`), con el mismo papel que el ticket del
  * Wrapped (docs/DESIGN.md §9): papel hueso sobre negro cálido, dientes arriba y abajo, cabecera
- * REELÓMETRO, la ruta ORIGEN → DESTINO con códigos de tres letras, el nivel enorme, millas y
+ * REELOMETER, la ruta ORIGEN → DESTINO con códigos de tres letras, el nivel enorme, millas y
  * sellos (como sellitos de tinta), código de barras con un trazo por sello y el sello rotado
  * «EMBARQUE CONFIRMADO» en `signal`. Medidas en píxeles de la imagen (retícula de 4 px).
  */

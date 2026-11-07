@@ -63,12 +63,12 @@
          _one: el tiempo es singular («una hora y 12 minutos», «un minuto»). -->
     <string-array name="notif_daily_normal">
         <item>%2$s de vidéos. Demain, le compteur repart de zéro.</item>
-        <item>%2$s. Une journée normale, et ça se remarque.</item>
+        <item>%2$s. Une journée normale, ce qui n’est pas rien.</item>
         <item>%1$s que personne ne te rendra.</item>
     </string-array>
     <string-array name="notif_daily_normal_one">
         <item>%2$s de vidéos. Demain, le compteur repart de zéro.</item>
-        <item>%2$s. Une journée normale, et ça se remarque.</item>
+        <item>%2$s. Une journée normale, ce qui n’est pas rien.</item>
         <item>%1$s que personne ne te rendra.</item>
     </string-array>
 
@@ -129,7 +129,7 @@
     <string name="notif_monthly_public_text">Le bilan du mois est prêt.</string>
 
     <!-- Si Android desconecta el servicio de accesibilidad (aún sin usar). -->
-    <string name="notif_service_lost_title">Reelómetro a cessé de compter</string>
+    <string name="notif_service_lost_title">Reelometer a cessé de compter</string>
     <string name="notif_service_lost_text">Android a déconnecté le service d’accessibilité. Touche pour le reconnecter.</string>
 
     <!-- ============================================================ aviso al pasar el objetivo -->
@@ -151,7 +151,7 @@
     <string name="notif_level_title">Nouveau niveau\u00A0: %1$s</string>
     <!-- Texto. Flap es la mascota del Pasaporte (nombre propio, no se traduce). -->
     <string-array name="notif_level">
-        <item>Ton passeport monte de catégorie. Ça se gagne en regardant moins, que ça reste noté.</item>
+        <item>Ton passeport passe à la catégorie supérieure. Ça se gagne en regardant moins, que ça reste noté.</item>
         <item>Flap t’attend au Passeport avec la nouvelle carte.</item>
         <item>Plus d’expérience pour moins de vidéos. La nouvelle carte est dans le Passeport.</item>
     </string-array>

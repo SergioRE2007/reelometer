@@ -56,6 +56,10 @@ fun SettingsRoute(
     val importFile = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) vm.readImport { context.contentResolver.openInputStream(uri) }
     }
+    // Copia semanal: el selector de carpetas del sistema (Storage Access Framework, sin permisos de almacenamiento).
+    val backupFolder = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+        if (uri != null) vm.onBackupFolderPicked(uri.toString())
+    }
     // ELEGIR FOTO (1.4.3): el selector de fotos de Android, sin permisos (en versiones viejas, el respaldo de
     // androidx abre el selector de documentos). Para quién era se guarda por si Android recrea la actividad.
     var photoFor by rememberSaveable { mutableStateOf<String?>(null) }
@@ -73,6 +77,7 @@ fun SettingsRoute(
                     notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
                 is SettingsEffect.PickExportFile -> exportFile.launch(effect.fileName)
                 SettingsEffect.PickImportFile -> importFile.launch(IMPORT_TYPES)
+                SettingsEffect.PickBackupFolder -> backupFolder.launch(null)
             }
         }
     }
@@ -97,6 +102,9 @@ fun SettingsRoute(
             onImport = vm::requestImport,
             onImportConfirm = vm::confirmImport,
             onImportCancel = vm::cancelImport,
+            onBackup = vm::setBackup,
+            onBackupNow = vm::backupNow,
+            onBackupChangeFolder = vm::requestBackupFolder,
             onOpenServiceSetup = onOpenServiceSetup,
             onOpenAccessibility = { SystemScreens.openAccessibility(context) },
             onVersionTap = vm::onVersionTap,

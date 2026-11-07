@@ -12,17 +12,17 @@
     <!-- Título grande. -->
     <string name="disclosure_title">Para contar, eu preciso observar.</string>
     <!-- Párrafo principal: qué se lee, para qué y dónde se guarda. -->
-    <string name="disclosure_summary">O Reelómetro usa o serviço de acessibilidade do Android para ler a tela do TikTok, do Instagram e do YouTube enquanto você os usa. Assim detecta cada vídeo curto que você vê e guarda, só neste celular, em qual app você o viu, quando, por quanto tempo, quem o publicou e a descrição, para mostrar suas estatísticas.</string>
+    <string name="disclosure_summary">O Reelometer usa o serviço de acessibilidade do Android para ler a tela do TikTok, do Instagram e do YouTube enquanto você os usa. Assim detecta cada vídeo curto que você vê e guarda, só neste celular, em qual app você o viu, quando, por quanto tempo, quem o publicou e a descrição, para mostrar suas estatísticas.</string>
 
     <!-- Bloques con etiqueta en MAYÚSCULAS (poco sitio) y su texto, en este orden. -->
     <!-- «Compartir» cita el botón de Instagram/TikTok/YouTube tal cual (en cada idioma, como lo muestren
          esas apps en ese idioma). «A quién envías» es el nombre del ajuste de la app (settings_recipients_label). -->
     <string name="disclosure_reads_label">O QUE LÊ</string>
-    <string name="disclosure_reads_text">No TikTok, no Instagram e no YouTube: quando você passa para o próximo vídeo curto e os textos visíveis desse vídeo (o nome do criador, a descrição e as hashtags). Também quando você toca em «Compartilhar» e, só no Instagram e se você ativar «Para quem você envia» nas Configurações, o nome da pessoa ou do grupo para quem você envia. Se você também usar o envio rápido, lê os nomes da folha de compartilhar para encontrar quem você fixou.</string>
+    <string name="disclosure_reads_text">No TikTok, no Instagram e no YouTube: quando você passa para o próximo vídeo curto e os textos visíveis desse vídeo (o nome do criador, a descrição e as hashtags). Também quando você toca em “Compartilhar” e, só no Instagram e se você ativar “Para quem você envia” nas Configurações, o nome da pessoa ou do grupo para quem você envia. Se você também usar o envio rápido, lê os nomes do menu de compartilhamento para encontrar quem você fixou.</string>
     <!-- «Compartir» y «Enviar» citan los botones de Instagram tal cual (en cada idioma, como los muestre
          Instagram en ese idioma). -->
     <string name="disclosure_not_reads_label">O QUE NÃO LÊ</string>
-    <string name="disclosure_not_reads_text">Nada dos outros apps: deles só sabe que você saiu, para parar de contar. Não guarda o que você escreve nem suas mensagens. Só aperta algo por você se você usar o envio rápido do Instagram, e apenas «Compartilhar», a pessoa ou o grupo que você fixou e «Enviar», ao tocar o botão; se não o vir, escreve o nome dele na busca da folha. Só com o envio rápido, recorta da folha de compartilhar a foto de perfil das pessoas ou grupos que você fixa, para mostrá-la no botão; guarda só neste celular e não faz nenhuma outra captura de tela.</string>
+    <string name="disclosure_not_reads_text">Nada dos outros apps: deles só sabe que você saiu, para parar de contar. Não guarda o que você escreve nem suas mensagens. Só aperta algo por você se você usar o envio rápido do Instagram, e apenas “Compartilhar”, a pessoa ou o grupo que você fixou e “Enviar”, ao tocar o botão; se não encontrar, digita o nome na busca do menu. Só com o envio rápido, recorta do menu de compartilhamento a foto de perfil das pessoas ou grupos que você fixa, para mostrá-la no botão; guarda só neste celular e não faz nenhuma outra captura de tela.</string>
     <string name="disclosure_purpose_label">PARA QUÊ</string>
     <string name="disclosure_purpose_text">Só para contar quantos vídeos você vê, por quanto tempo, de quais temas e de quais criadores. Não é usado para publicidade nem para fazer perfis.</string>
     <string name="disclosure_storage_label">ONDE VAI PARAR</string>
@@ -35,5 +35,5 @@
     <!-- Frase junto a los botones: qué pasa si aceptas y si no. «Hoy» y «Ajustes» son pantallas de la app. -->
     <string name="disclosure_consent">Se você aceitar, eu te levo às configurações do Android para ativar a permissão. Se não aceitar, o app não vai conseguir contar nada; você pode ativá-la depois em Hoje ou em Configurações.</string>
     <!-- Confirmación discreta tras pulsar AHORA NO. -->
-    <string name="disclosure_declined">Sem permissão não há conta. Quando quiser, ela está em Hoje e em Configurações.</string>
+    <string name="disclosure_declined">Sem permissão, nada de contagem. Quando quiser, ela está em Hoje e em Configurações.</string>
 </resources>

@@ -112,7 +112,7 @@ object PassportCsv {
             val kind = block.field(row, "tipo")?.let(CsvReader::normalize) ?: continue
             val key = block.field(row, "clave").orEmpty()
             val element = block.field(row, "elemento").orEmpty()
-            val date = block.field(row, "fecha")?.let { runCatching { LocalDate.parse(it) }.getOrNull() }
+            val date = CsvImport.localDate(block.field(row, CsvImport.COL_DATE))
             when (kind) {
                 LEVEL -> {
                     val l = byName<TravelerLevel>(key) ?: names.levels[CsvReader.normalize(element)] ?: continue
@@ -137,8 +137,8 @@ object PassportCsv {
                         else -> continue
                     }
                     if (date == null) continue
-                    val target = block.field(row, "tope")?.toIntOrNull() ?: continue
-                    val total = block.field(row, "vídeos")?.toIntOrNull() ?: continue
+                    val target = CsvImport.wholeNumber(block.field(row, "tope"))?.toInt() ?: continue
+                    val total = CsvImport.wholeNumber(block.field(row, "vídeos"))?.toInt() ?: continue
                     challenges.putIfAbsent(date, ChallengeResult(date, target, total, won))
                 }
             }

@@ -12,7 +12,7 @@
     <!-- Título grande. -->
     <string name="disclosure_title">Per contare, devo guardare.</string>
     <!-- Párrafo principal: qué se lee, para qué y dónde se guarda. -->
-    <string name="disclosure_summary">Reelómetro usa il servizio di accessibilità di Android per leggere lo schermo di TikTok, Instagram e YouTube mentre li usi. Così riconosce ogni video breve che guardi e salva, solo su questo telefono, in quale app l’hai visto, quando, per quanto tempo, chi l’ha pubblicato e la sua descrizione, per mostrarti le tue statistiche.</string>
+    <string name="disclosure_summary">Reelometer usa il servizio di accessibilità di Android per leggere lo schermo di TikTok, Instagram e YouTube mentre li usi. Così riconosce ogni video breve che guardi e salva, solo su questo telefono, in quale app l’hai visto, quando, per quanto tempo, chi l’ha pubblicato e la sua descrizione, per mostrarti le tue statistiche.</string>
 
     <!-- Bloques con etiqueta en MAYÚSCULAS (poco sitio) y su texto, en este orden. -->
     <!-- «Compartir» cita el botón de Instagram/TikTok/YouTube tal cual (en cada idioma, como lo muestren
@@ -22,9 +22,9 @@
     <!-- «Compartir» y «Enviar» citan los botones de Instagram tal cual (en cada idioma, como los muestre
          Instagram en ese idioma). -->
     <string name="disclosure_not_reads_label">COSA NON LEGGE</string>
-    <string name="disclosure_not_reads_text">Niente delle altre app: di loro sa solo che sei uscito, per smettere di contare. Non salva quello che scrivi né i tuoi messaggi. Preme per te solo se usi l’invio rapido di Instagram, e soltanto «Condividi», la persona o il gruppo che hai fissato e «Invia», quando tocchi la sua bolla; se non lo vede, scrive il suo nome nella ricerca del foglio. Solo con l’invio rapido, ritaglia dal foglio di condivisione la foto profilo delle persone o dei gruppi che fissi, per mostrarla nella bolla; la salva solo su questo telefono e non fa nessun’altra cattura dello schermo.</string>
+    <string name="disclosure_not_reads_text">Niente delle altre app: di loro sa solo che sei uscito, per smettere di contare. Non salva quello che scrivi né i tuoi messaggi. Preme per te solo se usi l’invio rapido di Instagram, e soltanto «Condividi», la persona o il gruppo che hai fissato e «Invia», quando tocchi la sua bolla; se non lo vede, scrive il suo nome nella ricerca del foglio. Solo con l’invio rapido, ritaglia dal foglio di condivisione la foto profilo delle persone o dei gruppi che fissi, per mostrarla nella bolla; la salva solo su questo telefono e non fa nessun altro screenshot.</string>
     <string name="disclosure_purpose_label">A COSA SERVE</string>
-    <string name="disclosure_purpose_text">Solo per dirti quanti video guardi, quanto tempo, di quali argomenti e di quali creatori. Non si usa per pubblicità né per fare profili.</string>
+    <string name="disclosure_purpose_text">Solo per dirti quanti video guardi, quanto tempo, di quali argomenti e di quali creatori. Non viene usato per la pubblicità né per profilarti.</string>
     <string name="disclosure_storage_label">DOVE FINISCE</string>
     <string name="disclosure_storage_text">Su questo telefono e da nessun’altra parte. Non viene inviato a nessun server né condiviso con nessuno: l’app non ha nemmeno il permesso di usare internet.</string>
     <!-- «Ajustes > Accesibilidad» cita los menús de Android tal cual; en cada idioma, los que muestre
@@ -33,7 +33,7 @@
     <string name="disclosure_control_text">Puoi disattivare il permesso quando vuoi in Impostazioni &gt; Accessibilità e cancellare tutti i dati dalla stessa app.</string>
 
     <!-- Frase junto a los botones: qué pasa si aceptas y si no. «Hoy» y «Ajustes» son pantallas de la app. -->
-    <string name="disclosure_consent">Se accetti, ti porto alle impostazioni di Android per attivare il permesso. Se no, l’app non potrà contare niente; puoi attivarlo più avanti da Oggi o dalle Impostazioni.</string>
+    <string name="disclosure_consent">Se accetti, ti porto alle impostazioni di Android per attivare il permesso. Altrimenti l’app non potrà contare niente; puoi attivarlo più avanti da Oggi o dalle Impostazioni.</string>
     <!-- Confirmación discreta tras pulsar AHORA NO. -->
     <string name="disclosure_declined">Senza permesso non c’è conteggio. Quando vuoi, è in Oggi e nelle Impostazioni.</string>
 </resources>

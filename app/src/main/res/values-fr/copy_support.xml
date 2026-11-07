@@ -9,7 +9,7 @@
     <!-- Antetítulo en MAYÚSCULAS, muy corto. -->
     <string name="support_kicker">UNE CHOSE</string>
     <string name="support_title">Cette application, c’est un étudiant qui la fait.</string>
-    <string name="support_text">Reelómetro est gratuit, sans publicité, et tes données ne sortent pas du téléphone. C’est un étudiant qui la fait pendant son temps libre. Sur son GitHub, tu peux voir comment elle est faite et, si tu en as envie, le soutenir.</string>
+    <string name="support_text">Reelometer est gratuit, sans publicité, et tes données ne sortent pas du téléphone. C’est un étudiant qui le développe pendant son temps libre. Sur son GitHub, tu peux voir comment il est fait et, si tu en as envie, le soutenir.</string>
     <!-- Pie pequeño bajo el texto: qué pasa al pulsar. -->
     <string name="support_note">Ça s’ouvre dans le navigateur. L’application reste sans internet.</string>
     <!-- Botón principal en MAYÚSCULAS. -->
@@ -20,7 +20,7 @@
     <string name="support_open_failed">Impossible d’ouvrir le navigateur. Cherche-le sur GitHub\u00A0: %1$s.</string>
 
     <!-- TalkBack: título del aviso y de los botones. -->
-    <string name="support_pane_title">Soutenir Reelómetro</string>
+    <string name="support_pane_title">Soutenir Reelometer</string>
     <string name="support_open_description">Voir son GitHub. Ça s’ouvre dans le navigateur</string>
     <string name="support_never_description">Ne plus afficher cet avis</string>
 </resources>

@@ -16,6 +16,8 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.reelometro.app.data.Platform
+import com.reelometro.app.data.backup.BackupError
+import com.reelometro.app.data.backup.BackupOutcome
 import com.reelometro.app.detection.BubbleLayout
 import com.reelometro.app.detection.BubbleSpot
 import com.reelometro.app.ui.support.SupportPrompt
@@ -76,6 +78,16 @@ data class AppSettings(
      * ahí). Lo guardado por la 1.4.0–1.4.1 (borde + altura) se lee convertido ([BubbleLayout.fromLegacy]).
      */
     val quickSendBubble: BubbleSpot? = null,
+    /**
+     * Copia semanal del CSV: la carpeta (URI de `ACTION_OPEN_DOCUMENT_TREE`, con permiso persistente). `null` = apagada.
+     */
+    val backupFolder: String? = null,
+    /** Nombre de esa carpeta para enseñarlo («Download»). */
+    val backupFolderName: String? = null,
+    /** Última copia escrita (epoch ms). */
+    val backupLastMs: Long? = null,
+    /** Por qué falló la última copia (se borra con la siguiente que salga bien o al cambiar de carpeta). */
+    val backupError: BackupError? = null,
 ) {
     fun isEnabled(platform: Platform): Boolean = platform in enabledPlatforms
 
@@ -211,6 +223,41 @@ class SettingsRepository internal constructor(private val store: DataStore<Prefe
     }
 
     /**
+     * Copia semanal en [folder] (ya con su permiso persistente), que se ve como [name]; `null` la apaga. Al cambiar
+     * de carpeta se olvidan el error y la fecha de la última copia (eran de la otra).
+     */
+    suspend fun setBackupFolder(folder: String?, name: String?) = edit {
+        val previous = it[BACKUP_FOLDER]
+        if (folder.isNullOrBlank()) {
+            it.remove(BACKUP_FOLDER)
+            it.remove(BACKUP_FOLDER_NAME)
+        } else {
+            it[BACKUP_FOLDER] = folder
+            if (name.isNullOrBlank()) it.remove(BACKUP_FOLDER_NAME) else it[BACKUP_FOLDER_NAME] = name
+        }
+        if (previous != folder) {
+            it.remove(BACKUP_LAST_MS)
+            it.remove(BACKUP_ERROR)
+        }
+    }
+
+    /**
+     * Apunta el resultado de una copia hecha en [folder] a las [nowMs]: si salió bien, su fecha (y sin error); si
+     * falló, el error. Si mientras tanto se ha cambiado o apagado la copia, no apunta nada (era de otra carpeta).
+     */
+    suspend fun recordBackup(folder: String, outcome: BackupOutcome, nowMs: Long) = edit {
+        if (it[BACKUP_FOLDER] != folder) return@edit
+        when (outcome) {
+            is BackupOutcome.Done -> {
+                it[BACKUP_LAST_MS] = nowMs
+                it.remove(BACKUP_ERROR)
+            }
+            is BackupOutcome.Failed -> it[BACKUP_ERROR] = outcome.error.name
+            BackupOutcome.Empty -> it.remove(BACKUP_ERROR)
+        }
+    }
+
+    /**
      * La posición de las burbujas: la nueva (`x`, `y` del centro) o, si solo está la de la 1.4.0–1.4.1 (borde y
      * altura), esa convertida a la equivalente. No se pierde nada: la de antes se borra al guardar la nueva.
      */
@@ -274,6 +321,10 @@ class SettingsRepository internal constructor(private val store: DataStore<Prefe
             quickSendEnabled = p[QUICK_SEND_ENABLED] ?: defaults.quickSendEnabled,
             quickSendTargets = p[QUICK_SEND_TARGETS]?.let { cleanTargets(it.split('\n')) } ?: defaults.quickSendTargets,
             quickSendBubble = bubbleSpot(p),
+            backupFolder = p[BACKUP_FOLDER]?.takeIf { it.isNotBlank() },
+            backupFolderName = p[BACKUP_FOLDER_NAME],
+            backupLastMs = p[BACKUP_LAST_MS],
+            backupError = p[BACKUP_ERROR]?.let { name -> BackupError.entries.firstOrNull { it.name == name } },
         )
     }
 
@@ -299,6 +350,12 @@ class SettingsRepository internal constructor(private val store: DataStore<Prefe
         val QUICK_SEND_TARGETS = stringPreferencesKey("quick_send_targets")
         val QUICK_SEND_BUBBLE_X = floatPreferencesKey("quick_send_bubble_cx")
         val QUICK_SEND_BUBBLE_CENTER_Y = floatPreferencesKey("quick_send_bubble_cy")
+
+        /** Copia semanal del CSV. */
+        val BACKUP_FOLDER = stringPreferencesKey("backup_folder")
+        val BACKUP_FOLDER_NAME = stringPreferencesKey("backup_folder_name")
+        val BACKUP_LAST_MS = longPreferencesKey("backup_last_ms")
+        val BACKUP_ERROR = stringPreferencesKey("backup_error")
 
         /** Aviso de apoyo ([SupportPromptState]). */
         val SUPPORT_USAGE_DAYS = intPreferencesKey("support_usage_days")

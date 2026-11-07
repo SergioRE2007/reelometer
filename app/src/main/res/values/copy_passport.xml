@@ -5,7 +5,7 @@
   celebraciones y el ticket de nivel que se comparte como imagen.
   Tono: aeropuerto, tarjeta de embarque, ironía amable. Premia ver menos y nunca culpa.
   Las millas salen de ver MENOS vídeos (días bajo la referencia, rachas, retos y sellos), nunca de verlos.
-  Nombres propios: «Flap» (la mascota) y «Reelómetro» (la app) no se traducen.
+  Nombres propios: «Flap» (la mascota) y «Reelometer» (la app) no se traducen.
   Cada <string-array> es una situación y cada <item>, una frase alternativa (se elige una por día).
   Puedes poner las que quieras (mínimo 2). \u00A0 es un espacio duro: la cifra y su palabra no se separan.
   «Se pasa a mayúsculas sola» quiere decir que el código la convierte en MAYÚSCULAS: escríbela normal.
@@ -465,11 +465,11 @@
     </string-array>
 
     <!-- Texto que acompaña a la imagen del ticket al compartirla. %1$s el nivel en MAYÚSCULAS («PLATA»).
-         «Reelómetro» es la marca: no se traduce. -->
-    <string name="passport_ticket_share_text">Nivel %1$s en Reelómetro: millas por ver menos vídeos.</string>
+         «Reelometer» es la marca: no se traduce. -->
+    <string name="passport_ticket_share_text">Nivel %1$s en Reelometer: millas por ver menos vídeos.</string>
     <!-- Nombre del archivo de la imagen del ticket (se ve al compartirla). SOLO letras ASCII sin acentos,
          cifras y guiones: sin espacios. %1$s el nivel en minúsculas («plata»; los acentos se quitan solos). -->
-    <string name="passport_ticket_file_name">reelometro-nivel-%1$s.png</string>
+    <string name="passport_ticket_file_name">reelometer-nivel-%1$s.png</string>
 
     <!-- ============================================================ aviso de nivel nuevo -->
 

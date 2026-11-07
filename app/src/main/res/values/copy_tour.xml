@@ -13,7 +13,7 @@
     <string name="tour_step">PASO %1$s DE %2$s</string>
 
     <!-- TalkBack: título del panel y de los botones. -->
-    <string name="tour_pane_title">Recorrido por Reelómetro</string>
+    <string name="tour_pane_title">Recorrido por Reelometer</string>
     <string name="tour_skip_description">Saltar el recorrido</string>
     <string name="tour_next_description">Paso siguiente del recorrido</string>
     <string name="tour_done_description">Terminar el recorrido</string>

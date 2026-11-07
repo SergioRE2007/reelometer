@@ -15,7 +15,7 @@
     <string name="today_section_hours">IL TUO GIORNO, ORA PER ORA</string>
     <string name="today_section_categories">COSA VEDI DI PIÙ</string>
     <!-- Las cuentas que publican los vídeos que ves. -->
-    <string name="today_section_creators">CHI TE LO METTE</string>
+    <string name="today_section_creators">CHI TE LI PROPINA</string>
 
     <!-- Secciones vacías (todavía no hay datos hoy). -->
     <string name="today_empty_platforms">Nessuna app ancora.</string>
@@ -24,7 +24,7 @@
     <string name="today_empty_creators">Nessun creatore ancora.</string>
 
     <!-- TalkBack del marcador con el servicio de accesibilidad desconectado. -->
-    <string name="today_service_off_description">Nessun segnale: il servizio di Reelómetro è disconnesso.</string>
+    <string name="today_service_off_description">Nessun segnale: il servizio di Reelometer è disconnesso.</string>
 
     <!-- Cabecera en MAYÚSCULAS (se pasa a mayúsculas sola): «HOY · MARTES 3 NOV». %1$s día de la
          semana, %2$s fecha corta («3 nov» o «3 nov 2025»). -->
@@ -42,7 +42,7 @@
 
     <!-- Cero vídeos el primer día (recién instalada). -->
     <string-array name="today_zero_first">
-        <item>Tutto pronto. Il primo video che vedi apre il conto.</item>
+        <item>Tutto pronto. Il primo video che vedi fa partire il conteggio.</item>
         <item>Contatore a zero. Da qui in poi, tutto conta.</item>
         <item>Qui comparirà ogni video che vedrai. Per ora, silenzio.</item>
     </string-array>
@@ -50,7 +50,7 @@
     <!-- Cero vídeos hoy (con historial). -->
     <string-array name="today_zero">
         <item>Per ora, vinci tu.</item>
-        <item>Zero. L’algoritmo sta ancora aspettando te.</item>
+        <item>Zero. L’algoritmo ti sta ancora aspettando.</item>
         <item>Contatore a zero. Che duri quanto deve durare.</item>
         <item>Nemmeno un video. Anche questo fa statistica.</item>
         <item>Oggi, per ora, niente da dichiarare.</item>
@@ -59,13 +59,13 @@
     <!-- Primer día con datos (no hay media aún): %1$s los vídeos («34 vídeos»), %2$s el tiempo
          («9 minutos»). _notime: menos de un minuto (no uses %2$s). -->
     <string-array name="today_first_day">
-        <item>Primo giorno contato: %1$s e %2$s. Domani avrai con cosa confrontarti.</item>
+        <item>Primo giorno contato: %1$s e %2$s. Domani avrai un termine di paragone.</item>
         <item>%1$s per iniziare. Ancora non c’è una media; domani sì.</item>
         <item>Così inizia la tua storia: %1$s in %2$s.</item>
         <item>Giorno uno. Da oggi, ogni video viene annotato.</item>
     </string-array>
     <string-array name="today_first_day_notime">
-        <item>Primo giorno contato: %1$s. Domani avrai con cosa confrontarti.</item>
+        <item>Primo giorno contato: %1$s. Domani avrai un termine di paragone.</item>
         <item>%1$s per iniziare. Ancora non c’è una media; domani sì.</item>
         <item>Così inizia la tua storia: %1$s.</item>
         <item>Giorno uno. Da oggi, ogni video viene annotato.</item>
@@ -77,14 +77,14 @@
         <item>%1$s sopra l’obiettivo. Il vero obiettivo era un altro.</item>
         <item>Obiettivo: %2$s. Realtà: %3$s.</item>
         <item>Hai sforato di %1$s. Nessuno tiene il conto. Beh, io sì.</item>
-        <item>Hai superato l’obiettivo. Superarlo non era il punto.</item>
+        <item>Hai superato l’obiettivo. Superarlo non era l’idea.</item>
         <item>%3$s su %2$s. I conti non tornano, ma li tengo io.</item>
     </string-array>
 
     <!-- Justo en el objetivo: %1$s el objetivo. -->
     <string-array name="today_goal_at">
-        <item>Proprio al limite: %1$s. Niente di più, per ora.</item>
-        <item>%1$s su %1$s. Quello che arriva adesso è una mancia.</item>
+        <item>Proprio al limite: %1$s. Nemmeno uno in più, per ora.</item>
+        <item>%1$s su %1$s. Quello che arriva adesso è tutto extra.</item>
         <item>Obiettivo centrato. Da qui in poi, ogni video va in rosso.</item>
     </string-array>
 
@@ -92,13 +92,13 @@
          hoy, %3$s el objetivo. _one: queda un solo vídeo. -->
     <string-array name="today_goal_near">
         <item>Ti mancano %1$s per l’obiettivo. Decidi tu.</item>
-        <item>Oggi %2$s su %3$s. Il margine è poco.</item>
+        <item>Oggi %2$s su %3$s. Resta poco margine.</item>
         <item>A %1$s dal limite. Il contatore non giudica; conta e basta.</item>
         <item>Margine rimasto: %1$s. Spendilo come vuoi.</item>
     </string-array>
     <string-array name="today_goal_near_one">
         <item>Ti manca %1$s per l’obiettivo. Decidi tu.</item>
-        <item>Oggi %2$s su %3$s. Il margine è poco.</item>
+        <item>Oggi %2$s su %3$s. Resta poco margine.</item>
         <item>A %1$s dal limite. Il contatore non giudica; conta e basta.</item>
         <item>Margine rimasto: %1$s. Spendilo come vuoi.</item>
     </string-array>
@@ -110,14 +110,14 @@
         <item>Hai iniziato piano: %2$s.</item>
         <item>%1$s e %2$s. Nessuno se ne sarebbe accorto.</item>
         <item>Poca roba, per ora: %1$s.</item>
-        <item>Questo è appena iniziato. Per ora, %1$s.</item>
+        <item>Siamo appena all’inizio. Per ora, %1$s.</item>
     </string-array>
     <string-array name="today_first_notime">
         <item>%1$s. Riscaldamento.</item>
         <item>Hai iniziato piano.</item>
         <item>%1$s. Nessuno se ne sarebbe accorto.</item>
         <item>Poca roba, per ora: %1$s.</item>
-        <item>Questo è appena iniziato. Per ora, %1$s.</item>
+        <item>Siamo appena all’inizio. Per ora, %1$s.</item>
     </string-array>
 
     <!-- Día normal (10–99 vídeos o 10–59 minutos): %1$s los vídeos, %2$s el tiempo («47 minutos»),
@@ -126,15 +126,15 @@
     <string-array name="today_normal">
         <item>Sono %2$s che nessuno ti restituirà.</item>
         <item>%3$s. Il tempo vola, soprattutto a pezzi da quindici secondi.</item>
-        <item>%1$s, uno dietro l’altro. Come i semi di girasole.</item>
-        <item>Ne hai %2$s. La giornata non ha ancora detto l’ultima parola.</item>
+        <item>%1$s, uno dietro l’altro. Come le ciliegie.</item>
+        <item>Sei a %2$s. La giornata non ha ancora detto l’ultima parola.</item>
         <item>%1$s. Né tanti né pochi, per ora.</item>
     </string-array>
     <string-array name="today_normal_one">
         <item>È %2$s che nessuno ti restituirà.</item>
         <item>%3$s. Il tempo vola, soprattutto a pezzi da quindici secondi.</item>
-        <item>%1$s, uno dietro l’altro. Come i semi di girasole.</item>
-        <item>Ne hai %2$s. La giornata non ha ancora detto l’ultima parola.</item>
+        <item>%1$s, uno dietro l’altro. Come le ciliegie.</item>
+        <item>Sei a %2$s. La giornata non ha ancora detto l’ultima parola.</item>
         <item>%1$s. Né tanti né pochi, per ora.</item>
     </string-array>
 
@@ -144,14 +144,14 @@
          _one: el tiempo es singular («una hora y 40 minutos»). _noeq: sin equivalencia (no uses %4$s). -->
     <string-array name="today_high">
         <item>Oggi ne hai %1$s. Sono %2$s che nessuno ti restituirà.</item>
-        <item>%3$s. Ti bastava per %4$s.</item>
+        <item>%3$s. Abbastanza per %4$s.</item>
         <item>%5$s. A quest’ora l’algoritmo sa come ti piace il caffè.</item>
         <item>%5$s: circa %6$s di pollice.</item>
         <item>%3$s di schermo, in dosi da quindici secondi.</item>
     </string-array>
     <string-array name="today_high_one">
         <item>Oggi ne hai %1$s. È %2$s che nessuno ti restituirà.</item>
-        <item>%3$s. Ti bastava per %4$s.</item>
+        <item>%3$s. Abbastanza per %4$s.</item>
         <item>%5$s. A quest’ora l’algoritmo sa come ti piace il caffè.</item>
         <item>%5$s: circa %6$s di pollice.</item>
         <item>%3$s di schermo, in dosi da quindici secondi.</item>
@@ -178,7 +178,7 @@
         <item>%1$s. L’algoritmo ti manda i suoi saluti.</item>
         <item>%2$s. Non è più un passatempo; è un turno.</item>
         <item>Oggi ne hai %1$s. Se fosse un lavoro, sarebbe ora di chiedere lo straordinario.</item>
-        <item>%2$s di video. Ti bastava per %3$s.</item>
+        <item>%2$s di video. Abbastanza per %3$s.</item>
         <item>%1$s. Il tuo pollice ha percorso %4$s. Tu, molto meno.</item>
     </string-array>
     <string-array name="today_extreme_noeq">
@@ -236,7 +236,7 @@
     <!-- Vídeos compartidos hoy (se pasa a MAYÚSCULAS): «4 compartidos». -->
     <plurals name="today_shares">
         <item quantity="one">%1$s\u00A0condiviso</item>
-        <item quantity="many">%1$s\u00A0di condivisi</item>
+        <item quantity="many">%1$s\u00A0condivisi</item>
         <item quantity="other">%1$s\u00A0condivisi</item>
     </plurals>
     <!-- La línea dicha (TalkBack): «47 minutos de pantalla.». %1$s el tiempo con mayúscula inicial. -->
@@ -268,13 +268,13 @@
     <string name="today_comparison_ref">la tua media di %1$s</string>
     <!-- Aún no hay datos de ese día de la semana: %1$s el día en plural (today_weekdays_plural).
          La etiqueta va en MAYÚSCULAS (con poco sitio); la _description es para TalkBack. -->
-    <string name="today_comparison_no_base">NON CI SONO ANCORA %1$s DA CONFRONTARE</string>
-    <string name="today_comparison_no_base_description">Non ci sono ancora %1$s con cui confrontare.</string>
+    <string name="today_comparison_no_base">ANCORA NIENTE DA CONFRONTARE PER %1$s</string>
+    <string name="today_comparison_no_base_description">Ancora niente da confrontare per %1$s.</string>
     <!-- La media es cero y hoy ya hay vídeos: %1$s el día en plural. _now: hasta la misma hora. -->
     <string name="today_comparison_from_zero_now">%1$s, A QUEST’ORA, DI SOLITO SONO A ZERO</string>
-    <string name="today_comparison_from_zero_now_description">%1$s, a quest’ora, di solito sono a zero.</string>
+    <string name="today_comparison_from_zero_now_description">A quest’ora %1$s di solito sono a zero.</string>
     <string name="today_comparison_from_zero">%1$s DI SOLITO SONO A ZERO</string>
-    <string name="today_comparison_from_zero_description">%1$s di solito sono a zero.</string>
+    <string name="today_comparison_from_zero_description">Di solito %1$s sono a zero.</string>
 
     <!-- Líneas de comparación (también en Estadísticas). La etiqueta va en MAYÚSCULAS con poco sitio;
          la _description es la misma idea en frase, para TalkBack. %1$s (o el último hueco) es con qué
@@ -308,7 +308,7 @@
     <!-- «HORA PUNTA 23:00 · 41 VÍDEOS» (MAYÚSCULAS, se pasa sola). %1$s la hora, %2$s los vídeos. -->
     <string name="today_peak_hour">ORA DI PUNTA %1$s · %2$s</string>
 
-    <!-- Banda «desde que usas Reelómetro» (MAYÚSCULAS, se pasa sola): «DESDE EL 3 MAR: 12.408 VÍDEOS · 61 H».
+    <!-- Banda «desde que usas Reelometer» (MAYÚSCULAS, se pasa sola): «DESDE EL 3 MAR: 12.408 VÍDEOS · 61 H».
          %1$s desde cuándo (today_since_*), %2$s los vídeos, %3$s el tiempo corto. -->
     <string name="today_since_band">%1$s: %2$s · %3$s</string>
     <!-- La banda dicha (TalkBack): «Desde el 3 de marzo: 12.408 vídeos y 61 horas.». %1$s desde
@@ -338,14 +338,14 @@
     </string-array>
     <!-- El permiso de accesibilidad nunca se ha concedido. -->
     <string-array name="today_service_never">
-        <item>Per iniziare a contare mi serve un permesso. Ti spiego quale e a cosa serve, senza righe in piccolo.</item>
+        <item>Per iniziare a contare mi serve un permesso. Ti spiego quale e a cosa serve, senza scritte in piccolo.</item>
         <item>Non ho ancora il permesso per guardare, quindi non conto niente. Decidi tu.</item>
-        <item>Senza il permesso di accessibilità, questo contatore è decorazione. Carina, ma decorazione.</item>
+        <item>Senza il permesso di accessibilità, questo contatore è un soprammobile. Carino, ma soprammobile.</item>
     </string-array>
     <!-- Todas las apps apagadas en Ajustes («Qué apps cuento»). -->
     <string-array name="today_no_platforms">
         <item>Hai disattivato tutte le app nelle Impostazioni. Così non c’è niente da contare.</item>
-        <item>Non sto contando nessuna app. Così chiunque.</item>
+        <item>Non sto contando nessuna app. Così son capaci tutti.</item>
         <item>Nessuna app attiva nelle Impostazioni. Il contatore è in vacanza.</item>
     </string-array>
 </resources>

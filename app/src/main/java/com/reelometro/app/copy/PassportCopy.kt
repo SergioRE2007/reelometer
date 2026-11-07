@@ -459,7 +459,7 @@ object PassportCopy {
     fun ticketShareText(level: TravelerLevel): String = str(R.string.passport_ticket_share_text, levelName(level))
 
     /**
-     * Nombre del PNG: «reelometro-nivel-plata.png». El nivel va en ASCII sin acentos; si su nombre
+     * Nombre del PNG: «reelometer-nivel-plata.png». El nivel va en ASCII sin acentos; si su nombre
      * no deja nada (otro alfabeto), se usa el id interno del nivel.
      */
     fun ticketFileName(level: TravelerLevel): String {

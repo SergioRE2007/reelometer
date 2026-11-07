@@ -2,11 +2,15 @@ package com.reelometro.app.copy
 
 import com.reelometro.app.R
 import com.reelometro.app.data.Platform
+import com.reelometro.app.data.backup.BackupError
+import com.reelometro.app.data.backup.BackupOutcome
+import com.reelometro.app.data.backup.BackupRules
 import com.reelometro.app.data.export.ImportError
 import com.reelometro.app.data.export.ImportPreview
 import com.reelometro.app.data.export.ImportResult
 import com.reelometro.app.stats.Format
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 /** Sección numerada de Ajustes: «01  OBJETIVO ─────» + descripción; [short], su nombre en el índice de arriba. */
 data class SettingsSection(val index: String, val title: String, val description: String, val short: String = title)
@@ -278,13 +282,19 @@ object SettingsCopy {
     val THEME_DARK: String get() = str(R.string.settings_theme_dark)
     val THEME_LIGHT: String get() = str(R.string.settings_theme_light)
 
-    /** Fila «Idioma» (Android 13+): abre los ajustes de idioma de la app en Android. */
+    /** Fila «Idioma» (Android 13+): abre el diálogo de la app para elegirlo. */
     fun languageLabel(): String = str(R.string.settings_language_label)
+
+    /** Título del diálogo de idioma: «¿En qué idioma?». */
+    fun languageDialogTitle(): String = str(R.string.settings_language_dialog_title)
+
+    /** Primera opción del diálogo: «El del móvil». */
+    fun languageSystem(): String = str(R.string.settings_language_system)
 
     /** Valor de la fila: el idioma de los textos, en su propio idioma («Español»). */
     fun languageValue(): String = Format.capitalize(Format.locale.getDisplayLanguage(Format.locale))
 
-    /** Ayuda bajo la fila: «Se cambia en los ajustes del sistema.». */
+    /** Ayuda bajo la fila: «Elige en qué idioma ves la app.». */
     fun languageHint(): String = str(R.string.settings_language_hint)
 
     /** TalkBack: qué hace tocar la fila. */
@@ -305,8 +315,8 @@ object SettingsCopy {
     val EXPORT_EMPTY: String get() = str(R.string.settings_export_empty)
     val EXPORT_FAILED: String get() = str(R.string.settings_export_failed)
 
-    /** Nombre propuesto para el CSV: «reelometro-2026-11-03.csv» (igual en todos los idiomas). */
-    fun exportFileName(date: LocalDate): String = "reelometro-$date.csv"
+    /** Nombre propuesto para el CSV: «reelometer-2026-11-03.csv» (igual en todos los idiomas). */
+    fun exportFileName(date: LocalDate): String = "reelometer-$date.csv"
 
     val DELETE_LABEL: String get() = Buttons.DELETE_ALL
     val DELETE_DESCRIPTION: String get() = str(R.string.settings_delete_description)
@@ -314,12 +324,15 @@ object SettingsCopy {
     val DELETE_DIALOG_TITLE: String get() = str(R.string.settings_delete_dialog_title)
 
     /** Cuerpo del diálogo de borrado (`ReelDialog`). */
-    fun deleteDialogBody(count: Long, totalMs: Long): String =
-        if (count <= 0) {
+    fun deleteDialogBody(count: Long, totalMs: Long, backupOn: Boolean = false): String {
+        val body = if (count <= 0) {
             str(R.string.settings_delete_dialog_body_empty)
         } else {
             plural(R.plurals.settings_delete_dialog_body, count, Words.videos(count), Words.duration(totalMs))
         }
+        // Con la copia semanal encendida sí hay copias fuera de la app: se dice que esas no se borran.
+        return if (backupOn) body + " " + str(R.string.settings_backup_delete_note) else body
+    }
 
     val DELETE_CONFIRM: String get() = Buttons.DELETE_ALL
     val DELETE_CANCEL: String get() = Buttons.CANCEL
@@ -395,7 +408,46 @@ object SettingsCopy {
         ImportError.TOO_LARGE -> str(R.string.settings_import_too_large)
         ImportError.TOO_MANY_BAD -> str(R.string.settings_import_too_broken)
         ImportError.FAILED -> str(R.string.settings_import_failed)
+        ImportError.DATES_UNREADABLE -> str(R.string.settings_import_dates)
     }
+
+    // ------------------------------------------------------------------ copia semanal del CSV
+
+    val BACKUP_LABEL: String get() = str(R.string.settings_backup_label)
+
+    /** «Cada semana guardo el mismo CSV de EXPORTAR… Me quedo con las 4 últimas copias…». */
+    val BACKUP_DESCRIPTION: String
+        get() = plural(R.plurals.settings_backup_description, BackupRules.KEEP, Format.integer(BackupRules.KEEP))
+
+    val BACKUP_FOLDER_LABEL: String get() = str(R.string.settings_backup_folder_label)
+    val BACKUP_LAST_LABEL: String get() = str(R.string.settings_backup_last_label)
+    val BACKUP_NOW: String get() = str(R.string.settings_backup_now)
+    val BACKUP_CHANGE: String get() = str(R.string.settings_backup_change)
+    val BACKUP_CHANGE_TALKBACK: String get() = str(R.string.settings_backup_change_talkback)
+
+    /** A la derecha de «Última copia»: «7 nov 2026, 14:05» o «Todavía ninguna». */
+    fun backupLast(at: LocalDateTime?): String =
+        if (at == null) {
+            str(R.string.settings_backup_last_never)
+        } else {
+            str(R.string.settings_backup_last_value, Format.dayShortWithYear(at.toLocalDate()), Format.time(at.hour, at.minute))
+        }
+
+    /** Resultado de COPIAR AHORA (o de elegir carpeta, que hace la primera copia). */
+    fun backupResult(outcome: BackupOutcome, folderName: String): String = when (outcome) {
+        is BackupOutcome.Done -> str(R.string.settings_backup_done, folderName, Words.videos(outcome.videos))
+        BackupOutcome.Empty -> str(R.string.settings_backup_empty)
+        is BackupOutcome.Failed -> backupError(outcome.error)
+    }
+
+    /** Por qué falló la última copia (aviso fijo bajo la copia semanal). */
+    fun backupError(error: BackupError): String = when (error) {
+        BackupError.NO_ACCESS -> str(R.string.settings_backup_no_access)
+        BackupError.FAILED -> str(R.string.settings_backup_failed)
+    }
+
+    /** Android no ha dado permiso para la carpeta recién elegida. */
+    val BACKUP_PICK_FAILED: String get() = str(R.string.settings_backup_pick_failed)
 
     // ------------------------------------------------------------------ 06 servicio
 

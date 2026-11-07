@@ -24,7 +24,7 @@
     <string name="today_empty_creators">Sin creadores todavía.</string>
 
     <!-- TalkBack del marcador con el servicio de accesibilidad desconectado. -->
-    <string name="today_service_off_description">Sin señal: el servicio de Reelómetro está desconectado.</string>
+    <string name="today_service_off_description">Sin señal: el servicio de Reelometer está desconectado.</string>
 
     <!-- Cabecera en MAYÚSCULAS (se pasa a mayúsculas sola): «HOY · MARTES 3 NOV». %1$s día de la
          semana, %2$s fecha corta («3 nov» o «3 nov 2025»). -->
@@ -307,7 +307,7 @@
     <!-- «HORA PUNTA 23:00 · 41 VÍDEOS» (MAYÚSCULAS, se pasa sola). %1$s la hora, %2$s los vídeos. -->
     <string name="today_peak_hour">HORA PUNTA %1$s · %2$s</string>
 
-    <!-- Banda «desde que usas Reelómetro» (MAYÚSCULAS, se pasa sola): «DESDE EL 3 MAR: 12.408 VÍDEOS · 61 H».
+    <!-- Banda «desde que usas Reelometer» (MAYÚSCULAS, se pasa sola): «DESDE EL 3 MAR: 12.408 VÍDEOS · 61 H».
          %1$s desde cuándo (today_since_*), %2$s los vídeos, %3$s el tiempo corto. -->
     <string name="today_since_band">%1$s: %2$s · %3$s</string>
     <!-- La banda dicha (TalkBack): «Desde el 3 de marzo: 12.408 vídeos y 61 horas.». %1$s desde

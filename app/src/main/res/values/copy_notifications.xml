@@ -129,7 +129,7 @@
     <string name="notif_monthly_public_text">El resumen del mes está listo.</string>
 
     <!-- Si Android desconecta el servicio de accesibilidad (aún sin usar). -->
-    <string name="notif_service_lost_title">Reelómetro ha dejado de contar</string>
+    <string name="notif_service_lost_title">Reelometer ha dejado de contar</string>
     <string name="notif_service_lost_text">Android ha desconectado el servicio de accesibilidad. Toca para volver a conectarlo.</string>
 
     <!-- ============================================================ aviso al pasar el objetivo -->

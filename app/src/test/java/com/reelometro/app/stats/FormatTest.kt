@@ -44,7 +44,8 @@ class FormatTest {
     fun `duraciones`() {
         assertEquals(nb("45 s"), Format.duration(45_000))
         assertEquals(nb("47 min"), Format.duration(47 * 60_000L))
-        assertEquals(nb("1 h") + " " + nb("12 min"), Format.duration(72 * 60_000L))
+        // Una sola cifra: todos los espacios son duros y «1 h 12 min» nunca se parte entre líneas.
+        assertEquals(nb("1 h 12 min"), Format.duration(72 * 60_000L))
         assertEquals(nb("3 h"), Format.duration(3 * 3_600_000L))
         assertEquals(nb("312 h"), Format.duration(312 * 3_600_000L + 5 * 60_000L))
         assertEquals(nb("47 min"), Format.durationCompact(47 * 60_000L))

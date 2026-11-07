@@ -58,6 +58,8 @@ import kotlin.math.roundToInt
  * adb shell am broadcast -n com.reelometro.app/.debug.DebugReceiver -a com.reelometro.app.debug.TOUR [--ez done true]
  * # Modo pasaporte encendido o apagado (pestaña, celebraciones, aviso de nivel y Flap en el widget).
  * adb shell am broadcast -n com.reelometro.app/.debug.DebugReceiver -a com.reelometro.app.debug.PASSPORT --ez enabled true
+ * # Copia semanal del CSV ya (el BackupWorker del periódico, una vez; resultado en logcat «Copia semanal»).
+ * adb shell am broadcast -n com.reelometro.app/.debug.DebugReceiver -a com.reelometro.app.debug.BACKUP
  * ```
  *
  * Widget y avisos:
@@ -120,7 +122,7 @@ class DebugReceiver : BroadcastReceiver() {
             ACTION_EXPORT -> {
                 // Como EXPORTAR CSV de Ajustes, a un fichero de getExternalFilesDir (adb pull para sacarlo).
                 val base = context.getExternalFilesDir(null) ?: throw IllegalStateException("sin almacenamiento externo")
-                val name = intent.getStringExtra(EXTRA_PATH)?.trim().orEmpty().ifEmpty { "reelometro-export.csv" }
+                val name = intent.getStringExtra(EXTRA_PATH)?.trim().orEmpty().ifEmpty { "reelometer-export.csv" }
                 val file = File(base, name).canonicalFile
                 require(file.path.startsWith(base.canonicalPath)) { "la ruta tiene que estar dentro de $base" }
                 val videos = file.outputStream().use { app.repository.exportCsv(it) }
@@ -196,6 +198,12 @@ class DebugReceiver : BroadcastReceiver() {
             }
             ACTION_NOTIFY_MONTHLY ->
                 "NOTIFY_MONTHLY: ${SummaryNotifier.monthly(context, YearMonth.now().minusMonths(1), force = true)}"
+            ACTION_BACKUP -> {
+                // La copia semanal ya: el mismo BackupWorker que el periódico, como trabajo de una vez.
+                androidx.work.WorkManager.getInstance(context)
+                    .enqueue(androidx.work.OneTimeWorkRequestBuilder<com.reelometro.app.work.BackupWorker>().build())
+                "BACKUP: copia semanal encolada (carpeta: ${app.settings.current().backupFolderName ?: "ninguna"})"
+            }
             ACTION_WIDGET_UPDATE -> "WIDGET_UPDATE: ${WidgetUpdater.refreshNow(context)} widgets repintados"
             ACTION_WIDGET_PIN -> {
                 val manager = AppWidgetManager.getInstance(context)
@@ -329,6 +337,7 @@ class DebugReceiver : BroadcastReceiver() {
         const val ACTION_WIDGET_SNAPSHOT = PREFIX + "WIDGET_SNAPSHOT"
         const val ACTION_TOUR = PREFIX + "TOUR"
         const val ACTION_PASSPORT = PREFIX + "PASSPORT"
+        const val ACTION_BACKUP = PREFIX + "BACKUP"
 
         const val EXTRA_WEEKS = "weeks"
         const val EXTRA_SEED = "seed"
@@ -350,7 +359,7 @@ class DebugReceiver : BroadcastReceiver() {
          */
         const val ACTION_IMPORT = PREFIX + "IMPORT"
 
-        /** Exporta el CSV a getExternalFilesDir: `--es path copia.csv` (por defecto reelometro-export.csv). */
+        /** Exporta el CSV a getExternalFilesDir: `--es path copia.csv` (por defecto reelometer-export.csv). */
         const val ACTION_EXPORT = PREFIX + "EXPORT"
 
         /** Captura de Calibración a logcat (`--ez enabled false` para pararla): `adb logcat -s ReelCal:V`. */

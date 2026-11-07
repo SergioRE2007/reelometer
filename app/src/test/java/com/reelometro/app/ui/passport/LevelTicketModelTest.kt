@@ -30,7 +30,7 @@ class LevelTicketModelTest {
         // El más reciente primero.
         assertEquals(PassportCopy.stampName(StampId.TRES_PLATAFORMAS), data.stamps.first())
         assertEquals("9 DE 23", data.lines.first().value)
-        assertEquals("reelometro-nivel-plata.png", data.fileName)
+        assertEquals("reelometer-nivel-plata.png", data.fileName)
     }
 
     @Test

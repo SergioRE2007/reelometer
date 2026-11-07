@@ -8,6 +8,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,11 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.unit.Dp
+import com.reelometro.app.stats.Format
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -112,7 +118,8 @@ private val MarkThickness = Space.hairline * 2
 
 /**
  * Índice de Ajustes, bajo la barra de arriba: las 8 secciones en dos columnas (`01 OBJETIVO`, `02 AVISOS`…),
- * separadas por filetes, y una última fila con EXPORTAR CSV e IMPORTAR CSV. [marked] lleva el número en el acento
+ * separadas por filetes, y una última fila con EXPORTAR CSV e IMPORTAR CSV (con textos largos o fuente grande,
+ * ver [IndexShape]). [marked] lleva el número en el acento
  * y un subrayado: la sección donde estabas antes de volver con ÍNDICE.
  */
 @Composable
@@ -124,24 +131,79 @@ internal fun SettingsIndex(
     onImport: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
+    BoxWithConstraints(
         modifier
             .fillMaxWidth()
             .padding(horizontal = Space.screen)
             .padding(top = Space.x2),
     ) {
-        SettingsPart.entries.chunked(2).forEach { row ->
-            IndexRow {
-                row.forEach { part ->
-                    IndexCell(part.section, marked = part == marked, onClick = { onJump(part) }, modifier = Modifier.weight(1f))
+        val shape = indexShape(
+            names = SettingsPart.entries.map { it.section.short },
+            actions = listOf(SettingsCopy.EXPORT_LABEL, SettingsCopy.IMPORT_LABEL),
+            width = maxWidth,
+        )
+        val columns = if (shape == IndexShape.ONE_COLUMN) 1 else 2
+        Column(Modifier.fillMaxWidth()) {
+            SettingsPart.entries.chunked(columns).forEach { row ->
+                IndexRow {
+                    row.forEach { part ->
+                        IndexCell(
+                            part.section,
+                            marked = part == marked,
+                            stacked = shape == IndexShape.STACKED,
+                            onClick = { onJump(part) },
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
                 }
             }
+            val exportAction = @Composable { m: Modifier ->
+                IndexAction(SettingsCopy.EXPORT_LABEL, ReelIcons.Download, enabled = !busy, onClick = onExport, modifier = m)
+            }
+            val importAction = @Composable { m: Modifier ->
+                IndexAction(SettingsCopy.IMPORT_LABEL, ReelIcons.Upload, enabled = !busy, onClick = onImport, modifier = m)
+            }
+            if (columns == 1) {
+                IndexRow { exportAction(Modifier.weight(1f)) }
+                IndexRow { importAction(Modifier.weight(1f)) }
+            } else {
+                IndexRow {
+                    exportAction(Modifier.weight(1f))
+                    importAction(Modifier.weight(1f))
+                }
+            }
+            Hairline()
         }
-        IndexRow {
-            IndexAction(SettingsCopy.EXPORT_LABEL, ReelIcons.Download, enabled = !busy, onClick = onExport, modifier = Modifier.weight(1f))
-            IndexAction(SettingsCopy.IMPORT_LABEL, ReelIcons.Upload, enabled = !busy, onClick = onImport, modifier = Modifier.weight(1f))
+    }
+}
+
+/**
+ * Forma del índice según quepan las palabras (sin partirlas por letras, p. ej. `CONFIDENTIALITÉ` con la fuente
+ * grande): dos columnas con el número al lado del nombre; si alguna palabra no cabe, dos columnas con el número
+ * encima; y si ni así, una sola columna.
+ */
+private enum class IndexShape { INLINE, STACKED, ONE_COLUMN }
+
+@Composable
+private fun indexShape(names: List<String>, actions: List<String>, width: Dp): IndexShape {
+    val measurer = rememberTextMeasurer()
+    val style = ReelTheme.type.label
+    val density = LocalDensity.current
+    val nameWords = names.flatMap { Format.upper(it).split(' ') }
+    val actionWords = actions.flatMap { Format.upper(it).split(' ') }
+    return remember(nameWords, actionWords, width, style, density) {
+        with(density) {
+            fun widest(words: List<String>) = words.maxOf { measurer.measure(it, style, softWrap = false).size.width }
+            val cell = (width / 2 - Space.x3).roundToPx()
+            val number = measurer.measure("00", style, softWrap = false).size.width + Space.x2.roundToPx()
+            val name = widest(nameWords)
+            val action = widest(actionWords) + (Space.x4 + Space.x2).roundToPx()
+            when {
+                name > cell || action > cell -> IndexShape.ONE_COLUMN
+                name + number > cell -> IndexShape.STACKED
+                else -> IndexShape.INLINE
+            }
         }
-        Hairline()
     }
 }
 
@@ -162,7 +224,13 @@ private fun IndexRow(content: @Composable RowScope.() -> Unit) {
 }
 
 @Composable
-private fun IndexCell(section: SettingsSection, marked: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
+private fun IndexCell(
+    section: SettingsSection,
+    marked: Boolean,
+    stacked: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val colors = ReelTheme.colors
     val type = ReelTheme.type
     Box(
@@ -175,15 +243,25 @@ private fun IndexCell(section: SettingsSection, marked: Boolean, onClick: () -> 
                 if (marked) stateDescription = SettingsCopy.INDEX_HERE
             },
     ) {
-        Row(
-            Modifier
-                .padding(vertical = Space.x3)
-                .padding(end = Space.x3)
-                .clearAndSetSemantics {},
-        ) {
+        val content = Modifier
+            .padding(vertical = Space.x3)
+            .padding(end = Space.x3)
+            .clearAndSetSemantics {}
+        val number = @Composable {
             Text(section.index, style = type.label, color = if (marked) colors.signalText else colors.textMuted)
-            Spacer(Modifier.width(Space.x2))
-            Label(section.short, color = colors.text, maxLines = 2)
+        }
+        if (stacked) {
+            Column(content) {
+                number()
+                Spacer(Modifier.height(Space.x1))
+                Label(section.short, color = colors.text, maxLines = 2)
+            }
+        } else {
+            Row(content) {
+                number()
+                Spacer(Modifier.width(Space.x2))
+                Label(section.short, color = colors.text, maxLines = 2)
+            }
         }
         if (marked) {
             Box(

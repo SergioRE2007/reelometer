@@ -55,7 +55,7 @@ class TextsTest {
         assertEquals("34\u00A0%", Format.percent(0.34))
         assertEquals("−12\u00A0%", Format.signedPercent(-0.12))
         assertEquals("3,2\u00A0h", Format.durationCompact(3 * 3_600_000L + 12 * 60_000L))
-        assertEquals("1\u00A0h 12\u00A0min", Format.duration(72 * 60_000L))
+        assertEquals("1\u00A0h\u00A012\u00A0min", Format.duration(72 * 60_000L))
         assertEquals("martes 3 de noviembre", Format.dayLong(LocalDate.of(2026, 11, 3)))
         assertEquals("3 – 9 nov", Format.range(LocalDate.of(2026, 11, 3), LocalDate.of(2026, 11, 9)))
         assertEquals("X", Format.weekdayInitial(DayOfWeek.WEDNESDAY))

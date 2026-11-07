@@ -30,9 +30,12 @@ class ResourceTexts(
 
     private fun current(): Entry {
         val base = app.resources
-        val locales = base.configuration.locales
+        // El idioma elegido en la app (o el del sistema si sigue al móvil) manda sobre el del proceso:
+        // con el servicio de accesibilidad vivo, la configuración del proceso puede quedarse atrasada.
+        val locales = AppLanguage.effective(app) ?: base.configuration.locales
         entry?.let { if (it.locales === locales || it.locales == locales) return it }
-        val locale = fixed ?: Locale.forLanguageTag(base.getString(R.string.locale_tag))
+        val wanted = Configuration(base.configuration).apply { setLocales(locales) }
+        val locale = fixed ?: Locale.forLanguageTag(app.createConfigurationContext(wanted).resources.getString(R.string.locale_tag))
         val config = Configuration(base.configuration).apply { setLocale(locale) }
         return Entry(locales, locale, app.createConfigurationContext(config).resources).also { entry = it }
     }

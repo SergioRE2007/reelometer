@@ -30,7 +30,7 @@ import kotlin.math.roundToInt
 /**
  * La imagen compartible: «ticket de tu tiempo» (docs/DESIGN.md §9), 1080 × 1920 px, pintada con
  * `android.graphics` (no Compose) para poder generarla fuera del hilo principal. Papel hueso
- * sobre negro cálido, dientes arriba y abajo, cabecera REELÓMETRO, cifra enorme, líneas de ticket
+ * sobre negro cálido, dientes arriba y abajo, cabecera REELOMETER, cifra enorme, líneas de ticket
  * con emojis (el único sitio donde se permiten), total, código de barras de un trazo por día,
  * sello rotado en `signal` y pie de marca.
  *

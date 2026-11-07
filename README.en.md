@@ -2,9 +2,9 @@
 
 **English** · [Español](README.md)
 
-<img src="docs/img/icono.svg" width="112" alt="Reelómetro icon">
+<img src="docs/img/icono.svg" width="112" alt="Reelometer icon">
 
-# Reelómetro
+# Reelometer
 
 **The scoreboard for your short videos.**
 
@@ -32,7 +32,7 @@ on which topics and from whom. Everything stays on your phone.
 
 > *212 so far today. That's 47 minutes nobody is giving back to you.*
 
-Reelómetro doesn't block apps or lecture you. It just puts the scoreboard in front of you.
+Reelometer doesn't block apps or lecture you. It just puts the scoreboard in front of you.
 
 > **The app speaks English, Spanish (Spain), Brazilian Portuguese, French and Italian.** It follows your phone's
 > language. Screenshots in this README are in Spanish; where it mentions a menu or button, the Spanish label is in
@@ -63,7 +63,7 @@ Reelómetro doesn't block apps or lecture you. It just puts the scoreboard in fr
 
 ## Privacy
 
-Reelómetro uses Android's **accessibility service** to know when you move on to the next video. It's a powerful
+Reelometer uses Android's **accessibility service** to know when you move on to the next video. It's a powerful
 permission, so the app is built so that it can't abuse it:
 
 - **It has no `INTERNET` permission.** It can't send anything anywhere, even if it wanted to.
@@ -117,25 +117,25 @@ don't clash on top of Instagram. The full system is in [`docs/DESIGN.md`](docs/D
 ## Install
 
 It isn't on Google Play (yet). Download the APK of the latest version from
-[Releases](https://github.com/SergioRE2007/reelometro/releases) and open it on your phone:
+[Releases](https://github.com/SergioRE2007/reelometer/releases) and open it on your phone:
 
 1. Android will ask you to allow your browser or file manager to «install unknown apps»: accept and install.
 2. On Android 13 or later, the accessibility service switch is greyed out («Restricted setting») because the app
-   doesn't come from Google Play. Go to the system Settings › Apps › Reelómetro › ⋮ › **Allow restricted settings**
+   doesn't come from Google Play. Go to the system Settings › Apps › Reelometer › ⋮ › **Allow restricted settings**
    and turn it on again. The app itself guides you.
 3. New versions install on top and keep your data. To switch phones: Settings › Your data › **Export CSV** on the
    old one and **Import CSV** on the new one.
 
 Requirements: Android 8.0 (API 26) or later. Languages: English, Spanish (Spain), Brazilian Portuguese, French and
-Italian (it follows the phone; on Android 13 or later you can pick one in Settings › Apps › Reelómetro › Language).
+Italian (it follows the phone; on Android 13 or later you can pick one inside the app, in Settings › Theme › Language).
 
 ## Build
 
 You need Android Studio (or its JDK) and the Android SDK.
 
 ```bash
-git clone https://github.com/SergioRE2007/reelometro.git
-cd reelometro
+git clone https://github.com/SergioRE2007/reelometer.git
+cd reelometer
 ./gradlew assembleDebug testDebugUnitTest   # debug APK + JVM tests
 ./gradlew assembleRelease                   # unsigned release
 ```
@@ -165,7 +165,7 @@ app/src/main/java/com/reelometro/app/
 
 ## Status
 
-Version **1.7.0**. Honestly:
+Version **1.8.0**. Honestly:
 
 - **Tested on a real phone** (a Pixel with Android 17): TikTok and Instagram count correctly. Instagram quick send has
   been measured send by send: between 0.5 and 0.93 s to a person and 1.4–1.6 s to a group that has to be searched for
@@ -187,11 +187,11 @@ Version **1.7.0**. Honestly:
   (798 videos: all of them come in, and none is duplicated on a second import).
 - **1.7.0**: charts can be scrubbed by sliding a finger sideways (no long press) and Settings has an index at the
   top that jumps to each section; quick send and the tools are folded. Tested on the emulator.
-- It builds and passes its 830 JVM tests. The screenshots in this README use sample data.
+- It builds and passes its 871 JVM tests. The screenshots in this README use sample data.
 
 ## Support the project
 
-Reelómetro is made by a student in their spare time. It's free, has no ads and no internet. If it's useful to you
+Reelometer is made by a student in their spare time. It's free, has no ads and no internet. If it's useful to you
 and you feel like it, you can buy them a coffee.
 
 <a href="https://www.buymeacoffee.com/Lopuzno"><img src="https://img.shields.io/badge/Buy_Me_a_Coffee-support_the_project-FF5A1F?style=flat-square&logo=buymeacoffee&logoColor=11100E" alt="Buy me a coffee on Buy Me a Coffee"></a>
@@ -204,5 +204,5 @@ licence (SIL Open Font License 1.1).
 
 ## Disclaimer
 
-Reelómetro is an independent project. It is not affiliated with, sponsored or endorsed by TikTok, Instagram, YouTube
+Reelometer is an independent project. It is not affiliated with, sponsored or endorsed by TikTok, Instagram, YouTube
 or their companies. The names are used only to indicate which apps it works with.

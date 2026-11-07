@@ -30,7 +30,7 @@ data class TodayHeader(val text: String, val epochDay: Long)
 
 /**
  * Lo que va arriba: el marcador y, si toca, el aviso integrado. [canOpenDay] = tocar el marcador
- * abre el detalle (no con las fichas en blanco). [band] es la banda «desde que usas Reelómetro».
+ * abre el detalle (no con las fichas en blanco). [band] es la banda «desde que usas Reelometer».
  */
 @Immutable
 data class TodayTop(

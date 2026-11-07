@@ -5,7 +5,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.res.Configuration
 import androidx.core.content.ContextCompat
+import com.reelometro.app.copy.AppLanguage
 import com.reelometro.app.copy.AppTexts
 import com.reelometro.app.copy.ResourceTexts
 import com.reelometro.app.data.AppDatabase
@@ -13,6 +15,7 @@ import com.reelometro.app.data.ReelRepository
 import com.reelometro.app.data.game.PassportRepository
 import com.reelometro.app.data.settings.SettingsRepository
 import com.reelometro.app.widget.WidgetUpdater
+import com.reelometro.app.work.BackupScheduler
 import com.reelometro.app.work.NotificationScheduler
 import com.reelometro.app.work.Notifications
 import kotlinx.coroutines.CoroutineScope
@@ -44,6 +47,12 @@ class ReelometroApp : Application() {
     /** Modo Pasaporte (Flap, niveles, sellos y reto semanal) sobre los datos de uso. */
     val passport: PassportRepository by lazy { PassportRepository(this, database, settings) }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        // Cambió el idioma del sistema (o el de la app desde Android) con el proceso vivo.
+        AppLanguage.refresh(this)
+    }
+
     override fun onCreate() {
         super.onCreate()
         // Antes que nada: todos los textos (pantallas, avisos, widget) salen de los recursos.
@@ -51,6 +60,7 @@ class ReelometroApp : Application() {
         // Todo fuera del hilo principal: el arranque no espera a canales, WorkManager ni widgets.
         appScope.launch { runCatching { Notifications.createChannels(this@ReelometroApp) } }
         NotificationScheduler.start(this)
+        BackupScheduler.start(this)
         WidgetUpdater.start(this)
         listenToClock()
     }

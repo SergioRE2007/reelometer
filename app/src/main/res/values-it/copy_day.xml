@@ -33,7 +33,7 @@
     </string-array>
     <!-- Con objetivo, justo en el límite: %1$s el objetivo. -->
     <string-array name="day_goal_at">
-        <item>Proprio al limite: %1$s, né uno di più.</item>
+        <item>Proprio al limite: %1$s, nemmeno uno di più.</item>
         <item>%1$s su %1$s. Centrato.</item>
         <item>Obiettivo centrato quel giorno.</item>
     </string-array>
@@ -70,7 +70,7 @@
     <!-- Día normal: %1$s los vídeos, %2$s el tiempo («47 minutos»), %3$s el tiempo con mayúscula
          inicial (para empezar la frase con él). -->
     <string-array name="day_normal">
-        <item>%1$s e %2$s. Una giornata normale, che è già dire.</item>
+        <item>%1$s e %2$s. Una giornata normale, il che è tutto dire.</item>
         <item>Quel giorno: %2$s di video.</item>
         <item>%3$s. Né carne né pesce.</item>
     </string-array>
@@ -80,7 +80,7 @@
          _one: el tiempo es singular («una hora y 40 minutos»). -->
     <string-array name="day_high">
         <item>%1$s. Quel giorno l’algoritmo ha fatto gli straordinari.</item>
-        <item>%2$s di video. Ti bastava per %4$s.</item>
+        <item>%2$s di video. Abbastanza per %4$s.</item>
         <item>Quel giorno sono sfumati %3$s. Così, senza storie.</item>
     </string-array>
     <string-array name="day_high_noeq">
@@ -90,7 +90,7 @@
     </string-array>
     <string-array name="day_high_one">
         <item>%1$s. Quel giorno l’algoritmo ha fatto gli straordinari.</item>
-        <item>%2$s di video. Ti bastava per %4$s.</item>
+        <item>%2$s di video. Abbastanza per %4$s.</item>
         <item>Quel giorno è sfumato %3$s. Così, senza storie.</item>
     </string-array>
     <string-array name="day_high_one_noeq">

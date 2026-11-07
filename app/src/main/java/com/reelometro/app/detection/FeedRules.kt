@@ -15,7 +15,7 @@ import kotlin.math.roundToInt
  *
  * ⚠️ Es la parte más frágil de la app: TikTok, Instagram y YouTube cambian sus pantallas sin avisar.
  * Los ids y las clases salen de lo que se sabe de versiones públicas recientes de esas apps y **no se
- * han verificado** con esta versión de Reelómetro en un móvil real.
+ * han verificado** con esta versión de Reelometer en un móvil real.
  *
  * Orden de evaluación (la primera regla que decide gana):
  *  1. Pantalla (actividad) excluida, p. ej. LIVE de TikTok.

@@ -75,7 +75,7 @@
     <!-- Día alto: %1$s el tiempo con mayúscula inicial («Una hora y 40 minutos»), %2$s una
          equivalencia en infinitivo («leer 14 libros»). _noeq: sin equivalencia (no uses %2$s). -->
     <string-array name="notif_daily_high">
-        <item>%1$s. With that you could have %2$s.</item>
+        <item>%1$s. Enough time to %2$s.</item>
         <item>%1$s of screen time. The algorithm is thrilled.</item>
         <item>%1$s. A good day for the algorithm.</item>
     </string-array>
@@ -129,7 +129,7 @@
     <string name="notif_monthly_public_text">Your monthly summary is ready.</string>
 
     <!-- Si Android desconecta el servicio de accesibilidad (aún sin usar). -->
-    <string name="notif_service_lost_title">Reelómetro has stopped counting</string>
+    <string name="notif_service_lost_title">Reelometer has stopped counting</string>
     <string name="notif_service_lost_text">Android has disconnected the accessibility service. Tap to reconnect it.</string>
 
     <!-- ============================================================ aviso al pasar el objetivo -->

@@ -29,7 +29,7 @@ object ShareCopy {
     /** Lema de la marca. */
     val TAGLINE: String get() = str(R.string.share_tagline)
 
-    /** Pie de marca: «REELÓMETRO · CUENTA LO QUE NO CUENTAS». */
+    /** Pie de marca: «REELOMETER · CUENTA LO QUE NO CUENTAS». */
     val BRAND_FOOTER: String get() = str(R.string.share_brand_footer, BRAND, TAGLINE)
 
     /** Título del selector de compartir de Android (`Intent.createChooser`). */
@@ -112,7 +112,7 @@ object ShareCopy {
     /** Nota al pie del ticket, con variantes. */
     fun footer(seed: Long): String = pick(seed, "share.footer", R.array.share_footer)
 
-    /** Texto que acompaña a la imagen al compartir: «Mi octubre en Reelómetro: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾». */
+    /** Texto que acompaña a la imagen al compartir: «Mi octubre en Reelometer: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾». */
     fun shareText(period: CopyPeriod, start: LocalDate, count: Long, totalMs: Long): String {
         val v = Words.videos(count)
         val t = Words.duration(totalMs)
@@ -125,9 +125,9 @@ object ShareCopy {
     }
 
     /**
-     * Nombre del fichero (ASCII): «reelometro-octubre-2026.png», «reelometro-semana-2026-10-27.png».
+     * Nombre del fichero (ASCII): «reelometer-octubre-2026.png», «reelometer-semana-2026-10-27.png».
      * Las palabras salen del idioma de los textos; el mes se pasa a ASCII sin acentos y, si no queda
-     * nada (otro alfabeto), se usa su número («reelometro-10-2026.png»).
+     * nada (otro alfabeto), se usa su número («reelometer-10-2026.png»).
      */
     fun fileName(period: CopyPeriod, start: LocalDate): String = when (period) {
         CopyPeriod.WEEK -> str(R.string.share_file_week, start.toString())

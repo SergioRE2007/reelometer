@@ -370,7 +370,7 @@ class ReelRepository(
         val orphans = if (mode == ImportMode.ADD) {
             CsvImport.splitNew(
                 csv.orphanShares, dao.orphanShares().map { TimeKey(it.platform, it.at) },
-                keyOf = { TimeKey(it.platform.name, it.at) }, exact = { it.exact },
+                keyOf = { TimeKey(it.platform.name, it.at) }, precisionMs = { it.precisionMs },
             ).first
         } else {
             csv.orphanShares
@@ -389,7 +389,7 @@ class ReelRepository(
         val recipients = if (mode == ImportMode.ADD) {
             CsvImport.splitNew(
                 csv.recipients, dao.shareRecipients().map { TimeKey(it.platform, it.at, it.recipient) },
-                keyOf = { TimeKey(it.platform.name, it.at, it.recipient) }, exact = { it.exact },
+                keyOf = { TimeKey(it.platform.name, it.at, it.recipient) }, precisionMs = { it.precisionMs },
             ).first
         } else {
             csv.recipients
@@ -415,7 +415,7 @@ class ReelRepository(
     private fun splitVideos(videos: List<ImportedVideo>, keys: List<ViewKey>): Pair<List<ImportedVideo>, Int> =
         CsvImport.splitNew(
             videos, keys.map { TimeKey(it.platform, it.startedAt) },
-            keyOf = { TimeKey(it.platform.name, it.startedAt) }, exact = { it.exact },
+            keyOf = { TimeKey(it.platform.name, it.startedAt) }, precisionMs = { it.precisionMs },
         )
 
     /** Lee [input] entero si no pasa de [CsvImport.MAX_BYTES]; si pasa, `null`. */

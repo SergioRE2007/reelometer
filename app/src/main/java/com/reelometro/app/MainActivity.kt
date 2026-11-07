@@ -1,5 +1,6 @@
 package com.reelometro.app
 
+import com.reelometro.app.copy.AppLanguage
 import android.app.UiModeManager
 import android.content.Intent
 import android.graphics.Color
@@ -49,6 +50,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         splash.setKeepOnScreenCondition { !ready }
 
+        // El idioma de la app puede haberse cambiado desde Android con el proceso vivo.
+        AppLanguage.refresh(this)
         val app = ReelometroApp.from(this)
         if (savedInstanceState == null) {
             DeepLinks.parse(intent?.getStringExtra(EXTRA_ROUTE))?.let { deepLinks.trySend(it) }

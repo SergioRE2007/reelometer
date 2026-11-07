@@ -9,7 +9,7 @@
     <!-- Antetítulo en MAYÚSCULAS, muy corto. -->
     <string name="support_kicker">UNA COSA</string>
     <string name="support_title">Quest’app la fa uno studente.</string>
-    <string name="support_text">Reelómetro è gratis, non ha pubblicità e i tuoi dati non escono dal telefono. La fa uno studente nel tempo libero. Sul suo GitHub puoi vedere come è fatta e, se ti va, sostenerla.</string>
+    <string name="support_text">Reelometer è gratis, non ha pubblicità e i tuoi dati non escono dal telefono. La fa uno studente nel tempo libero. Sul suo GitHub puoi vedere come è fatta e, se ti va, sostenerla.</string>
     <!-- Pie pequeño bajo el texto: qué pasa al pulsar. -->
     <string name="support_note">Si apre nel browser. L’app continua a non avere internet.</string>
     <!-- Botón principal en MAYÚSCULAS. -->
@@ -20,7 +20,7 @@
     <string name="support_open_failed">Non è stato possibile aprire il browser. Cercalo su GitHub: %1$s.</string>
 
     <!-- TalkBack: título del aviso y de los botones. -->
-    <string name="support_pane_title">Sostieni Reelómetro</string>
+    <string name="support_pane_title">Sostieni Reelometer</string>
     <string name="support_open_description">Vedi il suo GitHub. Si apre nel browser</string>
     <string name="support_never_description">Non mostrare più questo avviso</string>
 </resources>

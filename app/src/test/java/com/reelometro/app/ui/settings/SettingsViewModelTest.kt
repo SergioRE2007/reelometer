@@ -234,7 +234,7 @@ class SettingsViewModelTest {
         runCurrent()
         vm.requestExport()
         runCurrent()
-        assertEquals(listOf<SettingsEffect>(SettingsEffect.PickExportFile("reelometro-2026-11-03.csv")), effects)
+        assertEquals(listOf<SettingsEffect>(SettingsEffect.PickExportFile("reelometer-2026-11-03.csv")), effects)
     }
 
     @Test
@@ -303,7 +303,7 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun `importar un archivo que no es de Reelómetro lo dice y no abre la vista previa`() = runTest(dispatcher) {
+    fun `importar un archivo que no es de Reelometer lo dice y no abre la vista previa`() = runTest(dispatcher) {
         val usage = FakeUsage()
         val vm = viewModel(usage = usage)
         usage.readResult = CsvRead.Failed(ImportError.NOT_REELOMETRO)

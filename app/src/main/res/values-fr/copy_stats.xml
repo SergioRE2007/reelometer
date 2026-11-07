@@ -28,7 +28,7 @@
     <string name="stats_ghost_legend">SEMAINE D’AVANT</string>
 
     <!-- Etiquetas de las líneas de PATRONES (en frase, a la izquierda; la cifra va a la derecha). -->
-    <string name="stats_line_peak_hour">Le pic</string>
+    <string name="stats_line_peak_hour">Heure de pointe</string>
     <!-- El día de la semana con más vídeos de media. -->
     <string name="stats_line_weak_day">Jour faible</string>
     <!-- El día con más vídeos del periodo. -->
@@ -130,17 +130,17 @@
     <!-- Cero vídeos en este periodo y en el anterior. -->
     <string-array name="stats_trend_both_zero_week">
         <item>Comme la semaine précédente\u00A0: rien.</item>
-        <item>Zéro maintenant, zéro avant. La constance, ça s’appelle.</item>
+        <item>Zéro maintenant, zéro avant. Ça s’appelle la constance.</item>
         <item>Aucune vidéo ni maintenant ni avant.</item>
     </string-array>
     <string-array name="stats_trend_both_zero_month">
         <item>Comme le mois précédent\u00A0: rien.</item>
-        <item>Zéro maintenant, zéro avant. La constance, ça s’appelle.</item>
+        <item>Zéro maintenant, zéro avant. Ça s’appelle la constance.</item>
         <item>Aucune vidéo ni maintenant ni avant.</item>
     </string-array>
     <string-array name="stats_trend_both_zero_year">
         <item>Comme l’année précédente\u00A0: rien.</item>
-        <item>Zéro maintenant, zéro avant. La constance, ça s’appelle.</item>
+        <item>Zéro maintenant, zéro avant. Ça s’appelle la constance.</item>
         <item>Aucune vidéo ni maintenant ni avant.</item>
     </string-array>
     <!-- Tendencia con remate. %1$s es la comparación ya en frase, con su punto final
@@ -158,7 +158,7 @@
         <item>%1$s Il existe de pires tendances.</item>
     </string-array>
     <string-array name="stats_trend_same">
-        <item>%1$s La constance, ça s’appelle.</item>
+        <item>%1$s Ça s’appelle la constance.</item>
         <item>%1$s Ni plus ni moins.</item>
         <item>%1$s Tu es du genre régulier.</item>
     </string-array>
@@ -197,12 +197,12 @@
          («12 días»), %3$s lo que falta para igualarlo («8 días»; en _one_left, «1 día»). -->
     <string-array name="stats_streak_ongoing">
         <item>Série de %1$s. Le record est à %2$s.</item>
-        <item>Série de %1$s. Il te manque %3$s pour égaler ta meilleure marque.</item>
+        <item>Série de %1$s. Il te manque %3$s pour égaler ton record.</item>
         <item>%1$s et on continue. La meilleure était de %2$s.</item>
     </string-array>
     <string-array name="stats_streak_ongoing_one_left">
         <item>Série de %1$s. Le record est à %2$s.</item>
-        <item>Série de %1$s. Il te manque %3$s pour égaler ta meilleure marque.</item>
+        <item>Série de %1$s. Il te manque %3$s pour égaler ton record.</item>
         <item>%1$s et on continue. La meilleure était de %2$s.</item>
     </string-array>
 
@@ -348,10 +348,10 @@
         <item>Aucune vidéo cette année-là. Que ça figure au procès-verbal.</item>
     </string-array>
     <!-- Periodo anterior al primer día con datos: %1$s la fecha del primer día («3 de marzo de 2026»).
-         Reelómetro es el nombre de la app: no se traduce. -->
+         Reelometer es el nombre de la app: no se traduce. -->
     <string-array name="stats_before_history">
         <item>Avant le %1$s, je ne comptais rien. On ne se connaissait pas encore.</item>
-        <item>Ça date d’avant Reelómetro. Il n’y a littéralement rien à voir ici.</item>
+        <item>Ça date d’avant Reelometer. Il n’y a littéralement rien à voir ici.</item>
         <item>Ton historique commence le %1$s. Avant, silence radio.</item>
     </string-array>
 

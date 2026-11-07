@@ -5,7 +5,7 @@
   celebraciones y el ticket de nivel que se comparte como imagen.
   Tono: aeropuerto, tarjeta de embarque, ironía amable. Premia ver menos y nunca culpa.
   Las millas salen de ver MENOS vídeos (días bajo la referencia, rachas, retos y sellos), nunca de verlos.
-  Nombres propios: «Flap» (la mascota) y «Reelómetro» (la app) no se traducen.
+  Nombres propios: «Flap» (la mascota) y «Reelometer» (la app) no se traducen.
   Cada <string-array> es una situación y cada <item>, una frase alternativa (se elige una por día).
   Puedes poner las que quieras (mínimo 2).  es un espacio duro: la cifra y su palabra no se separan.
   «Se pasa a mayúsculas sola» quiere decir que el código la convierte en MAYÚSCULAS: escríbela normal.
@@ -42,7 +42,7 @@
         <item>Flap a de la marge cette semaine.</item>
         <item>Flap est en pleine forme. Toi aussi, même si ça ne se voit pas.</item>
         <item>Flap a oublié ce qu’était le scroll.</item>
-        <item>Flap a jeté un œil par le hublot.</item>
+        <item>Flap regarde de nouveau par le hublot.</item>
         <item>Flap s’est inscrit à la course. Pour l’instant, ça va.</item>
     </string-array>
     <!-- Frase de Flap normal. -->
@@ -67,7 +67,7 @@
         <item>Flap ne sait plus dire que «\u00A0encore une\u00A0».</item>
         <item>Flap est un zombie du scroll. Une journée calme le soigne.</item>
         <item>Flap ne meurt pas. Il traverse juste une mauvaise passe.</item>
-        <item>Flap se rétablit dès que tu tiendras une journée.</item>
+        <item>Flap se rétablira dès que tu tiendras une journée.</item>
     </string-array>
     <!-- Frase mientras Flap calienta (sin objetivo ni historial suficiente). -->
     <string-array name="passport_phrase_warming">
@@ -213,7 +213,7 @@
     <string name="passport_stamp_regreso">DE RETOUR</string>
     <!-- Una semana entera contando. -->
     <string name="passport_stamp_primera_semana">SEMAINE COMPLÈTE</string>
-    <string name="passport_stamp_wrapped_compartido">RÉSUMÉ PARTAGÉ</string>
+    <string name="passport_stamp_wrapped_compartido">BILAN PARTAGÉ</string>
     <string name="passport_stamp_ticket_guardado">TICKET GARDÉ</string>
     <!-- Primer ascenso de nivel (despegar, como un avión). -->
     <string name="passport_stamp_primer_ascenso">DÉCOLLAGE</string>
@@ -246,7 +246,7 @@
     <string name="passport_stamp_hint_racha_3">Trois jours d’affilée sous ton objectif.</string>
     <string name="passport_stamp_hint_racha_7">Sept jours d’affilée sous ton objectif.</string>
     <string name="passport_stamp_hint_racha_14">Quatorze jours d’affilée sous ton objectif.</string>
-    <string name="passport_stamp_hint_racha_30">Trente jours d’affilée sous ton objectif. Pas de précipitation.</string>
+    <string name="passport_stamp_hint_racha_30">Trente jours d’affilée sous ton objectif. Rien ne presse.</string>
     <!-- %1$s es «20 %». -->
     <string name="passport_stamp_hint_semana_menos_20">Une semaine avec %1$s de vidéos en moins que la précédente.</string>
     <string name="passport_stamp_hint_mes_a_la_baja">Un mois avec moins de vidéos que le mois précédent.</string>
@@ -256,14 +256,14 @@
     <string name="passport_stamp_hint_regreso">Que Flap passe de zombie à normal ou mieux.</string>
     <string name="passport_stamp_hint_primera_semana">Une semaine entière avec le service qui compte.</string>
     <!-- «Resumen» es el nombre de una pestaña de la app: usa el mismo que en la barra de navegación. -->
-    <string name="passport_stamp_hint_wrapped_compartido">Partage un résumé depuis l’onglet Résumé.</string>
-    <string name="passport_stamp_hint_ticket_guardado">Enregistre sur ton téléphone le ticket d’un résumé.</string>
+    <string name="passport_stamp_hint_wrapped_compartido">Partage un bilan depuis l’onglet Bilan.</string>
+    <string name="passport_stamp_hint_ticket_guardado">Enregistre sur ton téléphone le ticket d’un bilan.</string>
     <string name="passport_stamp_hint_primer_ascenso">Passe de passager à fréquent.</string>
     <string name="passport_stamp_hint_madrugador">Il sort si tu regardes des vidéos entre 3 h et 5 h du matin. Mieux vaut ne pas le chercher.</string>
     <!-- %1$s es «1.000 vídeos». -->
     <string name="passport_stamp_hint_mil_videos">Atteins %1$s au total. Il arrivera tout seul.</string>
     <!-- %1$s es «10.000 vídeos». -->
-    <string name="passport_stamp_hint_diez_mil_videos">Atteins %1$s au total. Pas non plus de précipitation.</string>
+    <string name="passport_stamp_hint_diez_mil_videos">Atteins %1$s au total. Rien ne presse non plus.</string>
     <!-- TikTok, Reels y Shorts son marcas: no se traducen. -->
     <string name="passport_stamp_hint_tres_plataformas">TikTok, Reels et Shorts le même jour. Ne rapporte pas de milles.</string>
     <string name="passport_stamp_hint_cinco_categorias">Cinq catégories différentes en une semaine. Varié, au moins.</string>
@@ -314,7 +314,7 @@
     <!-- Estado del reto, MAYÚSCULAS y corto. «NO ESTA VEZ» (perdido) suena amable, no a fracaso. -->
     <string name="passport_challenge_status_running">EN COURS</string>
     <string name="passport_challenge_status_won">RÉUSSI</string>
-    <string name="passport_challenge_status_lost">PERDU</string>
+    <string name="passport_challenge_status_lost">PAS CETTE FOIS</string>
 
     <!-- Etiquetas de las líneas del reto (etiqueta a la izquierda, cifra a la derecha). -->
     <string name="passport_line_so_far">Tu en es à</string>
@@ -340,7 +340,7 @@
     </string-array>
     <!-- En curso, pero ya por encima del tope (ya no se puede ganar). -->
     <string-array name="passport_challenge_over">
-        <item>Ce défi n’est plus accessible. Lundi, un autre, et le fantôme n’apprend rien.</item>
+        <item>Ce défi n’est plus accessible. Lundi, il y en a un autre, et le fantôme n’apprend jamais.</item>
         <item>Le plafond est dépassé. Ça arrive aux meilleures familles.</item>
         <item>Cette semaine, c’est le fantôme qui gagne. Qu’il ne s’y habitue pas.</item>
     </string-array>
@@ -354,7 +354,7 @@
     <string-array name="passport_challenge_ahead">
         <item>À ce stade, tu es %1$s en dessous de ton fantôme.</item>
         <item>À ce stade, ton fantôme avait %1$s de plus que toi.</item>
-        <item>Pour l’instant, le fantôme traîne\u00A0: tu lui prends %1$s.</item>
+        <item>Pour l’instant, le fantôme traîne\u00A0: tu as %1$s d’avance.</item>
     </string-array>
     <!-- En curso, por detrás (más vídeos que el fantasma): %1$s la diferencia («85 vídeos»). -->
     <string-array name="passport_challenge_behind">
@@ -465,11 +465,11 @@
     </string-array>
 
     <!-- Texto que acompaña a la imagen del ticket al compartirla. %1$s el nivel en MAYÚSCULAS («PLATA»).
-         «Reelómetro» es la marca: no se traduce. -->
-    <string name="passport_ticket_share_text">Niveau %1$s sur Reelómetro\u00A0: des milles pour avoir regardé moins de vidéos.</string>
+         «Reelometer» es la marca: no se traduce. -->
+    <string name="passport_ticket_share_text">Niveau %1$s sur Reelometer\u00A0: des milles pour avoir regardé moins de vidéos.</string>
     <!-- Nombre del archivo de la imagen del ticket (se ve al compartirla). SOLO letras ASCII sin acentos,
          cifras y guiones: sin espacios. %1$s el nivel en minúsculas («plata»; los acentos se quitan solos). -->
-    <string name="passport_ticket_file_name">reelometro-niveau-%1$s.png</string>
+    <string name="passport_ticket_file_name">reelometer-niveau-%1$s.png</string>
 
     <!-- ============================================================ aviso de nivel nuevo -->
 

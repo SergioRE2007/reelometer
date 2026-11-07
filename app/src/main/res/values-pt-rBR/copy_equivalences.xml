@@ -626,7 +626,7 @@
     <string name="eq_tortilla_half">meia omelete de batata</string>
     <string name="eq_tortilla_three_quarters">três quartos de omelete de batata</string>
     <string name="eq_tortilla_label">OMELETES DE BATATA</string>
-    <string name="eq_tortilla_basis">Base: descascar, fritar e firmar ≈ 45\u00A0min</string>
+    <string name="eq_tortilla_basis">Base: descascar, fritar e dar o ponto ≈ 45\u00A0min</string>
 
     <!-- COCIDOS: se cuenta por unidades (cocido madrileño / cocidos madrileños). -->
     <string name="eq_cocido_do">fazer %1$s</string>

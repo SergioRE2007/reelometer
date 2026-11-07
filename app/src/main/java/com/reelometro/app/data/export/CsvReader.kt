@@ -7,36 +7,80 @@ import java.nio.charset.CodingErrorAction
 import java.text.Normalizer
 
 /**
- * Lectura tolerante del CSV de Reelómetro (puro, sin Android): lo que escribe [CsvExporter] y lo que
+ * Lectura tolerante del CSV de Reelometer (puro, sin Android): lo que escribe [CsvExporter] y lo que
  * deja una hoja de cálculo al volver a guardarlo.
  *
- * - Con o sin BOM; UTF-8 o, si los bytes no son UTF-8 válido, Windows-1252 (Excel «CSV» a secas).
- * - Separador `;` o `,` (se mira la primera línea), fin de línea CRLF, LF o CR.
+ * - Con o sin BOM; UTF-8, UTF-16 con BOM (Excel «Texto Unicode») o, si los bytes no son UTF-8 válido,
+ *   Windows-1252 (Excel «CSV» a secas). Si un UTF-8 se abrió como Windows-1252 y se volvió a guardar en
+ *   UTF-8 («duraciÃ³n_s»), se deshace.
+ * - Separador `;`, `,` o tabulador (el que más sale en la primera línea), fin de línea CRLF, LF o CR.
  * - Campos entre comillas con separadores, comillas dobles (`""`) o saltos de línea dentro.
  * - Bloques ([CsvDocument]): los vídeos arriba y, detrás, `TÍTULO` + cabecera + filas.
  */
 object CsvReader {
 
+    private val WINDOWS_1252: Charset = Charset.forName("windows-1252")
+
     /** Texto del fichero: quita el BOM y elige la codificación. */
     fun decode(bytes: ByteArray): String {
-        val text = try {
-            Charsets.UTF_8.newDecoder()
-                .onMalformedInput(CodingErrorAction.REPORT)
-                .onUnmappableCharacter(CodingErrorAction.REPORT)
-                .decode(ByteBuffer.wrap(bytes))
-                .toString()
-        } catch (_: CharacterCodingException) {
-            String(bytes, Charset.forName("windows-1252"))
+        if (bytes.size >= 2) {
+            val b0 = bytes[0].toInt() and 0xFF
+            val b1 = bytes[1].toInt() and 0xFF
+            if (b0 == 0xFF && b1 == 0xFE) return String(bytes, 2, bytes.size - 2, Charsets.UTF_16LE)
+            if (b0 == 0xFE && b1 == 0xFF) return String(bytes, 2, bytes.size - 2, Charsets.UTF_16BE)
         }
-        return text.removePrefix(Csv.BOM)
+        val text = strictUtf8(bytes) ?: return String(bytes, WINDOWS_1252).removePrefix(Csv.BOM)
+        return repairMojibake(text.removePrefix(Csv.BOM))
     }
 
-    /** `;` salvo que la primera línea solo tenga comas. */
+    private fun strictUtf8(bytes: ByteArray): String? = try {
+        Charsets.UTF_8.newDecoder()
+            .onMalformedInput(CodingErrorAction.REPORT)
+            .onUnmappableCharacter(CodingErrorAction.REPORT)
+            .decode(ByteBuffer.wrap(bytes))
+            .toString()
+    } catch (_: CharacterCodingException) {
+        null
+    }
+
+    /**
+     * UTF-8 leído como Windows-1252 y guardado otra vez en UTF-8 («vÃ­deo»): se vuelve a los bytes de antes y se
+     * leen como UTF-8. Solo si todo el texto se deja (un texto bueno con «Ã» suelto no pasa la lectura estricta).
+     */
+    fun repairMojibake(text: String): String {
+        if (!MOJIBAKE.containsMatchIn(text)) return text
+        val out = ByteArray(text.length)
+        for ((i, c) in text.withIndex()) {
+            out[i] = (BYTE_OF[c] ?: return text).toByte()
+        }
+        return strictUtf8(out) ?: text
+    }
+
+    /** «Ã» o «Â» seguidos de lo que Windows-1252 pone en el segundo byte de una letra UTF-8 (á é í ó ú ñ ü…). */
+    private val MOJIBAKE = Regex("[\\u00C2\\u00C3][\\u0080-\\u00BF\\u0152\\u0153\\u0160\\u0161\\u0178\\u017D\\u017E\\u0192\\u02C6\\u02DC\\u2013-\\u203A\\u20AC\\u2122]")
+
+    /** Carácter → byte en Windows-1252 (los cinco huecos de la tabla, 0x81, 0x8D…, como su mismo código). */
+    private val BYTE_OF: Map<Char, Int> = HashMap<Char, Int>().apply {
+        for (b in 0 until 256) put(b.toChar(), b)
+        val decoded = String(ByteArray(128) { (it + 128).toByte() }, WINDOWS_1252)
+        for ((i, c) in decoded.withIndex()) if (c != '�') put(c, i + 128)
+    }
+
+    /** El que más sale en la primera línea (fuera de comillas) entre `;`, `,` y tabulador; si empatan, `;`. */
     fun separatorOf(text: String): Char {
         val end = text.indexOfAny(charArrayOf('\n', '\r')).let { if (it < 0) text.length else it }
-        val first = text.substring(0, end)
-        return if (first.contains(Csv.SEPARATOR) || !first.contains(',')) Csv.SEPARATOR else ','
+        val counts = IntArray(SEPARATORS.size)
+        var quoted = false
+        for (i in 0 until end) {
+            val c = text[i]
+            if (c == '"') quoted = !quoted
+            if (!quoted) SEPARATORS.indexOf(c).takeIf { it >= 0 }?.let { counts[it]++ }
+        }
+        val best = counts.indices.maxByOrNull { counts[it] } ?: 0
+        return if (counts[best] == 0) Csv.SEPARATOR else SEPARATORS[best]
     }
+
+    private val SEPARATORS = charArrayOf(Csv.SEPARATOR, ',', '\t')
 
     /** Todas las filas, con los campos ya sin comillas. Una línea vacía es una fila con un campo vacío. */
     fun rows(text: String, separator: Char = separatorOf(text)): List<List<String>> {
@@ -89,7 +133,19 @@ object CsvReader {
     fun isBlank(row: List<String>): Boolean = row.all { it.isBlank() }
 
     /** Lee [text] y lo separa en bloques. */
-    fun document(text: String): CsvDocument = CsvDocument.of(rows(text))
+    fun document(text: String): CsvDocument {
+        val separator = separatorOf(text)
+        return CsvDocument.of(unwrap(rows(text, separator), separator))
+    }
+
+    /**
+     * Una hoja de cálculo con otro separador mete la línea entera en una celda y al guardar la entrecomilla
+     * (`"2026-11-03T14:37:05;TikTok;12,3;…"`): esa celda se vuelve a partir.
+     */
+    private fun unwrap(rows: List<List<String>>, separator: Char): List<List<String>> = rows.flatMap { row ->
+        val only = row.firstOrNull()
+        if (only != null && separator in only && row.drop(1).all { it.isBlank() }) rows(only, separator) else listOf(row)
+    }
 
     /**
      * Nombre de columna o título comparable: sin espacios en los bordes, en minúsculas y sin tildes

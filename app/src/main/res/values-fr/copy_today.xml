@@ -24,7 +24,7 @@
     <string name="today_empty_creators">Aucun créateur pour l’instant.</string>
 
     <!-- TalkBack del marcador con el servicio de accesibilidad desconectado. -->
-    <string name="today_service_off_description">Pas de signal\u00A0: le service de Reelómetro est déconnecté.</string>
+    <string name="today_service_off_description">Pas de signal\u00A0: le service de Reelometer est déconnecté.</string>
 
     <!-- Cabecera en MAYÚSCULAS (se pasa a mayúsculas sola): «HOY · MARTES 3 NOV». %1$s día de la
          semana, %2$s fecha corta («3 nov» o «3 nov 2025»). -->
@@ -42,7 +42,7 @@
 
     <!-- Cero vídeos el primer día (recién instalada). -->
     <string-array name="today_zero_first">
-        <item>Tout est prêt. La première vidéo que tu regardes ouvre le compte.</item>
+        <item>Tout est prêt. La première vidéo que tu regardes lance le compteur.</item>
         <item>Compteur à zéro. À partir de maintenant, tout compte.</item>
         <item>Chaque vidéo que tu regardes apparaîtra ici. Pour l’instant, silence radio.</item>
     </string-array>
@@ -74,7 +74,7 @@
     <!-- Objetivo diario («como mucho N») superado: %1$s lo que se pasó («62 vídeos»), %2$s el
          objetivo («150»), %3$s los vídeos de hoy («212»). -->
     <string-array name="today_goal_over">
-        <item>%1$s au-dessus de ton objectif. Celui-ci était ailleurs.</item>
+        <item>%1$s au-dessus de ton objectif. L’objectif, c’était autre chose.</item>
         <item>Objectif\u00A0: %2$s. Réalité\u00A0: %3$s.</item>
         <item>Tu l’as dépassé de %1$s. Personne ne tient les comptes. Moi, si.</item>
         <item>Objectif dépassé. Ce n’était pas le but, pourtant.</item>
@@ -144,14 +144,14 @@
          _one: el tiempo es singular («una hora y 40 minutos»). _noeq: sin equivalencia (no uses %4$s). -->
     <string-array name="today_high">
         <item>Aujourd’hui, tu en es à %1$s. Ça fait %2$s que personne ne te rendra.</item>
-        <item>%3$s. Ça te suffisait pour %4$s.</item>
+        <item>%3$s. De quoi %4$s.</item>
         <item>%5$s. À ce stade, l’algorithme sait comment tu aimes ton café.</item>
         <item>%5$s\u00A0: environ %6$s de pouce.</item>
         <item>%3$s d’écran, en doses de quinze secondes.</item>
     </string-array>
     <string-array name="today_high_one">
         <item>Aujourd’hui, tu en es à %1$s. Ça fait %2$s que personne ne te rendra.</item>
-        <item>%3$s. Ça te suffisait pour %4$s.</item>
+        <item>%3$s. De quoi %4$s.</item>
         <item>%5$s. À ce stade, l’algorithme sait comment tu aimes ton café.</item>
         <item>%5$s\u00A0: environ %6$s de pouce.</item>
         <item>%3$s d’écran, en doses de quinze secondes.</item>
@@ -176,14 +176,14 @@
          _noeq: sin equivalencia (no uses %3$s). -->
     <string-array name="today_extreme">
         <item>%1$s. L’algorithme t’envoie ses salutations.</item>
-        <item>%2$s. Ce n’est plus un moment, c’est un service complet.</item>
+        <item>%2$s. Ce n’est plus un petit moment, c’est une journée de travail.</item>
         <item>Aujourd’hui, tu en es à %1$s. Si c’était un travail, il serait temps de réclamer des heures sup.</item>
-        <item>%2$s de vidéos. Ça te suffisait pour %3$s.</item>
+        <item>%2$s de vidéos. De quoi %3$s.</item>
         <item>%1$s. Ton pouce a parcouru %4$s. Toi, nettement moins.</item>
     </string-array>
     <string-array name="today_extreme_noeq">
         <item>%1$s. L’algorithme t’envoie ses salutations.</item>
-        <item>%2$s. Ce n’est plus un moment, c’est un service complet.</item>
+        <item>%2$s. Ce n’est plus un petit moment, c’est une journée de travail.</item>
         <item>Aujourd’hui, tu en es à %1$s. Si c’était un travail, il serait temps de réclamer des heures sup.</item>
         <item>%2$s de vidéos. Et ça monte.</item>
         <item>%1$s. Ton pouce a parcouru %4$s. Toi, nettement moins.</item>
@@ -234,9 +234,9 @@
     <string name="today_screen_time_rest_shares">D’ÉCRAN · %1$s</string>
     <!-- Vídeos compartidos hoy (se pasa a MAYÚSCULAS): «4 compartidos». -->
     <plurals name="today_shares">
-        <item quantity="one">%1$s\u00A0PARTAGE</item>
-        <item quantity="many">%1$s\u00A0DE\u00A0PARTAGES</item>
-        <item quantity="other">%1$s\u00A0PARTAGES</item>
+        <item quantity="one">%1$s\u00A0partage</item>
+        <item quantity="many">%1$s\u00A0de\u00A0partages</item>
+        <item quantity="other">%1$s\u00A0partages</item>
     </plurals>
     <!-- La línea dicha (TalkBack): «47 minutos de pantalla.». %1$s el tiempo con mayúscula inicial. -->
     <string name="today_screen_time_description">%1$s d’écran.</string>
@@ -263,8 +263,8 @@
     </string-array>
     <!-- Con qué se compara (en minúsculas; va dentro de las frases today_delta_*): %1$s el día de la
          semana («martes»). _now: hoy, hasta la misma hora. -->
-    <string name="today_comparison_ref_now">ta moyenne des %1$s à cette heure-ci</string>
-    <string name="today_comparison_ref">ta moyenne des %1$s</string>
+    <string name="today_comparison_ref_now">ta moyenne du %1$s à cette heure-ci</string>
+    <string name="today_comparison_ref">ta moyenne du %1$s</string>
     <!-- Aún no hay datos de ese día de la semana: %1$s el día en plural (today_weekdays_plural).
          La etiqueta va en MAYÚSCULAS (con poco sitio); la _description es para TalkBack. -->
     <string name="today_comparison_no_base">PAS ENCORE DE %1$s POUR COMPARER</string>
@@ -306,7 +306,7 @@
     <!-- «HORA PUNTA 23:00 · 41 VÍDEOS» (MAYÚSCULAS, se pasa sola). %1$s la hora, %2$s los vídeos. -->
     <string name="today_peak_hour">HEURE DE POINTE %1$s · %2$s</string>
 
-    <!-- Banda «desde que usas Reelómetro» (MAYÚSCULAS, se pasa sola): «DESDE EL 3 MAR: 12.408 VÍDEOS · 61 H».
+    <!-- Banda «desde que usas Reelometer» (MAYÚSCULAS, se pasa sola): «DESDE EL 3 MAR: 12.408 VÍDEOS · 61 H».
          %1$s desde cuándo (today_since_*), %2$s los vídeos, %3$s el tiempo corto. -->
     <string name="today_since_band">%1$s\u00A0: %2$s · %3$s</string>
     <!-- La banda dicha (TalkBack): «Desde el 3 de marzo: 12.408 vídeos y 61 horas.». %1$s desde
@@ -331,14 +331,14 @@
         <item>Sans l’autorisation d’accessibilité, je ne vois rien. Ce qui, d’ailleurs, est bien ce qu’on attend d’une appli comme ça.</item>
         <item>Le service est déconnecté. Ce que tu vois en ce moment ne compte pas. Littéralement.</item>
         <item>Sans autorisation, le compteur reste dans le noir. Reconnecte-le et on reprend là où on s’était arrêtés.</item>
-        <item>Android a déconnecté le service. Ça lui arrive. Un petit tap et c’est reparti.</item>
+        <item>Android a déconnecté le service. Ça lui arrive. Une pression et c’est reparti.</item>
         <item>En ce moment, tu pourrais regarder mille vidéos sans que rien ne se passe ici.</item>
     </string-array>
     <!-- El permiso de accesibilidad nunca se ha concedido. -->
     <string-array name="today_service_never">
         <item>Pour commencer à compter, il me faut une autorisation. Je t’explique laquelle et à quoi elle sert, sans les petits caractères.</item>
         <item>Je n’ai pas encore le droit de regarder, donc je ne compte rien. C’est toi qui décides.</item>
-        <item>Sans l’autorisation d’accessibilité, ce compteur est une décoration. Jolie, mais décoration.</item>
+        <item>Sans l’autorisation d’accessibilité, ce compteur n’est qu’une déco. Jolie, mais déco.</item>
     </string-array>
     <!-- Todas las apps apagadas en Ajustes («Qué apps cuento»). -->
     <string-array name="today_no_platforms">

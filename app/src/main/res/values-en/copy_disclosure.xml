@@ -12,7 +12,7 @@
     <!-- Título grande. -->
     <string name="disclosure_title">To count, I have to look.</string>
     <!-- Párrafo principal: qué se lee, para qué y dónde se guarda. -->
-    <string name="disclosure_summary">Reelómetro uses Android\'s accessibility service to read the screen of TikTok, Instagram and YouTube while you use them. That way it detects each short video you watch and stores, only on this phone, which app you watched it in, when, for how long, who posted it and its description, so it can show you your statistics.</string>
+    <string name="disclosure_summary">Reelometer uses Android\'s accessibility service to read the screen of TikTok, Instagram and YouTube while you use them. That way it detects each short video you watch and stores, only on this phone, which app you watched it in, when, for how long, who posted it and its description, so it can show you your statistics.</string>
 
     <!-- Bloques con etiqueta en MAYÚSCULAS (poco sitio) y su texto, en este orden. -->
     <!-- «Compartir» cita el botón de Instagram/TikTok/YouTube tal cual (en cada idioma, como lo muestren

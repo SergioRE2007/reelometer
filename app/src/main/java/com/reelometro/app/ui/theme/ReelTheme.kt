@@ -19,7 +19,7 @@ private val LocalReelColors = staticCompositionLocalOf { DarkReelColors }
 private val LocalReelType = staticCompositionLocalOf { ReelTypography }
 
 /**
- * Tema de Reelómetro. Material3 queda debajo solo como base invisible (ripple, selección de texto…),
+ * Tema de Reelometer. Material3 queda debajo solo como base invisible (ripple, selección de texto…),
  * con un esquema derivado de nuestros tokens para que nunca asome el morado por defecto.
  */
 @Composable

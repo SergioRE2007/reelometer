@@ -13,10 +13,10 @@
     <string name="tour_step">PASSO %1$s DI %2$s</string>
 
     <!-- TalkBack: título del panel y de los botones. -->
-    <string name="tour_pane_title">Giro guidato di Reelómetro</string>
-    <string name="tour_skip_description">Salta il giro guidato</string>
-    <string name="tour_next_description">Passo successivo del giro guidato</string>
-    <string name="tour_done_description">Termina il giro guidato</string>
+    <string name="tour_pane_title">Tour di Reelometer</string>
+    <string name="tour_skip_description">Salta il tour</string>
+    <string name="tour_next_description">Passo successivo del tour</string>
+    <string name="tour_done_description">Termina il tour</string>
 
     <!-- Título corto de cada paso (sin punto final). -->
     <!-- El marcador grande de Hoy con los vídeos del día. -->
@@ -37,7 +37,7 @@
     <!-- Lo mismo cuando aún no hay comparación (faltan días): no señala nada. -->
     <string name="tour_comparison_text_empty">Con qualche giorno contato, qui vedrai come vai rispetto al tuo giorno medio a quest’ora.</string>
     <string name="tour_stats_bars_text">Tieni il dito su una barra e scorri per vedere la cifra esatta di ogni giorno.</string>
-    <string name="tour_wrapped_text">La tua settimana, il tuo mese e il tuo anno, raccontati come una storia. Con ticket da condividere, se hai coraggio.</string>
+    <string name="tour_wrapped_text">La tua settimana, il tuo mese e il tuo anno, raccontati come una storia. Con lo scontrino da condividere, se hai coraggio.</string>
     <string name="tour_passport_text">Flap e i tuoi timbri. Qui l’esperienza si guadagna guardando meno, mai di più.</string>
     <string name="tour_settings_text">Obiettivo, avvisi e tema, qui in alto. Sette tocchi sulla versione aprono la calibrazione.</string>
 

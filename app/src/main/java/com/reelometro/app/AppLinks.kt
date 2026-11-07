@@ -13,7 +13,7 @@ object AppLinks {
      * proyecto, no a pagar: así no choca con la política de pagos de Google Play. El repo es público.
      * Vacía = ni el enlace escondido de Ajustes ni el aviso de apoyo se enseñan.
      */
-    const val PROJECT_URL = "https://github.com/SergioRE2007/reelometro"
+    const val PROJECT_URL = "https://github.com/SergioRE2007/reelometer"
 
     /** Abre [url] en el navegador. `false` si no hay ninguna app que lo abra (o la URL está vacía). */
     fun open(context: Context, url: String = PROJECT_URL): Boolean {

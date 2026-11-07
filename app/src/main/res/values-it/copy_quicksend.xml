@@ -17,7 +17,7 @@
     <!-- Acción de TalkBack en cada burbuja (equivale a soltarla en la «X»). -->
     <string name="quicksend_hide_action">Nascondi fino al reel successivo</string>
     <!-- Nombre de la ventana de las burbujas (TalkBack la anuncia así). -->
-    <string name="quicksend_window_title">Invio rapido di Reelómetro</string>
+    <string name="quicksend_window_title">Invio rapido di Reelometer</string>
     <!-- La zona «X» que sale abajo mientras arrastras las burbujas. -->
     <string name="quicksend_zone_title">Rilascia qui per nascondere</string>
 
@@ -27,5 +27,5 @@
     <string name="quicksend_ask_body">Hai nascosto le bolle tre volte di fila. Se lo spegni, lo riaccendi nelle Impostazioni, sotto «A chi invii».</string>
     <!-- Botones en MAYÚSCULAS, muy cortos. -->
     <string name="quicksend_ask_turn_off">SPEGNI</string>
-    <string name="quicksend_ask_keep">CONTINUA</string>
+    <string name="quicksend_ask_keep">LASCIALO</string>
 </resources>

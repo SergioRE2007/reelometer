@@ -126,7 +126,7 @@ class ScreenCopyTest {
     }
 
     @Test
-    fun `banda desde que usas Reelómetro`() {
+    fun `banda desde que usas Reelometer`() {
         val first = LocalDate.of(2026, 3, 3)
         assertEquals("DESDE EL 3 MAR: 12.408 VÍDEOS · 61 H", plain(TodayCopy.sinceBand(first, today, 12_408, 61 * hour)))
         assertEquals("DESDE HOY: 1 VÍDEO · 0 MIN", plain(TodayCopy.sinceBand(today, today, 1, 15_000)))
@@ -223,7 +223,7 @@ class ScreenCopyTest {
         assertTrue("Lo que octubre se llevó." in all { WrappedCopy.coverTitle(CopyPeriod.MONTH, oct, it) })
         assertTrue("Tu semana, contada." in all { WrappedCopy.coverTitle(CopyPeriod.WEEK, oct, it) })
         assertTrue("Tu 2026, contado." in all { WrappedCopy.coverTitle(CopyPeriod.YEAR, LocalDate.of(2026, 1, 1), it) })
-        assertEquals("REELÓMETRO · OCTUBRE 2026", WrappedCopy.coverLabel(CopyPeriod.MONTH, oct, LocalDate.of(2026, 10, 31)))
+        assertEquals("REELOMETER · OCTUBRE 2026", WrappedCopy.coverLabel(CopyPeriod.MONTH, oct, LocalDate.of(2026, 10, 31)))
         assertTrue("Tu octubre, contado." in all { WrappedCopy.hubHeadline(YearMonth.of(2026, 10), it) })
     }
 
@@ -260,13 +260,13 @@ class ScreenCopyTest {
         assertEquals("@pepito", byLabel["👑 CREADOR N.º 1"])
         assertEquals("34 %", byLabel["😂 HUMOR"])
         assertEquals("PAGADO CON TU TIEMPO", ShareCopy.STAMP)
-        assertEquals("REELÓMETRO · CUENTA LO QUE NO CUENTAS", ShareCopy.BRAND_FOOTER)
+        assertEquals("REELOMETER · CUENTA LO QUE NO CUENTAS", ShareCopy.BRAND_FOOTER)
         assertEquals(
-            "Mi octubre en Reelómetro: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾",
+            "Mi octubre en Reelometer: 4.812 vídeos y 29 horas. No se admiten devoluciones. 🧾",
             plain(ShareCopy.shareText(CopyPeriod.MONTH, LocalDate.of(2026, 10, 1), 4_812, 29 * hour)),
         )
-        assertEquals("reelometro-octubre-2026.png", ShareCopy.fileName(CopyPeriod.MONTH, LocalDate.of(2026, 10, 1)))
-        assertEquals("reelometro-semana-2026-10-26.png", ShareCopy.fileName(CopyPeriod.WEEK, LocalDate.of(2026, 10, 26)))
+        assertEquals("reelometer-octubre-2026.png", ShareCopy.fileName(CopyPeriod.MONTH, LocalDate.of(2026, 10, 1)))
+        assertEquals("reelometer-semana-2026-10-26.png", ShareCopy.fileName(CopyPeriod.WEEK, LocalDate.of(2026, 10, 26)))
         // Sin opcionales: solo vídeos y tiempo
         assertEquals(2, ShareCopy.lines(1, 60_000, 1).size)
     }
@@ -276,7 +276,7 @@ class ScreenCopyTest {
     @Test
     fun `la guía usa los nombres reales de Android`() {
         val guide = OnboardingCopy.GUIDE_STEPS.joinToString(" ") { it.text }
-        listOf("Aplicaciones descargadas", "Usar Reelómetro", "pueda controlar totalmente tu dispositivo", "Permitir").forEach {
+        listOf("Aplicaciones descargadas", "Usar Reelometer", "pueda controlar totalmente tu dispositivo", "Permitir").forEach {
             assertTrue("La guía debe citar «$it»", it in guide)
         }
         val restricted = OnboardingCopy.RESTRICTED_TITLE + OnboardingCopy.RESTRICTED_STEPS.joinToString(" ") { it.text } +

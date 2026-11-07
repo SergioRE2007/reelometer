@@ -24,7 +24,7 @@
     <string name="today_empty_creators">No creators yet.</string>
 
     <!-- TalkBack del marcador con el servicio de accesibilidad desconectado. -->
-    <string name="today_service_off_description">No signal: the Reelómetro service is disconnected.</string>
+    <string name="today_service_off_description">No signal: the Reelometer service is disconnected.</string>
 
     <!-- Cabecera en MAYÚSCULAS (se pasa a mayúsculas sola): «HOY · MARTES 3 NOV». %1$s día de la
          semana, %2$s fecha corta («3 nov» o «3 nov 2025»). -->
@@ -41,7 +41,7 @@
 
     <!-- Cero vídeos el primer día (recién instalada). -->
     <string-array name="today_zero_first">
-        <item>All set. The first video you watch opens the account.</item>
+        <item>All set. The first video you watch gets the count going.</item>
         <item>Counter at zero. From here on, everything counts.</item>
         <item>Every video you watch will show up here. For now, silence.</item>
     </string-array>
@@ -83,7 +83,7 @@
     <!-- Justo en el objetivo: %1$s el objetivo. -->
     <string-array name="today_goal_at">
         <item>Right on the limit: %1$s. Not one more, for now.</item>
-        <item>%1$s of %1$s. Anything from here is a tip.</item>
+        <item>%1$s of %1$s. Anything from here is extra.</item>
         <item>Goal nailed. From here on, every video goes into the red.</item>
     </string-array>
 
@@ -106,17 +106,17 @@
          _notime: menos de un minuto (no uses %2$s). -->
     <string-array name="today_first">
         <item>%1$s. Warming up.</item>
-        <item>You\'ve started easy: %2$s.</item>
+        <item>Gentle start: %2$s.</item>
         <item>%1$s and %2$s. Nobody would notice.</item>
         <item>Not much so far: %1$s.</item>
-        <item>This has just started. For now, %1$s.</item>
+        <item>It\'s only just begun. For now, %1$s.</item>
     </string-array>
     <string-array name="today_first_notime">
         <item>%1$s. Warming up.</item>
-        <item>You\'ve started easy.</item>
+        <item>Gentle start so far.</item>
         <item>%1$s. Nobody would notice.</item>
         <item>Not much so far: %1$s.</item>
-        <item>This has just started. For now, %1$s.</item>
+        <item>It\'s only just begun. For now, %1$s.</item>
     </string-array>
 
     <!-- Día normal (10–99 vídeos o 10–59 minutos): %1$s los vídeos, %2$s el tiempo («47 minutos»),
@@ -126,14 +126,14 @@
         <item>That\'s %2$s nobody\'s giving back to you.</item>
         <item>%3$s. Time flies, especially in fifteen-second chunks.</item>
         <item>%1$s, one after another. Like popcorn.</item>
-        <item>You\'ve got %2$s in. The day hasn\'t said its last word yet.</item>
+        <item>You\'re at %2$s. The day hasn\'t said its last word yet.</item>
         <item>%1$s. Not too many, not too few, for now.</item>
     </string-array>
     <string-array name="today_normal_one">
         <item>That\'s %2$s nobody\'s giving back to you.</item>
         <item>%3$s. Time flies, especially in fifteen-second chunks.</item>
         <item>%1$s, one after another. Like popcorn.</item>
-        <item>You\'ve got %2$s in. The day hasn\'t said its last word yet.</item>
+        <item>You\'re at %2$s. The day hasn\'t said its last word yet.</item>
         <item>%1$s. Not too many, not too few, for now.</item>
     </string-array>
 
@@ -248,13 +248,13 @@
     <!-- Los días de la semana en plural, de lunes a domingo («los martes», «los sábados»), para
          las frases de abajo. -->
     <string-array name="today_weekdays_plural">
-        <item>mondays</item>
-        <item>tuesdays</item>
-        <item>wednesdays</item>
-        <item>thursdays</item>
-        <item>fridays</item>
-        <item>saturdays</item>
-        <item>sundays</item>
+        <item>Mondays</item>
+        <item>Tuesdays</item>
+        <item>Wednesdays</item>
+        <item>Thursdays</item>
+        <item>Fridays</item>
+        <item>Saturdays</item>
+        <item>Sundays</item>
     </string-array>
     <!-- Con qué se compara (en minúsculas; va dentro de las frases today_delta_*): %1$s el día de la
          semana («martes»). _now: hoy, hasta la misma hora. -->
@@ -301,7 +301,7 @@
     <!-- «HORA PUNTA 23:00 · 41 VÍDEOS» (MAYÚSCULAS, se pasa sola). %1$s la hora, %2$s los vídeos. -->
     <string name="today_peak_hour">PEAK HOUR %1$s · %2$s</string>
 
-    <!-- Banda «desde que usas Reelómetro» (MAYÚSCULAS, se pasa sola): «DESDE EL 3 MAR: 12.408 VÍDEOS · 61 H».
+    <!-- Banda «desde que usas Reelometer» (MAYÚSCULAS, se pasa sola): «DESDE EL 3 MAR: 12.408 VÍDEOS · 61 H».
          %1$s desde cuándo (today_since_*), %2$s los vídeos, %3$s el tiempo corto. -->
     <string name="today_since_band">%1$s: %2$s · %3$s</string>
     <!-- La banda dicha (TalkBack): «Desde el 3 de marzo: 12.408 vídeos y 61 horas.». %1$s desde
@@ -333,12 +333,12 @@
     <string-array name="today_service_never">
         <item>To start counting I need a permission. I\'ll explain which one and why, no fine print.</item>
         <item>I don\'t have permission to look yet, so I\'m not counting anything. Your call.</item>
-        <item>Without accessibility permission, this counter is decoration. Pretty, but decoration.</item>
+        <item>Without accessibility permission, this counter is just for show. Pretty, but just for show.</item>
     </string-array>
     <!-- Todas las apps apagadas en Ajustes («Qué apps cuento»). -->
     <string-array name="today_no_platforms">
-        <item>You\'ve turned off all the apps in Settings. So there\'s nothing to count.</item>
-        <item>I\'m not counting any app. Easy, then.</item>
+        <item>You\'ve turned off all the apps in Settings. That leaves nothing to count.</item>
+        <item>I\'m not counting any app. That\'s one way to win.</item>
         <item>No app is switched on in Settings. The counter is on holiday.</item>
     </string-array>
 </resources>

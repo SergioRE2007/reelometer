@@ -1,4 +1,4 @@
-# Reelómetro · Sistema de diseño
+# Reelometer · Sistema de diseño
 
 > Concepto: **el marcador**. Un contador implacable y elegante, entre panel de aeropuerto
 > (split-flap), ticket de compra y revista editorial. Los números son los protagonistas.
@@ -290,7 +290,7 @@ Ancho de referencia 412 dp. `│` = margen de 20 dp.
   Diapositivas: portada → total (marcador) → tiempo → equivalencias → creador nº 1 → categoría →
   peor día → hora punta / plataformas → **ticket final** (vista previa de la imagen 1080×1920 + COMPARTIR / GUARDAR).
 - **Imagen compartible** (1080×1920, `android.graphics`): «ticket de tu tiempo» — papel hueso sobre
-  negro cálido, bordes dentados, cabecera REELÓMETRO, periodo, cifra enorme, tiempo, equivalencias
+  negro cálido, bordes dentados, cabecera REELOMETER, periodo, cifra enorme, tiempo, equivalencias
   (con emoji permitido), creador nº 1, categoría, peor día, código de barras con un trazo por día,
   sello rotado en `signal` («PAGADO CON TU TIEMPO») y pie con la marca.
 
