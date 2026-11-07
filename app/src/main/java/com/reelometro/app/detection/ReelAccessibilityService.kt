@@ -33,6 +33,7 @@ import com.reelometro.app.ReelometroApp
 import com.reelometro.app.data.Category
 import com.reelometro.app.data.Platform
 import com.reelometro.app.data.ReelRepository
+import com.reelometro.app.data.settings.AppSettings
 import com.reelometro.app.detection.CalibrationEventType.CLICK
 import com.reelometro.app.detection.CalibrationEventType.INFO
 import com.reelometro.app.detection.CalibrationEventType.LEAVE
@@ -67,13 +68,17 @@ import kotlin.math.max
  *   scroll (cambio de vídeo), cambio de ventana (en qué pantalla estás) y clic (botón compartir).
  * - [FeedRules] decide si cada scroll es el feed de vídeos cortos; [ViewTracker] cuenta y mide;
  *   [ContentExtractor] lee autor/descripción una vez asentado el vídeo (con retardo, fuera del hilo
- *   principal y con límite de nodos); [ShareDetector] detecta «compartir» y, en Instagram y solo con el
- *   ajuste «A quién envías» encendido, [RecipientDetector] lee a quién se envía en la hoja de compartir.
- * - **Envío rápido** (solo Instagram y con el ajuste encendido): [QuickSendOverlay] pone sobre los reels una
- *   burbuja (la foto de perfil o las iniciales) por persona o grupo fijado y, al tocarla, [QuickSender] decide
- *   qué pulsar («Compartir», ese nombre y «Enviar»), que el servicio pulsa con `performAction` (sin gestos).
- *   Es lo único que pulsa. La foto la recorta [AvatarCapture] de la hoja de compartir (Android 11+): es la
- *   única captura de pantalla que hace.
+ *   principal y con límite de nodos); [ShareDetector] detecta «compartir» y, en Instagram y TikTok
+ *   ([AppSettings.QUICK_SEND_PLATFORMS]) y solo con el ajuste «A quién envías» encendido, [RecipientDetector] lee a
+ *   quién se envía en la hoja de compartir.
+ * - **Envío rápido** (Instagram y TikTok, con el ajuste encendido): [QuickSendOverlay] pone sobre los vídeos del feed
+ *   de la app que se ve una burbuja (la foto de perfil o las iniciales) por persona o grupo fijado **en esa app** y,
+ *   al tocarla, [QuickSender] decide qué pulsar («Compartir», ese nombre y «Enviar»), que el servicio pulsa con
+ *   `performAction` (sin gestos). Es lo único que pulsa. Un envío empieza y acaba en su app ([quickPlatform], con su
+ *   [PlatformProfile]): solo se leen y se pulsan sus ventanas. La foto la recorta [AvatarCapture] de la hoja de
+ *   compartir (Android 11+): es la única captura de pantalla que hace.
+ * - Solo debug: [ACTION_DUMP_SHEET] vuelca al log el árbol de la app que se ve y [ACTION_QUICK_SEND] lanza un envío
+ *   rápido sin tocar las burbujas (comandos en el KDoc de cada uno).
  * - En las apps con [FeedRules.PlatformRules.contentCheck] (YouTube Shorts) hay una segunda señal: se
  *   compara la [ShortSignature] (autor + título) del vídeo visible tras cada scroll y en cada comprobación
  *   periódica. Cuenta los deslizamientos que no llegan como scroll y une los vídeos contados dos veces.
@@ -105,29 +110,38 @@ class ReelAccessibilityService : AccessibilityService() {
     // Todo lo que sigue se usa solo desde el hilo principal.
     private var enabledPlatforms: Set<Platform> = Platform.entries.toSet()
 
-    /** Ajuste «A quién envías» (solo Instagram). Apagado, la hoja de compartir no se lee. */
+    /** Ajuste «A quién envías» (Instagram y TikTok, uno para las dos). Apagado, la hoja de compartir no se lee. */
     private var recordRecipients = false
 
-    /** Ajuste «Envío rápido» y sus fijados (solo Instagram). */
+    /** Ajuste «Envío rápido» (uno para las dos apps) y, por app, sus fijados ([AppSettings.quickSendTargets]). */
     private var quickSendEnabled = false
-    private var quickSendTargets: List<String> = emptyList()
+    private var quickSendTargets: Map<Platform, List<String>> = emptyMap()
 
-    /** Dónde dejó el usuario las burbujas (`null` = por defecto). */
-    private var quickSendBubble: BubbleSpot? = null
+    /** Dónde dejó el usuario las burbujas en cada app (sin entrada = por defecto, [BubbleLayout.defaultFor]). */
+    private var quickSendBubbles: Map<Platform, BubbleSpot?> = emptyMap()
     private var overlay: QuickSendOverlay? = null
     private var quickMemory: QuickSendMemory? = null
     private var avatarStore: AvatarStore? = null
 
-    /** Fotos ya cargadas de los fijados (las que hay; sin foto, la burbuja lleva las iniciales). */
-    private var avatarCache: Map<String, Bitmap?> = emptyMap()
+    /** Fotos ya cargadas de los fijados, por app (las que hay; sin foto, la burbuja lleva las iniciales). */
+    private var avatarCache: Map<Platform, Map<String, Bitmap?>> = emptyMap()
 
-    /** Cuándo se guardó la foto de cada fijado (para no mirar el disco desde el hilo principal). */
-    private var avatarSavedAt: Map<String, Long?> = emptyMap()
+    /** Cuándo se guardó la foto de cada fijado, por app (para no mirar el disco desde el hilo principal). */
+    private var avatarSavedAt: Map<Platform, Map<String, Long?>> = emptyMap()
 
-    /** Fijados con foto elegida de la galería (1.4.3): la captura no la renueva nunca. */
-    private var avatarChosen: Set<String> = emptySet()
+    /** Fijados con foto elegida de la galería (1.4.3), por app: la captura no la renueva nunca. */
+    private var avatarChosen: Map<Platform, Set<String>> = emptyMap()
 
-    /** Instagram dejó de estar delante en mitad de un envío: las burbujas no se enseñan hasta el siguiente. */
+    /**
+     * App del envío rápido en curso o del último (1.10.0): todo el envío pasa en ella (raíces, eventos, clics propios,
+     * resultado). Solo se cambia al empezar uno ([startQuickSend]).
+     */
+    private var quickPlatform: Platform = Platform.INSTAGRAM
+
+    /** App cuyas burbujas se ven o se vieron por última vez: a ella van la posición al soltarlas y la vigilancia. */
+    private var bubblesPlatform: Platform = Platform.INSTAGRAM
+
+    /** La app del envío rápido dejó de estar delante en mitad de un envío: las burbujas no se enseñan hasta el siguiente. */
     private var quickAway = false
 
     /** Qué burbujas se ven y con qué marca (enviando, enviado, fallo), por reel (1.4.1). */
@@ -158,10 +172,11 @@ class ReelAccessibilityService : AccessibilityService() {
     /** Cuándo empezó el envío en curso (`uptimeMillis`): pasado [QUICK_MAX_MS], se para pase lo que pase. */
     private var quickStartedAt = 0L
 
-    /** Cuándo acabó bien el último envío rápido (`uptimeMillis`): su hoja puede estar aún cerrándose. */
+    /** Cuándo acabó bien el último envío rápido (`uptimeMillis`) y en qué app: su hoja puede estar aún cerrándose. */
     private var quickLastOkAt = -QUICK_SHEET_CLOSING_MS
+    private var quickLastOkPlatform: Platform? = null
 
-    /** Clics de Instagram que no se miran (los provoca el envío rápido) hasta este instante. */
+    /** Clics de la app del envío rápido ([quickPlatform]) que no se miran (los provoca él) hasta este instante. */
     private var ignoreClicksUntil = 0L
 
     private val quickTickRunnable = Runnable {
@@ -170,7 +185,7 @@ class ReelAccessibilityService : AccessibilityService() {
     }
     private val overlayRunnable = Runnable { updateOverlay() }
 
-    /** Con las burbujas a la vista: si Instagram deja de estar delante, se van sin esperar a la comprobación de 4 s. */
+    /** Con las burbujas a la vista: si su app deja de estar delante, se van sin esperar a la comprobación de 4 s. */
     private val overlayWatchRunnable = Runnable { watchOverlay() }
     private var screenWidth = 0
     private var screenHeight = 0
@@ -218,37 +233,68 @@ class ReelAccessibilityService : AccessibilityService() {
 
     private var dumpRegistered = false
 
-    /** Solo debug: el árbol de Instagram al log, fuera del hilo principal (ver [ACTION_DUMP_SHEET]). */
+    /** Solo debug: [ACTION_DUMP_SHEET] (el árbol al log, fuera del hilo principal) y [ACTION_QUICK_SEND]. */
     private val dumpReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (!BuildConfig.DEBUG) return
-            // `--ez active true`: la ventana activa de cualquier app (YouTube…); si no, la de Instagram.
-            val active = intent.getBooleanExtra("active", false)
-            if (!BuildConfig.DEBUG) return
-            readScope.launch {
-                val lines = mutableListOf<String>()
-                fun visit(n: UiNode, depth: Int) {
-                    if (lines.size >= 600 || depth > 40) return
-                    val b = n.bounds
-                    val label = listOfNotNull(
-                        shortViewId(n.viewId).ifEmpty { null },
-                        simpleClassName(n.className),
-                        n.text?.let { "t=«$it»" },
-                        n.contentDescription?.let { "d=«$it»" },
-                        "[${b.left},${b.top}][${b.right},${b.bottom}]",
-                    ).joinToString(" ")
-                    if (n.text != null || n.contentDescription != null || !n.viewId.isNullOrEmpty()) lines += "  ".repeat(depth.coerceAtMost(20)) + label
-                    n.children.forEach { visit(it, depth + 1) }
-                }
-                val roots = if (active) listOfNotNull(rootInActiveWindow?.let { AccessibilityUiNode(it) }) else instagramRoots()
-                roots.forEachIndexed { i, root ->
-                    lines += "── raíz $i"
-                    visit(root, 0)
-                }
-                lines.chunked(40).forEach { Log.d(TAG, "⇢ árbol\n" + it.joinToString("\n")) }
-                Log.d(TAG, "⇢ árbol: fin (${lines.size} líneas)")
-            }
+            if (intent.action == ACTION_QUICK_SEND) onDebugQuickSend(intent) else dumpTree(intent)
         }
+    }
+
+    /**
+     * Solo debug: vuelca al log las ventanas de la app que se ve (Instagram o TikTok, de arriba abajo: en TikTok la hoja
+     * de compartir es otra ventana). `--es platform tiktok|instagram` elige la app; `--ez active true`, la ventana activa
+     * de cualquier app (YouTube…). Cada nodo con id, texto o descripción, y `C` si es pulsable, `✓` si está marcado.
+     */
+    private fun dumpTree(intent: Intent) {
+        val active = intent.getBooleanExtra("active", false)
+        val asked = intent.getStringExtra("platform")?.let { p ->
+            Platform.entries.firstOrNull { it.name.equals(p, ignoreCase = true) || it.shortName.equals(p, ignoreCase = true) }
+        }
+        val playing = tracker?.currentPlatform
+        readScope.launch {
+            val lines = mutableListOf<String>()
+            fun visit(n: UiNode, depth: Int) {
+                if (lines.size >= 600 || depth > 40) return
+                val b = n.bounds
+                val label = listOfNotNull(
+                    shortViewId(n.viewId).ifEmpty { null },
+                    simpleClassName(n.className),
+                    n.text?.let { "t=«$it»" },
+                    n.contentDescription?.let { "d=«$it»" },
+                    "C".takeIf { n.isClickable },
+                    "✓".takeIf { n.isChecked },
+                    "[${b.left},${b.top}][${b.right},${b.bottom}]",
+                ).joinToString(" ")
+                if (n.text != null || n.contentDescription != null || !n.viewId.isNullOrEmpty()) lines += "  ".repeat(depth.coerceAtMost(20)) + label
+                n.children.forEach { visit(it, depth + 1) }
+            }
+            val platform = asked ?: foregroundQuickPlatform() ?: playing?.takeIf { quickApp(it) } ?: Platform.INSTAGRAM
+            val roots = if (active) listOfNotNull(rootInActiveWindow?.let { AccessibilityUiNode(it) }) else appRoots(platform)
+            roots.forEachIndexed { i, root ->
+                lines += "── raíz $i" + if (active) "" else " (${platform.shortName}, ventana ${root.windowId})"
+                visit(root, 0)
+            }
+            lines.chunked(40).forEach { Log.d(TAG, "⇢ árbol\n" + it.joinToString("\n")) }
+            Log.d(TAG, "⇢ árbol: fin (${lines.size} líneas)")
+        }
+    }
+
+    /**
+     * Solo debug: un envío rápido como si se tocara la burbuja de `name` (con `name2`, como soltar una encima de la otra),
+     * para medir en el móvil sin tocar la pantalla. Los nombres tienen que estar fijados en la app del vídeo que se ve, con
+     * el envío rápido y «A quién envías» encendidos. Pasa por [onQuickSendRequest], como un toque. El log no lleva nombres.
+     */
+    private fun onDebugQuickSend(intent: Intent) {
+        val names = listOfNotNull(intent.getStringExtra("name"), intent.getStringExtra("name2")).filter { it.isNotBlank() }
+        val platform = tracker?.currentPlatform
+        val pinned = targetsOf(platform)
+        Log.d(
+            TAG,
+            "⇢ depuración: envío rápido en ${platform?.shortName ?: "ningún vídeo"} · ${names.size} nombre(s), " +
+                "${names.count { it in pinned }} fijado(s) en esa app · activo: ${quickSendActive()}",
+        )
+        if (names.isNotEmpty()) onQuickSendRequest(names, gesture = "depuración")
     }
 
     private val screenOffReceiver = object : BroadcastReceiver() {
@@ -341,9 +387,13 @@ class ReelAccessibilityService : AccessibilityService() {
             receiverRegistered = true
             if (BuildConfig.DEBUG) {
                 // Solo debug: `adb shell am broadcast -a com.reelometro.app.debug.DUMP_SHEET` escribe en el log el árbol
-                // de Instagram (ids, textos, descripciones). uiautomator no puede leerlo con un reel reproduciéndose.
+                // de la app que se ve (ids, textos, descripciones). uiautomator no puede leerlo con un vídeo
+                // reproduciéndose. `…debug.QUICK_SEND --es name "…"` lanza un envío rápido (ver [onDebugQuickSend]).
+                // La APK que se publica es la debug: solo quien tenga el permiso DUMP (el shell de adb lo tiene; una app
+                // instalada, no) puede mandar estos avisos. Sin él, cualquier app podría lanzar un envío rápido o un volcado.
+                val filter = IntentFilter(ACTION_DUMP_SHEET).apply { addAction(ACTION_QUICK_SEND) }
                 ContextCompat.registerReceiver(
-                    this, dumpReceiver, IntentFilter(ACTION_DUMP_SHEET), ContextCompat.RECEIVER_EXPORTED,
+                    this, dumpReceiver, filter, DEBUG_HOOKS_PERMISSION, null, ContextCompat.RECEIVER_EXPORTED,
                 )
                 dumpRegistered = true
             }
@@ -367,18 +417,20 @@ class ReelAccessibilityService : AccessibilityService() {
             quickMemory = QuickSendMemory(this)
             avatarStore = AvatarStore(this)
             mainScope.launch {
+                // 1.10.0: los fijados y la posición de cada app (Instagram y TikTok).
                 app.settings.settings
-                    .map { Triple(it.quickSendEnabled, it.quickSendTargets, it.quickSendBubble) }
+                    .map { s -> Triple(s.quickSendEnabled, s.allQuickSendTargets(), AppSettings.QUICK_SEND_PLATFORMS.associateWith { s.quickSendBubble(it) }) }
                     .distinctUntilChanged()
                     .catch { debugError("ajustes", it) }
-                    .collect { (on, targets, bubble) ->
+                    .collect { (on, targets, bubbles) ->
                         val reload = targets != quickSendTargets
                         quickSendEnabled = on
                         quickSendTargets = targets
-                        quickSendBubble = bubble
+                        quickSendBubbles = bubbles
                         if (reload) {
                             // Mismo hilo que los guardados: una foto recortada justo al quitar el fijado no sobrevive.
-                            avatarStore?.let { store -> fileScope.launch { store.retainOnly(targets) } }
+                            // 1.10.0: los fijados de todas las apps, para no borrar las fotos de los de la otra.
+                            avatarStore?.let { store -> fileScope.launch { store.retainOnly(app.settings.current().allQuickSendTargets()) } }
                             reloadAvatars()
                         }
                         updateOverlay()
@@ -454,8 +506,8 @@ class ReelAccessibilityService : AccessibilityService() {
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null || tracker == null) return
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
-            // Llega a montones: solo sirve para que el envío rápido en curso reaccione antes. Sin envío, fuera.
-            if (quickBusy && Platform.fromPackage(event.packageName) == QUICK_SEND_PLATFORM) onQuickSendEvent()
+            // Llega a montones: solo sirve para que el envío rápido en curso reaccione antes, y solo los de su app.
+            if (quickBusy && Platform.fromPackage(event.packageName) == quickPlatform) onQuickSendEvent()
             return
         }
         try {
@@ -486,8 +538,8 @@ class ReelAccessibilityService : AccessibilityService() {
             AccessibilityEvent.TYPE_VIEW_CLICKED -> onViewClicked(event, platform, pkg, now)
         }
         if (tracker?.currentPlatform == platform) lastEvidenceAt = now
-        if (platform == QUICK_SEND_PLATFORM) {
-            if (quickBusy && event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) onQuickSendEvent()
+        if (quickApp(platform)) {
+            if (quickBusy && platform == quickPlatform && event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) onQuickSendEvent()
             updateOverlay()
         }
     }
@@ -496,6 +548,7 @@ class ReelAccessibilityService : AccessibilityService() {
     private fun onWindowStateChanged(event: AccessibilityEvent, platform: Platform, pkg: String, now: Long) {
         val t = tracker ?: return
         val cls = event.className?.toString()
+        watchSheetClose(event, platform, now)
         val kind = windowKindOf(pkg, cls)
         t.onAppForeground(platform, now)
         var decision: Boolean? = null
@@ -515,7 +568,7 @@ class ReelAccessibilityService : AccessibilityService() {
                 t.onScreenChanged(platform, now)
                 rule = "cambio de pantalla"
             }
-            if (platform == RECIPIENT_PLATFORM && previous != cls) recipientDetector.stop()
+            if (recipientDetector.platform == platform && previous != cls) recipientDetector.stop()
         }
         CalibrationLog.log {
             CalibrationEvent(
@@ -556,7 +609,7 @@ class ReelAccessibilityService : AccessibilityService() {
                 feedNode = source
                 feedPlatform = platform
                 shareDetector.onFeedActivity(platform)
-                if (platform == QUICK_SEND_PLATFORM) board.onFeedMoved(now)
+                if (quickApp(platform)) board.onFeedMoved(now)
                 val started = t.onFeedScroll(
                     ViewTracker.FeedScroll(
                         platform = platform,
@@ -574,7 +627,7 @@ class ReelAccessibilityService : AccessibilityService() {
                 )
                 if (started) {
                     note = "vídeo nuevo"
-                    if (platform == RECIPIENT_PLATFORM) recipientDetector.stop()
+                    if (recipientDetector.platform == platform) recipientDetector.stop()
                 }
                 ensurePresenceChecks()
             }
@@ -612,20 +665,20 @@ class ReelAccessibilityService : AccessibilityService() {
 
     /**
      * Solo con un vídeo activo en el feed de esa app y si el detector no está en silencio tras un
-     * compartido. La excepción es la hoja de compartir de Instagram con «A quién envías» encendido, que
-     * va a [onShareSheetClicked]; con el ajuste apagado no se lee nada de la hoja ni del destinatario.
+     * compartido. La excepción es la hoja de compartir de Instagram o TikTok con «A quién envías» encendido,
+     * que va a [onShareSheetClicked]; con el ajuste apagado no se lee nada de la hoja ni del destinatario.
      */
     private fun onViewClicked(event: AccessibilityEvent, platform: Platform, pkg: String, now: Long) {
-        if (platform == QUICK_SEND_PLATFORM && !quickBusy && quickSendActive()) checkUserSheet(event, now)
-        // Los clics que provoca el envío rápido no cuentan (los apunta él al terminar).
-        if (platform == QUICK_SEND_PLATFORM && (quickBusy || now < ignoreClicksUntil)) {
+        if (quickApp(platform) && !quickBusy && quickSendActive()) checkUserSheet(event, platform, now)
+        // Los clics que provoca el envío rápido no cuentan (los apunta él al terminar). Solo los de su app.
+        if (platform == quickPlatform && (quickBusy || now < ignoreClicksUntil)) {
             CalibrationLog.log {
                 CalibrationEvent(now, CLICK, pkg, platform, className = event.className?.toString(), decision = false, rule = "envío rápido: clic propio")
             }
             return
         }
         // La hoja de compartir puede tapar el vídeo (o dejarlo en pausa): va antes de mirar si hay vídeo activo.
-        if (platform == RECIPIENT_PLATFORM && recordRecipients && recipientDetector.isOpen(now)) {
+        if (recordRecipients && recipientDetector.isOpen(now) && recipientDetector.platform == platform) {
             onShareSheetClicked(event, platform, pkg, now)
             return
         }
@@ -655,9 +708,11 @@ class ReelAccessibilityService : AccessibilityService() {
         }
         CalibrationLog.log { CalibrationEvent(now, SHARE, pkg, platform, videoId = videoId, rule = result.rule) }
         debug { "↗ Compartido en ${platform.shortName} (vídeo $videoId, ${result.rule})" }
-        if (platform == RECIPIENT_PLATFORM && recordRecipients) {
-            recipientDetector.start(now, videoId)
-            scheduleManualAvatars()
+        val profile = recipientProfile(platform)
+        if (profile != null && recordRecipients) {
+            recipientDetector.start(now, videoId, profile = profile)
+            snapshotSentBanners(platform, now)
+            scheduleManualAvatars(platform)
         }
     }
 
@@ -666,37 +721,49 @@ class ReelAccessibilityService : AccessibilityService() {
      * comentarios, más opciones: [ShareDetector.opensSheet]) las esconde hasta que se cierre; sin depender de isArmed
      * ni de la pausa tras un envío rápido, así que un compartir o unos comentarios justo después también cuentan.
      * Otro clic dentro del visor (me gusta, el vídeo…) dice que ya no hay hoja encima: vuelven. Solo botones del
-     * visor (ids `clips_*`); lo de la hoja no se mira aquí.
+     * visor ([PlatformProfile.feedIds]: `clips_*` en Instagram, `viewpager` en TikTok); lo de la hoja no se mira aquí.
      */
-    private fun checkUserSheet(event: AccessibilityEvent, now: Long) {
+    private fun checkUserSheet(event: AccessibilityEvent, platform: Platform, now: Long) {
+        val profile = PlatformProfile.of(platform) ?: return
         val node = event.source?.let { AccessibilityUiNode(it) } ?: return
-        if (!recipientDetector.insideFeed(node)) return
-        if (!shareDetector.opensSheet(node, screenWidth, screenHeight)) {
+        if (!recipientDetector.insideFeed(node, profile.feedIds)) return
+        if (!shareDetector.opensSheet(node, screenWidth, screenHeight, platform)) {
             if (board.sheetOpen) {
                 board.onSheetClosed()
-                CalibrationLog.log { CalibrationEvent(now, INFO, platform = QUICK_SEND_PLATFORM, rule = "envío rápido: clic en el visor (burbujas de vuelta)") }
+                CalibrationLog.log { CalibrationEvent(now, INFO, platform = platform, rule = "envío rápido: clic en el visor (burbujas de vuelta)") }
             }
             return
         }
         board.onUserSheetOpened(now)
-        CalibrationLog.log { CalibrationEvent(now, INFO, platform = QUICK_SEND_PLATFORM, rule = "envío rápido: hoja abierta a mano (burbujas fuera)") }
+        CalibrationLog.log { CalibrationEvent(now, INFO, platform = platform, rule = "envío rápido: hoja abierta a mano (burbujas fuera)") }
         // Un compartir a mano en el mismo reel tras un envío rápido: el detector está en pausa (no lo cuenta otra vez),
         // pero lo que se envíe desde la hoja se apunta y, al enviarlo, la hoja se da por cerrada.
         val t = tracker
-        if (recordRecipients && !shareDetector.isArmed(QUICK_SEND_PLATFORM, now) && !recipientDetector.isOpen(now) &&
-            t?.currentPlatform == QUICK_SEND_PLATFORM && shareDetector.evaluate(node, screenWidth, screenHeight).isShare
+        if (recordRecipients && !shareDetector.isArmed(platform, now) && !recipientDetector.isOpen(now) &&
+            t?.currentPlatform == platform && shareDetector.evaluate(node, screenWidth, screenHeight).isShare
         ) {
-            recipientDetector.start(now, t.currentVideoId)
+            recipientDetector.start(now, t.currentVideoId, profile = profile)
+            snapshotSentBanners(platform, now)
         }
     }
 
     /**
-     * Un clic con la hoja de compartir de Instagram abierta ([RecipientDetector]). El nombre solo va a la
-     * base de datos: ni al registro de Calibración (que el usuario puede exportar) ni al logcat.
+     * Un clic con la hoja de compartir de Instagram o TikTok abierta ([RecipientDetector], con el perfil de la app de la
+     * sesión). El nombre solo va a la base de datos: ni al registro de Calibración (que el usuario puede exportar) ni al
+     * logcat.
      */
     private fun onShareSheetClicked(event: AccessibilityEvent, platform: Platform, pkg: String, now: Long) {
-        val source = event.source ?: return
-        val node = AccessibilityUiNode(source)
+        // 1.10.0, medido en el móvil: el «Enviar» de TikTok cierra la hoja al momento y su clic llega sin nodo. Entonces vale
+        // lo que trae el evento (texto, descripción y clase): «Enviar» se reconoce por su texto exacto. Solo en las apps cuya
+        // hoja va en su propia ventana: en Instagram, un clic sin nodo se descarta como hasta la 1.9.0.
+        val source = event.source
+        val node: UiNode = source?.let { AccessibilityUiNode(it) }
+            ?: EventUiNode.of(event)?.takeIf { recipientDetector.acceptsNodelessClicks }
+            ?: run {
+                debug { "clic sin nodo en la hoja de ${platform.shortName}: se descarta (clase ${event.className})" }
+                return
+            }
+        if (source == null) debug { "clic sin nodo en la hoja de ${platform.shortName}: se usa el del evento (clase ${event.className})" }
         val outcome = recipientDetector.onClick(node, screenHeight, now)
         val note = when (outcome) {
             is RecipientDetector.Outcome.Ignored -> null
@@ -706,31 +773,150 @@ class ReelAccessibilityService : AccessibilityService() {
         }
         CalibrationLog.log {
             CalibrationEvent(
-                now, CLICK, pkg, platform, viewId = source.viewIdResourceName, className = source.className?.toString(),
+                now, CLICK, pkg, platform, viewId = node.viewId, className = node.className?.toString(),
                 nodeWidth = node.bounds.width, nodeHeight = node.bounds.height, screenWidth = screenWidth,
                 screenHeight = screenHeight, decision = outcome !is RecipientDetector.Outcome.Ignored,
-                rule = "hoja de compartir: ${outcome.rule}", note = note,
+                rule = "hoja de compartir: ${outcome.rule}" + if (source == null) " (clic sin nodo)" else "", note = note,
             )
         }
+        if (outcome is RecipientDetector.Outcome.Toggled) noteStaleSentBanners(platform, now)
         val repo = repository ?: return
         when (outcome) {
-            is RecipientDetector.Outcome.Sent -> {
-                dbScope.launch {
-                    runCatching { repo.recordRecipients(platform, now, outcome.reelId, outcome.names) }
-                        .onFailure { debugError("recordRecipients", it) }
-                }
-                // La hoja se ha cerrado: un segundo «compartir» del mismo vídeo vuelve a contar.
-                if (outcome.closesSession) {
-                    shareDetector.onFeedActivity(platform)
-                    if (platform == QUICK_SEND_PLATFORM) board.onSheetClosed()
-                }
-                debug { "✉ Enviado a ${outcome.names.size} en ${platform.shortName} (${outcome.rule})" }
-            }
+            is RecipientDetector.Outcome.Sent -> onRecipientsSent(outcome, platform, now)
             is RecipientDetector.Outcome.Undone -> dbScope.launch {
                 runCatching { repo.undoRecipient(outcome.name, outcome.since) }.onFailure { debugError("undoRecipient", it) }
             }
             else -> Unit
         }
+    }
+
+    /** «A quién envías»: un envío a mano ya decidido (por el clic en «Enviar» o, en TikTok, por su aviso de enviado). */
+    private fun onRecipientsSent(outcome: RecipientDetector.Outcome.Sent, platform: Platform, now: Long) {
+        val repo = repository ?: return
+        dbScope.launch {
+            runCatching { repo.recordRecipients(platform, now, outcome.reelId, outcome.names) }
+                .onFailure { debugError("recordRecipients", it) }
+        }
+        // La hoja se ha cerrado: un segundo «compartir» del mismo vídeo vuelve a contar.
+        if (outcome.closesSession) {
+            // Y una vigilancia del cierre de la hoja de TikTok que estuviera en marcha ya no tiene nada que apuntar: si siguiera,
+            // vería el aviso de este envío y lo apuntaría otra vez (revisión de los arreglos de la verificación final).
+            sheetCloseRun++
+            shareDetector.onFeedActivity(platform)
+            if (quickApp(platform)) board.onSheetClosed()
+        }
+        debug { "✉ Enviado a ${outcome.names.size} en ${platform.shortName} (${outcome.rule})" }
+    }
+
+    /**
+     * Cada cierre de la hoja de TikTok que se comprueba: uno nuevo deja sin efecto el anterior, empezar un envío rápido
+     * también (su aviso «Enviado a …» no es de esa hoja) y un envío ya apuntado que cierra la sesión ([onRecipientsSent]).
+     * Cambia en el hilo principal y se lee en [readScope].
+     */
+    @Volatile
+    private var sheetCloseRun = 0
+
+    /**
+     * Los avisos «Enviado a …» (texto y ventana) que ya se veían en la sesión de «A quién envías» que empezó en `first`: son
+     * de un envío anterior y no dicen nada de esta hoja ([RecipientDetector.freshSentBanners]). Solo se toca en [readScope].
+     */
+    private var staleSentBanners: Pair<Long, Set<RecipientDetector.SentBanner>>? = null
+
+    /** ¿Sigue abierta en [roots] la hoja de compartir de [profile] (por sus ids, `touch_outside` en TikTok)? */
+    private fun sheetOpenIn(roots: List<UiNode>, profile: PlatformProfile): Boolean =
+        roots.any { r -> profile.openSheetIds.any { id -> profile.fullIds(id).any { AccessibilityUiFinder.byViewId(r, it).isNotEmpty() } } }
+
+    /**
+     * TikTok: empieza una sesión de «A quién envías» (se acaba de pulsar «Compartir», o un envío rápido dejó la hoja abierta).
+     * El envío de esta hoja aún no ha ocurrido, así que los avisos «Enviado a …» que se ven ahora son de un envío anterior: se
+     * apuntan para que [watchSheetClose] no los tome por el de esta hoja. Segunda pasada de la revisión: se leen aquí, cuando
+     * aún se ve la actividad, porque con la hoja abierta (un diálogo encima) el aviso de debajo no se ve, y al cerrarse la
+     * hoja el aviso de este envío sale a los pocos milisegundos del cambio de ventana (leerlo entonces lo daría por viejo).
+     * (Si la sesión empieza con la hoja ya abierta, porque un envío rápido la dejó así, esta lectura no ve el aviso de debajo:
+     * uno de un envío anterior aún a la vista se tomaría por nuevo al cerrar con la «X». Sin arreglar.)
+     */
+    private fun snapshotSentBanners(platform: Platform, startedAt: Long) {
+        if (recipientProfile(platform)?.sheetOwnWindow != true) return
+        readScope.launch {
+            val seen = RecipientDetector.sentBanners(appRoots(platform), AccessibilityUiFinder)
+            val previous = staleSentBanners?.takeIf { it.first == startedAt }?.second.orEmpty()
+            staleSentBanners = startedAt to (previous + seen)
+        }
+    }
+
+    /**
+     * TikTok: se acaba de marcar o desmarcar a alguien, con la hoja abierta. Lo que se vea ahora tampoco es de esta hoja: se
+     * suma a lo leído al empezar la sesión ([snapshotSentBanners]); sin esa lectura no se crea aquí (con la hoja abierta no
+     * se ve el aviso de debajo, y una lectura vacía no puede pasar por «no había ninguno»). Solo si la hoja sigue abierta en
+     * esa misma lectura: si llega tarde, con la hoja ya cerrada, lo que se ve puede ser el aviso de este envío (revisión de
+     * los arreglos de la verificación final).
+     */
+    private fun noteStaleSentBanners(platform: Platform, now: Long) {
+        val profile = recipientProfile(platform)?.takeIf { it.sheetOwnWindow } ?: return
+        val startedAt = recipientDetector.tikTokSelection(now)?.startedAt ?: return
+        readScope.launch {
+            val previous = staleSentBanners?.takeIf { it.first == startedAt }?.second ?: return@launch
+            val roots = appRoots(platform)
+            if (!sheetOpenIn(roots, profile)) return@launch
+            staleSentBanners = startedAt to (previous + RecipientDetector.sentBanners(roots, AccessibilityUiFinder))
+        }
+    }
+
+    /**
+     * 1.10.0, medido en el móvil (TikTok 47.7): su «Enviar» cierra la hoja sin `TYPE_VIEW_CLICKED`, así que «A quién envías»
+     * nunca veía el envío (y sin envíos a mano no hay a quién fijar en TikTok). Cuando, con alguien marcado, llega un cambio de
+     * ventana de la app que no es la propia hoja (la actividad recupera el foco), se mira unas veces en poco más de un segundo
+     * si la hoja ya no está y TikTok enseña abajo un aviso «Enviado a …» **nuevo** ([RecipientDetector.sentBanners] y
+     * [RecipientDetector.freshSentBanners]): entonces se apunta; si la hoja se cerró sin ese aviso («X», atrás, tocar fuera),
+     * no. Los avisos que ya se veían al empezar la sesión ([snapshotSentBanners]) son de un envío anterior y no valen (cada
+     * aviso va en su propia ventana, nueva). El aviso de este envío sale a los pocos milisegundos del cambio de ventana de la
+     * actividad. Solo en las apps cuya hoja va en su propia ventana. (El 7 nov, en una segunda tanda, la misma TikTok 47.7.3
+     * sí emitió el clic de «Enviar», sin nodo, en 2 envíos de 2: entonces lo apunta [onShareSheetClicked], la sesión se cierra,
+     * se anula la vigilancia que hubiera ([onRecipientsSent]) y aquí ya no hay nada marcado. Esto queda de red.)
+     */
+    private fun watchSheetClose(event: AccessibilityEvent, platform: Platform, now: Long) {
+        if (!recordRecipients || recipientDetector.platform != platform) return
+        val profile = recipientProfile(platform)?.takeIf { it.sheetOwnWindow } ?: return
+        // Los eventos de la propia hoja (también al abrir su buscador) traen su título.
+        if (event.text.orEmpty().any { it != null && RecipientDetector.normalize(it.toString()) in profile.titleLabels }) return
+        val selection = recipientDetector.tikTokSelection(now) ?: return
+        val run = ++sheetCloseRun
+        readScope.launch {
+            // Lo leído al empezar la sesión (y al marcar). Nunca una lectura ahora: el aviso de este envío sale a los pocos
+            // milisegundos del cambio de ventana y se tomaría por viejo (segunda pasada de la revisión). Sin lectura, todo aviso
+            // vale como nuevo, como antes de los arreglos.
+            val before = staleSentBanners?.takeIf { it.first == selection.startedAt }?.second.orEmpty()
+            var closed = false
+            for (wait in SENT_BANNER_WAITS_MS) {
+                delay(wait)
+                if (run != sheetCloseRun) return@launch
+                val roots = appRoots(platform)
+                if (sheetOpenIn(roots, profile)) continue
+                closed = true
+                val banner = RecipientDetector.freshSentBanners(before, RecipientDetector.sentBanners(roots, AccessibilityUiFinder)).isNotEmpty()
+                if (banner) {
+                    withContext(Dispatchers.Main) { onSheetClosedChecked(platform, selection, sent = true, run) }
+                    return@launch
+                }
+            }
+            // Cerrada y sin aviso en todo ese rato: no se envió. Si sigue abierta, no era un cierre (nada cambia).
+            if (closed) withContext(Dispatchers.Main) { onSheetClosedChecked(platform, selection, sent = false, run) }
+        }
+    }
+
+    private fun onSheetClosedChecked(platform: Platform, selection: RecipientDetector.Selection, sent: Boolean, run: Int) {
+        // Con «A quién envías» apagado mientras tanto, no se apunta nada.
+        if (run != sheetCloseRun || !recordRecipients) return
+        val now = System.currentTimeMillis()
+        val outcome = recipientDetector.onTikTokSheetClosed(selection, sent)
+        CalibrationLog.log {
+            CalibrationEvent(
+                now, INFO, platform = platform, decision = outcome is RecipientDetector.Outcome.Sent,
+                rule = "hoja de compartir: ${outcome.rule}",
+                note = (outcome as? RecipientDetector.Outcome.Sent)?.let { "enviado a ${it.names.size}" },
+            )
+        }
+        if (outcome is RecipientDetector.Outcome.Sent) onRecipientsSent(outcome, platform, now)
     }
 
     private fun onEnabledPlatformsChanged(enabled: Set<Platform>) {
@@ -951,11 +1137,25 @@ class ReelAccessibilityService : AccessibilityService() {
 
     private val quickBusy: Boolean get() = quickNames.isNotEmpty()
 
+    /** ¿[platform] tiene envío rápido y «A quién envías»? (Instagram y TikTok: [AppSettings.QUICK_SEND_PLATFORMS].) */
+    private fun quickApp(platform: Platform?): Boolean =
+        platform != null && platform in AppSettings.QUICK_SEND_PLATFORMS && PlatformProfile.of(platform) != null
+
+    /** El perfil de «A quién envías» en [platform], o `null` si esa app no lo tiene (YouTube). */
+    private fun recipientProfile(platform: Platform): PlatformProfile? = if (quickApp(platform)) PlatformProfile.of(platform) else null
+
+    /** Los fijados de [platform] (vacío sin app o en una sin envío rápido). */
+    private fun targetsOf(platform: Platform?): List<String> = platform?.let { quickSendTargets[it] }.orEmpty()
+
+    /** Dónde van las burbujas de [platform]: donde las dejó el usuario o, si no, el sitio por defecto de esa app. */
+    private fun bubbleSpotOf(platform: Platform): BubbleSpot = quickSendBubbles[platform] ?: BubbleLayout.defaultFor(platform)
+
     /**
      * Las burbujas se ven con el envío rápido y «A quién envías» encendidos (el envío rápido lee los nombres
-     * de la hoja, y la divulgación solo lo dice con ese ajuste), algún fijado y un reel de Instagram activo; qué
-     * se ve y con qué marca lo decide [BubbleBoard] (1.4.1: ya no depende de [ShareDetector.isArmed], así que no se
-     * esconden y vuelven tras enviar). Mientras el dedo las arrastra no se tocan.
+     * de la hoja, y la divulgación solo lo dice con ese ajuste), algún fijado **en la app del vídeo** y un vídeo activo
+     * en el feed de Instagram o TikTok; qué se ve y con qué marca lo decide [BubbleBoard] (1.4.1: ya no depende de
+     * [ShareDetector.isArmed], así que no se esconden y vuelven tras enviar). Se enseñan los fijados de esa app, en su
+     * sitio; durante un envío, los de la app del envío ([quickPlatform]). Mientras el dedo las arrastra no se tocan.
      */
     private fun updateOverlay() {
         try {
@@ -967,23 +1167,27 @@ class ReelAccessibilityService : AccessibilityService() {
             }
             val now = System.currentTimeMillis()
             val t = tracker
-            val onReel = quickSendActive() && quickSendTargets.isNotEmpty() && QUICK_SEND_PLATFORM in enabledPlatforms &&
-                t != null && t.isActive && t.currentPlatform == QUICK_SEND_PLATFORM
+            val app = if (quickBusy) quickPlatform else t?.currentPlatform?.takeIf { quickApp(it) } ?: bubblesPlatform
+            val targets = targetsOf(app)
+            val onReel = quickSendActive() && targets.isNotEmpty() && app in enabledPlatforms &&
+                t != null && t.isActive && t.currentPlatform == app
             val reel = t?.currentVideoId
-            // Pasar de reel borra las marcas de enviado (salir de Reels no: al volver al mismo, siguen).
+            // Pasar de vídeo borra las marcas de enviado (salir del feed no: al volver al mismo, siguen).
             if (onReel && reel != null) board.onReel(reel)
             if (!quickBusy && quickAway) {
-                // Se fue de Instagram en mitad del envío: si sigue fuera, se cierra el vídeo y no se enseña nada.
+                // Se fue de la app del envío en mitad de él: si sigue fuera, se cierra el vídeo y no se enseña nada.
+                // Si lo que tiene delante es un vídeo de la otra app (pasó de TikTok a Instagram), ese no se cierra.
                 quickAway = false
-                if (isAppOnScreen(QUICK_SEND_PLATFORM) == false) {
-                    leave(estimatedLeaveAt(now), "${QUICK_SEND_PLATFORM.shortName} ya no está en pantalla", QUICK_SEND_PLATFORM)
+                if (isAppOnScreen(quickPlatform) == false && (t?.currentPlatform == null || t.currentPlatform == quickPlatform)) {
+                    leave(estimatedLeaveAt(now), "${quickPlatform.shortName} ya no está en pantalla", quickPlatform)
                     return
                 }
             }
-            val visible = !quickAway && quickSendTargets.isNotEmpty() && board.visible(onReel, reel, now)
+            val visible = !quickAway && targets.isNotEmpty() && board.visible(onReel, reel, now)
             if (visible) {
+                bubblesPlatform = app
                 val view = overlay ?: QuickSendOverlay(this, overlayListener).also { overlay = it }
-                view.show(quickSendTargets, avatarCache, quickSendBubble ?: BubbleLayout.DEFAULT, screenWidth, screenHeight)
+                view.show(targets, avatarCache[app].orEmpty(), bubbleSpotOf(app), screenWidth, screenHeight)
                 view.setStates(board.shownMarks.mapValues { (_, mark) -> stateOf(mark) })
                 // Vuelven en otro reel: la pregunta de apagarlo (si estaba) ya no viene a cuento.
                 if (!board.isDismissedOn(reel)) view.hideQuestion()
@@ -1017,15 +1221,17 @@ class ReelAccessibilityService : AccessibilityService() {
         override fun onPair(first: String, second: String) = onQuickSendRequest(listOf(first, second), gesture = "una encima de otra")
 
         override fun onMoved(spot: BubbleSpot) {
-            quickSendBubble = spot
+            // 1.10.0: cada app guarda su posición; estas burbujas son las de la app que se ve.
+            val platform = bubblesPlatform
+            quickSendBubbles = quickSendBubbles + (platform to spot)
             val settings = ReelometroApp.from(this@ReelAccessibilityService).settings
-            mainScope.launch { runCatching { settings.setQuickSendBubble(spot) }.onFailure { debugError("posición de las burbujas", it) } }
+            mainScope.launch { runCatching { settings.setQuickSendBubble(platform, spot) }.onFailure { debugError("posición de las burbujas", it) } }
             CalibrationLog.log {
                 // Sin nombres: solo dónde queda el centro de la pila (en % de la pantalla) y si va en fila o columna.
                 val fmt = com.reelometro.app.stats.Format
                 val shape = if (BubbleLayout.orientationFor(spot.y) == BubbleOrientation.ROW) "fila" else "columna"
                 CalibrationEvent(
-                    System.currentTimeMillis(), INFO, platform = QUICK_SEND_PLATFORM, rule = "envío rápido: burbujas movidas",
+                    System.currentTimeMillis(), INFO, platform = platform, rule = "envío rápido: burbujas movidas",
                     note = "x ${fmt.percent(spot.x.toDouble())} · y ${fmt.percent(spot.y.toDouble())} · $shape",
                 )
             }
@@ -1047,14 +1253,15 @@ class ReelAccessibilityService : AccessibilityService() {
         val (streak, ask) = (memory?.streak ?: DismissStreak()).dismissed()
         memory?.streak = streak
         CalibrationLog.log {
-            CalibrationEvent(now, INFO, platform = QUICK_SEND_PLATFORM, videoId = videoId, rule = "envío rápido: burbujas escondidas hasta el siguiente reel", note = if (ask) "pregunta si se apaga" else null)
+            CalibrationEvent(now, INFO, platform = bubblesPlatform, videoId = videoId, rule = "envío rápido: burbujas escondidas hasta el siguiente reel", note = if (ask) "pregunta si se apaga" else null)
         }
         if (ask) {
             val settings = ReelometroApp.from(this).settings
+            val platform = bubblesPlatform
             overlay?.showQuestion(
                 onTurnOff = {
                     mainScope.launch { runCatching { settings.setQuickSendEnabled(false) }.onFailure { debugError("apagar el envío rápido", it) } }
-                    CalibrationLog.log { CalibrationEvent(System.currentTimeMillis(), INFO, platform = QUICK_SEND_PLATFORM, rule = "envío rápido: apagado desde la pregunta") }
+                    CalibrationLog.log { CalibrationEvent(System.currentTimeMillis(), INFO, platform = platform, rule = "envío rápido: apagado desde la pregunta") }
                 },
                 onKeep = {},
             )
@@ -1062,11 +1269,12 @@ class ReelAccessibilityService : AccessibilityService() {
         return true
     }
 
-    /** Burbujas a la vista: ¿sigue Instagram delante? (otra app, el lanzador…) */
+    /** Burbujas a la vista: ¿sigue delante su app? (otra app, el lanzador…) */
     private fun watchOverlay() {
         if (overlay?.isShown != true) return
         try {
-            if (isAppOnScreen(QUICK_SEND_PLATFORM) == false) {
+            val platform = if (quickBusy) quickPlatform else bubblesPlatform
+            if (isAppOnScreen(platform) == false) {
                 val now = System.currentTimeMillis()
                 if (quickBusy) {
                     // En mitad de un envío: fuera las burbujas; el envío acaba solo por tiempo.
@@ -1075,7 +1283,13 @@ class ReelAccessibilityService : AccessibilityService() {
                     overlay?.hideQuestion()
                     return
                 }
-                leave(estimatedLeaveAt(now), "${QUICK_SEND_PLATFORM.shortName} ya no está en pantalla", QUICK_SEND_PLATFORM)
+                val current = tracker?.currentPlatform
+                if (current == null || current == platform) {
+                    leave(estimatedLeaveAt(now), "${platform.shortName} ya no está en pantalla", platform)
+                } else {
+                    // Ya hay un vídeo de la otra app delante: ese no se cierra; se pintan sus burbujas.
+                    updateOverlay()
+                }
                 return
             }
         } catch (e: Exception) {
@@ -1084,113 +1298,126 @@ class ReelAccessibilityService : AccessibilityService() {
         handler.postDelayed(overlayWatchRunnable, OVERLAY_WATCH_MS)
     }
 
-    /** Lee de disco las fotos de los fijados (fuera del hilo principal) y las pasa a las burbujas. */
+    /** Lee de disco las fotos de los fijados de cada app (fuera del hilo principal) y las pasa a las burbujas. */
     private fun reloadAvatars() {
         val store = avatarStore ?: return
         val targets = quickSendTargets
         fileScope.launch {
-            val loaded = targets.associateWith { store.load(it) }
-            val savedAt = targets.associateWith { store.savedAt(it) }
-            val chosen = targets.filterTo(HashSet()) { store.hasChosen(it) }
+            val loaded = targets.mapValues { (platform, names) -> names.associateWith { store.load(it, platform) } }
+            val savedAt = targets.mapValues { (platform, names) -> names.associateWith { store.savedAt(it, platform) } }
+            val chosen = targets.mapValues { (platform, names) -> names.filterTo(HashSet()) { store.hasChosen(it, platform) } }
             withContext(Dispatchers.Main) {
                 if (targets != quickSendTargets) return@withContext
                 avatarCache = loaded
                 avatarSavedAt = savedAt
                 avatarChosen = chosen
-                loaded.forEach { (name, bitmap) -> overlay?.setAvatar(name, bitmap) }
+                // Las burbujas que se ven son las de una sola app: solo esas fotos.
+                loaded[bubblesPlatform]?.forEach { (name, bitmap) -> overlay?.setAvatar(name, bitmap) }
             }
         }
     }
 
     /**
-     * Guarda la foto recortada de [name] (si sigue fijado) y la pone en su burbuja. Si el usuario eligió una de su
-     * galería mientras tanto, no se guarda (la elegida manda y la captura no la toca).
+     * Guarda la foto recortada de [name] en [platform] (si sigue fijado ahí) y la pone en su burbuja. Si el usuario
+     * eligió una de su galería mientras tanto, no se guarda (la elegida manda y la captura no la toca).
      */
-    private fun saveAvatar(name: String, bitmap: Bitmap) {
+    private fun saveAvatar(platform: Platform, name: String, bitmap: Bitmap) {
         val store = avatarStore ?: return
         fileScope.launch {
-            val stillPinned = withContext(Dispatchers.Main) { name in quickSendTargets }
-            if (!stillPinned || store.hasChosen(name) || !store.save(name, bitmap)) return@launch
+            val stillPinned = withContext(Dispatchers.Main) { name in targetsOf(platform) }
+            if (!stillPinned || store.hasChosen(name, platform) || !store.save(name, bitmap, platform)) return@launch
             // AvatarStore.changes recarga las burbujas y las filas de Ajustes.
         }
     }
 
     /**
-     * ¿Hay que renovar la foto de [name] en un envío a mano? Solo en Android 11+ (antes no hay captura) y nunca si
-     * el usuario eligió una de su galería.
+     * ¿Hay que renovar la foto de [name] (fijado en [platform]) en un envío a mano? Solo en Android 11+ (antes no hay
+     * captura) y nunca si el usuario eligió una de su galería.
      */
-    private fun wantsAvatar(name: String, now: Long): Boolean =
+    private fun wantsAvatar(platform: Platform, name: String, now: Long): Boolean =
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && avatarStore != null &&
-            AvatarRules.needsRefresh(avatarSavedAt[name], now, chosen = name in avatarChosen)
+            AvatarRules.needsRefresh(avatarSavedAt[platform]?.get(name), now, chosen = avatarChosen[platform]?.contains(name) == true)
 
     /**
-     * ¿Se recorta la foto de [name] en un **envío rápido**? (1.4.1) Solo si aún no tiene ninguna (ni elegida de la
-     * galería) y no falló en el último día: la captura retrasa el clic en el nombre. Renovarla al día se hace en los
-     * envíos a mano.
+     * ¿Se recorta la foto de [name] (fijado en [platform]) en un **envío rápido**? (1.4.1) Solo si aún no tiene
+     * ninguna (ni elegida de la galería) y no falló en el último día: la captura retrasa el clic en el nombre.
+     * Renovarla al día se hace en los envíos a mano.
      */
-    private fun wantsQuickAvatar(name: String, now: Long): Boolean =
+    private fun wantsQuickAvatar(platform: Platform, name: String, now: Long): Boolean =
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && avatarStore != null &&
-            AvatarRules.captureInQuickSend(avatarSavedAt[name], quickMemory?.avatarFailedAt(name), now, chosen = name in avatarChosen)
+            AvatarRules.captureInQuickSend(
+                avatarSavedAt[platform]?.get(name), quickMemory?.avatarFailedAt(name, platform), now,
+                chosen = avatarChosen[platform]?.contains(name) == true,
+            )
 
     /**
-     * Envío a mano con «A quién envías» y el envío rápido encendidos: si algún fijado necesita foto, se busca su
-     * celda en la hoja que se acaba de abrir y se recorta (antes de que el usuario marque a nadie, para que
-     * no salga la marca de seleccionado). Dos intentos; el primero que acierta cancela el otro.
+     * Envío a mano en [platform] con «A quién envías» y el envío rápido encendidos: si algún fijado de esa app necesita
+     * foto, se busca su celda en la hoja que se acaba de abrir y se recorta (antes de que el usuario marque a nadie,
+     * para que no salga la marca de seleccionado). Dos intentos; el primero que acierta cancela el otro.
      */
-    private fun scheduleManualAvatars() {
+    private fun scheduleManualAvatars(platform: Platform) {
         if (!quickSendActive() || quickBusy) return
         val now = System.currentTimeMillis()
-        val names = quickSendTargets.filter { wantsAvatar(it, now) }
+        val names = targetsOf(platform).filter { wantsAvatar(platform, it, now) }
         if (names.isEmpty()) return
         val run = ++manualAvatarRun
-        MANUAL_AVATAR_DELAYS_MS.forEach { delay -> handler.postDelayed({ captureManualAvatars(run, names) }, delay) }
+        MANUAL_AVATAR_DELAYS_MS.forEach { delay -> handler.postDelayed({ captureManualAvatars(run, platform, names) }, delay) }
     }
 
-    private fun captureManualAvatars(run: Long, candidates: List<String>) {
+    private fun captureManualAvatars(run: Long, platform: Platform, candidates: List<String>) {
         val now = System.currentTimeMillis()
         if (run != manualAvatarRun || quickBusy || !quickSendActive()) return
-        if (!recipientDetector.isOpen(now) || recipientDetector.selectedCount > 0) return
-        val names = candidates.filter { it in quickSendTargets && wantsAvatar(it, now) }
+        if (!recipientDetector.isOpen(now) || recipientDetector.platform != platform || recipientDetector.selectedCount > 0) return
+        val profile = PlatformProfile.of(platform) ?: return
+        val names = candidates.filter { it in targetsOf(platform) && wantsAvatar(platform, it, now) }
         if (names.isEmpty()) return
         val width = screenWidth
         val height = screenHeight
         readScope.launch {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return@launch
-            val roots = instagramRoots()
-            val found = names.mapNotNull { name -> locateAvatar(roots, name, width, height)?.let { name to it } }
+            val roots = appRoots(platform)
+            val found = names.mapNotNull { name -> locateAvatar(roots, name, width, height, profile)?.let { name to it } }
             if (found.isEmpty()) return@launch
             val crops = AvatarCapture.crop(this@ReelAccessibilityService, found.map { it.second }) ?: return@launch
             var saved = 0
             found.zip(crops).forEach { (pair, bitmap) ->
                 if (bitmap != null) {
-                    saveAvatar(pair.first, bitmap)
+                    saveAvatar(platform, pair.first, bitmap)
                     saved++
                 }
             }
             withContext(Dispatchers.Main) {
                 if (run == manualAvatarRun && saved == names.size) manualAvatarRun++ // todo hecho: sobra el segundo intento
                 CalibrationLog.log {
-                    CalibrationEvent(System.currentTimeMillis(), INFO, platform = QUICK_SEND_PLATFORM, rule = "envío rápido: foto de perfil recortada", note = "$saved de ${names.size} (envío a mano)")
+                    CalibrationEvent(System.currentTimeMillis(), INFO, platform = platform, rule = "envío rápido: foto de perfil recortada", note = "$saved de ${names.size} (envío a mano)")
                 }
             }
         }
     }
 
-    /** El cuadrado de la foto de [name] en la hoja de compartir, buscando su nombre con el atajo. */
-    private fun locateAvatar(roots: List<UiNode>, name: String, width: Int, height: Int): NodeBounds? {
+    /**
+     * El cuadrado de la foto de [name] en la hoja de compartir de [profile], buscando su nombre con el atajo. Solo en la
+     * ventana de la hoja (la que tiene alguna de sus marcas: «Copiar enlace» en Instagram; «Enviar a» en TikTok, cuya
+     * hoja es otra ventana) y nunca dentro del visor.
+     */
+    private fun locateAvatar(roots: List<UiNode>, name: String, width: Int, height: Int, profile: PlatformProfile): NodeBounds? {
         val key = RecipientDetector.normalize(name)
+        // En TikTok la descripción de la celda es el nombre entero (con comas, si es un grupo, o solo emojis).
+        val tiktok = profile.platform == Platform.TIKTOK
         for (root in roots) {
-            // Solo en la hoja de compartir: su ventana tiene que tener alguna de sus opciones («Copiar enlace»…).
-            val isSheet = QuickSender.MARKER_QUERIES.any { q ->
+            val isSheet = profile.markerQueries.any { q ->
                 AccessibilityUiFinder.byText(root, q).any { n ->
-                    n.isVisible && !recipientDetector.insideFeed(n) && listOfNotNull(n.text, n.contentDescription).any { QuickSender.isSheetMarker(it) }
+                    n.isVisible && !recipientDetector.insideFeed(n, profile.feedIds) &&
+                        listOfNotNull(n.text, n.contentDescription).any { isSheetMarker(it, profile) }
                 }
             }
             if (!isSheet) continue
             for (node in AccessibilityUiFinder.byText(root, name)) {
-                if (!node.isVisible || node.className?.contains("EditText") == true || recipientDetector.insideFeed(node)) continue
-                val fromText = node.text?.let { recipientDetector.clean(it.toString(), fromText = true) }
-                val fromDesc = node.contentDescription?.let { recipientDetector.clean(it.toString(), fromText = false) }
+                if (!node.isVisible || node.className?.contains("EditText") == true || recipientDetector.insideFeed(node, profile.feedIds)) continue
+                val fromText = node.text?.let { recipientDetector.clean(it.toString(), fromText = true, symbolNames = profile.symbolNames) }
+                val fromDesc = node.contentDescription?.let {
+                    recipientDetector.clean(it.toString(), fromText = tiktok, symbolNames = profile.symbolNames)
+                }
                 if (listOfNotNull(fromText, fromDesc).none { RecipientDetector.normalize(it) == key }) continue
                 val photo = AvatarRules.photo(node, name, height) ?: continue
                 AvatarRules.cropBox(photo.bounds, width, height, group = photo.group)?.let { return it }
@@ -1199,19 +1426,30 @@ class ReelAccessibilityService : AccessibilityService() {
         return null
     }
 
+    /** ¿[label] es una opción que solo sale en la hoja de compartir de [profile]? (Como `QuickSender.isSheetMarker`.) */
+    private fun isSheetMarker(label: CharSequence, profile: PlatformProfile): Boolean =
+        RecipientDetector.normalize(label.toString()).trimEnd('.', '…', ':', ' ') in profile.sheetMarkers
+
     /**
      * Tocar una burbuja ([names] = una) o soltar una encima de otra (dos). Sin envío en curso, empieza uno. Con uno
      * en curso (1.4.1) ya no se ignora: si aún no se ha pulsado «Enviar», se marca en la misma hoja; si ya se pulsó,
      * se encola y sale justo después. Nunca hay dos hojas a la vez.
      */
-    /** [allowRelease]: un toque con «Enviar» ya aceptado puede cerrar ese envío ([QuickSender.release]); una vez. */
+    /**
+     * [allowRelease]: un toque con «Enviar» ya aceptado puede cerrar ese envío ([QuickSender.release]); una vez.
+     * 1.10.0: la app es la del vídeo activo (Instagram o TikTok) y los nombres tienen que estar fijados en ella; con un
+     * envío en curso en la otra app, el toque no hace nada (un envío empieza y acaba en su app).
+     */
     private fun onQuickSendRequest(names: List<String>, gesture: String, allowRelease: Boolean = true) {
         val t = tracker ?: return
-        if (!quickSendActive() || t.currentPlatform != QUICK_SEND_PLATFORM) return
-        val wanted = names.distinct().filter { it in quickSendTargets }
+        val platform = t.currentPlatform ?: return
+        if (!quickSendActive() || !quickApp(platform)) return
+        if (quickBusy && platform != quickPlatform) return
+        val pinned = targetsOf(platform)
+        val wanted = names.distinct().filter { it in pinned }
         if (wanted.isEmpty()) return
         if (!quickBusy) {
-            startQuickSend(wanted, waitForClosedSheet = false, gesture = gesture)
+            startQuickSend(wanted, waitForClosedSheet = false, gesture = gesture, platform = platform)
             return
         }
         if (quickProvisionalShown && allowRelease) {
@@ -1227,7 +1465,7 @@ class ReelAccessibilityService : AccessibilityService() {
                 withContext(Dispatchers.Main) {
                     if (done != null && run == quickRun && quickBusy) onQuickSendDone(done, report, results, at)
                     when {
-                        !quickBusy -> startQuickSend(wanted, waitForClosedSheet = true, gesture = gesture)
+                        !quickBusy -> startQuickSend(wanted, waitForClosedSheet = true, gesture = gesture, platform = platform)
                         // Ya hay otro envío (lo encolado salió): se suma o se encola como siempre.
                         !quickProvisionalShown -> onQuickSendRequest(wanted, gesture, allowRelease = false)
                         // Aún no se puede cerrar (diseño antiguo: «Enviar» de una fila y otro destino por marcar): se
@@ -1243,7 +1481,7 @@ class ReelAccessibilityService : AccessibilityService() {
         val now = System.currentTimeMillis()
         val run = quickRun
         val reel = quickVideoId
-        val targets = fresh.map { quickMemory?.target(it, wantAvatar = wantsQuickAvatar(it, now)) ?: QuickSender.Target(it) }
+        val targets = fresh.map { quickMemory?.target(it, wantAvatar = wantsQuickAvatar(platform, it, now), platform = platform) ?: QuickSender.Target(it) }
         board.onSending(fresh, quickVideoId)
         overlay?.setStates(board.shownMarks.mapValues { (_, mark) -> stateOf(mark) })
         quickMemory?.let { it.streak = it.streak.used() }
@@ -1257,9 +1495,9 @@ class ReelAccessibilityService : AccessibilityService() {
                         quickNames += joined.filter { it !in quickNames }
                         quickQueue += rest.filter { it !in quickQueue }
                     }
-                    // El envío acabó mientras tanto: estos salen ya, en uno nuevo, pero solo con el mismo reel delante.
-                    !quickBusy -> if (sameReel(reel)) {
-                        startQuickSend(fresh, waitForClosedSheet = true, gesture = "en cola", reel = reel)
+                    // El envío acabó mientras tanto: estos salen ya, en uno nuevo, pero solo con el mismo vídeo delante.
+                    !quickBusy -> if (sameReel(reel, platform)) {
+                        startQuickSend(fresh, waitForClosedSheet = true, gesture = "en cola", reel = reel, platform = platform)
                     } else {
                         board.onFinished(fresh.associateWith { false }, sheetLeftOpen = false, System.currentTimeMillis())
                         updateOverlay()
@@ -1268,7 +1506,7 @@ class ReelAccessibilityService : AccessibilityService() {
                 }
                 CalibrationLog.log {
                     CalibrationEvent(
-                        System.currentTimeMillis(), INFO, platform = QUICK_SEND_PLATFORM, videoId = quickVideoId,
+                        System.currentTimeMillis(), INFO, platform = quickPlatform, videoId = quickVideoId,
                         rule = "envío rápido: otra burbuja durante el envío",
                         note = "se suman ${joined.size} a la misma hoja · se encolan ${rest.size}",
                     )
@@ -1278,23 +1516,35 @@ class ReelAccessibilityService : AccessibilityService() {
     }
 
     /**
-     * ¿Sigue delante el reel [videoId] de Instagram? Lo encolado solo sale con el reel que se eligió; sin vídeo activo
-     * (se ha ido del visor) no sale.
+     * ¿Sigue delante el vídeo [videoId] de [platform]? Lo encolado solo sale con el vídeo que se eligió; sin vídeo
+     * activo (se ha ido del visor) o en otra app no sale.
      */
-    private fun sameReel(videoId: Long?): Boolean {
+    private fun sameReel(videoId: Long?, platform: Platform = quickPlatform): Boolean {
         val t = tracker ?: return false
-        return videoId != null && t.currentPlatform == QUICK_SEND_PLATFORM && t.currentVideoId == videoId
+        return videoId != null && t.currentPlatform == platform && t.currentVideoId == videoId
     }
 
-    /** [reel]: el reel desde el que se pidió (lo encolado lleva el del envío en el que se tocó). */
-    private fun startQuickSend(names: List<String>, waitForClosedSheet: Boolean, gesture: String, reel: Long? = tracker?.currentVideoId) {
+    /**
+     * [reel]: el vídeo desde el que se pidió (lo encolado lleva el del envío en el que se tocó). [platform]: su app; todo
+     * el envío pasa en ella ([quickPlatform], con su [PlatformProfile]).
+     */
+    private fun startQuickSend(
+        names: List<String>,
+        waitForClosedSheet: Boolean,
+        gesture: String,
+        platform: Platform,
+        reel: Long? = tracker?.currentVideoId,
+    ) {
         val t = tracker ?: return
+        val profile = PlatformProfile.of(platform) ?: return
         val now = System.currentTimeMillis()
         // 1.4.2: justo después de un envío que salió bien, su hoja aún se puede estar cerrando: se espera a que se
-        // cierre en vez de rendirse con «ya hay una hoja abierta».
-        val afterSend = SystemClock.uptimeMillis() - quickLastOkAt < QUICK_SHEET_CLOSING_MS
+        // cierre en vez de rendirse con «ya hay una hoja abierta». Solo si fue en la misma app.
+        val afterSend = quickLastOkPlatform == platform && SystemClock.uptimeMillis() - quickLastOkAt < QUICK_SHEET_CLOSING_MS
         val waitClosed = waitForClosedSheet || afterSend
         handler.removeCallbacks(overlayWatchRunnable)
+        quickPlatform = platform
+        bubblesPlatform = platform
         quickRun++
         manualAvatarRun++
         quickNames.clear()
@@ -1307,21 +1557,25 @@ class ReelAccessibilityService : AccessibilityService() {
         setContentEvents(true)
         ignoreClicksUntil = now + QUICK_IGNORE_AFTER_MS
         recipientDetector.stop()
+        // Una comprobación de cierre de la hoja que siga pendiente queda anulada: el aviso «Enviado a …» que salga ahora es
+        // de este envío rápido, no de lo que se marcó en esa hoja.
+        sheetCloseRun++
         val memory = quickMemory
         memory?.let { it.streak = it.streak.used() }
-        val hints = memory?.hints() ?: QuickSender.Hints()
-        val targets = names.map { memory?.target(it, wantAvatar = wantsQuickAvatar(it, now)) ?: QuickSender.Target(it) }
+        val hints = memory?.hints(platform) ?: QuickSender.Hints()
+        val targets = names.map { memory?.target(it, wantAvatar = wantsQuickAvatar(platform, it, now), platform = platform) ?: QuickSender.Target(it) }
         // En el hilo de los pasos (start está sincronizado con tick: así no espera aquí a un paso que acaba).
-        readScope.launch { quickSender.start(targets, now, hints, waitClosed) }
+        readScope.launch { quickSender.start(targets, now, hints, waitClosed, profile = profile) }
         board.onSending(names, quickVideoId)
         updateOverlay()
         // Si el dedo aún suelta la despegada (updateOverlay no toca nada mientras), las marcas van igual.
         overlay?.setStates(board.shownMarks.mapValues { (_, mark) -> stateOf(mark) })
+        val pinned = targetsOf(platform)
         CalibrationLog.log {
             CalibrationEvent(
-                now, INFO, platform = QUICK_SEND_PLATFORM, videoId = quickVideoId, rule = "envío rápido: empieza",
+                now, INFO, platform = platform, videoId = quickVideoId, rule = "envío rápido: empieza",
                 note = listOfNotNull(
-                    "burbuja " + names.joinToString(" y ") { "${quickSendTargets.indexOf(it) + 1}" } + " de ${quickSendTargets.size}",
+                    "burbuja " + names.joinToString(" y ") { "${pinned.indexOf(it) + 1}" } + " de ${pinned.size}",
                     gesture,
                     "ids aprendidos: ${if (hints.shareId != null || hints.searchId != null) "sí" else "no"}",
                     "directo al buscador: ${targets.count { it.skipGrid }}".takeIf { targets.any { it.skipGrid } },
@@ -1334,7 +1588,7 @@ class ReelAccessibilityService : AccessibilityService() {
     }
 
     /**
-     * Un evento de Instagram mientras envía (la hoja se abre, cambia su contenido…): el siguiente paso va en
+     * Un evento de la app del envío mientras envía (la hoja se abre, cambia su contenido…): el siguiente paso va en
      * [QUICK_EVENT_DEBOUNCE_MS] como mucho, sin esperar al reloj. Si ya hay un paso leyendo la pantalla, el
      * siguiente irá en cuanto acabe.
      */
@@ -1348,9 +1602,9 @@ class ReelAccessibilityService : AccessibilityService() {
     }
 
     /**
-     * `typeWindowContentChanged` solo mientras dura un envío: llega a montones (también de TikTok y YouTube), así
-     * que no está en `accessibility_service_config.xml` y se pide al empezar y se quita al acabar. Aun así, si
-     * llega sin envío en curso se descarta nada más entrar ([onAccessibilityEvent]).
+     * `typeWindowContentChanged` solo mientras dura un envío: llega a montones (de las tres apps), así que no está en
+     * `accessibility_service_config.xml` y se pide al empezar y se quita al acabar. Aun así, si llega sin envío en
+     * curso o de otra app que la del envío ([quickPlatform]) se descarta nada más entrar ([onAccessibilityEvent]).
      */
     private fun setContentEvents(on: Boolean) {
         try {
@@ -1383,7 +1637,7 @@ class ReelAccessibilityService : AccessibilityService() {
         quickTickAt = null
     }
 
-    /** Lo que vuelve de un paso al hilo principal. */
+    /** Lo que vuelve de un paso al hilo principal. [platform]: la app del envío de ese paso. */
     private class QuickResult(
         val step: QuickSender.Step,
         val accepted: Boolean?,
@@ -1392,9 +1646,10 @@ class ReelAccessibilityService : AccessibilityService() {
         val results: List<QuickSender.DestResult>,
         val avatarName: String?,
         val avatar: Bitmap?,
+        val platform: Platform,
     )
 
-    /** Un paso: lee las ventanas de Instagram y pulsa o escribe, fuera del hilo principal. */
+    /** Un paso: lee las ventanas de la app del envío y pulsa o escribe, fuera del hilo principal. */
     private fun runQuickTick() {
         if (!quickBusy) return
         if (quickTickInFlight) {
@@ -1404,6 +1659,7 @@ class ReelAccessibilityService : AccessibilityService() {
         quickTickInFlight = true
         quickDirty = false
         val run = quickRun
+        val platform = quickPlatform
         val width = screenWidth
         val height = screenHeight
         // Se pulsa «Compartir» solo en el reel desde el que se pidió el envío (lo encolado espera a que se cierre la
@@ -1421,7 +1677,8 @@ class ReelAccessibilityService : AccessibilityService() {
                 quickSender.abort("tarda demasiado", now)
             } else try {
                 val readStart = SystemClock.uptimeMillis()
-                val roots = instagramRoots()
+                // Solo las ventanas de la app del envío: nunca se lee ni se pulsa nada de otra.
+                val roots = appRoots(platform)
                 val ticked = quickSender.tick(roots, width, height, now)
                 val readMs = SystemClock.uptimeMillis() - readStart
                 quickSender.noteRead(readMs)
@@ -1441,7 +1698,7 @@ class ReelAccessibilityService : AccessibilityService() {
                     QuickSender.Step.Done(false, "el reel ha cambiado", sheetOpened = false, targetSelected = false)
                 } else ticked.also { step ->
                     // (Lo que ha costado leer la pantalla en este paso ya va a «envío rápido: tiempos».)
-                    // La foto se recorta antes de pulsar el nombre: después Instagram le pone encima la marca.
+                    // La foto se recorta antes de pulsar el nombre: después la app le pone encima la marca de marcado.
                     val click = step as? QuickSender.Step.Click
                     val photo = click?.avatar
                     avatarName = click?.avatarName
@@ -1477,13 +1734,18 @@ class ReelAccessibilityService : AccessibilityService() {
                 results = if (step is QuickSender.Step.Done) quickSender.lastResults else emptyList(),
                 avatarName = avatarName,
                 avatar = avatar,
+                platform = platform,
             )
             withContext(Dispatchers.Main) {
                 quickTickInFlight = false
                 result.avatarName?.let { name ->
                     val bitmap = result.avatar
                     // Una captura fallida (o una foto que no se encuentra) no se reintenta en cada envío: espera un día.
-                    if (bitmap != null) saveAvatar(name, bitmap) else quickMemory?.avatarFailed(name, System.currentTimeMillis())
+                    if (bitmap != null) {
+                        saveAvatar(result.platform, name, bitmap)
+                    } else {
+                        quickMemory?.avatarFailed(name, System.currentTimeMillis(), result.platform)
+                    }
                 }
                 if (run == quickRun && quickBusy) onQuickStep(result) else if (quickBusy) scheduleQuickTick(0)
             }
@@ -1491,11 +1753,11 @@ class ReelAccessibilityService : AccessibilityService() {
     }
 
     /**
-     * Ventanas de Instagram, de la de más arriba a la de más abajo (la hoja puede ir en una propia). Solo se pide la
-     * raíz de las ventanas de apps (1.4.1): las del sistema, el teclado y las propias burbujas no son de Instagram y
-     * cada raíz cuesta una llamada entre procesos.
+     * Ventanas de [platform], de la de más arriba a la de más abajo (en Instagram la hoja va en la del visor; en TikTok,
+     * en un diálogo propio encima del feed). Solo se pide la raíz de las ventanas de apps (1.4.1): las del sistema, el
+     * teclado y las propias burbujas no son de la app y cada raíz cuesta una llamada entre procesos. Hilo de fondo.
      */
-    private fun instagramRoots(): List<UiNode> {
+    private fun appRoots(platform: Platform): List<UiNode> {
         val list = try {
             windows
         } catch (e: RuntimeException) {
@@ -1505,11 +1767,25 @@ class ReelAccessibilityService : AccessibilityService() {
             .filter { it.type == AccessibilityWindowInfo.TYPE_APPLICATION }
             .sortedByDescending { it.layer }
             .mapNotNull { window -> runCatching { window.root }.getOrNull() }
-            .filter { Platform.fromPackage(it.packageName) == QUICK_SEND_PLATFORM }
+            .filter { Platform.fromPackage(it.packageName) == platform }
         val found = roots.ifEmpty {
-            listOfNotNull(rootInActiveWindow?.takeIf { Platform.fromPackage(it.packageName) == QUICK_SEND_PLATFORM })
+            listOfNotNull(rootInActiveWindow?.takeIf { Platform.fromPackage(it.packageName) == platform })
         }
         return found.map { AccessibilityUiNode(it) }
+    }
+
+    /** Solo debug: la app con envío rápido de la ventana de app más alta (la que se ve), o `null`. Hilo de fondo. */
+    private fun foregroundQuickPlatform(): Platform? {
+        val list = try {
+            windows
+        } catch (e: RuntimeException) {
+            null
+        }
+        val top = list.orEmpty()
+            .filter { it.type == AccessibilityWindowInfo.TYPE_APPLICATION }
+            .sortedByDescending { it.layer }
+            .firstNotNullOfOrNull { window -> runCatching { Platform.fromPackage(window.root?.packageName) }.getOrNull() }
+        return top?.takeIf { quickApp(it) }
     }
 
     /** Pulsa (en el nodo o su primer antepasado pulsable) o escribe. `null` si el paso no hace nada. */
@@ -1552,8 +1828,9 @@ class ReelAccessibilityService : AccessibilityService() {
         val accepted = result.accepted
         val now = System.currentTimeMillis()
         ignoreClicksUntil = now + QUICK_IGNORE_AFTER_MS
-        // 1.4.2: tras marcar un nombre (Android lo aceptó), «Enviar» se busca ya, sin esperar al reloj.
-        val nameAccepted = accepted == true && (step as? QuickSender.Step.Click)?.what?.startsWith("nombre") == true
+        // 1.4.2: tras marcar un nombre (Android lo aceptó), «Enviar» se busca ya, sin esperar al reloj. 1.10.0: lo mismo tras
+        // la lupa de TikTok (su buscador sale al momento).
+        val nameAccepted = accepted == true && (step as? QuickSender.Step.Click)?.what?.let { it.startsWith("nombre") || it == "lupa del buscador" } == true
         val next = when {
             nameAccepted -> 0L
             quickDirty -> QUICK_EVENT_DEBOUNCE_MS
@@ -1564,7 +1841,7 @@ class ReelAccessibilityService : AccessibilityService() {
             is QuickSender.Step.Click, is QuickSender.Step.SetText -> {
                 CalibrationLog.log {
                     CalibrationEvent(
-                        now, INFO, platform = QUICK_SEND_PLATFORM, videoId = quickVideoId, decision = accepted,
+                        now, INFO, platform = result.platform, videoId = quickVideoId, decision = accepted,
                         rule = "envío rápido: " + if (step is QuickSender.Step.Click) "pulsa ${step.what}" else "escribe en el buscador",
                         note = listOfNotNull(
                             "Android no aceptó la acción".takeIf { accepted == false },
@@ -1587,16 +1864,21 @@ class ReelAccessibilityService : AccessibilityService() {
         }
     }
 
+    /** Fin del envío en curso: se apunta en su app ([quickPlatform]), como si lo hubiera hecho el usuario. */
     private fun onQuickSendDone(done: QuickSender.Step.Done, report: QuickSender.Report?, results: List<QuickSender.DestResult>, now: Long) {
         val names = quickNames.toList()
         val videoId = quickVideoId
+        val platform = quickPlatform
         quickNames.clear()
         cancelQuickTick()
         setContentEvents(false)
-        if (done.ok) quickLastOkAt = SystemClock.uptimeMillis()
+        if (done.ok) {
+            quickLastOkAt = SystemClock.uptimeMillis()
+            quickLastOkPlatform = platform
+        }
         CalibrationLog.log {
             CalibrationEvent(
-                now, INFO, platform = QUICK_SEND_PLATFORM, videoId = videoId, decision = done.ok,
+                now, INFO, platform = platform, videoId = videoId, decision = done.ok,
                 rule = "envío rápido: ${done.reason}",
                 note = listOfNotNull(
                     "la hoja se queda abierta para terminar a mano".takeIf { !done.ok && done.sheetOpened },
@@ -1610,29 +1892,31 @@ class ReelAccessibilityService : AccessibilityService() {
         if (report != null) {
             // Tiempos de cada fase, para comparar con un log real (sin nombres).
             CalibrationLog.log {
-                CalibrationEvent(now, INFO, platform = QUICK_SEND_PLATFORM, videoId = videoId, decision = done.ok, rule = "envío rápido: tiempos", note = report.describe())
+                CalibrationEvent(now, INFO, platform = platform, videoId = videoId, decision = done.ok, rule = "envío rápido: tiempos", note = report.describe())
             }
-            quickMemory?.learn(report, results, done.sheetOpened)
+            quickMemory?.learn(report, results, done.sheetOpened, platform)
             debug { "⇢ Envío rápido: ${report.describe()}" }
         }
         val repo = repository
         if (done.ok || done.sheetOpened) {
             // Se ha pulsado «Compartir» de verdad: cuenta como compartido, como si lo hubiera hecho el usuario.
-            shareDetector.onShareRecorded(QUICK_SEND_PLATFORM, now)
-            repo?.let { dbScope.launch { runCatching { it.recordShare(QUICK_SEND_PLATFORM, now, videoId) }.onFailure { e -> debugError("recordShare", e) } } }
+            shareDetector.onShareRecorded(platform, now)
+            repo?.let { dbScope.launch { runCatching { it.recordShare(platform, now, videoId) }.onFailure { e -> debugError("recordShare", e) } } }
             CalibrationLog.log {
-                CalibrationEvent(now, SHARE, platform = QUICK_SEND_PLATFORM, videoId = videoId, rule = if (done.ok) "envío rápido" else "envío rápido a medias")
+                CalibrationEvent(now, SHARE, platform = platform, videoId = videoId, rule = if (done.ok) "envío rápido" else "envío rápido a medias")
             }
         }
         val sent = results.filter { it.ok }.map { it.name }
         if (sent.isNotEmpty() && recordRecipients) {
-            // Cada destino, en su ranking de «A quién envías».
-            repo?.let { dbScope.launch { runCatching { it.recordRecipients(QUICK_SEND_PLATFORM, now, videoId, sent) }.onFailure { e -> debugError("recordRecipients", e) } } }
+            // Cada destino, en su ranking de «A quién envías» (el de su app).
+            repo?.let { dbScope.launch { runCatching { it.recordRecipients(platform, now, videoId, sent) }.onFailure { e -> debugError("recordRecipients", e) } } }
         }
         val leftOpen = !done.ok && done.sheetOpened
-        if (leftOpen && recordRecipients) {
+        val profile = recipientProfile(platform)
+        if (leftOpen && recordRecipients && profile != null) {
             // Lo que el usuario termine a mano se apunta como siempre (con los fijados ya marcados, si lo estaban).
-            recipientDetector.start(now, videoId, preselected = results.filter { it.selected }.map { it.name })
+            recipientDetector.start(now, videoId, preselected = results.filter { it.selected }.map { it.name }, profile = profile)
+            snapshotSentBanners(platform, now)
         }
         val outcome = (names.associateWith { false } + results.associate { it.name to it.ok })
         val queued = quickQueue.toList()
@@ -1645,9 +1929,9 @@ class ReelAccessibilityService : AccessibilityService() {
         }
         updateOverlay()
         debug { "⇢ Envío rápido: ${done.reason}" }
-        if (queued.isNotEmpty() && !leftOpen && sameReel(videoId)) {
+        if (queued.isNotEmpty() && !leftOpen && sameReel(videoId, platform)) {
             // Lo que se tocó con «Enviar» ya pulsado sale ahora, en cuanto se cierre la hoja de este.
-            startQuickSend(queued, waitForClosedSheet = true, gesture = "en cola", reel = videoId)
+            startQuickSend(queued, waitForClosedSheet = true, gesture = "en cola", platform = platform, reel = videoId)
         } else if (queued.isNotEmpty() && !leftOpen) {
             board.onFinished(queued.associateWith { false }, sheetLeftOpen = false, now)
             updateOverlay()
@@ -1747,12 +2031,43 @@ class ReelAccessibilityService : AccessibilityService() {
         val node = feedNode ?: return true
         if (feedPlatform != platform) return true
         return try {
-            if (!node.refresh() || !node.isVisibleToUser) return false
+            if (!node.refresh()) {
+                // Medido en TikTok 47.7: con su hoja abierta, el nodo del feed deja de refrescarse (la ventana de detrás no
+                // contesta) aunque el feed siga ahí.
+                val sheet = sheetOverFeed(platform, node)
+                debug { "feed de ${platform.shortName}: el nodo no se refresca · hoja encima: $sheet" }
+                return sheet
+            }
+            if (!node.isVisibleToUser) {
+                val sheet = sheetOverFeed(platform, node)
+                debug { "feed de ${platform.shortName} no visible · hoja encima: $sheet" }
+                return sheet
+            }
             val r = Rect()
             node.getBoundsInScreen(r)
             r.width() >= screenWidth / 2 && r.height() >= screenHeight / 2
         } catch (e: RuntimeException) {
             true
+        }
+    }
+
+    /**
+     * 1.10.0, medido en el móvil: en TikTok la hoja de compartir (y la de comentarios) es un diálogo encima del feed, y con él
+     * abierto el feed deja de contar como visible. Sigue ahí detrás, igual que en Instagram, donde la hoja va en la misma
+     * ventana y el vídeo no se cierra: si encima del feed hay una hoja de abajo de la misma app ([PlatformProfile.openSheetIds]),
+     * el feed se da por visto. Sin esto, abrir la hoja cerraba el vídeo (y el envío rápido se quedaba sin vídeo activo).
+     */
+    private fun sheetOverFeed(platform: Platform, feed: AccessibilityNodeInfo): Boolean {
+        val profile = PlatformProfile.of(platform)?.takeIf { it.sheetOwnWindow } ?: return false
+        val feedWindow = feed.windowId
+        val ids = profile.openSheetIds.flatMap { profile.fullIds(it) }
+        return try {
+            windows.any { w ->
+                w.type == AccessibilityWindowInfo.TYPE_APPLICATION && w.id != feedWindow &&
+                    w.root?.let { root -> Platform.fromPackage(root.packageName) == platform && ids.any { root.findAccessibilityNodeInfosByViewId(it).isNotEmpty() } } == true
+            }
+        } catch (e: RuntimeException) {
+            false
         }
     }
 
@@ -1902,19 +2217,31 @@ class ReelAccessibilityService : AccessibilityService() {
     companion object {
         const val TAG = "Reelometro"
 
-        /** Solo debug: vuelca al log el árbol de Instagram (para sacar ids reales sin uiautomator). */
+        /**
+         * Solo debug: vuelca al log (tag `Reelometro`, líneas «⇢ árbol») las ventanas de la app que se ve, Instagram o
+         * TikTok (para sacar ids reales sin uiautomator, que no puede leerlas con un vídeo reproduciéndose):
+         * `adb shell am broadcast -a com.reelometro.app.debug.DUMP_SHEET [--es platform tiktok] [--ez active true]`.
+         */
         private const val ACTION_DUMP_SHEET = "com.reelometro.app.debug.DUMP_SHEET"
 
-        /** «A quién envías» solo se lee en Instagram (la hoja de compartir de las otras no se mira). */
-        private val RECIPIENT_PLATFORM = Platform.INSTAGRAM
+        /**
+         * Solo debug: un envío rápido sin tocar las burbujas, para medirlo en el móvil (pasos «⇢ paso» en logcat y
+         * «envío rápido: tiempos» en Calibración). Con un vídeo de esa app en pantalla y los nombres fijados en ella:
+         * `adb shell am broadcast -a com.reelometro.app.debug.QUICK_SEND --es name "<fijado>" [--es name2 "<otro fijado>"]`.
+         */
+        private const val ACTION_QUICK_SEND = "com.reelometro.app.debug.QUICK_SEND"
 
-        /** El envío rápido también es solo de Instagram. */
-        private val QUICK_SEND_PLATFORM = Platform.INSTAGRAM
+        /**
+         * Lo que hay que tener para mandar [ACTION_DUMP_SHEET] y [ACTION_QUICK_SEND]: el permiso DUMP, que tiene el shell de
+         * adb (`adb shell am broadcast` sigue valiendo) y que una app instalada no puede conseguir. Lo mismo exige el
+         * `DebugReceiver` del manifiesto de debug.
+         */
+        private const val DEBUG_HOOKS_PERMISSION = android.Manifest.permission.DUMP
 
-        /** Cada cuánto mira la pantalla mientras envía, como red de seguridad (los eventos de Instagram van antes). */
+        /** Cada cuánto mira la pantalla mientras envía, como red de seguridad (los eventos de la app van antes). */
         private const val QUICK_TICK_MS = 100L
 
-        /** Tras un evento de Instagram durante un envío, el siguiente paso va como mucho en este tiempo. */
+        /** Tras un evento de la app durante un envío, el siguiente paso va como mucho en este tiempo. */
         private const val QUICK_EVENT_DEBOUNCE_MS = 30L
 
         /**
@@ -1923,13 +2250,20 @@ class ReelAccessibilityService : AccessibilityService() {
          */
         private const val QUICK_CAPTURE_TIMEOUT_MS = 250L
 
+        /**
+         * Esperas (seguidas) para ver si la hoja de TikTok se ha cerrado con el aviso «Enviado a …» ([watchSheetClose]):
+         * medido, el aviso sale en su propia ventana a los pocos milisegundos del cambio de ventana de la actividad (ya está a
+         * los 0,4 s del toque) y dura unos 5 s (medido el 7 nov por la tarde: aún a 4,2 y 4,7 s del envío; ya no a 5,0 y 6,4 s).
+         */
+        private val SENT_BANNER_WAITS_MS = listOf(150L, 300L, 450L, 600L)
+
         /** Lo que se espera, con las burbujas escondidas, a que la pantalla se repinte antes de la captura. */
         private const val CAPTURE_HIDE_MS = 64L
 
         /** Envío a mano: cuándo (tras pulsar «compartir») se busca la celda de un fijado para recortar su foto. */
         private val MANUAL_AVATAR_DELAYS_MS = listOf(700L, 1_500L)
 
-        /** Tras el último paso del envío rápido, los clics de Instagram se siguen ignorando este tiempo. */
+        /** Tras el último paso del envío rápido, los clics de su app se siguen ignorando este tiempo. */
         private const val QUICK_IGNORE_AFTER_MS = 1_000L
 
         /** Ningún envío rápido dura más que esto (varios destinos con el buscador caben de sobra). */
@@ -1941,7 +2275,7 @@ class ReelAccessibilityService : AccessibilityService() {
         /** Con el dedo sobre las burbujas, cuándo se vuelve a mirar qué se ve. */
         private const val OVERLAY_AFTER_DRAG_MS = 250L
 
-        /** Con las burbujas a la vista, cada cuánto se mira si Instagram sigue delante. */
+        /** Con las burbujas a la vista, cada cuánto se mira si su app sigue delante. */
         private const val OVERLAY_WATCH_MS = 600L
 
         /** Antepasados que se suben como mucho buscando uno pulsable. */

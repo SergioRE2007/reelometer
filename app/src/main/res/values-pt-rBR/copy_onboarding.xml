@@ -61,7 +61,7 @@
     <!-- «pueda controlar totalmente tu dispositivo» cita el aviso de Android («¿Permitir que Reelometer pueda
          controlar totalmente tu dispositivo?») y «Permitir», su botón: tal cual; en cada idioma, como lo
          muestre Android en ese idioma. -->
-    <string name="onboarding_guide_step_4">O Android vai perguntar se você permite que o Reelometer “tenha controle total do dispositivo”. É o aviso padrão de qualquer serviço de acessibilidade: o Reelometer observa e conta, e só aperta algo por você se você usar o envio rápido do Instagram. Toque em “Permitir”.</string>
+    <string name="onboarding_guide_step_4">O Android vai perguntar se você permite que o Reelometer “tenha controle total do dispositivo”. É o aviso padrão de qualquer serviço de acessibilidade: o Reelometer observa e conta, e só aperta algo por você se você usar o envio rápido do Instagram ou do TikTok. Toque em “Permitir”.</string>
     <!-- OK es lo que muestra el marcador de la pantalla al conectar (onboarding_guide_connected_counter). -->
     <string name="onboarding_guide_step_5">Volte aqui. Se o placar disser OK, está pronto.</string>
 

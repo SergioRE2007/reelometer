@@ -2,6 +2,7 @@ package com.reelometro.app.ui.settings
 
 import android.graphics.Bitmap
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -36,6 +37,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -90,6 +92,7 @@ import com.reelometro.app.ui.onboarding.InlineNotice
 import com.reelometro.app.ui.onboarding.goalStep
 import com.reelometro.app.ui.onboarding.revealIn
 import com.reelometro.app.ui.onboarding.revealOut
+import com.reelometro.app.ui.theme.Motion
 import com.reelometro.app.ui.theme.ReelTheme
 import com.reelometro.app.ui.theme.Space
 import com.reelometro.app.ui.theme.rememberHaptics
@@ -128,18 +131,20 @@ class SettingsActions(
     val onNotifyGoalLive: (Boolean) -> Unit = {},
     /** VER EL RECORRIDO (08). */
     val onReplayTour: () -> Unit = {},
-    /** «A quién envías» en Instagram (03). */
+    /** «A quién envías» en Instagram y TikTok (03). */
     val onRecordRecipients: (Boolean) -> Unit = {},
-    /** «Envío rápido» en Instagram (03). */
+    /** «Envío rápido» en Instagram y TikTok (03). */
     val onQuickSend: (Boolean) -> Unit = {},
-    /** FIJAR / FIJADO de una persona o un grupo del envío rápido (03). */
-    val onQuickSendTarget: (String) -> Unit = {},
-    /** RECOLOCAR: las burbujas del envío rápido vuelven a su sitio (03). */
-    val onQuickSendRelocate: () -> Unit = {},
-    /** ELEGIR FOTO de un fijado: abre el selector de fotos de Android (1.4.3). */
-    val onQuickSendPickPhoto: (String) -> Unit = {},
-    /** QUITAR FOTO de un fijado: vuelve la recortada de la hoja de compartir (1.4.3). */
-    val onQuickSendClearPhoto: (String) -> Unit = {},
+    /** Pestaña INSTAGRAM / TIKTOK del envío rápido (1.10.0). */
+    val onQuickSendApp: (Platform) -> Unit = {},
+    /** FIJAR / FIJADO de una persona o un grupo del envío rápido en esa app (03). */
+    val onQuickSendTarget: (Platform, String) -> Unit = { _, _ -> },
+    /** RECOLOCAR: las burbujas del envío rápido de esa app vuelven a su sitio (03). */
+    val onQuickSendRelocate: (Platform) -> Unit = {},
+    /** ELEGIR FOTO de un fijado de esa app: abre el selector de fotos de Android (1.4.3). */
+    val onQuickSendPickPhoto: (Platform, String) -> Unit = { _, _ -> },
+    /** QUITAR FOTO de un fijado de esa app: vuelve la recortada de la hoja de compartir (1.4.3). */
+    val onQuickSendClearPhoto: (Platform, String) -> Unit = { _, _ -> },
     /** IMPORTAR CSV: abre el selector de archivos (1.6.0). */
     val onImport: () -> Unit = {},
     /** AÑADIR o SUSTITUIR TODO (ya confirmado) en la vista previa de la importación. */
@@ -578,7 +583,7 @@ private fun AppsSection(s: SettingsState, actions: SettingsActions, quickSendOpe
     QuickSendSection(s, actions, open = quickSendOpen, onToggle = onToggleQuickSend)
 }
 
-/** «A quién envías» (solo Instagram): va con las apps porque decide qué se lee de una de ellas. */
+/** «A quién envías» (Instagram y TikTok): va con las apps porque decide qué se lee de ellas. */
 @Composable
 private fun RecipientsLine(s: SettingsState, actions: SettingsActions) {
     Spacer(Modifier.height(Space.x4))
@@ -589,16 +594,17 @@ private fun RecipientsLine(s: SettingsState, actions: SettingsActions) {
 }
 
 /**
- * «Envío rápido» (solo Instagram), debajo de «A quién envías»: el interruptor y, encendido, la lista para
- * fijar hasta [AppSettings.MAX_QUICK_SEND] personas o grupos de tu historial de envíos. Plegado por defecto tras
- * `ENVÍO RÁPIDO · 2 FIJADOS ▸`: es lo más largo de Ajustes y casi nunca se toca.
+ * «Envío rápido» (Instagram y TikTok), debajo de «A quién envías»: el interruptor (uno para las dos apps) y,
+ * encendido, una pestaña por app con su lista para fijar hasta [AppSettings.MAX_QUICK_SEND] personas o grupos de tu
+ * historial de envíos en esa app, sus fotos y su RECOLOCAR (1.10.0). Plegado por defecto tras
+ * `ENVÍO RÁPIDO · 2 FIJADOS ▸` (los de las dos apps): es lo más largo de Ajustes y casi nunca se toca.
  */
 @Composable
 private fun QuickSendSection(s: SettingsState, actions: SettingsActions, open: Boolean, onToggle: () -> Unit) {
     Spacer(Modifier.height(Space.x4))
     TicketDivider(style = TicketDividerStyle.Dashed)
     FoldLine(
-        text = SettingsCopy.quickSendFold(s.quickSendEnabled && s.quickSendAvailable, s.quickSendLines.count { it.pinned }),
+        text = SettingsCopy.quickSendFold(s.quickSendEnabled && s.quickSendAvailable, s.quickSendPinnedTotal),
         expanded = open,
         onToggle = onToggle,
     )
@@ -641,43 +647,70 @@ private fun QuickSendContent(s: SettingsState, actions: SettingsActions) {
         exit = revealOut(ReelTheme.reducedMotion),
     ) {
         Column(Modifier.fillMaxWidth().padding(top = Space.x3)) {
-            if (s.quickSendLines.isEmpty()) {
-                Text(SettingsCopy.QUICK_SEND_EMPTY, style = type.bodySmall, color = colors.text)
-            } else {
-                Label(SettingsCopy.QUICK_SEND_LIST_LABEL)
-                Spacer(Modifier.height(Space.x1))
-                s.quickSendLines.forEach { line ->
+            // Cada app tiene sus fijados y su sitio: primero la pestaña y, debajo, todo lo de esa app.
+            Text(SettingsCopy.QUICK_SEND_APPS_HINT, style = type.bodySmall, color = colors.textMuted)
+            Spacer(Modifier.height(Space.x1))
+            SegmentedTabs(
+                options = s.quickSendApps.map { it.appName },
+                selectedIndex = s.quickSendApps.indexOf(s.quickSendApp).coerceAtLeast(0),
+                onSelect = { actions.onQuickSendApp(s.quickSendApps[it]) },
+                descriptions = s.quickSendApps.map { SettingsCopy.quickSendAppDescription(it.appName) },
+            )
+            Spacer(Modifier.height(Space.x3))
+            QuickSendAppContent(s, actions)
+        }
+    }
+}
+
+/**
+ * Lo de la pestaña elegida ([SettingsState.quickSendApp]): su lista (o el vacío de esa app), «ya tienes 3» y
+ * RECOLOCAR de sus burbujas. Cada texto dice de qué app es («A quién envías más en TikTok»). Al cambiar de pestaña,
+ * el alto cambia con un muelle.
+ */
+@Composable
+private fun QuickSendAppContent(s: SettingsState, actions: SettingsActions) {
+    val colors = ReelTheme.colors
+    val type = ReelTheme.type
+    val app = s.quickSendApp
+    Column(Modifier.fillMaxWidth().animateContentSize(Motion.orSnap(ReelTheme.reducedMotion, Motion.standard()))) {
+        if (s.quickSendLines.isEmpty()) {
+            Text(SettingsCopy.quickSendEmpty(app.appName), style = type.bodySmall, color = colors.text)
+        } else {
+            Label(SettingsCopy.quickSendListLabel(app.appName))
+            Spacer(Modifier.height(Space.x1))
+            s.quickSendLines.forEach { line ->
+                key(line.platform, line.name) {
                     QuickSendRow(
                         line,
                         enabled = line.pinned || !s.quickSendFull,
-                        onToggle = { actions.onQuickSendTarget(line.name) },
-                        onPickPhoto = { actions.onQuickSendPickPhoto(line.name) },
-                        onClearPhoto = { actions.onQuickSendClearPhoto(line.name) },
-                    )
-                }
-                if (s.quickSendFull) {
-                    Text(
-                        SettingsCopy.quickSendFull(AppSettings.MAX_QUICK_SEND),
-                        style = type.bodySmall,
-                        color = colors.textMuted,
-                        modifier = Modifier.padding(top = Space.x2),
+                        onToggle = { actions.onQuickSendTarget(line.platform, line.name) },
+                        onPickPhoto = { actions.onQuickSendPickPhoto(line.platform, line.name) },
+                        onClearPhoto = { actions.onQuickSendClearPhoto(line.platform, line.name) },
                     )
                 }
             }
-            Spacer(Modifier.height(Space.x3))
-            ReelButton(
-                SettingsCopy.QUICK_SEND_RELOCATE,
-                onClick = actions.onQuickSendRelocate,
-                style = ReelButtonStyle.Ghost,
-                enabled = s.quickSendMoved,
-            )
-            Text(
-                s.quickSendMessage ?: SettingsCopy.QUICK_SEND_RELOCATE_HINT,
-                style = type.bodySmall,
-                color = colors.textMuted,
-                modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
-            )
+            if (s.quickSendFull) {
+                Text(
+                    SettingsCopy.quickSendFull(AppSettings.MAX_QUICK_SEND),
+                    style = type.bodySmall,
+                    color = colors.textMuted,
+                    modifier = Modifier.padding(top = Space.x2),
+                )
+            }
         }
+        Spacer(Modifier.height(Space.x3))
+        ReelButton(
+            SettingsCopy.QUICK_SEND_RELOCATE,
+            onClick = { actions.onQuickSendRelocate(app) },
+            style = ReelButtonStyle.Ghost,
+            enabled = s.quickSendMoved,
+        )
+        Text(
+            s.quickSendMessage ?: SettingsCopy.quickSendRelocateHint(app.appName),
+            style = type.bodySmall,
+            color = colors.textMuted,
+            modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
+        )
     }
 }
 
@@ -714,13 +747,14 @@ private fun QuickSendRow(
 ) {
     val context = LocalContext.current
     val version by AvatarStore.changes.collectAsState()
-    val photo by produceState(initialValue = RowPhoto(null, false), line.name, line.pinned, version) {
+    val photo by produceState(initialValue = RowPhoto(null, false), line.platform, line.name, line.pinned, version) {
         value = if (!line.pinned) {
             RowPhoto(null, false)
         } else {
             withContext(Dispatchers.IO) {
+                // La foto de este fijado en su app (la misma persona en Instagram y en TikTok tiene dos).
                 val store = AvatarStore(context)
-                RowPhoto(store.load(line.name), store.hasChosen(line.name))
+                RowPhoto(store.load(line.name, line.platform), store.hasChosen(line.name, line.platform))
             }
         }
     }

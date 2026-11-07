@@ -46,12 +46,13 @@ object DebugTools {
         return data.views.size
     }
 
-    /** «A quién envías» de ejemplo: cada compartido de Instagram va a una o dos personas o grupos. */
+    /** «A quién envías» de ejemplo: cada compartido de Instagram o TikTok (1.10.0) va a una o dos personas o grupos de esa app. */
     private fun sampleRecipients(shares: List<ShareEvent>, seed: Long): List<ShareRecipient> {
         val random = Random(seed)
-        return shares.filter { it.platform == Platform.INSTAGRAM.name }.flatMap { share ->
+        return shares.filter { it.platform == Platform.INSTAGRAM.name || it.platform == Platform.TIKTOK.name }.flatMap { share ->
             val count = if (random.nextInt(4) == 0) 2 else 1
-            SAMPLE_RECIPIENTS.shuffled(random).take(count).map {
+            val names = if (share.platform == Platform.TIKTOK.name) SAMPLE_RECIPIENTS_TIKTOK else SAMPLE_RECIPIENTS
+            names.shuffled(random).take(count).map {
                 ShareRecipient(
                     platform = share.platform, at = share.at, day = share.day, minuteOfDay = share.minuteOfDay,
                     recipient = it, reelId = share.reelId,
@@ -64,6 +65,9 @@ object DebugTools {
     private val SAMPLE_RECIPIENTS = listOf(
         "Los del piso", "Los del piso", "Los del piso", "Marta", "Marta", "Primos", "Dani", "Lucía",
     )
+
+    /** Los de TikTok (otros contactos; uno con nombre de emoji, como los hay allí). */
+    private val SAMPLE_RECIPIENTS_TIKTOK = listOf("rubio_m", "rubio_m", "Carlos", "Carlos", "🎧", "Ana, Bea, Carlos", "Marta")
 
     /** Borra todos los datos de uso (no los ajustes). */
     suspend fun clearData(context: Context) {

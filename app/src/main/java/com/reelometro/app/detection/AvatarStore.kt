@@ -3,6 +3,7 @@ package com.reelometro.app.detection
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import com.reelometro.app.data.Platform
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,27 +32,31 @@ class AvatarStore(context: Context) {
 
     private val dir = File(context.applicationContext.filesDir, DIR)
 
-    private fun cropped(name: String): File = File(dir, AvatarRules.croppedFileName(name))
+    // 1.10.0: cada app guarda sus fotos (la misma persona en Instagram y en TikTok son dos fijados). Instagram sigue con
+    // los ficheros de siempre; pasa siempre la plataforma del fijado.
+    private fun cropped(name: String, platform: Platform): File = File(dir, AvatarRules.croppedFileName(name, platform))
 
-    private fun chosen(name: String): File = File(dir, AvatarRules.chosenFileName(name))
+    private fun chosen(name: String, platform: Platform): File = File(dir, AvatarRules.chosenFileName(name, platform))
 
-    private fun legacy(name: String): File = File(dir, AvatarRules.fileName(name))
+    private fun legacy(name: String, platform: Platform): File = File(dir, AvatarRules.fileName(name, platform))
 
     /** Cuándo se recortó la foto de [name] de la hoja (con el recorte actual), o `null` si no hay. */
-    fun savedAt(name: String): Long? = cropped(name).takeIf { it.isFile }?.lastModified()?.takeIf { it > 0 }
+    fun savedAt(name: String, platform: Platform = Platform.INSTAGRAM): Long? =
+        cropped(name, platform).takeIf { it.isFile }?.lastModified()?.takeIf { it > 0 }
 
     /** ¿Tiene [name] una foto elegida de la galería? */
-    fun hasChosen(name: String): Boolean = chosen(name).isFile
+    fun hasChosen(name: String, platform: Platform = Platform.INSTAGRAM): Boolean = chosen(name, platform).isFile
 
-    fun needsRefresh(name: String, now: Long): Boolean = AvatarRules.needsRefresh(savedAt(name), now, hasChosen(name))
+    fun needsRefresh(name: String, now: Long, platform: Platform = Platform.INSTAGRAM): Boolean =
+        AvatarRules.needsRefresh(savedAt(name, platform), now, hasChosen(name, platform))
 
     /** La foto que se pinta para [name] ([AvatarRules.pick]): la elegida, la recortada o la de antes; o `null`. */
-    fun load(name: String): Bitmap? {
-        val source = AvatarRules.pick(hasChosen(name), cropped(name).isFile, legacy(name).isFile) ?: return null
+    fun load(name: String, platform: Platform = Platform.INSTAGRAM): Bitmap? {
+        val source = AvatarRules.pick(hasChosen(name, platform), cropped(name, platform).isFile, legacy(name, platform).isFile) ?: return null
         val file = when (source) {
-            AvatarRules.Source.CHOSEN -> chosen(name)
-            AvatarRules.Source.CROPPED -> cropped(name)
-            AvatarRules.Source.LEGACY -> legacy(name)
+            AvatarRules.Source.CHOSEN -> chosen(name, platform)
+            AvatarRules.Source.CROPPED -> cropped(name, platform)
+            AvatarRules.Source.LEGACY -> legacy(name, platform)
         }
         return try {
             BitmapFactory.decodeFile(file.path)
@@ -61,25 +66,25 @@ class AvatarStore(context: Context) {
     }
 
     /** Guarda (o renueva) la foto recortada de la hoja para [name] y borra la de antes de la 1.4.3. */
-    fun save(name: String, bitmap: Bitmap): Boolean {
-        val ok = write(cropped(name), bitmap)
+    fun save(name: String, bitmap: Bitmap, platform: Platform = Platform.INSTAGRAM): Boolean {
+        val ok = write(cropped(name, platform), bitmap)
         if (ok) {
-            legacy(name).delete()
+            legacy(name, platform).delete()
             bump()
         }
         return ok
     }
 
     /** Guarda la foto que el usuario eligió de su galería para [name] (ya cuadrada, de [AvatarRules.SIZE_PX]). */
-    fun saveChosen(name: String, bitmap: Bitmap): Boolean {
-        val ok = write(chosen(name), bitmap)
+    fun saveChosen(name: String, bitmap: Bitmap, platform: Platform = Platform.INSTAGRAM): Boolean {
+        val ok = write(chosen(name, platform), bitmap)
         if (ok) bump()
         return ok
     }
 
     /** QUITAR FOTO: borra solo la elegida; vuelve la recortada de la hoja (o las iniciales). */
-    fun clearChosen(name: String): Boolean {
-        val removed = chosen(name).delete()
+    fun clearChosen(name: String, platform: Platform = Platform.INSTAGRAM): Boolean {
+        val removed = chosen(name, platform).delete()
         if (removed) bump()
         return removed
     }
@@ -97,9 +102,12 @@ class AvatarStore(context: Context) {
         false
     }
 
-    /** Borra las fotos (elegidas y recortadas) de quien ya no está fijado. */
-    fun retainOnly(names: Collection<String>) {
-        val keep = names.flatMapTo(HashSet()) { AvatarRules.fileNames(it) }
+    /**
+     * Borra las fotos (elegidas y recortadas) de quien ya no está fijado **en ninguna app**: [pins] son todos los fijados
+     * por app (`AppSettings.allQuickSendTargets()`). Pasar solo los de una app borraría las fotos de la otra.
+     */
+    fun retainOnly(pins: Map<Platform, Collection<String>>) {
+        val keep = pins.flatMapTo(HashSet()) { (platform, names) -> names.flatMap { AvatarRules.fileNames(it, platform) } }
         var removed = false
         dir.listFiles()?.forEach { f -> if (f.name !in keep && f.name.removeSuffix(".tmp") !in keep && f.delete()) removed = true }
         if (removed) bump()

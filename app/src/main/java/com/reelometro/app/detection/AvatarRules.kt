@@ -1,6 +1,8 @@
 package com.reelometro.app.detection
 
+import com.reelometro.app.data.Platform
 import java.security.MessageDigest
+import java.text.BreakIterator
 import java.util.Locale
 import kotlin.math.roundToInt
 
@@ -11,7 +13,8 @@ import kotlin.math.roundToInt
  *    del nombre, nunca el nombre) y [pick], cuál se pinta;
  *  - [needsRefresh] y [captureInQuickSend]: como mucho una captura al día por fijado, y ninguna si el usuario eligió
  *    la foto de su galería;
- *  - [photoOf] y [cropBox]: dónde está la foto en la hoja de compartir y qué cuadrado se recorta;
+ *  - [photoOf] y [cropBox]: dónde está la foto en la hoja de compartir (de Instagram o de TikTok) y qué cuadrado se
+ *    recorta;
  *  - [centerSquare], [sampleSize], [exifRotation] y [exifMirror]: la foto elegida de la galería (1.4.3).
  */
 object AvatarRules {
@@ -36,16 +39,35 @@ object AvatarRules {
     /**
      * Una o dos iniciales: la de la primera palabra y la de la última que cuente (con alguna letra y sin ser
      * «de», «la»…). «Ana García» → «AG», «marta» → «M», «Los del piso» → «LP», «@ana.g_92» → «AG»,
-     * «Primos 2024» → «P». Sin letras ni cifras, «?».
+     * «Primos 2024» → «P». Sin letras ni cifras, el primer emoji («💿», 1.10.0: en TikTok hay quien se llama así) o «?».
      */
     fun initials(name: String): String {
         val words = name.split(Regex("[\\s._\\-@·,]+"))
             .map { w -> w.dropWhile { !it.isLetterOrDigit() } }
             .filter { it.isNotEmpty() }
-        if (words.isEmpty()) return "?"
+        if (words.isEmpty()) return firstSymbol(name) ?: "?"
         val first = firstChar(words.first())
         val last = words.drop(1).lastOrNull { w -> w.lowercase(LOCALE) !in LINKS && w.any { it.isLetter() } }?.let(::firstChar)
         return (first + (last ?: "")).uppercase(LOCALE)
+    }
+
+    /**
+     * El primer emoji o símbolo de [name] **entero** (el grafema: una bandera son dos indicadores regionales, «❤️» lleva su
+     * selector de variante, «👍🏽» su tono y «🧑‍💻» sus partes unidas), o `null`. Segunda pasada de la revisión de la 1.10.0.
+     */
+    private fun firstSymbol(name: String): String? {
+        var i = 0
+        while (i < name.length) {
+            val cp = name.codePointAt(i)
+            if (Character.getType(cp) == Character.OTHER_SYMBOL.toInt()) {
+                val graphemes = BreakIterator.getCharacterInstance()
+                graphemes.setText(name)
+                val end = graphemes.following(i).takeIf { it != BreakIterator.DONE && it > i } ?: (i + Character.charCount(cp))
+                return name.substring(i, end)
+            }
+            i += Character.charCount(cp)
+        }
+        return null
     }
 
     /** Primer carácter completo (un emoji o una letra con su tilde combinada no se parten). */
@@ -60,22 +82,34 @@ object AvatarRules {
      * llevar la etiqueta de actividad de Instagram: se siguen pintando hasta que haya una nueva, pero cuentan como
      * «sin foto» para volver a recortarla ([croppedFileName]).
      */
-    fun fileName(name: String): String = hash(name) + ".png"
+    fun fileName(name: String, platform: Platform = Platform.INSTAGRAM): String = hash(name, platform) + ".png"
 
     /** La foto recortada de la hoja con el recorte actual ([cropBox], sin el borde del círculo). */
-    fun croppedFileName(name: String): String = hash(name) + ".c$CROP_VERSION.png"
+    fun croppedFileName(name: String, platform: Platform = Platform.INSTAGRAM): String = hash(name, platform) + ".c$CROP_VERSION.png"
 
     /** La foto que el usuario eligió de su galería: manda sobre la recortada y la captura nunca la toca. */
-    fun chosenFileName(name: String): String = hash(name) + ".mine.png"
+    fun chosenFileName(name: String, platform: Platform = Platform.INSTAGRAM): String = hash(name, platform) + ".mine.png"
 
     /** Todos los ficheros de [name] (para no borrarlos mientras siga fijado). */
-    fun fileNames(name: String): List<String> = listOf(chosenFileName(name), croppedFileName(name), fileName(name))
+    fun fileNames(name: String, platform: Platform = Platform.INSTAGRAM): List<String> =
+        listOf(chosenFileName(name, platform), croppedFileName(name, platform), fileName(name, platform))
 
     /** Versión del recorte de la hoja: subirla hace que las fotos ya guardadas se recorten de nuevo. */
     const val CROP_VERSION = 2
 
-    private fun hash(name: String): String {
-        val digest = MessageDigest.getInstance("SHA-256").digest(RecipientDetector.normalize(name).toByteArray(Charsets.UTF_8))
+    /**
+     * Instagram, el de siempre, con la normalización de la 1.9.0 ([RecipientDetector.normalizeKeepingMarks], que no quita
+     * las marcas de dirección): las fotos y lo aprendido ya guardados siguen valiendo aunque el nombre lleve alguna. Las
+     * demás apps (1.10.0: TikTok) llevan su nombre delante, así la misma persona en dos apps tiene dos fotos y dos
+     * memorias, y sin marcas (TikTok las pone en sus nombres).
+     */
+    private fun hash(name: String, platform: Platform): String {
+        val key = if (platform == Platform.INSTAGRAM) {
+            RecipientDetector.normalizeKeepingMarks(name)
+        } else {
+            platform.name.lowercase() + "|" + RecipientDetector.normalize(name)
+        }
+        val digest = MessageDigest.getInstance("SHA-256").digest(key.toByteArray(Charsets.UTF_8))
         return digest.take(16).joinToString("") { "%02x".format(it) }
     }
 
@@ -104,6 +138,11 @@ object AvatarRules {
      * la izquierda, lejos de esa franja (queda un cuadrado del 70 % del lado; 1.4.3, visto en el móvil: la etiqueta
      * ocupa el borde de abajo hacia el centro, no solo la esquina). La burbuja pinta la foto en círculo,
      * así que el borde perdido no se nota; en un grupo (dos círculos que se pisan) quedan los dos, algo recortados.
+     *
+     * En **TikTok** (1.10.0) vale el mismo recorte: la foto de la celda es un círculo de 126 px sin etiqueta de
+     * actividad conocida, y lo único que se pinta encima es el `CheckBox` de marcado, en su último tercio de abajo a la
+     * derecha (y la foto se recorta antes de pulsar, sin marcar). Con estos márgenes, el círculo de la burbuja no llega
+     * ni a ese `CheckBox` (visto con los volcados de TikTok 47.7 en `AvatarRulesTest`).
      */
     const val INSET_START = 0.08f
     const val INSET_END = 0.22f
@@ -138,10 +177,14 @@ object AvatarRules {
     /**
      * Dónde está la foto de [name] en la hoja, a partir del nodo donde se lee su nombre ([nameNode]):
      *  1. si el propio nodo es la foto («Foto del perfil de Ana»), ese;
-     *  2. en su fila o celda (como mucho [maxAncestors] antepasados, ninguno más alto que [maxRowHeight] de la
+     *  2. si el nodo es la **celda o la fila entera** (1.10.0, TikTok: la celda es un `Button` descrito con el nombre y
+     *     la fila del buscador, un `ViewGroup` con la foto, el nombre y un `CheckBox`), la foto que lleva **dentro**
+     *     ([inside]); las de las celdas de al lado nunca;
+     *  3. en su fila o celda (como mucho [maxAncestors] antepasados, ninguno más alto que [maxRowHeight] de la
      *     pantalla), el nodo cuya descripción es «Foto del perfil de» + ese nombre;
-     *  3. si no, la imagen casi cuadrada más grande de la fila que queda encima o a la izquierda del nombre; las que se
-     *     pisan (el avatar compuesto de un grupo, dos círculos) cuentan juntas, con el rectángulo que las envuelve.
+     *  4. si no, y si el nombre se lee en el **texto** del nodo, la imagen casi cuadrada más grande de la fila que queda
+     *     encima o a la izquierda del nombre; las que se pisan (el avatar compuesto de un grupo, dos círculos) cuentan
+     *     juntas, con el rectángulo que las envuelve.
      */
     fun photoOf(
         nameNode: UiNode,
@@ -166,6 +209,11 @@ object AvatarRules {
     ): Photo? {
         val key = RecipientDetector.normalize(name)
         if (isPhotoOf(nameNode, key)) return Photo(nameNode.bounds)
+        if (nameNode.bounds.height <= screenHeight * maxRowHeight) inside(nameNode, key, maxNodes)?.let { return it }
+        // La regla de la posición (encima o a la izquierda del nombre) es para el **texto** del nombre. Una celda entera
+        // (el nombre en su descripción) tiene la foto dentro o no la tiene: la de su izquierda es la de otra persona
+        // (TikTok 47.7: una celda que asoma por el borde, sin hijos).
+        val byPosition = !nameNode.text.isNullOrBlank()
         var ancestor = nameNode.parent
         var best: Photo? = null
         repeat(maxAncestors) {
@@ -173,21 +221,47 @@ object AvatarRules {
             if (row.bounds.height > screenHeight * maxRowHeight) return best
             val nodes = below(row, maxNodes)
             nodes.firstOrNull { isPhotoOf(it, key) }?.let { return Photo(it.bounds) }
-            if (best == null) {
+            if (best == null && byPosition) {
                 val images = nodes.filter { n ->
-                    n !== nameNode && n.className?.contains("Image") == true && n.isVisible && squareish(n.bounds) &&
+                    n !== nameNode && isImage(n) &&
                         (n.bounds.bottom <= nameNode.bounds.centerY || n.bounds.right <= nameNode.bounds.centerX)
                 }.map { it.bounds }
-                // Un grupo lleva un avatar compuesto (dos círculos que se pisan): vale el rectángulo que los envuelve.
-                // Solo imágenes casi cuadradas (cada círculo lo es): un fondo o una franja ancha no se suman.
-                best = clusters(images).filter(::squareish).maxByOrNull { it.width.toLong() * it.height }
-                    // Si no es una imagen suelta, es la unión de varias: el avatar compuesto de un grupo.
-                    ?.let { b -> Photo(b, group = images.none { it == b }) }
+                best = largest(images)
             }
             ancestor = row.parent
         }
         return best
     }
+
+    /**
+     * La foto que va **dentro** de [cell] cuando el nodo encontrado es la celda o la fila entera y no solo el texto del
+     * nombre (TikTok 47.7: la celda de la fila de contactos es un `Button` descrito con el nombre, con la foto de 126 px
+     * dentro y, si está marcada, un `CheckBox` encima abajo a la derecha; la fila del buscador, un `ViewGroup` con la
+     * foto a la izquierda). Primero la descrita como su foto; si no, la imagen casi cuadrada más grande de dentro (las
+     * que se pisan, juntas: un grupo). `null` si no tiene hijos (un texto) o no hay ninguna: entonces se busca en sus
+     * antepasados como siempre.
+     */
+    private fun inside(cell: UiNode, key: String, maxNodes: Int): Photo? {
+        if (cell.children.isEmpty()) return null
+        val nodes = below(cell, maxNodes)
+        nodes.firstOrNull { isPhotoOf(it, key) }?.let { return Photo(it.bounds) }
+        return largest(nodes.filter { isImage(it) && it.bounds.within(cell.bounds) }.map { it.bounds })
+    }
+
+    /**
+     * La imagen más grande de [images]. Un grupo lleva un avatar compuesto (dos círculos que se pisan): vale el
+     * rectángulo que los envuelve. Solo imágenes casi cuadradas (cada círculo lo es): un fondo o una franja ancha no se
+     * suman.
+     */
+    private fun largest(images: List<NodeBounds>): Photo? =
+        clusters(images).filter(::squareish).maxByOrNull { it.width.toLong() * it.height }
+            // Si no es una imagen suelta, es la unión de varias: el avatar compuesto de un grupo.
+            ?.let { b -> Photo(b, group = images.none { it == b }) }
+
+    private fun isImage(n: UiNode): Boolean = n.className?.contains("Image") == true && n.isVisible && squareish(n.bounds)
+
+    private fun NodeBounds.within(outer: NodeBounds): Boolean =
+        left >= outer.left && top >= outer.top && right <= outer.right && bottom <= outer.bottom
 
     /**
      * Junta las imágenes que se pisan (el avatar compuesto de un grupo: dos círculos montados) y devuelve el

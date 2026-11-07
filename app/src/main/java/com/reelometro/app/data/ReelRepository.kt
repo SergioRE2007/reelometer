@@ -241,11 +241,18 @@ class ReelRepository(
      * A quién envías más en Instagram, de siempre (los nombres, el más frecuente primero): la lista para
      * fijar el envío rápido en Ajustes. Se emite al suscribirse y en cada cambio de `share_recipients`.
      */
-    fun observeTopRecipients(limit: Int = TOP_RECIPIENTS_LIMIT): Flow<List<String>> =
+    fun observeTopRecipients(limit: Int = TOP_RECIPIENTS_LIMIT): Flow<List<String>> = observeTopRecipients(Platform.INSTAGRAM, limit)
+
+    /**
+     * Lo mismo en [platform] (1.10.0: también TikTok, cuyos contactos no son los de Instagram). La consulta trae el top
+     * de todas las apps y se filtra aquí, así que se pide de más para que el filtro no deje la lista corta.
+     */
+    fun observeTopRecipients(platform: Platform, limit: Int = TOP_RECIPIENTS_LIMIT): Flow<List<String>> =
         database.invalidationTracker.createFlow(ShareRecipient.TABLE)
             .map {
-                statsDao.topRecipients(Long.MIN_VALUE, Long.MAX_VALUE, limit.coerceIn(1, MAX_RECENT_LIMIT))
-                    .filter { it.platform == Platform.INSTAGRAM.name }
+                statsDao.topRecipients(Long.MIN_VALUE, Long.MAX_VALUE, (limit * 4).coerceIn(1, MAX_RECENT_LIMIT))
+                    .filter { it.platform == platform.name }
+                    .take(limit)
                     .map { it.recipient }
                     .distinct()
             }

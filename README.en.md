@@ -11,12 +11,12 @@
 Counts the videos you watch on TikTok, Instagram Reels and YouTube Shorts: how many, for how long,
 on which topics and from whom. Everything stays on your phone.
 
-![Version 1.5.0](https://img.shields.io/badge/version-1.5.0-11100E?style=flat-square)
+![Version 1.10.0](https://img.shields.io/badge/version-1.10.0-11100E?style=flat-square)
 ![Android 8.0+](https://img.shields.io/badge/Android-8.0%2B-11100E?style=flat-square&logo=android&logoColor=EDE8DF)
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.4-11100E?style=flat-square&logo=kotlin&logoColor=EDE8DF)
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack_Compose-11100E?style=flat-square&logo=jetpackcompose&logoColor=EDE8DF)
 ![No internet](https://img.shields.io/badge/INTERNET_permission-no-FF5A1F?style=flat-square)
-![Tests](https://img.shields.io/badge/tests-761-11100E?style=flat-square)
+![Tests](https://img.shields.io/badge/tests-969-11100E?style=flat-square)
 [![Buy me a coffee](https://img.shields.io/badge/Buy_Me_a_Coffee-support_the_project-FF5A1F?style=flat-square&logo=buymeacoffee&logoColor=11100E)](https://www.buymeacoffee.com/Lopuzno)
 
 <br>
@@ -51,9 +51,9 @@ Reelometer doesn't block apps or lecture you. It just puts the scoreboard in fro
 | **Topics** | Sorts each video into 16 topics (humour, sport, food, gaming, learning…) from its description and hashtags, without leaving your phone. |
 | **Widget and notifications** | A «Today» widget in 6 sizes (with Flap in the large one), a daily notification at the time you choose, a monthly one with your recap and, if you turn it on, one the moment you go over your goal. |
 | **Goal** | If you want, a daily limit: the scoreboard tells you how much you have left and keeps your streaks. |
-| **Who you send to** (A quién envías) | Instagram only and only if you turn it on (it's off by default): counts which people and groups you send reels to, so you can see who you share with most. |
-| **Quick send** (Envío rápido) | Also Instagram only and also off by default. Pin your usual people or groups and bubbles with their photo appear over the reels: one tap and the reel is sent by itself, in under a second. You can place the bubbles wherever you like, send to two at once by dropping one bubble onto another, and each bubble's photo can be their profile picture or one you choose from your gallery. |
-| **Your data** | Export everything to CSV, import it on another phone (or after resetting this one) without duplicates, or delete it with one button. |
+| **Who you send to** (A quién envías) | On Instagram and TikTok, and only if you turn it on (it's off by default): counts which people and groups you send videos to, so you can see who you share with most. |
+| **Quick send** (Envío rápido) | On Instagram and TikTok, also off by default. Pin your usual people or groups (each app has its own) and bubbles with their photo appear over the videos: one tap and the video is sent by itself, in under a second. You can place the bubbles wherever you like, send to two at once by dropping one bubble onto another, and each bubble's photo can be their profile picture or one you choose from your gallery. |
+| **Your data** | Export everything to CSV, import it on another phone (or after resetting this one) without duplicates, or delete it with one button. If you want, a weekly copy of the CSV in a folder on your phone that you choose (the last 4 are kept). |
 
 <div align="center">
 <img src="docs/img/hoy-claro.png" width="24%" alt="Today screen in light theme">
@@ -70,11 +70,11 @@ permission, so the app is built so that it can't abuse it:
 - No accounts, no servers, no ads, no analytics and no cloud backup.
 - The service only listens to TikTok, Instagram and YouTube (`android:packageNames`). It reads nothing in any other app.
 - For each video it stores the app, the time, how long it was on screen, the creator and the description. Never what
-  you type or your messages. Who you share something with: only on Instagram and only if you turn on «Who you send
-  to» (it's off by default); then it stores the name of the person or group, on the phone.
-- It doesn't tap anything for you, except with Instagram **quick send** (off by default; it needs «Who you send to»):
-  when you tap a bubble, it only taps «Share», the person or group you pinned and «Send» (if it can't see them, it
-  types their name into the sheet's search box).
+  you type or your messages. Who you share something with: only on Instagram and TikTok and only if you turn on «Who
+  you send to» (it's off by default); then it stores the name of the person or group, on the phone.
+- It doesn't tap anything for you, except with Instagram and TikTok **quick send** (off by default; it needs «Who you
+  send to»): when you tap a bubble, it only taps «Share», the person or group you pinned and «Send» (if it can't see
+  them, it looks them up in the sheet's search box; on TikTok, tapping its search icon first).
 - It doesn't take screenshots, except one: only with quick send, it crops the profile picture of the people or groups
   you pin from the share sheet, to show it on their bubble; it keeps it only on this phone and takes no other
   screenshot. If you'd rather use another photo, you choose it with Android's photo picker, which asks for no
@@ -97,7 +97,7 @@ TikTok · Instagram · YouTube
    ├─ ContentExtractor   creator, description and hashtags of the visible page
    ├─ CategoryClassifier keywords → 16 topics
    ├─ ShareDetector      counts the «Share» taps
-   ├─ RecipientDetector  who you send to on Instagram (only if you turn it on)
+   ├─ RecipientDetector  who you send to on Instagram and TikTok (only if you turn it on)
    └─ QuickSender        quick send: Share → the person or group → Send
           │
           ▼
@@ -112,7 +112,7 @@ About (Acerca de) › tap the version 7 times; it then sits at the bottom, under
 No default Material. Ink background `#11100E` or paper `#F3EEE5`, bone `#EDE8DF` and a single orange accent
 `#FF5A1F`. Bricolage Grotesque, JetBrains Mono and Instrument Serif typefaces. A 4 dp grid, no rounded cards, no
 gradients, no emojis and spring animations. The only exception is the quick-send bubbles, which imitate glass so they
-don't clash on top of Instagram. The full system is in [`docs/DESIGN.md`](docs/DESIGN.md) (in Spanish).
+don't clash on top of Instagram and TikTok. The full system is in [`docs/DESIGN.md`](docs/DESIGN.md) (in Spanish).
 
 ## Install
 
@@ -165,12 +165,17 @@ app/src/main/java/com/reelometro/app/
 
 ## Status
 
-Version **1.8.0**. Honestly:
+Version **1.10.0**. Honestly:
 
 - **Tested on a real phone** (a Pixel with Android 17): TikTok and Instagram count correctly. Instagram quick send has
   been measured send by send: between 0.5 and 0.93 s to a person and 1.4–1.6 s to a group that has to be searched for
   (almost all of that time is Instagram's search). The bubbles and the photo chosen from the gallery have also been
   tested on that phone.
+- **Quick send on TikTok** (1.10.0, TikTok 47.7): measured on that phone, 11 sends in a row to a contact who appears on
+  the sheet, all between 0.5 and 0.67 s, the tenth as fast as the first. Not tested on the phone yet: the search path
+  (when the pinned contact isn't on the sheet; tested with the real screen tree in tests) and TikTok in other
+  languages. TikTok changes its screen identifiers with every version: if an update breaks it, the send stops and
+  leaves the sheet open for you to finish by hand.
 - **YouTube Shorts** (1.6.1): calibrated with a real log from a Pixel (YouTube 21.44). It used to count about 6 out of
   27 Shorts; in a check round it now counted 7 out of 7. YouTube changes without notice: if it stops adding up, the
   Calibration console shows why.
@@ -187,7 +192,7 @@ Version **1.8.0**. Honestly:
   (798 videos: all of them come in, and none is duplicated on a second import).
 - **1.7.0**: charts can be scrubbed by sliding a finger sideways (no long press) and Settings has an index at the
   top that jumps to each section; quick send and the tools are folded. Tested on the emulator.
-- It builds and passes its 871 JVM tests. The screenshots in this README use sample data.
+- It builds and passes its 969 JVM tests. The screenshots in this README use sample data.
 
 ## Support the project
 

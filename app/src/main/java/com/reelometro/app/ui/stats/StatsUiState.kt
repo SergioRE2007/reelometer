@@ -74,7 +74,8 @@ data class PeriodSummary(
 
 /**
  * [week] = comparativa con la semana anterior (solo en SEMANA y si la anterior tiene datos).
- * [recipients] = a quién envías más en Instagram (vacío si el ajuste está apagado o no hay envíos).
+ * [recipients] = a quién envías más en Instagram y TikTok (vacío si el ajuste está apagado o no hay envíos). Cada fila
+ * lleva la marca de su app (como los creadores): la misma persona en las dos apps son dos filas.
  */
 @Immutable
 data class StatsSections(

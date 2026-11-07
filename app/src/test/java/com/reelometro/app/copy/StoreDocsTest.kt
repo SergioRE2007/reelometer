@@ -35,6 +35,16 @@ class StoreDocsTest {
     }
 
     @Test
+    fun `la traducción inglesa de la divulgación de la tienda es la de la app`() {
+        // 1.10.0: la sección «Traducción al inglés» de store/prominent-disclosure.md copia values-en (se desfasó una vez).
+        val doc = normalized(optionalFile("store/prominent-disclosure.md").readText().replace(Regex("(?m)^>\\s?"), ""))
+        val english = AppTexts.using(JvmTexts.forQualifier("en")) { DisclosureCopy.fullText }
+        english.drop(2).forEach { part -> // la etiqueta y el título van con otro formato en el documento
+            assertTrue("store/prominent-disclosure.md no contiene, tal cual: «${CopyRules.plain(part)}»", normalized(part) in doc)
+        }
+    }
+
+    @Test
     fun `la ficha respeta los límites de Google Play`() {
         val listing = optionalFile("store/listing-es-ES.md").readText().replace("\r\n", "\n")
         fun block(name: String): String {

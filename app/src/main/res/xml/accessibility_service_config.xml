@@ -5,11 +5,12 @@
   - packageNames: el sistema SOLO le entrega eventos de TikTok (sus dos paquetes), Instagram y YouTube.
     No recibe nada del resto de apps, ni del teclado, ni del lanzador. Debe coincidir con Platform.packages.
   - Eventos: scroll (cambio de vídeo), cambio de ventana (en qué pantalla de la app estás) y clic
-    (para detectar el botón compartir y, solo en Instagram y con el ajuste «A quién envías» encendido,
+    (para detectar el botón compartir y, solo en Instagram y TikTok y con el ajuste «A quién envías» encendido,
     el nombre de la persona o grupo que eliges en la hoja de compartir).
-  - Envío rápido (solo Instagram y con el ajuste encendido): al tocar su burbuja, el servicio pulsa con
+  - Envío rápido (Instagram y TikTok, con el ajuste encendido): al tocar su burbuja, el servicio pulsa con
     performAction (ACTION_CLICK / ACTION_SET_TEXT, que bastan con canRetrieveWindowContent) «Compartir», el
-    nombre fijado y «Enviar». Sin canPerformGestures: añadirlo obligaría a reactivar el servicio.
+    nombre fijado y «Enviar» (si no lo ve, lo escribe en el buscador de la hoja; en TikTok, pulsando antes su
+    lupa). Sin canPerformGestures: añadirlo obligaría a reactivar el servicio.
   - typeWindowContentChanged (1.4.0) NO va aquí: llega a montones de las tres apps. El servicio lo añade a su
     configuración (setServiceInfo) solo mientras dura un envío rápido, para reaccionar a la hoja sin esperar al
     reloj, y lo quita al acabar; si aun así llega sin envío en curso, lo descarta nada más entrar.

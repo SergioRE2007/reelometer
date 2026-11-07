@@ -17,6 +17,8 @@ class AccessibilityUiNode(
     override val viewId: String? get() = safe { node.viewIdResourceName }
     override val className: CharSequence? get() = safe { node.className }
     override val windowId: Int get() = safe { node.windowId } ?: UiNode.NO_WINDOW
+    override val isClickable: Boolean get() = safe { node.isClickable } ?: false
+    override val isChecked: Boolean get() = safe { node.isChecked } ?: false
 
     override val bounds: NodeBounds by lazy {
         safe {

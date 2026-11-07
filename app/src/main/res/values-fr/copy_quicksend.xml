@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Envío rápido (copy/QuickSendCopy.kt): burbujas que pone la app sobre los reels de Instagram para
-  compartir el reel con un toque. Las burbujas no llevan texto visible: casi todo es para TalkBack,
-  más la pregunta de si apagarlo. %1$s es siempre el nombre de una persona o un grupo de Instagram.
+  Envío rápido (copy/QuickSendCopy.kt): burbujas que pone la app sobre los vídeos de Instagram y TikTok
+  para compartirlos con un toque. Las burbujas no llevan texto visible: casi todo es para TalkBack,
+  más la pregunta de si apagarlo. %1$s es siempre el nombre de una persona o un grupo de esa app.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="fr">
 
     <!-- TalkBack de cada burbuja, según su estado. -->
-    <string name="quicksend_bubble_description">Envoyer ce reel à %1$s</string>
+    <string name="quicksend_bubble_description">Envoyer cette vidéo à %1$s</string>
     <string name="quicksend_sending_description">Envoi à %1$s</string>
     <string name="quicksend_sent_description">Envoyé à %1$s</string>
     <!-- No ha encontrado algo: si la hoja de compartir se abrió, se queda abierta para terminar a mano. -->
@@ -15,7 +15,7 @@
     <!-- Acción de TalkBack: enviar a dos a la vez. %1$s esta burbuja, %2$s otra persona o grupo fijado. -->
     <string name="quicksend_pair_action">Envoyer à %1$s et à %2$s</string>
     <!-- Acción de TalkBack en cada burbuja (equivale a soltarla en la «X»). -->
-    <string name="quicksend_hide_action">Cacher jusqu’au reel suivant</string>
+    <string name="quicksend_hide_action">Cacher jusqu’à la vidéo suivante</string>
     <!-- Nombre de la ventana de las burbujas (TalkBack la anuncia así). -->
     <string name="quicksend_window_title">Envoi rapide de Reelometer</string>
     <!-- La zona «X» que sale abajo mientras arrastras las burbujas. -->

@@ -41,15 +41,19 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 /**
- * Las **burbujas de cristal** del envío rápido sobre los reels de Instagram (1.4.2): la foto de perfil (o las
- * iniciales) de cada fijado en un círculo de 42 dp con un anillo de cristal, un reflejo y una sombra suave
+ * Las **burbujas de cristal** del envío rápido sobre los vídeos de Instagram (1.4.2) y de TikTok (1.10.0): la foto de
+ * perfil (o las iniciales) de cada fijado en un círculo de 42 dp con un anillo de cristal, un reflejo y una sombra suave
  * ([GlassBubbleArt], el mismo dibujo que la vista previa de Ajustes y la galería). Zona táctil de 48 dp. Sin texto
  * visible: el nombre va en la descripción para TalkBack. El círculo y el cristal son excepciones deliberadas de
- * `docs/DESIGN.md`: es un avatar sobre Instagram, no una tarjeta de la app.
+ * `docs/DESIGN.md`: es un avatar sobre la otra app, no una tarjeta de la app.
+ *
+ * Aquí no hay nada de una app en concreto: el servicio pasa a [show] los fijados, las fotos y el sitio de la app que se
+ * ve (cada app tiene los suyos; por defecto, `BubbleLayout.defaultFor`). Si al cambiar de app los nombres son los mismos,
+ * se quedan las mismas burbujas con las fotos y el sitio de la otra.
  *
  * Ventanas `TYPE_ACCESSIBILITY_OVERLAY` del propio servicio (sin permiso de superposición), con Views porque
  * viven fuera de cualquier actividad. La de las burbujas mide solo lo que ocupan (incluso al arrastrarlas: se
- * mueve la ventana); el resto de la pantalla sigue siendo de Instagram. Sin desenfoque real (ver [GlassBubbleArt]).
+ * mueve la ventana); el resto de la pantalla sigue siendo de la app de vídeos. Sin desenfoque real (ver [GlassBubbleArt]).
  *  - **Tocar** envía (se hunde un poco y vibra). Enviando, un brillo gira por el anillo; enviado, una marca de
  *    visto pequeña encima de la foto y la burbuja rebota; si falla, «!» y una sacudida corta.
  *  - **Arrastrar** (más de `scaledTouchSlop`) mueve todas juntas y nunca envía. Al soltar se quedan **donde se

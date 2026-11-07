@@ -223,21 +223,27 @@ object SettingsCopy {
     /** Con «A quién envías» apagado, el envío rápido no se puede encender. */
     val QUICK_SEND_NEEDS_RECIPIENTS: String get() = str(R.string.settings_quick_send_needs_recipients)
 
-    /** Sin historial de envíos todavía: no hay nada que fijar. */
-    val QUICK_SEND_EMPTY: String get() = str(R.string.settings_quick_send_empty)
+    /** 1.10.0: encima de las pestañas de cada app (INSTAGRAM, TIKTOK). */
+    val QUICK_SEND_APPS_HINT: String get() = str(R.string.settings_quick_send_apps_hint)
 
-    /** Encima de la lista de personas y grupos para fijar. */
-    val QUICK_SEND_LIST_LABEL: String get() = str(R.string.settings_quick_send_list_label)
+    /** TalkBack de la pestaña de [app] («TikTok»: `Platform.appName`). */
+    fun quickSendAppDescription(app: String): String = str(R.string.settings_quick_send_app_description, app)
+
+    /** Sin historial de envíos en [app] todavía: no hay nada que fijar. */
+    fun quickSendEmpty(app: String): String = str(R.string.settings_quick_send_empty_app, app)
+
+    /** Encima de la lista de personas y grupos de [app] para fijar. */
+    fun quickSendListLabel(app: String): String = str(R.string.settings_quick_send_list_label_app, app)
 
     val QUICK_SEND_PIN: String get() = str(R.string.settings_quick_send_pin)
     val QUICK_SEND_PINNED: String get() = str(R.string.settings_quick_send_pinned)
 
-    /** Devuelve las burbujas a su sitio: borde derecho, a media altura. */
+    /** Devuelve las burbujas de la app elegida a su sitio por defecto. */
     val QUICK_SEND_RELOCATE: String get() = str(R.string.settings_quick_send_relocate)
 
-    val QUICK_SEND_RELOCATE_HINT: String get() = str(R.string.settings_quick_send_relocate_hint)
+    fun quickSendRelocateHint(app: String): String = str(R.string.settings_quick_send_relocate_hint_app, app)
 
-    val QUICK_SEND_RELOCATED: String get() = str(R.string.settings_quick_send_relocated)
+    fun quickSendRelocated(app: String): String = str(R.string.settings_quick_send_relocated_app, app)
 
     /** Ya hay [max] fijados: para fijar otro hay que quitar uno. */
     fun quickSendFull(max: Int): String = plural(R.plurals.settings_quick_send_full, max, Format.integer(max))

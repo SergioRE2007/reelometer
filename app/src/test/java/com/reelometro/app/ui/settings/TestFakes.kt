@@ -13,6 +13,7 @@ import com.reelometro.app.data.settings.SettingsRepository
 import com.reelometro.app.stats.Totals
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -39,9 +40,17 @@ internal class FakeUsage(count: Int = 12, totalMs: Long = 600_000) : UsageData {
 
     override val totals: Flow<Totals> = totalsFlow
 
-    /** A quién envías más (para fijar el envío rápido). */
+    /** A quién envías más en Instagram (para fijar el envío rápido). */
     val topFlow = MutableStateFlow<List<String>>(emptyList())
-    override val topRecipients: Flow<List<String>> = topFlow
+
+    /** A quién envías más en TikTok (1.10.0: otra lista). */
+    val tikTokTopFlow = MutableStateFlow<List<String>>(emptyList())
+
+    override fun topRecipients(platform: Platform): Flow<List<String>> = when (platform) {
+        Platform.INSTAGRAM -> topFlow
+        Platform.TIKTOK -> tikTokTopFlow
+        else -> flowOf(emptyList())
+    }
 
     override suspend fun exportCsv(out: OutputStream): Int {
         exportedTo = out
@@ -99,25 +108,35 @@ internal class FakeSettingsSystem(
         passportChanges += enabled
     }
 
-    /** Cada lista de fijados tras fijar o quitar (el real borra la foto de quien ya no está). */
+    /** Cada lista de fijados de Instagram tras fijar o quitar (el real borra la foto de quien ya no está). */
     val pinnedChanges = mutableListOf<List<String>>()
 
-    override fun onQuickSendTargetsChanged(pinned: List<String>) {
-        pinnedChanges += pinned
+    /** Lo mismo con los fijados de todas las apps (lo que recibe el real: con los de una sola, borraría los de otra). */
+    val pinnedMaps = mutableListOf<Map<Platform, List<String>>>()
+
+    override fun onQuickSendTargetsChanged(pins: Map<Platform, List<String>>) {
+        pinnedChanges += pins[Platform.INSTAGRAM].orEmpty()
+        pinnedMaps += pins
     }
 
-    /** Fotos elegidas de la galería (nombre → uri); [photoReadable] = false simula una foto que no se puede abrir. */
-    val chosenPhotos = mutableMapOf<String, String>()
+    /** Fotos elegidas de la galería por app y nombre; [photoReadable] = false simula una foto que no se puede abrir. */
+    val photos = mutableMapOf<Pair<Platform, String>, String>()
     var photoReadable = true
 
-    override fun setQuickSendPhoto(name: String, uri: String): Boolean {
+    /** Las de Instagram, nombre → uri (como antes de la 1.10.0). */
+    val chosenPhotos: Map<String, String> get() = photosOf(Platform.INSTAGRAM)
+
+    fun photosOf(platform: Platform): Map<String, String> =
+        photos.filterKeys { it.first == platform }.mapKeys { it.key.second }
+
+    override fun setQuickSendPhoto(name: String, uri: String, platform: Platform): Boolean {
         if (!photoReadable) return false
-        chosenPhotos[name] = uri
+        photos[platform to name] = uri
         return true
     }
 
-    override fun clearQuickSendPhoto(name: String) {
-        chosenPhotos.remove(name)
+    override fun clearQuickSendPhoto(name: String, platform: Platform) {
+        photos.remove(platform to name)
     }
 
     override suspend fun loadLicenses(): List<License> = listOf(License("JetBrains Mono", "OFL"))

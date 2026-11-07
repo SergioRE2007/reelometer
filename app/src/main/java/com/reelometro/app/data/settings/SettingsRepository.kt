@@ -59,15 +59,16 @@ data class AppSettings(
     /** El recorrido guiado de la primera vez ya se vio o se saltó («VER EL RECORRIDO» lo repite). */
     val tourDone: Boolean = false,
     /**
-     * «A quién envías» (solo Instagram): con `true`, el servicio lee en la hoja de compartir el nombre
+     * «A quién envías» (Instagram y TikTok): con `true`, el servicio lee en la hoja de compartir el nombre
      * de la persona o el grupo al que mandas un vídeo y lo guarda en el móvil para las estadísticas.
      * Apagado por defecto: la divulgación y la política lo presentan como algo que eliges tú.
      */
     val recordRecipients: Boolean = false,
     /**
-     * «Envío rápido» (solo Instagram): con `true` y algún fijado, el servicio pone sobre los reels un botón
-     * por cada nombre de [quickSendTargets] y, al tocarlo, pulsa por ti «Compartir», ese nombre y «Enviar».
-     * Apagado por defecto.
+     * «Envío rápido» (Instagram y TikTok): con `true` y algún fijado, el servicio pone sobre los vídeos de esa app
+     * un botón por cada nombre fijado en ella ([quickSendTargets] en Instagram, [quickSendTargetsTikTok] en TikTok)
+     * y, al tocarlo, pulsa por ti «Compartir», ese nombre y «Enviar» (si no lo ve, lo busca en el buscador de la
+     * hoja; en TikTok, pulsando antes su lupa). Un único interruptor para las dos apps. Apagado por defecto.
      */
     val quickSendEnabled: Boolean = false,
     /** Personas o grupos fijados para el envío rápido, en el orden en que se fijaron (como mucho [MAX_QUICK_SEND]). */
@@ -78,6 +79,14 @@ data class AppSettings(
      * ahí). Lo guardado por la 1.4.0–1.4.1 (borde + altura) se lee convertido ([BubbleLayout.fromLegacy]).
      */
     val quickSendBubble: BubbleSpot? = null,
+    /**
+     * 1.10.0, envío rápido también en TikTok: sus fijados (los contactos de TikTok no son los de Instagram), en orden y
+     * como mucho [MAX_QUICK_SEND]. [quickSendTargets] y [quickSendBubble] siguen siendo los de **Instagram** (las mismas
+     * claves de siempre: nada que migrar). Para leer por app, [quickSendTargets] (función) y [quickSendBubble] (función).
+     */
+    val quickSendTargetsTikTok: List<String> = emptyList(),
+    /** Dónde dejó el usuario las burbujas sobre TikTok; `null` = donde van por defecto en TikTok. */
+    val quickSendBubbleTikTok: BubbleSpot? = null,
     /**
      * Copia semanal del CSV: la carpeta (URI de `ACTION_OPEN_DOCUMENT_TREE`, con permiso persistente). `null` = apagada.
      */
@@ -91,7 +100,27 @@ data class AppSettings(
 ) {
     fun isEnabled(platform: Platform): Boolean = platform in enabledPlatforms
 
+    /** Fijados del envío rápido en [platform] (vacío en las apps sin envío rápido, como YouTube). */
+    fun quickSendTargets(platform: Platform): List<String> = when (platform) {
+        Platform.INSTAGRAM -> quickSendTargets
+        Platform.TIKTOK -> quickSendTargetsTikTok
+        else -> emptyList()
+    }
+
+    /** Dónde dejó las burbujas en [platform] (`null` = por defecto en esa app). */
+    fun quickSendBubble(platform: Platform): BubbleSpot? = when (platform) {
+        Platform.INSTAGRAM -> quickSendBubble
+        Platform.TIKTOK -> quickSendBubbleTikTok
+        else -> null
+    }
+
+    /** Todos los fijados, por app (para no borrar las fotos de los de otra app al quitar uno). */
+    fun allQuickSendTargets(): Map<Platform, List<String>> = QUICK_SEND_PLATFORMS.associateWith { quickSendTargets(it) }
+
     companion object {
+        /** Apps con envío rápido (y con «A quién envías»), en el orden en que salen en Ajustes. */
+        val QUICK_SEND_PLATFORMS: List<Platform> = listOf(Platform.INSTAGRAM, Platform.TIKTOK)
+
         const val MIN_GOAL = 5
         const val MAX_GOAL = 2_000
         val SUGGESTED_GOALS = listOf(30, 60, 100, 150, 200)
@@ -200,26 +229,61 @@ class SettingsRepository internal constructor(private val store: DataStore<Prefe
      * Fijados del envío rápido, en orden. Se recortan, se quitan vacíos y repetidos y se guardan como
      * mucho [AppSettings.MAX_QUICK_SEND]. Van unidos por `\n` (un conjunto no guardaría el orden).
      */
-    suspend fun setQuickSendTargets(targets: List<String>) = edit { prefs ->
-        val clean = cleanTargets(targets)
-        if (clean.isEmpty()) prefs.remove(QUICK_SEND_TARGETS) else prefs[QUICK_SEND_TARGETS] = clean.joinToString("\n")
+    suspend fun setQuickSendTargets(targets: List<String>) = setQuickSendTargets(Platform.INSTAGRAM, targets)
+
+    /** Lo mismo en [platform] (Instagram o TikTok; en las demás no hace nada). */
+    suspend fun setQuickSendTargets(platform: Platform, targets: List<String>) {
+        val key = targetsKey(platform) ?: return
+        edit { prefs ->
+            val clean = cleanTargets(targets)
+            if (clean.isEmpty()) prefs.remove(key) else prefs[key] = clean.joinToString("\n")
+        }
     }
 
     /** Burbujas del envío rápido soltadas en [spot] (la posición de antes, si quedaba, ya no hace falta). */
-    suspend fun setQuickSendBubble(spot: BubbleSpot) = edit {
-        val clean = BubbleLayout.sanitize(spot)
-        it[QUICK_SEND_BUBBLE_X] = clean.x
-        it[QUICK_SEND_BUBBLE_CENTER_Y] = clean.y
-        it.remove(LEGACY_BUBBLE_LEFT)
-        it.remove(LEGACY_BUBBLE_Y)
+    suspend fun setQuickSendBubble(spot: BubbleSpot) = setQuickSendBubble(Platform.INSTAGRAM, spot)
+
+    /** Lo mismo sobre [platform]: cada app guarda su posición (1.10.0). */
+    suspend fun setQuickSendBubble(platform: Platform, spot: BubbleSpot) {
+        val (keyX, keyY) = bubbleKeys(platform) ?: return
+        edit {
+            val clean = BubbleLayout.sanitize(spot, BubbleLayout.defaultFor(platform))
+            it[keyX] = clean.x
+            it[keyY] = clean.y
+            if (platform == Platform.INSTAGRAM) {
+                it.remove(LEGACY_BUBBLE_LEFT)
+                it.remove(LEGACY_BUBBLE_Y)
+            }
+        }
     }
 
     /** RECOLOCAR: las burbujas vuelven a su sitio por defecto. */
-    suspend fun resetQuickSendBubble() = edit {
-        it.remove(QUICK_SEND_BUBBLE_X)
-        it.remove(QUICK_SEND_BUBBLE_CENTER_Y)
-        it.remove(LEGACY_BUBBLE_LEFT)
-        it.remove(LEGACY_BUBBLE_Y)
+    suspend fun resetQuickSendBubble() = resetQuickSendBubble(Platform.INSTAGRAM)
+
+    /** RECOLOCAR en [platform]: solo las de esa app vuelven a su sitio por defecto. */
+    suspend fun resetQuickSendBubble(platform: Platform) {
+        val (keyX, keyY) = bubbleKeys(platform) ?: return
+        edit {
+            it.remove(keyX)
+            it.remove(keyY)
+            if (platform == Platform.INSTAGRAM) {
+                it.remove(LEGACY_BUBBLE_LEFT)
+                it.remove(LEGACY_BUBBLE_Y)
+            }
+        }
+    }
+
+    /** Clave de los fijados de [platform]: Instagram, la de siempre; TikTok, una nueva (1.10.0). */
+    private fun targetsKey(platform: Platform): Preferences.Key<String>? = when (platform) {
+        Platform.INSTAGRAM -> QUICK_SEND_TARGETS
+        Platform.TIKTOK -> QUICK_SEND_TARGETS_TIKTOK
+        else -> null
+    }
+
+    private fun bubbleKeys(platform: Platform): Pair<Preferences.Key<Float>, Preferences.Key<Float>>? = when (platform) {
+        Platform.INSTAGRAM -> QUICK_SEND_BUBBLE_X to QUICK_SEND_BUBBLE_CENTER_Y
+        Platform.TIKTOK -> QUICK_SEND_BUBBLE_X_TIKTOK to QUICK_SEND_BUBBLE_CENTER_Y_TIKTOK
+        else -> null
     }
 
     /**
@@ -269,6 +333,13 @@ class SettingsRepository internal constructor(private val store: DataStore<Prefe
         return BubbleLayout.fromLegacy(left = p[LEGACY_BUBBLE_LEFT] ?: false, centerY = legacyY)
     }
 
+    /** La posición sobre TikTok (1.10.0; no hay formato antiguo que convertir). */
+    private fun tikTokBubbleSpot(p: Preferences): BubbleSpot? {
+        val x = p[QUICK_SEND_BUBBLE_X_TIKTOK] ?: return null
+        val y = p[QUICK_SEND_BUBBLE_CENTER_Y_TIKTOK] ?: return null
+        return BubbleLayout.sanitize(BubbleSpot(x, y), BubbleLayout.DEFAULT_TIKTOK)
+    }
+
     /** Vuelve a los valores por defecto (no toca los datos de uso). */
     suspend fun reset() = edit { it.clear() }
 
@@ -277,10 +348,14 @@ class SettingsRepository internal constructor(private val store: DataStore<Prefe
      * [name] si estaba o lo añade al final si queda sitio. Con el cupo lleno no hace nada. Devuelve los
      * fijados que quedan (para borrar la foto de quien ya no lo está).
      */
-    suspend fun toggleQuickSendTarget(name: String): List<String> {
+    suspend fun toggleQuickSendTarget(name: String): List<String> = toggleQuickSendTarget(Platform.INSTAGRAM, name)
+
+    /** Lo mismo en la lista de [platform]; devuelve los fijados que quedan **en esa app**. */
+    suspend fun toggleQuickSendTarget(platform: Platform, name: String): List<String> {
+        val storeKey = targetsKey(platform) ?: return emptyList()
         var result: List<String> = emptyList()
         edit { prefs ->
-            val pinned = prefs[QUICK_SEND_TARGETS]?.let { cleanTargets(it.split('\n')) }.orEmpty()
+            val pinned = prefs[storeKey]?.let { cleanTargets(it.split('\n')) }.orEmpty()
             val key = name.replace('\n', ' ').trim()
             val next = when {
                 key.isEmpty() -> pinned
@@ -288,7 +363,7 @@ class SettingsRepository internal constructor(private val store: DataStore<Prefe
                 pinned.size < AppSettings.MAX_QUICK_SEND -> pinned + key
                 else -> pinned
             }
-            if (next.isEmpty()) prefs.remove(QUICK_SEND_TARGETS) else prefs[QUICK_SEND_TARGETS] = next.joinToString("\n")
+            if (next.isEmpty()) prefs.remove(storeKey) else prefs[storeKey] = next.joinToString("\n")
             result = next
         }
         return result
@@ -321,6 +396,8 @@ class SettingsRepository internal constructor(private val store: DataStore<Prefe
             quickSendEnabled = p[QUICK_SEND_ENABLED] ?: defaults.quickSendEnabled,
             quickSendTargets = p[QUICK_SEND_TARGETS]?.let { cleanTargets(it.split('\n')) } ?: defaults.quickSendTargets,
             quickSendBubble = bubbleSpot(p),
+            quickSendTargetsTikTok = p[QUICK_SEND_TARGETS_TIKTOK]?.let { cleanTargets(it.split('\n')) } ?: defaults.quickSendTargetsTikTok,
+            quickSendBubbleTikTok = tikTokBubbleSpot(p),
             backupFolder = p[BACKUP_FOLDER]?.takeIf { it.isNotBlank() },
             backupFolderName = p[BACKUP_FOLDER_NAME],
             backupLastMs = p[BACKUP_LAST_MS],
@@ -350,6 +427,11 @@ class SettingsRepository internal constructor(private val store: DataStore<Prefe
         val QUICK_SEND_TARGETS = stringPreferencesKey("quick_send_targets")
         val QUICK_SEND_BUBBLE_X = floatPreferencesKey("quick_send_bubble_cx")
         val QUICK_SEND_BUBBLE_CENTER_Y = floatPreferencesKey("quick_send_bubble_cy")
+
+        /** 1.10.0: lo mismo en TikTok (Instagram sigue en las claves de arriba). */
+        val QUICK_SEND_TARGETS_TIKTOK = stringPreferencesKey("quick_send_targets_tiktok")
+        val QUICK_SEND_BUBBLE_X_TIKTOK = floatPreferencesKey("quick_send_bubble_cx_tiktok")
+        val QUICK_SEND_BUBBLE_CENTER_Y_TIKTOK = floatPreferencesKey("quick_send_bubble_cy_tiktok")
 
         /** Copia semanal del CSV. */
         val BACKUP_FOLDER = stringPreferencesKey("backup_folder")

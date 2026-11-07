@@ -80,10 +80,10 @@ interface UsageData {
     suspend fun importCsv(csv: ParsedCsv, mode: ImportMode): ImportResult = throw IOException("Sin importación")
 
     /**
-     * A quién envías más en Instagram, de siempre (para fijar el envío rápido). Con valor por defecto para
-     * que las fuentes falsas de los tests no tengan que darlo.
+     * A quién envías más en [platform], de siempre (para fijar el envío rápido de esa app; 1.10.0: Instagram y TikTok,
+     * cada una con sus contactos). Con valor por defecto para que las fuentes falsas de los tests no tengan que darlo.
      */
-    val topRecipients: Flow<List<String>> get() = flowOf(emptyList())
+    fun topRecipients(platform: Platform): Flow<List<String>> = flowOf(emptyList())
 }
 
 class RepositoryUsageData(private val repository: ReelRepository) : UsageData {
@@ -97,7 +97,7 @@ class RepositoryUsageData(private val repository: ReelRepository) : UsageData {
 
     override suspend fun importCsv(csv: ParsedCsv, mode: ImportMode): ImportResult = repository.importCsv(csv, mode)
 
-    override val topRecipients: Flow<List<String>> = repository.observeTopRecipients()
+    override fun topRecipients(platform: Platform): Flow<List<String>> = repository.observeTopRecipients(platform)
 }
 
 /** Licencia de una tipografía (texto de `assets/licenses/`). */
@@ -126,17 +126,20 @@ interface SettingsSystem {
     /** Tras cambiar el modo pasaporte: repintar el widget (Flap) y, si se apaga, quitar su aviso. */
     fun onPassportModeChanged(enabled: Boolean) {}
 
-    /** Tras fijar o quitar: borrar la foto de perfil de quien ya no está fijado (en el hilo de E/S). */
-    fun onQuickSendTargetsChanged(pinned: List<String>) {}
+    /**
+     * Tras fijar o quitar: borrar la foto de perfil de quien ya no está fijado (en el hilo de E/S). [pins] son los fijados
+     * de **todas** las apps (1.10.0), para no borrar los de la otra.
+     */
+    fun onQuickSendTargetsChanged(pins: Map<Platform, List<String>>) {}
 
     /**
      * ELEGIR FOTO (1.4.3): decodifica la foto de [uri] (del selector de fotos), se queda con el cuadrado centrado y la
      * guarda como la foto elegida de [name]. `false` si no se puede leer. En el hilo de E/S.
      */
-    fun setQuickSendPhoto(name: String, uri: String): Boolean = false
+    fun setQuickSendPhoto(name: String, uri: String, platform: Platform = Platform.INSTAGRAM): Boolean = false
 
     /** QUITAR FOTO: borra la foto elegida de [name] (vuelve la recortada de la hoja). En el hilo de E/S. */
-    fun clearQuickSendPhoto(name: String) {}
+    fun clearQuickSendPhoto(name: String, platform: Platform = Platform.INSTAGRAM) {}
 
     /**
      * Copia semanal: se queda con el permiso persistente de la carpeta [uri] recién elegida y devuelve su nombre, o
@@ -184,21 +187,21 @@ class AndroidSettingsSystem(context: Context) : SettingsSystem {
         WidgetUpdater.requestUpdate(app)
     }
 
-    override fun onQuickSendTargetsChanged(pinned: List<String>) {
-        AvatarStore(app).retainOnly(pinned)
+    override fun onQuickSendTargetsChanged(pins: Map<Platform, List<String>>) {
+        AvatarStore(app).retainOnly(pins)
     }
 
-    override fun setQuickSendPhoto(name: String, uri: String): Boolean {
+    override fun setQuickSendPhoto(name: String, uri: String, platform: Platform): Boolean {
         val bitmap = AvatarImport.decode(app.contentResolver, Uri.parse(uri)) ?: return false
         return try {
-            AvatarStore(app).saveChosen(name, bitmap)
+            AvatarStore(app).saveChosen(name, bitmap, platform)
         } finally {
             bitmap.recycle()
         }
     }
 
-    override fun clearQuickSendPhoto(name: String) {
-        AvatarStore(app).clearChosen(name)
+    override fun clearQuickSendPhoto(name: String, platform: Platform) {
+        AvatarStore(app).clearChosen(name, platform)
     }
 
     override fun takeBackupFolder(uri: String): String? = CsvBackup.takeFolder(app, uri)
@@ -237,9 +240,9 @@ class AndroidSettingsSystem(context: Context) : SettingsSystem {
     }
 }
 
-/** Una persona o un grupo que se puede fijar para el envío rápido (sección 03). */
+/** Una persona o un grupo de [platform] que se puede fijar para el envío rápido en esa app (sección 03). */
 @Immutable
-data class QuickSendLine(val name: String, val pinned: Boolean) {
+data class QuickSendLine(val name: String, val pinned: Boolean, val platform: Platform = Platform.INSTAGRAM) {
     /** Lo que lleva su burbuja si no hay foto. */
     val initials: String get() = AvatarRules.initials(name)
 }
@@ -283,15 +286,21 @@ data class SettingsState(
     val passportEnabled: Boolean = true,
     /** Aviso en directo al pasar el objetivo (solo tiene efecto con objetivo). */
     val notifyGoalLive: Boolean = false,
-    /** «A quién envías» en Instagram (apagado por defecto). */
+    /** «A quién envías» en Instagram y TikTok (apagado por defecto; uno para las dos). */
     val recordRecipients: Boolean = false,
-    /** «Envío rápido» en Instagram (apagado por defecto). */
+    /** «Envío rápido» en Instagram y TikTok (apagado por defecto; uno para las dos). */
     val quickSendEnabled: Boolean = false,
-    /** Lo que se puede fijar: tu top de envíos y, detrás, los fijados que ya no salen en él. */
+    /** Las apps con envío rápido, una pestaña cada una y en este orden (Instagram, TikTok). */
+    val quickSendApps: List<Platform> = AppSettings.QUICK_SEND_PLATFORMS,
+    /** La pestaña elegida: la lista, las fotos y RECOLOCAR de debajo son de esta app. */
+    val quickSendApp: Platform = Platform.INSTAGRAM,
+    /** Lo que se puede fijar en [quickSendApp]: tu top de envíos en esa app y, detrás, sus fijados que ya no salen en él. */
     val quickSendLines: List<QuickSendLine> = emptyList(),
-    /** Las burbujas no están en su sitio por defecto (RECOLOCAR hace algo). */
+    /** Las burbujas de [quickSendApp] no están en su sitio por defecto (RECOLOCAR hace algo). */
     val quickSendMoved: Boolean = false,
-    /** Confirmación de RECOLOCAR. */
+    /** Fijados de todas las apps juntas (para la línea plegable). */
+    val quickSendPinnedTotal: Int = 0,
+    /** Confirmación de RECOLOCAR o de la foto (de [quickSendApp]: cambiar de pestaña la borra). */
     val quickSendMessage: String? = null,
     /** Copia semanal del CSV encendida (hay carpeta). */
     val backupOn: Boolean = false,
@@ -305,7 +314,7 @@ data class SettingsState(
     /** El envío rápido necesita «A quién envías» encendido. */
     val quickSendAvailable: Boolean get() = recordRecipients
 
-    /** Ya hay [AppSettings.MAX_QUICK_SEND] fijados: no se puede fijar otro sin quitar uno. */
+    /** Ya hay [AppSettings.MAX_QUICK_SEND] fijados en [quickSendApp]: no se puede fijar otro ahí sin quitar uno. */
     val quickSendFull: Boolean get() = quickSendLines.count { it.pinned } >= AppSettings.MAX_QUICK_SEND
 
     /** El aviso en directo solo se puede encender con objetivo. */
@@ -370,6 +379,11 @@ class SettingsViewModel(
         val licenses: List<License>? = null,
         val notificationsBlocked: Boolean = false,
         val quickSendMessage: String? = null,
+        /**
+         * Pestaña del envío rápido elegida (o en la que se ha tocado algo). `null` = la de inicio: la primera app con
+         * fijados, o Instagram ([startQuickSendApp]).
+         */
+        val quickSendApp: Platform? = null,
         /** Vista previa de IMPORTAR CSV (abre su diálogo). */
         val importPreview: ImportPreview? = null,
         /** Leyendo o importando un CSV (indicador de carga). */
@@ -401,7 +415,7 @@ class SettingsViewModel(
                 usage.totals.catch { emit(Totals(0, 0)) },
                 local,
                 systemInfo,
-                usage.topRecipients.catch { emit(emptyList()) },
+                topRecipients(),
             ) { s, totals, l, sys, top ->
                 SettingsUiState.Content(content(s, totals, l, sys, top)) as SettingsUiState
             }.catch { emit(SettingsUiState.Error) }
@@ -412,42 +426,69 @@ class SettingsViewModel(
         refresh()
     }
 
-    private fun content(s: AppSettings, totals: Totals, l: Local, sys: SystemInfo, top: List<String>) = SettingsState(
-        goal = l.goalEdit?.value ?: s.dailyGoal.takeIf { l.goalEdit == null },
-        notifyDaily = s.notifyDaily,
-        notifyMonthly = s.notifyMonthly,
-        notifyHour = s.notifyHour,
-        notifyMinute = s.notifyMinute,
-        notificationsAllowed = sys.notificationsAllowed,
-        canRequestNotifications = system.needsNotificationPermission && !l.notificationsBlocked,
-        apps = Platform.entries.map { AppLine(it, s.isEnabled(it), it in sys.installed) },
-        themeMode = s.themeMode,
-        totals = totals,
-        dataMessage = l.dataMessage,
-        busy = l.busy,
-        importPreview = l.importPreview,
-        importing = l.importing,
-        serviceEnabled = sys.serviceEnabled,
-        calibrationUnlocked = s.calibrationUnlocked,
-        aboutMessage = l.aboutMessage,
-        versionName = versionName,
-        debugAvailable = seedSampleData != null,
-        debugMessage = l.debugMessage,
-        licenses = l.licenses,
-        passportEnabled = s.passportEnabled,
-        notifyGoalLive = s.notifyGoalLive,
-        recordRecipients = s.recordRecipients,
-        quickSendEnabled = s.quickSendEnabled,
-        quickSendLines = (top + s.quickSendTargets).distinct().map { QuickSendLine(it, it in s.quickSendTargets) },
-        quickSendMoved = s.quickSendBubble != null,
-        quickSendMessage = l.quickSendMessage,
-        backupOn = s.backupFolder != null,
-        backupFolderName = s.backupFolderName,
-        backupLast = s.backupLastMs?.let { Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDateTime() },
-        backupError = s.backupError.takeIf { s.backupFolder != null },
-    )
+    /** El top de envíos de cada app con envío rápido (si falla la de una, esa sale vacía y las demás siguen). */
+    private fun topRecipients(): Flow<Map<Platform, List<String>>> =
+        combine(AppSettings.QUICK_SEND_PLATFORMS.map { p -> usage.topRecipients(p).catch { emit(emptyList()) }.map { p to it } }) {
+            it.toMap()
+        }
+
+    private fun content(s: AppSettings, totals: Totals, l: Local, sys: SystemInfo, tops: Map<Platform, List<String>>): SettingsState {
+        val app = l.quickSendApp ?: startQuickSendApp(s)
+        val pinned = s.quickSendTargets(app)
+        return SettingsState(
+            goal = l.goalEdit?.value ?: s.dailyGoal.takeIf { l.goalEdit == null },
+            notifyDaily = s.notifyDaily,
+            notifyMonthly = s.notifyMonthly,
+            notifyHour = s.notifyHour,
+            notifyMinute = s.notifyMinute,
+            notificationsAllowed = sys.notificationsAllowed,
+            canRequestNotifications = system.needsNotificationPermission && !l.notificationsBlocked,
+            apps = Platform.entries.map { AppLine(it, s.isEnabled(it), it in sys.installed) },
+            themeMode = s.themeMode,
+            totals = totals,
+            dataMessage = l.dataMessage,
+            busy = l.busy,
+            importPreview = l.importPreview,
+            importing = l.importing,
+            serviceEnabled = sys.serviceEnabled,
+            calibrationUnlocked = s.calibrationUnlocked,
+            aboutMessage = l.aboutMessage,
+            versionName = versionName,
+            debugAvailable = seedSampleData != null,
+            debugMessage = l.debugMessage,
+            licenses = l.licenses,
+            passportEnabled = s.passportEnabled,
+            notifyGoalLive = s.notifyGoalLive,
+            recordRecipients = s.recordRecipients,
+            quickSendEnabled = s.quickSendEnabled,
+            quickSendApp = app,
+            quickSendLines = (tops[app].orEmpty() + pinned).distinct().map { QuickSendLine(it, it in pinned, app) },
+            quickSendMoved = s.quickSendBubble(app) != null,
+            quickSendPinnedTotal = s.allQuickSendTargets().values.sumOf { it.size },
+            quickSendMessage = l.quickSendMessage,
+            backupOn = s.backupFolder != null,
+            backupFolderName = s.backupFolderName,
+            backupLast = s.backupLastMs?.let { Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDateTime() },
+            backupError = s.backupError.takeIf { s.backupFolder != null },
+        )
+    }
+
+    /** La pestaña con la que se abre el envío rápido: la primera app que tiene fijados o, si ninguna, Instagram. */
+    private fun startQuickSendApp(s: AppSettings): Platform =
+        AppSettings.QUICK_SEND_PLATFORMS.firstOrNull { s.quickSendTargets(it).isNotEmpty() } ?: Platform.INSTAGRAM
 
     private val current: SettingsState? get() = (state.value as? SettingsUiState.Content)?.settings
+
+    /** La app de la pestaña que se ve (la de inicio si aún no ha cargado). */
+    private fun shownQuickSendApp(): Platform = current?.quickSendApp ?: local.value.quickSendApp ?: Platform.INSTAGRAM
+
+    /**
+     * Tocar algo de una pestaña la deja elegida: si no, al quitar el último fijado de Instagram la pestaña de inicio
+     * pasaría sola a TikTok mientras la miras.
+     */
+    private fun keepQuickSendApp(platform: Platform) {
+        local.update { if (it.quickSendApp == null) it.copy(quickSendApp = platform) else it }
+    }
 
     /** Relee lo que puede haber cambiado fuera de la app (servicio, avisos, apps instaladas). En cada `ON_RESUME`. */
     fun refresh() {
@@ -568,50 +609,86 @@ class SettingsViewModel(
     }
 
     /**
-     * FIJAR / FIJADO en una fila: fija [name] al final (las burbujas salen en ese orden) o lo quita. Con
-     * [AppSettings.MAX_QUICK_SEND] fijados no fija otro (la pantalla explica que hay que quitar uno).
+     * Pestaña INSTAGRAM / TIKTOK del envío rápido: lo de debajo pasa a ser de [platform]. El aviso de la otra pestaña
+     * (RECOLOCAR, foto) se borra: era de la otra app. Una app sin envío rápido (YouTube) no hace nada.
      */
-    fun toggleQuickSendTarget(name: String) {
+    fun selectQuickSendApp(platform: Platform) {
+        if (platform !in AppSettings.QUICK_SEND_PLATFORMS) return
+        local.update { if (it.quickSendApp == platform) it else it.copy(quickSendApp = platform, quickSendMessage = null) }
+    }
+
+    /** FIJAR / FIJADO en la pestaña que se ve (ver la de dos argumentos). */
+    fun toggleQuickSendTarget(name: String) = toggleQuickSendTarget(shownQuickSendApp(), name)
+
+    /**
+     * FIJAR / FIJADO en una fila de [platform]: fija [name] al final de los de esa app (las burbujas salen en ese
+     * orden) o lo quita. Con [AppSettings.MAX_QUICK_SEND] fijados en esa app no fija otro (la pantalla explica que hay
+     * que quitar uno). Los de la otra app no se tocan.
+     */
+    fun toggleQuickSendTarget(platform: Platform, name: String) {
+        if (platform !in AppSettings.QUICK_SEND_PLATFORMS) return
+        keepQuickSendApp(platform)
         viewModelScope.launch {
-            val pinned = settings.toggleQuickSendTarget(name)
-            // Quitar un fijado borra su foto de perfil.
-            withContext(io) { system.onQuickSendTargetsChanged(pinned) }
+            settings.toggleQuickSendTarget(platform, name)
+            // Quitar un fijado borra su foto de perfil (con los fijados de todas las apps, 1.10.0).
+            val all = settings.current().allQuickSendTargets()
+            withContext(io) { system.onQuickSendTargetsChanged(all) }
         }
     }
 
+    /** ELEGIR FOTO para un fijado de Instagram (lo de antes de la 1.10.0; ver la de tres argumentos). */
+    fun setQuickSendPhoto(name: String, uri: String) = setQuickSendPhoto(Platform.INSTAGRAM, name, uri)
+
     /**
-     * ELEGIR FOTO (1.4.3): la foto de [uri] (del selector de fotos de Android) pasa a ser la de la burbuja de [name],
-     * si sigue fijado. La captura de la hoja ya no la renueva; QUITAR FOTO vuelve a la automática.
+     * ELEGIR FOTO (1.4.3): la foto de [uri] (del selector de fotos de Android) pasa a ser la de la burbuja de [name] en
+     * [platform], si sigue fijado ahí. La captura de la hoja ya no la renueva; QUITAR FOTO vuelve a la automática.
      */
-    fun setQuickSendPhoto(name: String, uri: String) {
+    fun setQuickSendPhoto(platform: Platform, name: String, uri: String) {
+        if (platform !in AppSettings.QUICK_SEND_PLATFORMS) return
         viewModelScope.launch {
             // De los ajustes guardados y no del estado de la pantalla: si Android mató la app con el selector abierto,
             // el resultado llega con el ViewModel recién creado y aún cargando (revisión de la 1.4.3).
-            val pinned = runCatching { name in settings.current().quickSendTargets }.getOrDefault(false)
+            val pinned = runCatching { name in settings.current().quickSendTargets(platform) }.getOrDefault(false)
             if (!pinned) return@launch
-            val saved = runCatching { withContext(io) { system.setQuickSendPhoto(name, uri) } }.getOrDefault(false)
+            val saved = runCatching { withContext(io) { system.setQuickSendPhoto(name, uri, platform) } }.getOrDefault(false)
             // Si mientras se decodificaba se quitó el fijado (o BORRAR TODO), la foto recién guardada no se queda.
-            val stillPinned = runCatching { name in settings.current().quickSendTargets }.getOrDefault(false)
-            if (saved && !stillPinned) runCatching { withContext(io) { system.clearQuickSendPhoto(name) } }
+            val stillPinned = runCatching { name in settings.current().quickSendTargets(platform) }.getOrDefault(false)
+            if (saved && !stillPinned) runCatching { withContext(io) { system.clearQuickSendPhoto(name, platform) } }
             if (!stillPinned) return@launch
-            val ok = saved
-            local.update { it.copy(quickSendMessage = if (ok) SettingsCopy.QUICK_SEND_PHOTO_SET else SettingsCopy.QUICK_SEND_PHOTO_FAILED) }
+            val message = if (saved) SettingsCopy.QUICK_SEND_PHOTO_SET else SettingsCopy.QUICK_SEND_PHOTO_FAILED
+            // El aviso, en su pestaña: si mientras tanto se pasó a la otra app, no se enseña ahí.
+            local.update {
+                if (it.quickSendApp != null && it.quickSendApp != platform) it else it.copy(quickSendApp = platform, quickSendMessage = message)
+            }
         }
     }
 
-    /** QUITAR FOTO: borra la foto elegida de [name]; vuelve la recortada de la hoja de compartir (o las iniciales). */
-    fun clearQuickSendPhoto(name: String) {
+    /** QUITAR FOTO de un fijado de Instagram (lo de antes de la 1.10.0; ver la de dos argumentos). */
+    fun clearQuickSendPhoto(name: String) = clearQuickSendPhoto(Platform.INSTAGRAM, name)
+
+    /** QUITAR FOTO: borra la foto elegida de [name] en [platform]; vuelve la recortada de la hoja (o las iniciales). */
+    fun clearQuickSendPhoto(platform: Platform, name: String) {
+        if (platform !in AppSettings.QUICK_SEND_PLATFORMS) return
+        keepQuickSendApp(platform)
         viewModelScope.launch {
-            withContext(io) { system.clearQuickSendPhoto(name) }
+            withContext(io) { system.clearQuickSendPhoto(name, platform) }
             local.update { it.copy(quickSendMessage = SettingsCopy.QUICK_SEND_PHOTO_CLEARED) }
         }
     }
 
-    /** RECOLOCAR: las burbujas vuelven al borde derecho, a media altura (el servicio las mueve al momento). */
-    fun relocateQuickSend() {
+    /** RECOLOCAR en la pestaña que se ve (ver la de un argumento). */
+    fun relocateQuickSend() = relocateQuickSend(shownQuickSendApp())
+
+    /**
+     * RECOLOCAR: las burbujas de [platform] vuelven a su sitio por defecto (`BubbleLayout.defaultFor`; el servicio las
+     * mueve al momento). Las de la otra app se quedan donde estén.
+     */
+    fun relocateQuickSend(platform: Platform) {
+        if (platform !in AppSettings.QUICK_SEND_PLATFORMS) return
+        keepQuickSendApp(platform)
         viewModelScope.launch {
-            settings.resetQuickSendBubble()
-            local.update { it.copy(quickSendMessage = SettingsCopy.QUICK_SEND_RELOCATED) }
+            settings.resetQuickSendBubble(platform)
+            local.update { it.copy(quickSendMessage = SettingsCopy.quickSendRelocated(platform.appName)) }
         }
     }
 
@@ -666,7 +743,7 @@ class SettingsViewModel(
             val ok = runCatching { withContext(io) { usage.clearAll() } }.isSuccess
             if (ok) {
                 // Los fijados del envío rápido son nombres del historial que se acaba de borrar: también se olvidan.
-                runCatching { settings.setQuickSendTargets(emptyList()) }
+                AppSettings.QUICK_SEND_PLATFORMS.forEach { p -> runCatching { settings.setQuickSendTargets(p, emptyList()) } }
                 system.onDataCleared()
             }
             local.update {

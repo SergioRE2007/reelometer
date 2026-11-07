@@ -113,30 +113,25 @@
     <!-- Con todas las apps apagadas. -->
     <string name="settings_all_apps_off">Tu les as toutes éteintes. Du coup, plus rien à compter.</string>
 
-    <!-- Interruptor «A quién envías» (solo Instagram). «Estadísticas» es la pestaña de la app. -->
+    <!-- Interruptor «A quién envías» (Instagram y TikTok). «Estadísticas» es la pestaña de la app. -->
     <string name="settings_recipients_label">À qui tu envoies</string>
-    <string name="settings_recipients_description">Seulement sur Instagram. Quand tu partages une vidéo, je note le nom de la personne ou du groupe que tu choisis, et dans Statistiques tu vois à qui tu envoies le plus. Je ne lis ni le chat ni ce que tu écris, et tout reste dans ce téléphone.</string>
+    <string name="settings_recipients_description">Sur Instagram et TikTok. Quand tu partages une vidéo, je note le nom de la personne ou du groupe que tu choisis, et dans Statistiques tu vois à qui tu envoies le plus. Je ne lis ni le chat ni ce que tu écris, et tout reste dans ce téléphone.</string>
 
-    <!-- Interruptor «Envío rápido» (solo Instagram): unas burbujas sobre los reels que comparten el reel
-         con un toque. «Compartir» y «Enviar» citan los botones de Instagram tal cual: en cada idioma,
-         como los muestre Instagram en ese idioma. «X» es la zona donde se sueltan las burbujas. -->
+    <!-- Interruptor «Envío rápido» (Instagram y TikTok): unas burbujas sobre los vídeos que los comparten
+         con un toque. «Compartir» y «Enviar» citan los botones de Instagram y TikTok tal cual: en cada idioma,
+         como los muestren esas apps en ese idioma. «X» es la zona donde se sueltan las burbujas. -->
     <string name="settings_quick_send_label">Envoi rapide</string>
-    <string name="settings_quick_send_description">Seulement sur Instagram. Pendant que tu regardes des reels, une bulle apparaît pour chaque personne ou groupe que tu épingles. En la touchant, j’appuie pour toi sur «\u00A0Partager\u00A0», sur ce nom, puis sur «\u00A0Envoyer\u00A0»\u00A0; si ce n’est pas visible, j’écris son nom dans la recherche de la feuille. Rien de plus. Si quelque chose ne colle pas, je m’arrête et tu termines. Pour afficher sa photo dans la bulle, je la découpe dans la feuille de partage quand elle est visible, ou tu choisis une photo de ta galerie\u00A0; elle reste dans ce téléphone. Fais-les glisser où tu veux (en bas, au-dessus du nom du reel, elles se mettent en file) ou lâche-les sur la «\u00A0X\u00A0» pour les cacher jusqu’au reel suivant.</string>
+    <string name="settings_quick_send_description">Sur Instagram et TikTok. Pendant que tu regardes des vidéos, une bulle apparaît pour chaque personne ou groupe que tu épingles dans cette application. En la touchant, j’appuie pour toi sur «\u00A0Partager\u00A0», sur ce nom, puis sur «\u00A0Envoyer\u00A0»\u00A0; s’il n’apparaît pas, je le cherche dans la barre de recherche de la feuille (sur TikTok, en touchant d’abord sa loupe). Rien de plus. Si quelque chose ne colle pas, je m’arrête et tu termines. Pour afficher sa photo dans la bulle, je la découpe dans la feuille de partage quand elle est visible, ou tu choisis une photo de ta galerie\u00A0; elle reste dans ce téléphone. Fais-les glisser où tu veux (en bas, au-dessus du nom de la vidéo, elles se mettent en file) ou lâche-les sur la «\u00A0X\u00A0» pour les cacher jusqu’à la vidéo suivante.</string>
     <!-- El gesto para enviar a dos personas a la vez. -->
     <string name="settings_quick_send_pair_hint">Pour l’envoyer à deux personnes à la fois, maintiens une bulle jusqu’à ce qu’elle se détache et lâche-la sur l’autre. Si tu en touches une autre pendant l’envoi, je l’ajoute à la même feuille.</string>
     <!-- Con «A quién envías» apagado, el envío rápido no se puede encender. -->
     <string name="settings_quick_send_needs_recipients">Pour l’utiliser, active d’abord «\u00A0À qui tu envoies\u00A0»\u00A0: l’envoi rapide cherche dans la feuille le nom que tu épingles.</string>
-    <!-- Sin historial de envíos todavía: no hay nada que fijar. -->
-    <string name="settings_quick_send_empty">Il n’y a encore personne à épingler. Partage un reel à la main avec «\u00A0À qui tu envoies\u00A0» activé\u00A0: les personnes et les groupes à qui tu envoies apparaîtront ici.</string>
-    <!-- Encima de la lista de personas y grupos para fijar. -->
-    <string name="settings_quick_send_list_label">Ceux à qui tu envoies le plus</string>
     <!-- Botones de cada fila, en MAYÚSCULAS y con poco sitio: fijar a alguien / ya fijado. -->
     <string name="settings_quick_send_pin">ÉPINGLER</string>
     <string name="settings_quick_send_pinned">ÉPINGLÉ</string>
-    <!-- Botón en MAYÚSCULAS: devuelve las burbujas a su sitio (borde derecho, a media altura). -->
+    <!-- Botón en MAYÚSCULAS: devuelve las burbujas de esa app a su sitio por defecto (borde derecho;
+         la altura depende de la app, ver BubbleLayout.defaultFor). -->
     <string name="settings_quick_send_relocate">REPLACER</string>
-    <string name="settings_quick_send_relocate_hint">Les bulles reviennent au bord droit, à mi-hauteur.</string>
-    <string name="settings_quick_send_relocated">C’est fait. Tu les verras à leur place dans le prochain reel.</string>
     <!-- Ya hay el máximo de fijados. %1$s el máximo («3»). -->
     <plurals name="settings_quick_send_full">
         <item quantity="one">Tu as déjà %1$s épinglé. Retire-le pour en épingler un autre.</item>
@@ -157,6 +152,19 @@
     <string name="settings_quick_send_photo_pick_description">Choisir dans la galerie la photo de la bulle de %1$s</string>
     <string name="settings_quick_send_photo_change_description">Remplacer la photo de la bulle de %1$s par une autre de la galerie</string>
     <string name="settings_quick_send_photo_clear_description">Retirer la photo choisie pour %1$s et revenir à l’automatique</string>
+
+    <!-- 1.10.0, envío rápido en Instagram y en TikTok: cada app tiene sus fijados y su sitio para las burbujas.
+         Va encima de las dos pestañas con el nombre de cada app (INSTAGRAM, TIKTOK: las marcas no se traducen). -->
+    <string name="settings_quick_send_apps_hint">Chaque application a ses épinglés et sa place pour les bulles\u00A0: tes contacts TikTok ne sont pas ceux d’Instagram.</string>
+    <!-- TalkBack de cada pestaña. %1$s el nombre de la app («TikTok», «Instagram»). -->
+    <string name="settings_quick_send_app_description">Voir tes épinglés sur %1$s</string>
+    <!-- Sin historial de envíos en esa app todavía: no hay nada que fijar. %1$s el nombre de la app (sale dos veces). -->
+    <string name="settings_quick_send_empty_app">Il n’y a encore personne à épingler sur %1$s. Partage une vidéo à la main sur %1$s avec «\u00A0À qui tu envoies\u00A0» activé\u00A0: les personnes et les groupes à qui tu envoies apparaîtront ici.</string>
+    <!-- Encima de la lista de personas y grupos para fijar. %1$s el nombre de la app. -->
+    <string name="settings_quick_send_list_label_app">Ceux à qui tu envoies le plus sur %1$s</string>
+    <!-- Bajo RECOLOCAR y tras pulsarlo. %1$s el nombre de la app. -->
+    <string name="settings_quick_send_relocate_hint_app">Sur %1$s, les bulles reviennent à leur place, au bord droit.</string>
+    <string name="settings_quick_send_relocated_app">C’est fait. Tu les verras à leur place dans la prochaine vidéo %1$s.</string>
 
     <!-- ============================================================ 04 tema e idioma -->
 

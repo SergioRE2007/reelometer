@@ -83,4 +83,25 @@ class ShareDetectorTest {
         FakeNode(bounds = box(0, 2200, 1080, 2300), children = listOf(field, sendComment))
         assertFalse(opens(sendComment))
     }
+
+    /** 1.10.0: los botones del visor de TikTok 47.7 (volcado real anonimizado). */
+    @Test
+    fun `en TikTok compartir y comentarios abren hoja y me gusta no`() {
+        val feed = UiDump.all(UiDump.load("tiktok-47.7-feed.xml"))
+        fun byDesc(prefix: String) = feed.single { it.contentDescription?.startsWith(prefix) == true }
+        fun opensTikTok(node: UiNode) = detector.opensSheet(node, UiDump.W, UiDump.H, Platform.TIKTOK)
+        val share = byDesc("Compartir el vídeo")
+        val comments = byDesc("Leer o añadir comentarios")
+        val like = byDesc("Dar me gusta")
+        assertTrue(opensTikTok(share))
+        assertTrue(opensTikTok(comments))
+        // El clic suele llegar del icono de dentro (pulsable, sin etiqueta).
+        assertTrue(opensTikTok(feed.single { shortViewId(it.viewId) == "ekj" }))
+        assertTrue(detector.evaluate(feed.single { shortViewId(it.viewId) == "wbn" }, UiDump.W, UiDump.H).isShare)
+        assertFalse(opensTikTok(like))
+        assertFalse(opensTikTok(byDesc("Añade o elimina este vídeo de Favoritos")))
+        assertFalse(detector.evaluate(like, UiDump.W, UiDump.H).isShare)
+        // Con las reglas de Instagram (sin plataforma), la etiqueta larga de comentarios no cuenta: igual que antes.
+        assertFalse(detector.opensSheet(comments, UiDump.W, UiDump.H))
+    }
 }

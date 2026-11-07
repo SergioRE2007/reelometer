@@ -6,7 +6,7 @@ import com.reelometro.app.data.Platform
  * Detecta la pulsación del botón **compartir** de un vídeo corto a partir de un `TYPE_VIEW_CLICKED`.
  *
  * Solo se cuenta que se ha pulsado (y en qué vídeo); a quién se envía lo lee aparte [RecipientDetector]
- * (solo Instagram y con el ajuste encendido). Este detector no lee nada de la hoja:
+ * (Instagram y TikTok, con el ajuste encendido). Este detector no lee nada de la hoja:
  *  - El servicio solo llama a [evaluate] con un vídeo activo en el feed de esa app y si [isArmed].
  *  - Tras un compartido la detección queda en silencio (no se mira ningún clic de esa app) hasta que
  *    el feed vuelve a moverse ([onFeedActivity]): así no se lee nada de la hoja de compartir ni del
@@ -92,8 +92,13 @@ class ShareDetector(private val config: Config = Config()) {
      * ¿Este clic abre una hoja encima del visor? (1.4.1, para esconder las burbujas del envío rápido.) Compartir
      * ([evaluate]) o, en la misma columna de botones y con el mismo tamaño, «Comentar» o «Más opciones». No depende
      * de [isArmed]: un compartir a mano justo después de un envío rápido también abre su hoja.
+     *
+     * 1.10.0, [platform] TikTok: su botón de comentarios lleva una descripción larga con la cifra («Leer o añadir
+     * comentarios. 12,1 mil comentarios»), así que también vale una etiqueta larga que **empiece** así
+     * ([LONG_OPENERS]), del botón o de un antepasado pequeño (el clic suele llegar del icono de dentro). En Instagram,
+     * igual que antes.
      */
-    fun opensSheet(node: UiNode, screenWidth: Int, screenHeight: Int): Boolean {
+    fun opensSheet(node: UiNode, screenWidth: Int, screenHeight: Int, platform: Platform = Platform.INSTAGRAM): Boolean {
         if (evaluate(node, screenWidth, screenHeight).isShare) return true
         if (screenWidth <= 0 || screenHeight <= 0) return false
         val bounds = node.bounds
@@ -103,6 +108,21 @@ class ShareDetector(private val config: Config = Config()) {
         val sources = buildList {
             add(node)
             node.children.take(config.maxChildren).forEach(::add)
+        }
+        if (platform == Platform.TIKTOK) {
+            // El clic puede llegar del icono de dentro (pulsable y sin etiqueta): también los antepasados pequeños.
+            val near = buildList {
+                addAll(sources)
+                var ancestor = node.parent
+                var level = 0
+                while (ancestor != null && level < config.maxAncestors) {
+                    if (ancestor.bounds.width <= maxWidthPx) add(ancestor)
+                    ancestor = ancestor.parent
+                    level++
+                }
+            }
+            val long = near.flatMap { listOfNotNull(it.text, it.contentDescription) }.map { CategoryClassifier.normalize(it.toString()).trim() }
+            if (long.any { LONG_OPENERS.containsMatchIn(it) }) return true
         }
         val labels = sources.flatMap { listOfNotNull(it.text, it.contentDescription) }
             .map { CategoryClassifier.normalize(it.toString()).trim() }
@@ -137,5 +157,8 @@ class ShareDetector(private val config: Config = Config()) {
 
         /** Botones del visor que abren una hoja encima: comentarios y más opciones (texto normalizado o id). */
         val SHEET_OPENERS = Regex("(?:\\bcomentar\\b|\\bcomentarios\\b|\\bcomment|\\bmas opciones\\b|\\bmore options\\b|^mas$|^more$|^opciones$|^options$|comment_button|more_button|overflow)")
+
+        /** TikTok 47.7: el botón de comentarios del visor («Leer o añadir comentarios. 12,1 mil comentarios»). */
+        val LONG_OPENERS = Regex("^(?:leer o anadir comentarios|read or add comments)\\b")
     }
 }

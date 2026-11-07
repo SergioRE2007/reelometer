@@ -3,8 +3,15 @@ package com.reelometro.app.detection
 import com.reelometro.app.stats.Format
 
 /**
- * **Envío rápido** (solo Instagram y solo con el ajuste encendido): manda el reel que se está viendo a
+ * **Envío rápido** (Instagram y TikTok, solo con el ajuste encendido): manda el vídeo que se está viendo a
  * una o varias personas o grupos fijados, y solo esto: «Compartir», esos nombres y un único «Enviar».
+ *
+ * 1.10.0: lo que cambia de una app a otra viene en el [PlatformProfile] de [start] (ids, palabras, ventanas). Con la
+ * hoja en su propia ventana ([PlatformProfile.sheetOwnWindow], TikTok) las fases son las mismas con sus reglas: la hoja
+ * es la ventana con `tv_title` que no es la del visor, el nombre es la **celda** de la fila de contactos cuya
+ * descripción es el nombre, el buscador se abre con la lupa de la cabecera ([Phase.SEARCH]) y el envío se confirma
+ * cuando esa ventana desaparece. En esa hoja solo se pulsan una celda o fila de contacto, la lupa de la cabecera y
+ * «Enviar», y solo se escribe en el campo del buscador.
  *
  * Es una máquina de estados sin Android. El servicio la arranca con [start] al tocar la burbuja (o al soltar
  * una encima de otra) y, cada ~100 ms (antes si Instagram avisa de un cambio), le pasa las raíces de las
@@ -211,6 +218,8 @@ class QuickSender(
         SHARE("busca compartir", "compartir"),
         SHEET("espera la hoja", "hoja"),
         TARGET("busca el nombre", "nombre"),
+        /** 1.10.0, hoja en su propia ventana (TikTok): pulsada la lupa de la cabecera, espera el buscador y mira los recientes. */
+        SEARCH("abre el buscador", "lupa"),
         RESULT("espera el resultado del buscador", "buscador"),
         SEND("busca enviar", "enviar"),
         SENT("enviado", "confirmar"),
@@ -247,8 +256,14 @@ class QuickSender(
         data class Done(val ok: Boolean, val reason: String, val sheetOpened: Boolean, val targetSelected: Boolean) : Step
     }
 
-    /** Un nodo visto en el recorrido de una ventana (o devuelto por el atajo, con sus antepasados mirados). */
-    private class Seen(val node: UiNode, val inFeed: Boolean, val inField: Boolean, val window: Int)
+    /**
+     * Un nodo visto en el recorrido de una ventana (o devuelto por el atajo, con sus antepasados mirados). [real]: [window]
+     * es el `windowId` de Android (no la posición de la raíz).
+     */
+    private class Seen(val node: UiNode, val inFeed: Boolean, val inField: Boolean, val window: Int, val real: Boolean = false)
+
+    /** Hoja en su propia ventana: lo que se pulsa por un destino ([click], la celda o la fila) y el nodo que dice su nombre. */
+    private class Pick(val click: UiNode, val label: UiNode)
 
     private enum class Status { PENDING, SELECTED, ROW_SENT, FAILED }
 
@@ -298,6 +313,33 @@ class QuickSender(
     private var shareRejected = false
     private val dests = ArrayList<Dest>()
     private var hints = Hints()
+
+    /** La app del envío en curso ([start]). */
+    private var profile: PlatformProfile = PlatformProfile.INSTAGRAM
+
+    /** La app del último [start] (el servicio la usa para repartir el resultado). */
+    val platformProfile: PlatformProfile get() = profile
+
+    /** La hoja de esta app va en su propia ventana (TikTok): su propio recorrido de cada fase. */
+    private val own: Boolean get() = profile.sheetOwnWindow
+
+    /**
+     * Paquete de la app en este envío (TikTok tiene dos): sabido, cada id se pide una vez y no una por paquete. Sale del
+     * id de cualquier nodo que devuelva un atajo (el «Compartir» del primer tick) o del buscador aprendido.
+     */
+    private var pkg: String? = null
+
+    /** Hoja en su propia ventana: la ventana del visor (la del «Compartir»). La hoja nunca está en ella. */
+    private var feedWindow: Int? = null
+
+    /** Hoja en su propia ventana: se pulsó la lupa y la hoja enseña el buscador (otra pantalla en la misma ventana). */
+    private var searchOpen = false
+
+    /** Hoja en su propia ventana: ya se vio la fila de contactos cargada (con alguna celda). */
+    private var rowLoaded = false
+
+    /** Hoja en su propia ventana: se buscó el campo del buscador (si el aprendido no salió, se olvida). */
+    private var ownFieldSought = false
     private var waitForClosedSheet = false
     private var phase = Phase.SHARE
     private var phaseSince = 0L
@@ -368,6 +410,7 @@ class QuickSender(
     private class Before(
         val phase: Phase, val phaseSince: Long, val marks: Int, val lastHow: How?, val sentFast: Boolean,
         val dest: Dest?, val destState: DestState?, val typedKey: String?, val rejectedSince: Long?,
+        val searchOpen: Boolean = false,
     )
 
     private var before: Before? = null
@@ -405,7 +448,23 @@ class QuickSender(
      * espera a que se cierre en vez de rendirse.
      */
     @Synchronized
-    fun start(targets: List<Target>, now: Long, hints: Hints = Hints(), waitForClosedSheet: Boolean = false) {
+    fun start(
+        targets: List<Target>,
+        now: Long,
+        hints: Hints = Hints(),
+        waitForClosedSheet: Boolean = false,
+        profile: PlatformProfile = PlatformProfile.INSTAGRAM,
+    ) {
+        // 1.10.0: la app de este envío (Instagram o TikTok); lo que cambia de una a otra viene en el perfil.
+        this.profile = profile
+        pkg = hints.searchId?.let(::packageOf)
+        // Las raíces de la hoja son de la app de este envío: tras uno de TikTok sin paquete sabido, Instagram no puede
+        // usar las de TikTok con la misma clave (revisión de la 1.10.0: volvía a subir hasta la raíz, como antes de la 1.4.3).
+        rootIdsCache = null
+        feedWindow = null
+        searchOpen = false
+        rowLoaded = false
+        ownFieldSought = false
         dests.clear()
         targets.distinctBy { RecipientDetector.normalize(it.name) }.forEach { dests += Dest(it, dests.size + 1) }
         running = dests.isNotEmpty()
@@ -489,6 +548,7 @@ class QuickSender(
         marks.lastOrNull()?.how = b.lastHow
         if (b.dest != null && b.destState != null) b.dest.restore(b.destState)
         b.typedKey?.let { typed.remove(it) }
+        searchOpen = b.searchOpen
         // El primer rechazo de esta fase (enter() lo borró al intentarlo: se recupera de antes).
         rejectedSince = b.rejectedSince ?: lastTickAt
         if (b.phase == Phase.SHARE) shareRejected = true
@@ -546,7 +606,7 @@ class QuickSender(
         val rejected = rejectedSince
         if (rejected != null && phase != Phase.SENT && now - rejected > config.stepTimeoutMs) {
             val dest = current()
-            return if ((phase == Phase.TARGET || phase == Phase.RESULT) && dest != null) {
+            return if ((phase == Phase.TARGET || phase == Phase.SEARCH || phase == Phase.RESULT) && dest != null) {
                 failDest(dest, REJECTED, screen, now, null)
             } else {
                 finish(false, REJECTED, now)
@@ -557,7 +617,7 @@ class QuickSender(
         val step = when (phase) {
             Phase.SHARE -> shareStep(screen, now)
             Phase.SHEET -> sheetStep(screen, now)
-            Phase.TARGET, Phase.RESULT -> lookForTarget(screen, now)
+            Phase.TARGET, Phase.SEARCH, Phase.RESULT -> lookForTarget(screen, now)
             // Se ha sumado un destino ([add]) antes de pulsar «Enviar»: primero se marca.
             Phase.SEND -> if (current() != null) {
                 enter(Phase.TARGET, now, null)
@@ -584,6 +644,7 @@ class QuickSender(
     private fun current(): Dest? = dests.firstOrNull { it.status == Status.PENDING }
 
     private fun shareStep(screen: Screen, now: Long): Step {
+        if (own) return ownShareStep(screen, now)
         // Con una hoja de compartir ya abierta, el «Enviar» de una fila podría pasar por «compartir», y pulsar el
         // compartir del reel de detrás abriría otra. El atajo va primero (no tiene el límite de nodos del recorrido)
         // y un recorrido cubre las pistas («Escribe un mensaje…» de un campo vacío), que la búsqueda de Instagram no
@@ -630,13 +691,15 @@ class QuickSender(
 
     private fun clickShare(share: UiNode, screen: Screen, now: Long, how: How): Step {
         shareBounds = share.bounds
-        learnedShareId = share.viewId?.takeIf { it.isNotEmpty() }
+        // En TikTok el id de «Compartir» es el de «Me gusta»: nunca se aprende (PlatformProfile.learnShareId).
+        learnedShareId = share.viewId?.takeIf { it.isNotEmpty() && profile.learnShareId }
         snapshot(null)
         enter(Phase.SHEET, now, how)
         return Step.Click(share, "compartir", maxClimbWidth = (screen.w * SHARE_MAX_WIDTH).toInt())
     }
 
     private fun sheetStep(screen: Screen, now: Long): Step {
+        if (own) return ownSheetStep(screen, now)
         val fastWindow = if (finder == null) {
             null
         } else {
@@ -663,6 +726,7 @@ class QuickSender(
 
     /** ¿Se ha enviado de verdad? La hoja se cierra, la fila dice «Deshacer»/«Enviado» o el «Enviar» ya no está. */
     private fun confirmSent(screen: Screen, now: Long): Step {
+        if (own) return ownConfirmSent(screen, now)
         if (sentFast && finder != null) {
             // Por el id (cualquier idioma) y, si no, por las palabras.
             val stillThere = sheetSendById(screen).any { it.bounds == sentBounds } ||
@@ -685,6 +749,7 @@ class QuickSender(
     }
 
     private fun lookForTarget(screen: Screen, now: Long): Step {
+        if (own) return ownLookForTarget(screen, now)
         val dest = current() ?: return afterTargets(screen, now)
         val notFound = if (phase == Phase.RESULT) "el buscador no lo encuentra" else "no encuentro el nombre"
         // 1. Atajo: Instagram busca el nombre (solo en la ventana de la hoja).
@@ -783,6 +848,10 @@ class QuickSender(
     private fun failDest(dest: Dest, reason: String, screen: Screen, now: Long, how: How?): Step {
         dest.status = Status.FAILED
         dest.reason = reason
+        // Hoja en su propia ventana: la lupa se pulsó pero el buscador no llegó a abrirse (el título de la hoja sigue a la
+        // vista): el siguiente destino se busca otra vez en la fila de contactos (revisión de la 1.10.0). Solo al dar el
+        // destino por fallado: justo tras la lupa, la hoja aún enseña su título mientras llega el buscador.
+        if (own && searchOpen && phase == Phase.SEARCH && ownTitleVisible(screen)) searchOpen = false
         if (current() != null) {
             enter(Phase.TARGET, now, how)
             return lookForTarget(screen, now)
@@ -815,10 +884,13 @@ class QuickSender(
         enter(Phase.RESULT, now, how)
         learnedSearchId = field.viewId?.takeIf { it.isNotEmpty() } ?: learnedSearchId
         searches += why
-        return Step.SetText(field, dest.target.name)
+        // En TikTok se escribe lo mismo que se pide al atajo ([ownQuery]: un grupo, por su primer miembro); la fila se sigue
+        // eligiendo por el nombre exacto. Instagram, el nombre entero, como siempre.
+        return Step.SetText(field, if (own) ownQuery(dest) else dest.target.name)
     }
 
     private fun sendStep(screen: Screen, now: Long): Step {
+        if (own) return ownSendStep(screen, now)
         if (finder != null) {
             // Con la hoja ya abierta del todo: ¿sigue el buscador aprendido? (si no salió en todo el envío, se olvida).
             if (hints.searchId != null && !sawLearnedSearch) fastSearchFields(screen)
@@ -837,10 +909,10 @@ class QuickSender(
         return findSend(sheet, screen.w, screen.h)?.let { clickSend(it, fast = false, now) } ?: timeoutOr(now, "no encuentro enviar")
     }
 
-    /** El «Enviar» de abajo por su id de hoy ([RecipientDetector.SEND_BUTTON_ID]), en la ventana de la hoja; nunca «Crear grupo». */
+    /** El «Enviar» de abajo por su id de hoy ([PlatformProfile.sendIds]), en la ventana de la hoja; nunca «Crear grupo». */
     private fun sheetSendById(screen: Screen): List<UiNode> =
-        screen.id(RecipientDetector.SEND_BUTTON_ID)
-            .filter { !it.inFeed && !it.inField && (sheetWindow == null || it.window == sheetWindow) && it.node.bounds != shareBounds && RecipientDetector.isSendId(it.node) }
+        fullIds(profile.sendIds).flatMap { screen.id(it) }
+            .filter { !it.inFeed && !it.inField && (sheetWindow == null || it.window == sheetWindow) && it.node.bounds != shareBounds && isSendId(it.node) }
             .map { it.node }
             .distinctBy { it.bounds }
 
@@ -853,23 +925,545 @@ class QuickSender(
         return Step.Click(send, "enviar")
     }
 
+    // ── Hoja en su propia ventana (TikTok, 1.10.0) ───────────────────────────────────────────────
+
+    /**
+     * Compartir con la hoja en su propia ventana. «Compartir» del visor por sus palabras (nunca por id: en TikTok es el
+     * de «Me gusta»), con las reglas de [ShareDetector]; de paso dice el paquete de la app y la ventana del visor. Antes de
+     * pulsarlo, «¿ya hay una hoja abierta?»: una ventana encima del visor con [PlatformProfile.openSheetIds]
+     * (`touch_outside`, el de cualquier hoja de abajo) o con las marcas de la hoja. Nunca se pulsa «Compartir» detrás.
+     */
+    private fun ownShareStep(screen: Screen, now: Long): Step {
+        var seen = if (finder != null) fastShareSeen(screen) else null
+        seen?.let(::noteFeedWindow)
+        // Con la ventana del visor sabida, estas búsquedas solo van a las demás ventanas: sin ninguna, no cuestan nada.
+        var open = seen != null && ownSheetOpenFast(screen)
+        var how = How.FAST
+        if (!open && seen == null) {
+            if (!walkAllowed(now)) return paused(now).let { timeoutOr(now, "no encuentro compartir") }
+            open = screen.outside.any { w -> w.any { !it.inFeed && isOwnSheetOpenMark(it.node) } }
+            if (!open) {
+                seen = findShareSeen(screen.windows, screen.w, screen.h)
+                seen?.let(::noteFeedWindow)
+                how = How.WALK
+            }
+        }
+        if (open) {
+            if (shareRejected) {
+                // Android dijo que no al clic en «Compartir», pero la hoja se ha abierto: es la nuestra.
+                shareRejected = false
+                enter(Phase.SHEET, now, null)
+                return sheetStep(screen, now)
+            }
+            return if (waitForClosedSheet) timeoutOr(now, "ya hay una hoja abierta") else finish(false, "ya hay una hoja abierta", now)
+        }
+        val found = seen?.node ?: return timeoutOr(now, "no encuentro compartir")
+        if (how == How.FAST) fastHits++
+        return clickShare(found, screen, now, how)
+    }
+
+    private fun noteFeedWindow(seen: Seen) {
+        if (seen.real) feedWindow = seen.window
+    }
+
+    /** ¿Hay una hoja encima del visor? `touch_outside` o las marcas de la hoja, en las ventanas que no son la del visor. */
+    private fun ownSheetOpenFast(screen: Screen): Boolean =
+        fullIds(profile.openSheetIds).any { id -> screen.awayId(id).any { !it.inFeed } } ||
+            profile.markerQueries.any { q -> screen.awayText(q).any { !it.inFeed && hasMarker(it.node) } }
+
+    /** La hoja: la ventana con su título (`tv_title`) que no es la del visor. Desde aquí, solo esa ventana. */
+    private fun ownSheetStep(screen: Screen, now: Long): Step {
+        val header = if (finder != null) ownHeader(screen) else null
+        val how: How
+        if (header != null) {
+            fastHits++
+            sheetWindow = header.window
+            how = How.FAST
+        } else {
+            if (!walkAllowed(now)) return paused(now).let { timeoutOr(now, "la hoja de compartir no se abre") }
+            ownSheetOf(screen.outside) ?: return timeoutOr(now, "la hoja de compartir no se abre")
+            how = How.WALK
+        }
+        sheetAt = now
+        enter(Phase.TARGET, now, how)
+        // Con el nombre ya a la vista se pulsa en este mismo tick.
+        return ownLookForTarget(screen, now)
+    }
+
+    /**
+     * ¿Se ve el título de la hoja de contactos? Solo por su id (`tv_title`): la etiqueta «Enviar a» también sale en el
+     * buscador (con otro id), y ahí el buscador sí se ha abierto.
+     */
+    private fun ownTitleVisible(screen: Screen): Boolean =
+        if (finder != null) {
+            ownHeader(screen) != null
+        } else {
+            ownSheetOf(screen.outside)?.any { s -> !s.inFeed && shortViewId(s.node.viewId).let { it.isNotEmpty() && it in profile.sheetIds } } == true
+        }
+
+    /** El título de la hoja (`tv_title`), fuera del visor y, si ya se sabe, en la ventana de la hoja. Una vez por tick. */
+    private fun ownHeader(screen: Screen): Seen? {
+        if (screen.headerAsked) return screen.header
+        screen.headerAsked = true
+        val inSheet = screen.sheetRoot() != null
+        return fullIds(profile.sheetIds).firstNotNullOfOrNull { id ->
+            (if (inSheet) screen.sheetOnlyId(id) else screen.awayId(id)).firstOrNull { !it.inFeed && !it.inField }
+        }.also { screen.header = it }
+    }
+
+    /**
+     * El nombre en la hoja: la **celda** de la fila de contactos cuya descripción es el nombre (su texto puede ir cortado).
+     * Si no está (la fila ya cargó sin él, o pasado [Config.searchAfterMs]) o suele no estar ([Target.skipGrid]), la lupa
+     * de la cabecera abre el buscador ([openSearch]). Con el buscador abierto, [ownLookInSearch].
+     */
+    private fun ownLookForTarget(screen: Screen, now: Long): Step {
+        val dest = current() ?: return afterTargets(screen, now)
+        if (searchOpen) return ownLookInSearch(dest, screen, now)
+        val notFound = "no encuentro el nombre"
+        // Suele no estar en la fila (aprendido): directo a la lupa, sin mirarla.
+        if (!dest.searched && dest.target.skipGrid) return openSearch(dest, screen, now, "directo, aprendido", rowSeen = true, walk = null)
+        if (finder != null) {
+            val header = ownHeader(screen)
+            // Una llamada: la búsqueda del nombre en la ventana de la hoja devuelve la celda por su descripción.
+            val cells = ownCells(dest, screen.sheetOnlyText(ownQuery(dest)), header?.node?.bounds, divider = null)
+            if (cells.isNotEmpty()) {
+                fastHits++
+                return onOwnTargets(dest, cells, screen, now, How.FAST, Found.GRID)
+            }
+            if (!dest.searched) {
+                val loaded = header != null && (rowLoaded || probeRow(header.node, screen.w).also { if (it) rowLoaded = true })
+                val waited = now - (sheetAt ?: now) >= config.searchAfterMs
+                if (loaded || waited) {
+                    return openSearch(dest, screen, now, if (loaded) "fila sin él" else "pasado el plazo sin fila", rowSeen = loaded, walk = null)
+                }
+            }
+            if (!walkAllowed(now)) {
+                waitWhy = "fila sin cargar"
+                return destTimeoutOr(dest, screen, now, notFound)
+            }
+        }
+        if (!walkAllowed(now)) return paused(now).let { destTimeoutOr(dest, screen, now, notFound) }
+        val sheet = ownSheetOf(screen.outside) ?: return finish(false, "la hoja se ha cerrado", now)
+        val header = walkHeader(sheet)
+        val divider = header?.let { walkDivider(sheet, it, screen.w) }
+        val cells = ownCells(dest, sheet, header, divider)
+        if (cells.isNotEmpty()) return onOwnTargets(dest, cells, screen, now, How.WALK, Found.GRID)
+        val loaded = header != null && sheet.any { !it.inFeed && isCellLike(it.node) && inContactRow(it.node.bounds, header, divider) }
+        if (loaded) rowLoaded = true
+        val waited = now - (sheetAt ?: now) >= config.searchAfterMs
+        if (!dest.searched && (loaded || waited)) {
+            return openSearch(dest, screen, now, if (loaded) "fila sin él" else "pasado el plazo sin fila", rowSeen = loaded, walk = sheet)
+        }
+        waitWhy = if (loaded) "fila sin él" else "fila sin cargar"
+        return destTimeoutOr(dest, screen, now, notFound)
+    }
+
+    /**
+     * Pulsa la lupa de la **cabecera de la hoja** (nunca la del visor: solo se mira la ventana de la hoja, a la altura de su
+     * título). [rowSeen]: se vio la fila de contactos sin él (si no, no se aprende «no sale en la fila»).
+     */
+    private fun openSearch(dest: Dest, screen: Screen, now: Long, why: String, rowSeen: Boolean, walk: List<Seen>?): Step {
+        var lupa: UiNode? = null
+        var how = How.FAST
+        if (walk == null && finder != null) {
+            val header = ownHeader(screen)?.node?.bounds
+            lupa = header?.let { h ->
+                profile.searchButtonLabels.firstNotNullOfOrNull { q -> screen.sheetOnlyText(q).firstOrNull { isLupa(it, h) }?.node }
+            }
+        }
+        if (lupa == null) {
+            val sheet = walk ?: run {
+                if (!walkAllowed(now)) {
+                    waitWhy = "sin la lupa"
+                    return destTimeoutOr(dest, screen, now, "no encuentro el buscador")
+                }
+                ownSheetOf(screen.outside) ?: return finish(false, "la hoja se ha cerrado", now)
+            }
+            lupa = walkHeader(sheet)?.let { h -> sheet.firstOrNull { isLupa(it, h) }?.node }
+            how = How.WALK
+        }
+        if (lupa == null) {
+            waitWhy = "sin la lupa"
+            return destTimeoutOr(dest, screen, now, "no encuentro el buscador")
+        }
+        if (how == How.FAST) fastHits++
+        snapshot(dest)
+        dest.searched = true
+        dest.gridHidden = !rowSeen
+        searchOpen = true
+        searches += why
+        enter(Phase.SEARCH, now, how)
+        return Step.Click(lupa, "lupa del buscador")
+    }
+
+    /** La lupa de la cabecera: pulsable, dice exactamente «Buscar»/«Search» y está en la fila del título de la hoja. */
+    private fun isLupa(seen: Seen, header: NodeBounds): Boolean {
+        val n = seen.node
+        if (seen.inFeed || seen.inField || isField(n) || !n.isClickable) return false
+        if (labelsOf(n).none { plain(it.value) in profile.searchButtonLabels }) return false
+        val b = n.bounds
+        return !b.isEmpty && b.top < header.bottom && b.centerY >= header.top - header.height && b.centerY <= header.bottom + header.height
+    }
+
+    /**
+     * Con el buscador abierto (tras la lupa): espera su campo, mira antes las filas que ya salen («Chats recientes»: así
+     * valen los nombres de emojis) y, si no está, escribe el nombre. Vale la fila cuyo **nombre visible** es exactamente
+     * ese (nunca por el usuario de debajo: [searchRows]); un grupo («Ana, Bea, Carlos») nunca vale por llevar a una persona
+     * en su nombre.
+     */
+    private fun ownLookInSearch(dest: Dest, screen: Screen, now: Long): Step {
+        val notFound = when (phase) {
+            Phase.RESULT -> "el buscador no lo encuentra"
+            Phase.SEARCH -> "no se abre el buscador"
+            else -> "no encuentro el nombre"
+        }
+        if (finder != null) {
+            // Recién pulsada la lupa, primero su campo: dice que ya está la otra pantalla (y prueba el id aprendido).
+            val field = if (phase == Phase.SEARCH) ownSearchField(screen) else null
+            if (phase != Phase.SEARCH || field != null) {
+                val rows = searchRows(dest, screen.sheetOnlyText(ownQuery(dest)), screen)
+                if (rows.isNotEmpty()) {
+                    fastHits++
+                    return onOwnTargets(dest, rows, screen, now, How.FAST, Found.SEARCH)
+                }
+                if (dest.key !in typed) {
+                    (field ?: ownSearchField(screen))?.let { f ->
+                        fastHits++
+                        return ownType(dest, f, now, How.FAST)
+                    }
+                }
+            }
+            if (!walkAllowed(now)) {
+                waitWhy = if (phase == Phase.RESULT) "esperando al buscador" else "esperando el campo del buscador"
+                return destTimeoutOr(dest, screen, now, notFound)
+            }
+        }
+        if (!walkAllowed(now)) return paused(now).let { destTimeoutOr(dest, screen, now, notFound) }
+        val sheet = ownSheetOf(screen.outside) ?: return finish(false, "la hoja se ha cerrado", now)
+        // Con el título de la hoja de contactos a la vista (tv_title), el buscador no se ha abierto y el único campo es el del
+        // mensaje: nunca es el buscador. Segunda pasada de la revisión (1.10.0): en fr/it/pt/de, con la lupa sin abrir el buscador
+        // en 1 s, el nombre del siguiente destino se escribía en «Écrire un message…», se enviaba como mensaje y se aprendía ese
+        // campo como buscador. Así el destino falla en SEARCH y el siguiente vuelve a buscarse en la fila.
+        val contacts = sheet.any { s -> !s.inFeed && shortViewId(s.node.viewId).let { it.isNotEmpty() && it in profile.sheetIds } }
+        val field = if (contacts) null else walkSearchField(sheet)
+        if (field != null) {
+            val rows = searchRows(dest, sheet, screen)
+            if (rows.isNotEmpty()) return onOwnTargets(dest, rows, screen, now, How.WALK, Found.SEARCH)
+            if (dest.key !in typed) return ownType(dest, field, now, How.WALK)
+        }
+        waitWhy = if (phase == Phase.RESULT) "esperando al buscador" else "esperando el campo del buscador"
+        return destTimeoutOr(dest, screen, now, notFound)
+    }
+
+    /**
+     * Lo que se pide al atajo de texto por [dest] en la hoja. Android busca «contiene» en el texto crudo, y TikTok pinta los
+     * grupos con marcas de aislamiento (U+2068/U+2069) alrededor de cada miembro: pedido entero, un grupo no sale nunca. Se pide
+     * su primer miembro (ese sí va seguido) y lo que vuelve se sigue filtrando por el nombre **exacto** ([ownCells],
+     * [searchRows]): una persona que se llame como el miembro no vale (revisión de la 1.10.0).
+     */
+    private fun ownQuery(dest: Dest): String {
+        val name = dest.target.name.filterNot { it in BIDI_MARKS }
+        return name.substringBefore(", ").trim().ifEmpty { name.trim() }.ifEmpty { dest.target.name }
+    }
+
+    /** Escribe el nombre de [dest] en el buscador. Si no se miró la fila por él (el buscador ya estaba abierto), no se aprende de esto. */
+    private fun ownType(dest: Dest, field: UiNode, now: Long, how: How): Step {
+        val hidden = dest.gridHidden || !dest.searched
+        val why = if (phase == Phase.SEARCH) "no está en los recientes" else "con el buscador ya abierto"
+        return typeInSearch(dest, field, now, how, why).also { dest.gridHidden = dest.gridHidden || hidden }
+    }
+
+    /**
+     * El campo del buscador de la hoja: por el id aprendido (ofuscado: cambia con cada versión) o, si no, el `EditText` junto
+     * a la lupa de su cabecera (la búsqueda de texto no ve la pista «Buscar» del campo vacío, pero sí la lupa). Nunca el de
+     * «Escribe un mensaje…».
+     *
+     * Por el id aprendido, el campo solo vale si tiene **la lupa al lado** ([besideSearchButton]), como por la lupa. Verificación
+     * final de la 1.10.0: un id ofuscado de otra versión de TikTok que hoy cayera en un campo del mensaje (`pja` en la hoja de
+     * contactos, `h84` en el buscador con alguien marcado), en un idioma cuya pista no está en [MESSAGE_HINTS], habría escrito
+     * ahí el nombre del siguiente destino (y se habría enviado como mensaje). En los volcados de la 47.7, el buscador (`vlq`)
+     * siempre va junto a la lupa «Buscar» y los campos del mensaje no tienen hermanos. Sin consultas de más.
+     */
+    private fun ownSearchField(screen: Screen): UiNode? {
+        ownFieldSought = true
+        val learned = learnedSearchId ?: hints.searchId
+        if (learned != null) {
+            screen.sheetOnlyId(learned).firstOrNull { !it.inFeed && isOwnSearchField(it.node) && besideSearchButton(it.node) }?.let { s ->
+                if (learned == hints.searchId) sawLearnedSearch = true
+                learnedSearchId = learned
+                return s.node
+            }
+        }
+        for (q in profile.searchButtonLabels) {
+            val hits = screen.sheetOnlyText(q).filter { !it.inFeed }
+            if (hits.isEmpty()) continue
+            val field = hits.firstOrNull { isOwnSearchField(it.node) }?.node
+                ?: hits.firstNotNullOfOrNull { s -> s.node.parent?.children?.firstOrNull(::isOwnSearchField) }
+            field?.viewId?.takeIf { it.isNotEmpty() }?.let { learnedSearchId = it }
+            // La lupa salió (en esta lengua): no se pregunta en la otra.
+            return field
+        }
+        return null
+    }
+
+    /** Recorriendo la hoja: el campo de más arriba que no es el del mensaje. */
+    private fun walkSearchField(sheet: List<Seen>): UiNode? {
+        ownFieldSought = true
+        val field = sheet.filter { !it.inFeed && isOwnSearchField(it.node) }.minByOrNull { it.node.bounds.top }?.node
+        field?.viewId?.takeIf { it.isNotEmpty() }?.let { learnedSearchId = it }
+        return field
+    }
+
+    /** ¿Tiene el campo la lupa al lado (un hermano, que no es un campo, con la etiqueta «Buscar», «Search»…)? */
+    private fun besideSearchButton(node: UiNode): Boolean =
+        node.parent?.children.orEmpty().any { c -> !isField(c) && labelsOf(c).any { plain(it.value) in profile.searchButtonLabels } }
+
+    private fun isOwnSearchField(node: UiNode): Boolean =
+        isField(node) && node.isVisible && labelsOf(node).none { l -> plain(l.value).let { p -> MESSAGE_HINTS.any { p.startsWith(it) } } }
+
+    /**
+     * Filas del buscador con el nombre de [dest]: una fila pulsable de ancho entero y con su `CheckBox` cuyo **nombre
+     * visible** (su primer texto) es, limpio, **exactamente** el nombre. El usuario de debajo nunca vale por sí solo: los
+     * fijados son nombres visibles («A quién envías» apunta la celda o el primer texto de la fila) y el usuario de otra
+     * persona puede ser justo ese nombre (revisión de la 1.10.0). Una por fila; más de una = repetido. Nunca un emoji de
+     * reacción (su celda no es una fila) ni un grupo que lo lleve en su nombre.
+     */
+    private fun searchRows(dest: Dest, candidates: List<Seen>, screen: Screen): List<Pick> {
+        val out = ArrayList<Pick>()
+        for (s in candidates) {
+            if (s.inFeed || s.inField) continue
+            val t = s.node.text ?: continue
+            if (ownName(t) != dest.key) continue
+            val row = searchRowOf(s.node, screen) ?: continue
+            // Por el nombre y no por el nodo: en el móvil, el del atajo y el leído bajando por la fila son objetos distintos.
+            val shown = below(row, config.rowMaxNodes, config.rowMaxDepth).firstOrNull { !it.text.isNullOrBlank() }?.text ?: continue
+            if (ownName(shown) != dest.key) continue
+            if (out.none { overlaps(it.click.bounds, row.bounds) }) out += Pick(row, s.node)
+        }
+        return out
+    }
+
+    /** La fila del buscador de [node]: su primer antepasado pulsable, si es de ancho entero, bajo y con `CheckBox`. */
+    private fun searchRowOf(node: UiNode, screen: Screen): UiNode? {
+        var current = node.parent
+        repeat(config.maxRowAncestors) {
+            val n = current ?: return null
+            if (n.bounds.height > screen.h * config.maxRowHeight) return null
+            if (n.isClickable) {
+                val ok = n.bounds.width >= screen.w * SEARCH_ROW_WIDTH && below(n, config.rowMaxNodes, config.rowMaxDepth).any(::isCheckBox)
+                return n.takeIf { ok }
+            }
+            current = n.parent
+        }
+        return null
+    }
+
+    /**
+     * Celdas de la fila de contactos con el nombre de [dest]: pulsables, con la **descripción** exactamente el nombre, en la
+     * primera fila debajo del título (o antes de la primera línea divisoria) y fuera de una cuadrícula (los emojis de
+     * reacción). Una por celda: dos celdas con el nombre son dos personas (no se pulsa ninguna).
+     */
+    private fun ownCells(dest: Dest, candidates: List<Seen>, header: NodeBounds?, divider: NodeBounds?): List<Pick> {
+        if (header == null) return emptyList()
+        val found = ArrayList<Pick>()
+        for (s in candidates) {
+            val n = s.node
+            if (s.inFeed || s.inField || !n.isClickable) continue
+            val d = n.contentDescription ?: continue
+            if (ownName(d) != dest.key || !inContactRow(n.bounds, header, divider) || inGrid(n)) continue
+            if (found.none { it.click.bounds == n.bounds }) found += Pick(n, n)
+        }
+        return found
+    }
+
+    /** El nombre limpio (normalizado) de una celda o fila; `null` si no es un nombre o es una opción de la hoja. */
+    private fun ownName(raw: CharSequence): String? =
+        recipients.clean(raw.toString(), fromText = true, symbolNames = profile.symbolNames)
+            ?.let(RecipientDetector::normalize)
+            ?.takeUnless { it in profile.sheetOptions }
+
+    private fun inContactRow(b: NodeBounds, header: NodeBounds, divider: NodeBounds?): Boolean {
+        if (b.isEmpty || b.top < header.bottom) return false
+        return if (divider != null) b.top < divider.top && b.bottom <= divider.top + 2 else b.top - header.bottom <= b.height * FIRST_ROW_GAP
+    }
+
+    private fun inGrid(node: UiNode): Boolean {
+        var p = node.parent
+        repeat(2) {
+            val n = p ?: return false
+            if (n.className?.contains("GridView") == true) return true
+            p = n.parent
+        }
+        return false
+    }
+
+    private fun isCellLike(node: UiNode): Boolean = node.isClickable && node.contentDescription?.let { ownName(it) } != null
+
+    private fun isCheckBox(node: UiNode): Boolean = node.className?.contains("CheckBox") == true
+
+    private fun isDivider(node: UiNode, screenWidth: Int): Boolean =
+        node.bounds.height in 1..4 && node.bounds.width >= screenWidth * 0.9f && labelsOf(node).isEmpty()
+
+    /**
+     * ¿Ha cargado la fila de contactos? Desde el título: su fila (la cabecera), la columna de la hoja y, tras la cabecera
+     * y hasta la primera línea divisoria, alguna celda. Unas pocas llamadas, solo si el nombre no salió.
+     */
+    private fun probeRow(title: UiNode, screenWidth: Int): Boolean {
+        val headerRow = title.parent ?: return false
+        val column = headerRow.parent ?: return false
+        var after = false
+        for (child in column.children) {
+            if (!after) {
+                if (child === headerRow || child.bounds == headerRow.bounds) after = true
+                continue
+            }
+            if (isDivider(child, screenWidth)) break
+            if (below(child, config.rowMaxNodes, config.rowMaxDepth).any { isCellLike(it) && inContactRow(it.bounds, title.bounds, null) }) return true
+        }
+        return false
+    }
+
+    /** La hoja recorrida: la ventana (fuera del visor) con su título o sus marcas; la ya conocida, si sigue. */
+    private fun ownSheetOf(windows: List<List<Seen>>): List<Seen>? {
+        val marked = windows.filter { w -> w.any { !it.inFeed && isOwnSheetMark(it.node) } }
+        val sheet = marked.firstOrNull { it.firstOrNull()?.window == sheetWindow } ?: marked.firstOrNull()
+        sheet?.firstOrNull()?.let { sheetWindow = it.window }
+        return sheet
+    }
+
+    /**
+     * Marca de la hoja: su id de título, una de sus opciones o el título en cualquiera de sus idiomas
+     * ([PlatformProfile.titleLabels], como [walkHeader]). En el buscador el título lleva otro id (`title`) y, fuera del
+     * español y el inglés, «Envoyer à» no es una opción: sin esto, el recorrido daba la hoja por cerrada (revisión 1.10.0).
+     */
+    private fun isOwnSheetMark(node: UiNode): Boolean =
+        shortViewId(node.viewId).let { it.isNotEmpty() && it in profile.sheetIds } || hasMarker(node) ||
+            labelsOf(node).any { plain(it.value) in profile.titleLabels }
+
+    private fun isOwnSheetOpenMark(node: UiNode): Boolean =
+        isOwnSheetMark(node) || shortViewId(node.viewId).let { it.isNotEmpty() && it in profile.openSheetIds }
+
+    private fun walkHeader(sheet: List<Seen>): NodeBounds? = sheet.firstOrNull { s ->
+        !s.inFeed && (
+            shortViewId(s.node.viewId).let { it.isNotEmpty() && it in profile.sheetIds } ||
+                labelsOf(s.node).any { plain(it.value) in profile.titleLabels }
+            )
+    }?.node?.bounds
+
+    private fun walkDivider(sheet: List<Seen>, header: NodeBounds, screenWidth: Int): NodeBounds? =
+        sheet.firstOrNull { !it.inFeed && it.node.bounds.top >= header.bottom && isDivider(it.node, screenWidth) }?.node?.bounds
+
+    /**
+     * Pulsa la celda o la fila de [dest]. Si ya está marcada (su `CheckBox`; el `selected` de las celdas recicladas
+     * miente), no se pulsa: lo desmarcaría. La foto, de dentro de la celda (o de la fila del buscador).
+     */
+    private fun onOwnTargets(dest: Dest, picks: List<Pick>, screen: Screen, now: Long, how: How, where: Found): Step {
+        if (picks.size > 1) return failDest(dest, "nombre repetido en la hoja", screen, now, how)
+        val pick = picks.first()
+        val inside = below(pick.click, config.rowMaxNodes, config.rowMaxDepth)
+        val marked = profile.selectedByCheckbox && inside.any { isCheckBox(it) && it.isChecked }
+        val photo = if (dest.target.wantAvatar && !marked) {
+            if (where == Found.GRID) cellPhoto(inside) else AvatarRules.photo(pick.label, dest.target.name, screen.h, config.maxRowAncestors, config.maxRowHeight)
+        } else {
+            null
+        }
+        snapshot(dest)
+        dest.foundIn = where
+        dest.row = pick.click.bounds
+        dest.status = Status.SELECTED
+        val more = current() != null
+        enter(if (more) Phase.TARGET else Phase.SEND, now, how)
+        if (marked) {
+            // Nada que pulsar: se sigue en este mismo tick.
+            before = null
+            return if (more) ownLookForTarget(screen, now) else ownSendStep(screen, now)
+        }
+        val avatar = photo?.bounds
+        return Step.Click(
+            pick.click, if (where == Found.SEARCH) "nombre del buscador" else "nombre",
+            avatar = avatar, avatarName = dest.target.name.takeIf { avatar != null }, avatarGroup = photo?.group == true,
+        )
+    }
+
+    /** La foto de una celda: la imagen casi cuadrada más grande de dentro. */
+    private fun cellPhoto(nodes: List<UiNode>): AvatarRules.Photo? =
+        nodes.filter { it.isVisible && it.className?.contains("Image") == true && squarish(it.bounds) }
+            .maxByOrNull { it.bounds.width.toLong() * it.bounds.height }
+            ?.let { AvatarRules.Photo(it.bounds) }
+
+    private fun squarish(b: NodeBounds): Boolean =
+        !b.isEmpty && minOf(b.width, b.height) >= MIN_PHOTO_PX && maxOf(b.width, b.height) * 4 <= minOf(b.width, b.height) * 5
+
+    /**
+     * «Enviar» de la hoja en su propia ventana: el botón exacto ([PlatformProfile.sendLabels]) o el de su id (`tv_send`,
+     * en el buscador), pulsable, ancho y en la mitad de abajo. Nunca «Enviar a» (el título) ni «Crear grupo».
+     */
+    private fun ownSendStep(screen: Screen, now: Long): Step {
+        if (finder != null) {
+            val byId = { fullIds(profile.sendIds).flatMap { screen.sheetOnlyId(it) }.filter { isOwnSend(it, screen) } }
+            val byText = {
+                profile.sendLabels.firstNotNullOfOrNull { q -> screen.sheetOnlyText(q).filter { isOwnSend(it, screen) }.ifEmpty { null } }.orEmpty()
+            }
+            // En el buscador lleva `tv_send`; en la hoja, su id cambia con cada versión: por sus palabras.
+            val all = if (searchOpen) byId().ifEmpty { byText() } else byText().ifEmpty { byId() }
+            all.maxByOrNull { it.node.bounds.top }?.let { send ->
+                fastHits++
+                return clickSend(send.node, fast = true, now)
+            }
+        }
+        if (!walkAllowed(now)) return paused(now).let { timeoutOr(now, "no encuentro enviar") }
+        val sheet = ownSheetOf(screen.outside) ?: return finish(false, "la hoja se ha cerrado", now)
+        return sheet.filter { isOwnSend(it, screen) }.maxByOrNull { it.node.bounds.top }?.let { clickSend(it.node, fast = false, now) }
+            ?: timeoutOr(now, "no encuentro enviar")
+    }
+
+    private fun isOwnSend(seen: Seen, screen: Screen): Boolean {
+        val n = seen.node
+        if (seen.inFeed || seen.inField || isField(n) || !n.isClickable || n.bounds == shareBounds) return false
+        val labels = labelsOf(n).map { plain(it.value) }
+        val byId = shortViewId(n.viewId).let { it.isNotEmpty() && it in profile.sendIds }
+        if (!byId && labels.none { it in profile.sendLabels }) return false
+        if (labels.any { RecipientDetector.CREATE_GROUP.matches(it) }) return false
+        return sendButtonWidth(n) >= screen.w * config.wideSend && n.bounds.centerY >= screen.h / 2
+    }
+
+    /**
+     * Hoja en su propia ventana: enviado cuando su ventana desaparece (TikTok la cierra al momento; sin consultas) o, si
+     * sigue, cuando el «Enviar» pulsado ya no está.
+     */
+    private fun ownConfirmSent(screen: Screen, now: Long): Step {
+        if (screen.sheetRoot() == null) return finish(true, "enviado", now, How.FAST)
+        if (finder != null) {
+            val stillThere = (fullIds(profile.sendIds).flatMap { screen.sheetOnlyId(it) } + profile.sendLabels.flatMap { screen.sheetOnlyText(it) })
+                .any { it.node.bounds == sentBounds && isOwnSend(it, screen) }
+            if (!stillThere) return finish(true, "enviado", now, How.FAST)
+        } else if (walkAllowed(now)) {
+            val sheet = ownSheetOf(screen.outside) ?: return finish(true, "enviado", now, How.WALK)
+            if (sheet.none { it.node.bounds == sentBounds && isOwnSend(it, screen) }) return finish(true, "enviado", now, How.WALK)
+        }
+        return if (now - phaseSince > config.confirmMs) finish(false, "no se confirma el envío", now) else wait("sin confirmar")
+    }
+
     // ── Atajos ───────────────────────────────────────────────────────────────────────────────────
 
     /** El botón compartir del reel visible: por el id aprendido o por su etiqueta. Siempre dentro del visor. */
-    private fun fastShare(screen: Screen): UiNode? {
+    private fun fastShare(screen: Screen): UiNode? = fastShareSeen(screen)?.node
+
+    private fun fastShareSeen(screen: Screen): Seen? {
         fun valid(seen: Seen): Boolean {
             val b = seen.node.bounds
             return seen.inFeed && !seen.inField && !b.isEmpty && b.left >= 0 && b.top >= 0 && b.right <= screen.w &&
                 b.bottom <= screen.h && shareDetector.evaluate(seen.node, screen.w, screen.h).isShare
         }
-        hints.shareId?.let { id -> screen.id(id).firstOrNull(::valid)?.let { return it.node } }
-        for (q in SHARE_QUERIES) screen.text(q).firstOrNull(::valid)?.let { return it.node }
+        // Por id solo donde no es el de otro botón (en TikTok, «Compartir» y «Me gusta» comparten id).
+        if (profile.learnShareId) hints.shareId?.let { id -> screen.id(id).firstOrNull(::valid)?.let { return it } }
+        for (q in SHARE_QUERIES) screen.text(q).firstOrNull(::valid)?.let { return it }
         return null
     }
 
     /** Alguna opción que solo sale en la hoja de compartir («Copiar enlace», «Escribe un mensaje»…), fuera del visor. */
     private fun fastSheetMarker(screen: Screen): Seen? =
-        MARKER_QUERIES.firstNotNullOfOrNull { q -> screen.text(q).firstOrNull { !it.inFeed && hasMarker(it.node) } }
+        profile.markerQueries.firstNotNullOfOrNull { q -> screen.text(q).firstOrNull { !it.inFeed && hasMarker(it.node) } }
 
     /**
      * El buscador de la hoja por el id aprendido (dentro de la ventana de la hoja si ya se conoce). Por texto no:
@@ -881,15 +1475,19 @@ class QuickSender(
         // 1.4.2: sin id aprendido, el que tiene Instagram hoy (visto en el árbol real de la hoja).
         val learned = hints.searchId?.let { id -> screen.id(id).filter(::ok) }.orEmpty()
         if (learned.isNotEmpty()) sawLearnedSearch = true
-        if (learned.isNotEmpty() || hints.searchId == KNOWN_SEARCH_ID) return learned
-        return screen.id(KNOWN_SEARCH_ID).filter(::ok)
+        val known = knownSearchId ?: return learned
+        if (learned.isNotEmpty() || hints.searchId == known) return learned
+        return screen.id(known).filter(::ok)
     }
 
+    /** El id de hoy del buscador de la hoja ([PlatformProfile.searchFieldIds]; en Instagram, `search_edit_text`). */
+    private val knownSearchId: String? get() = profile.searchFieldIds.firstOrNull()?.let { fullIds(listOf(it)).first() }
+
     /**
-     * La hoja de hoy ya se vio en un envío anterior: el buscador aprendido es [KNOWN_SEARCH_ID]. Entonces sus ids
+     * La hoja de hoy ya se vio en un envío anterior: el buscador aprendido es [knownSearchId]. Entonces sus ids
      * bastan y no hacen falta las búsquedas de texto de las opciones ni el recorrido (1.4.3).
      */
-    private val knownLayout: Boolean get() = hints.searchId == KNOWN_SEARCH_ID
+    private val knownLayout: Boolean get() = hints.searchId != null && hints.searchId == knownSearchId
 
     /**
      * ¿Hay una hoja abierta? Por los ids de hoy (tres búsquedas): el buscador fuera del visor, diga lo que diga (con un
@@ -897,19 +1495,24 @@ class QuickSender(
      * hoja de abajo de Instagram (comentarios, más opciones…): nunca se pulsa «Compartir» detrás de una.
      */
     private fun fastSheetOpenById(screen: Screen): Boolean =
-        screen.id(hints.searchId ?: KNOWN_SEARCH_ID).any { !it.inFeed && isField(it.node) }.also { if (it) sawLearnedSearch = true } ||
-            OPEN_SHEET_IDS.any { id -> screen.id(id).any { !it.inFeed } }
+        (hints.searchId ?: knownSearchId)?.let { id -> screen.id(id).any { !it.inFeed && isField(it.node) } }.also { if (it == true) sawLearnedSearch = true } == true ||
+            fullIds(profile.openSheetIds).any { id -> screen.id(id).any { !it.inFeed } }
 
     /** La hoja por sus ids de hoy (contenedor o cuadrícula), fuera del visor: una llamada, sin recorrer. */
     private fun fastSheetContainer(screen: Screen): Seen? =
-        KNOWN_SHEET_IDS.firstNotNullOfOrNull { id -> screen.id(id).firstOrNull { !it.inFeed } }
+        fullIds(profile.sheetIds).firstNotNullOfOrNull { id -> screen.id(id).firstOrNull { !it.inFeed } }
+
+    /** El id de hoy de una celda de la cuadrícula ([PlatformProfile.gridCellIds]). */
+    private val knownGridCellId: String? get() = profile.gridCellIds.firstOrNull()?.let { fullIds(listOf(it)).first() }
 
     /**
      * La cuadrícula de la hoja ya ha cargado (1.4.2): se ve alguna celda (`direct_share_sheet_grid_view_pog`, que
      * Instagram describe «Nombre Chat sin seleccionar», sin «Foto del perfil de…»), dentro de la ventana de la hoja.
      */
-    private fun fastGridLoaded(screen: Screen): Boolean =
-        screen.id(KNOWN_GRID_CELL_ID).any { !it.inFeed && (sheetWindow == null || it.window == sheetWindow) }
+    private fun fastGridLoaded(screen: Screen): Boolean {
+        val id = knownGridCellId ?: return false
+        return screen.id(id).any { !it.inFeed && (sheetWindow == null || it.window == sheetWindow) }
+    }
 
     /** Lo que encuentra el atajo para el nombre de [dest], agrupado por fila como [findTarget]. */
     private fun fastTargets(screen: Screen, dest: Dest): List<UiNode> {
@@ -923,14 +1526,18 @@ class QuickSender(
 
     // ── Hoja ─────────────────────────────────────────────────────────────────────────────────────
 
-    private fun findShare(windows: List<List<Seen>>, w: Int, h: Int): UiNode? {
+    private fun findShare(windows: List<List<Seen>>, w: Int, h: Int): UiNode? = findShareSeen(windows, w, h)?.node
+
+    private fun findShareSeen(windows: List<List<Seen>>, w: Int, h: Int): Seen? {
         for (window in windows) {
             for (seen in window) {
                 val node = seen.node
                 val b = node.bounds
                 if (seen.inField || b.isEmpty || b.left < 0 || b.top < 0 || b.right > w || b.bottom > h) continue
                 if (node.text.isNullOrBlank() && node.contentDescription.isNullOrBlank() && node.viewId.isNullOrEmpty()) continue
-                if (shareDetector.evaluate(node, w, h).isShare) return node
+                // Hoja en su propia ventana: «Compartir» solo dentro del visor (en la hoja, «Compartir» es repostear).
+                if (own && !seen.inFeed) continue
+                if (shareDetector.evaluate(node, w, h).isShare) return seen
             }
         }
         return null
@@ -946,7 +1553,7 @@ class QuickSender(
         if (sheet.any { !it.inFeed && isField(it.node) }) sheetWalkedWithField = true
     }
 
-    private fun hasMarker(node: UiNode): Boolean = labelsOf(node).any { plain(it.value) in SHEET_MARKERS }
+    private fun hasMarker(node: UiNode): Boolean = labelsOf(node).any { plain(it.value) in profile.sheetMarkers }
 
     /**
      * La cuadrícula ya ha cargado: se ve alguna celda fuera del visor, por su id de hoy (1.4.2) o por una foto de
@@ -954,7 +1561,7 @@ class QuickSender(
      */
     private fun gridLoaded(sheet: List<Seen>): Boolean = sheet.any { seen ->
         !seen.inFeed && !seen.inField && (
-            seen.node.viewId == KNOWN_GRID_CELL_ID ||
+            (seen.node.viewId != null && seen.node.viewId == knownGridCellId) ||
                 seen.node.contentDescription?.let { d ->
                     val n = RecipientDetector.normalize(d.toString())
                     RecipientDetector.PREFIXES.any { n.startsWith(it) }
@@ -1012,7 +1619,7 @@ class QuickSender(
         a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom
 
     private fun matches(raw: CharSequence, fromText: Boolean, key: String): Boolean {
-        val name = recipients.clean(raw.toString(), fromText) ?: return false
+        val name = recipients.clean(raw.toString(), fromText, symbolNames = profile.symbolNames) ?: return false
         return RecipientDetector.normalize(name) == key
     }
 
@@ -1025,7 +1632,7 @@ class QuickSender(
      * Sin ninguna etiqueta, [allowEmpty].
      */
     private fun isSearchField(field: UiNode, allowEmpty: Boolean): Boolean {
-        if (field.viewId == KNOWN_SEARCH_ID) return true
+        if (field.viewId != null && field.viewId == knownSearchId) return true
         val labels = labelsOf(field).map { plain(it.value) }
         if (labels.isEmpty()) return allowEmpty
         return labels.any { l -> SEARCH_PREFIXES.any { l.startsWith(it) } || l in typed }
@@ -1092,7 +1699,17 @@ class QuickSender(
      * grupo» no lo es nunca.
      */
     private fun isSendButton(node: UiNode): Boolean =
-        RecipientDetector.isSendId(node) || labelsOf(node).any { RecipientDetector.SEND.matches(RecipientDetector.normalize(it.value)) }
+        isSendId(node) || labelsOf(node).any { RecipientDetector.SEND.matches(RecipientDetector.normalize(it.value)) }
+
+    /** ¿Es el «Enviar» de abajo por su id ([PlatformProfile.sendIds])? Nunca «Crear grupo», lleve el id que lleve. */
+    private fun isSendId(node: UiNode): Boolean {
+        if (profile.platform == PlatformProfile.INSTAGRAM.platform) return RecipientDetector.isSendId(node)
+        val id = shortViewId(node.viewId)
+        return id.isNotEmpty() && id in profile.sendIds &&
+            (listOf(node) + node.children.take(RecipientDetector.MAX_OWN_CHILDREN))
+                .flatMap { listOfNotNull(it.text, it.contentDescription) }
+                .none { RecipientDetector.CREATE_GROUP.matches(RecipientDetector.normalize(it.toString())) }
+    }
 
     /** «Enviar» de la fila de otra persona (diseño antiguo): no se pulsa nunca. */
     private fun inOtherRow(node: UiNode, screenHeight: Int): Boolean {
@@ -1116,8 +1733,8 @@ class QuickSender(
     private fun namesBelow(node: UiNode, skip: UiNode? = null): Set<String> =
         below(node, config.rowMaxNodes, config.rowMaxDepth, skip, skipFields = true).mapNotNullTo(mutableSetOf()) { n ->
             n.text?.toString()
-                ?.takeUnless { plain(it) in SHEET_MARKERS }
-                ?.let { recipients.clean(it, fromText = true) }
+                ?.takeUnless { plain(it) in profile.sheetMarkers }
+                ?.let { recipients.clean(it, fromText = true, symbolNames = profile.symbolNames) }
                 ?.let(RecipientDetector::normalize)
         }
 
@@ -1128,13 +1745,13 @@ class QuickSender(
         /** Recorrido entero, visor incluido: solo para buscar «Compartir» si el atajo no lo ve. */
         val windows: List<List<Seen>> by lazy {
             countWalk(now)
-            timed({ walkMs += it }) { roots.mapIndexed { i, root -> snapshot(root, w, h, keyOf(i), pruneFeed = false) } }
+            timed({ walkMs += it }) { roots.mapIndexed { i, root -> snapshot(root, w, h, keyOf(i), pruneFeed = false, real = root.windowId != UiNode.NO_WINDOW) } }
         }
 
         /** Recorrido sin entrar en el visor (la hoja nunca está dentro): para todo lo demás. */
         val outside: List<List<Seen>> by lazy {
             countWalk(now)
-            timed({ walkMs += it }) { roots.mapIndexed { i, root -> snapshot(root, w, h, keyOf(i), pruneFeed = true) } }
+            timed({ walkMs += it }) { roots.mapIndexed { i, root -> snapshot(root, w, h, keyOf(i), pruneFeed = true, real = root.windowId != UiNode.NO_WINDOW) } }
         }
 
         /** Identidad de la ventana de [roots]`[i]`: su `windowId` o, si no se sabe, su posición. */
@@ -1170,20 +1787,61 @@ class QuickSender(
 
         fun id(viewId: String): List<Seen> = fast("i:$viewId") { f, root -> f.byViewId(root, viewId) }
 
-        private fun fast(key: String, find: (UiFinder, UiNode) -> List<UiNode>): List<Seen> {
+        /** Hoja en su propia ventana: [text] solo en la raíz de la hoja (una llamada en vez de una por ventana). */
+        fun sheetOnlyText(query: String): List<Seen> = sheetRoot()?.let { i -> fast("t:$query", only = i) { f, root -> f.byText(root, query) } }.orEmpty()
+
+        fun sheetOnlyId(viewId: String): List<Seen> = sheetRoot()?.let { i -> fast("i:$viewId", only = i) { f, root -> f.byViewId(root, viewId) } }.orEmpty()
+
+        /** Hoja en su propia ventana: [id] en todas las ventanas menos la del visor (la hoja nunca está en ella). */
+        fun awayId(viewId: String): List<Seen> {
+            val skip = feedWindow ?: return id(viewId)
+            return fast("i:$viewId", skip = skip) { f, root -> f.byViewId(root, viewId) }
+        }
+
+        fun awayText(query: String): List<Seen> {
+            val skip = feedWindow ?: return text(query)
+            return fast("t:$query", skip = skip) { f, root -> f.byText(root, query) }
+        }
+
+        /** Índice de la raíz de la ventana de la hoja, o `null` si no está (o no se sabe cuál es). */
+        fun sheetRoot(): Int? {
+            val sheet = sheetWindow ?: return null
+            return roots.indices.firstOrNull { keyOf(it) == sheet }
+        }
+
+        /** Hoja en su propia ventana: la cabecera de este tick ([ownHeader]), pedida una vez. */
+        var header: Seen? = null
+        var headerAsked = false
+
+        private fun fast(
+            key: String,
+            only: Int? = null,
+            skip: Int? = null,
+            find: (UiFinder, UiNode) -> List<UiNode>,
+        ): List<Seen> {
             val f = finder ?: return emptyList()
-            return cache.getOrPut(key) {
-                queries++
+            val scoped = only != null || skip != null
+            val cacheKey = when {
+                only != null -> "s${keyOf(only)}|$key"
+                skip != null -> "a$skip|$key"
+                else -> key
+            }
+            return cache.getOrPut(cacheKey) {
+                val picked = roots.indices.filter { i -> (only == null || i == only) && (skip == null || keyOf(i) != skip) }
+                // Una consulta por búsqueda hecha (las acotadas, solo si se pidió a alguna ventana).
+                if (!scoped || picked.isNotEmpty()) queries++
                 timed({ queryMs += it }) {
-                    roots.flatMapIndexed { i, root ->
+                    picked.flatMap { i ->
+                        val root = roots[i]
                         val found = try {
                             find(f, root)
                         } catch (e: RuntimeException) {
                             emptyList()
                         }
                         val key = keyOf(i)
-                        found.filter { it.isVisible && it.bounds.intersectsScreen(w, h) }.map { seenFromAncestors(it, key) }
-                    }
+                        val real = root.windowId != UiNode.NO_WINDOW
+                        found.filter { it.isVisible && it.bounds.intersectsScreen(w, h) }.map { seenFromAncestors(it, key, real) }
+                    }.also { if (pkg == null && profile.platform.packages.size > 1) it.firstNotNullOfOrNull { s -> packageOf(s.node.viewId) }?.let { p -> pkg = p } }
                 }
             }
         }
@@ -1203,21 +1861,47 @@ class QuickSender(
     }
 
     /** [Seen] de un nodo suelto (del atajo): mira sus antepasados para saber si está en el visor o en un campo. */
-    private fun seenFromAncestors(node: UiNode, window: Int): Seen {
+    private fun seenFromAncestors(node: UiNode, window: Int, real: Boolean = false): Seen {
+        // 1.10.0, hoja en su propia ventana: lo de una ventana que no es la del visor no está en el visor, sin subir (la
+        // hoja de TikTok va ~20 niveles por debajo de su raíz y cada antepasado puede costar una llamada a la app).
+        val fw = feedWindow
+        if (own && real && fw != null && window != fw) return Seen(node, inFeed = false, inField = isField(node), window = window, real = true)
         var feed = false
         var field = false
         var current: UiNode? = node
         var depth = 0
+        val roots = sheetRootIds()
         while (current != null && depth <= config.maxDepth) {
             if (!feed && isFeedNode(current)) feed = true
             if (!field && isField(current)) field = true
             if (feed && field) break
+            // Hoja en su propia ventana: en el visor no hay campos que importen (nada de él se pulsa salvo «Compartir»).
+            if (feed && own) break
             // 1.4.3: la hoja de compartir no está dentro del visor; subir más allá de ella son ~20 llamadas a Instagram.
-            if (!feed && current.viewId in SHEET_ROOT_IDS) break
+            if (!feed && current.viewId in roots) break
             current = current.parent
             depth++
         }
-        return Seen(node, feed, field, window)
+        return Seen(node, feed, field, window, real)
+    }
+
+    /** Ids completos de [PlatformProfile.sheetRootIds] (con el paquete de hoy). */
+    private fun sheetRootIds(): Set<String> {
+        val key = pkg
+        rootIdsCache?.let { (p, ids) -> if (p == key) return ids }
+        return fullIds(profile.sheetRootIds).toSet().also { rootIdsCache = key to it }
+    }
+
+    private var rootIdsCache: Pair<String?, Set<String>>? = null
+
+    /** El paquete de [viewId] (`com.zhiliaoapp.musically:id/x` → `com.zhiliaoapp.musically`) si es de la app del envío. */
+    private fun packageOf(viewId: String?): String? =
+        viewId?.substringBefore(":id/", "")?.takeIf { it.isNotEmpty() && it in profile.platform.packages }
+
+    /** Los ids completos de [shortIds]: con el paquete de este envío si ya se sabe; si no, en todos los de la app. */
+    private fun fullIds(shortIds: List<String>): List<String> {
+        val p = pkg
+        return shortIds.flatMap { if (p != null) listOf("$p:id/$it") else profile.fullIds(it) }
     }
 
     /**
@@ -1233,19 +1917,19 @@ class QuickSender(
         return now - last >= config.walkEveryMs || now < last
     }
 
-    private fun isFeedNode(node: UiNode): Boolean = shortViewId(node.viewId).let { id -> RecipientDetector.FEED_IDS.any { id.contains(it) } }
+    private fun isFeedNode(node: UiNode): Boolean = shortViewId(node.viewId).let { id -> id.isNotEmpty() && profile.feedIds.any { id.contains(it) } }
 
     /**
      * Nodos visibles y dentro de la pantalla, en orden de lectura y con límite. Con [pruneFeed], del visor solo
      * se apunta su contenedor (sin entrar): es la mayor parte del árbol y nada de la hoja está dentro.
      */
-    private fun snapshot(root: UiNode, w: Int, h: Int, window: Int, pruneFeed: Boolean): List<Seen> {
+    private fun snapshot(root: UiNode, w: Int, h: Int, window: Int, pruneFeed: Boolean, real: Boolean = false): List<Seen> {
         val out = ArrayList<Seen>()
         fun visit(node: UiNode, depth: Int, inFeed: Boolean, inField: Boolean) {
             if (out.size >= config.maxNodes || !node.isVisible || !node.bounds.intersectsScreen(w, h)) return
             val feed = inFeed || isFeedNode(node)
             val field = inField || isField(node)
-            out += Seen(node, feed, field, window)
+            out += Seen(node, feed, field, window, real)
             if (pruneFeed && feed) return
             if (depth < config.maxDepth) node.children.forEach { visit(it, depth + 1, feed, field) }
         }
@@ -1282,12 +1966,12 @@ class QuickSender(
         marks.lastOrNull()?.let { if (how != null) it.how = how }
         phase = next
         phaseSince = now
-        marks += Mark(next, now, if (next == Phase.TARGET || next == Phase.RESULT) current()?.index ?: 0 else 0)
+        marks += Mark(next, now, if (next == Phase.TARGET || next == Phase.SEARCH || next == Phase.RESULT) current()?.index ?: 0 else 0)
     }
 
     /** Antes de una acción que el servicio aún tiene que hacer: se guarda cómo estaba ([onPerformed]). */
     private fun snapshot(dest: Dest?, typedKey: String? = null) {
-        before = Before(phase, phaseSince, marks.size, marks.lastOrNull()?.how, sentFast, dest, dest?.copyState(), typedKey, rejectedSince)
+        before = Before(phase, phaseSince, marks.size, marks.lastOrNull()?.how, sentFast, dest, dest?.copyState(), typedKey, rejectedSince, searchOpen)
     }
 
     /** Un [Step.Wait] con su motivo para [Report.waits] (si ya había uno más concreto en este tick, se queda ese). */
@@ -1348,7 +2032,8 @@ class QuickSender(
             actions = actions.toList(),
             waits = LinkedHashMap(waits),
             searches = searches.toList(),
-            forgetSearchId = hints.searchId != null && sheetWalkedWithField && !sawLearnedSearch && learnedSearchId == null,
+            // Hoja en su propia ventana: el buscador solo sale tras la lupa; se olvida si se buscó y el aprendido no salió.
+            forgetSearchId = hints.searchId != null && (if (own) ownFieldSought else sheetWalkedWithField) && !sawLearnedSearch && learnedSearchId == null,
             queries = queries,
             queryMs = queryMs,
             walkMs = walkMs,
@@ -1359,51 +2044,57 @@ class QuickSender(
 
     companion object {
 
-        /** Opciones que solo salen en la hoja de compartir (normalizadas). */
-        private val SHEET_MARKERS = setOf(
-            "copiar enlace", "copy link", "anadir a la historia", "anadir a historia", "add to story",
-            "add to your story", "escribe un mensaje", "write a message",
-        )
         private val SEARCH_PREFIXES = listOf("buscar", "search")
 
         /** Android rechaza una y otra vez la acción (nada pulsable a la medida). */
         private const val REJECTED = "Android no acepta la acción"
 
         /**
-         * Ids de la hoja de compartir de Instagram vistos en el árbol real (Instagram 454, nov. 2026). Solo son atajos:
-         * lo que devuelven pasa las mismas reglas, y si cambian, se aprende el buscador o se recorre como siempre.
+         * Ids de la hoja de compartir de Instagram vistos en el árbol real (Instagram 454, nov. 2026; los cortos están en
+         * [PlatformProfile.INSTAGRAM]). Solo son atajos: lo que devuelven pasa las mismas reglas, y si cambian, se aprende
+         * el buscador o se recorre como siempre.
          */
         const val KNOWN_SEARCH_ID = "com.instagram.android:id/search_edit_text"
         const val KNOWN_GRID_CELL_ID = "com.instagram.android:id/direct_share_sheet_grid_view_pog"
-        private val KNOWN_SHEET_IDS = listOf(
-            "com.instagram.android:id/direct_private_share_container_view",
-            "com.instagram.android:id/direct_private_share_recipients_recycler_view",
-        )
-
-        /** Una hoja abierta (la de compartir o cualquier hoja de abajo de Instagram), para «¿ya hay una hoja abierta?». */
-        private val OPEN_SHEET_IDS = listOf(
-            "com.instagram.android:id/direct_private_share_container_view",
-            "com.instagram.android:id/layout_container_bottom_sheet",
-        )
-
-        /** Al mirar los antepasados de un nodo del atajo, al llegar a uno de estos ya se sabe que no está en el visor. */
-        private val SHEET_ROOT_IDS = KNOWN_SHEET_IDS.toSet() + setOf(
-            "com.instagram.android:id/layout_container_bottom_sheet",
-            "com.instagram.android:id/bottom_sheet_container",
-        )
 
         /** [release]: «Enviar» aceptado y otro envío esperando; no se espera a confirmarlo. */
         const val RELEASED = "enviado sin confirmar"
 
-        /** Lo que se pide a Instagram con el atajo (contiene, sin mayúsculas, con tildes). */
+        /** Lo que se pide a la app con el atajo (contiene, sin mayúsculas, con tildes). */
         private val SHARE_QUERIES = listOf("Compartir", "Share", "Enviar", "Send")
 
-        /** Opciones de la hoja que se ven como texto (las pistas de los campos vacíos no las encuentra Instagram). */
-        val MARKER_QUERIES = listOf("Copiar enlace", "Copy link", "Añadir a", "Add to")
+        /** Opciones de la hoja de Instagram que se ven como texto (las pistas de los campos vacíos no las encuentra Instagram). */
+        val MARKER_QUERIES = PlatformProfile.INSTAGRAM.markerQueries
 
-        /** ¿[label] es una opción que solo sale en la hoja de compartir? (Para el recorte de fotos a mano.) */
-        fun isSheetMarker(label: CharSequence): Boolean =
-            RecipientDetector.normalize(label.toString()).trimEnd('.', '…', ':', ' ') in SHEET_MARKERS
+        /** ¿[label] es una opción que solo sale en la hoja de compartir de Instagram? (Para el recorte de fotos a mano.) */
+        fun isSheetMarker(label: CharSequence): Boolean = isSheetMarker(label, PlatformProfile.INSTAGRAM)
+
+        /** ¿[label] es una opción que solo sale en la hoja de compartir de la app de [profile]? */
+        fun isSheetMarker(label: CharSequence, profile: PlatformProfile): Boolean =
+            RecipientDetector.normalize(label.toString()).trimEnd('.', '…', ':', ' ') in profile.sheetMarkers
+
+        /** El campo de «Escribe un mensaje…» de la hoja: nunca es el buscador (el nombre acabaría en el mensaje). */
+        private val MESSAGE_HINTS = listOf(
+            "escribe un mensaje", "write a message",
+            // 1.10.0, sin ver en un móvil (TikTok en otros idiomas): defensa de más, la regla del título ya lo evita.
+            "ecrire un message", "ecris un message", "scrivi un messaggio", "escreva uma mensagem", "nachricht schreiben",
+        )
+
+        /** Marcas de dirección invisibles (LRM/RLM, U+202A–U+202E, U+2066–U+2069): nunca van en lo que se pide al atajo. */
+        private val BIDI_MARKS: Set<Char> = (listOf(0x200E, 0x200F) + (0x202A..0x202E) + (0x2066..0x2069)).mapTo(HashSet()) { Char(it) }
+
+        /** Una fila del buscador de una hoja en su propia ventana ocupa casi todo el ancho; una celda o un emoji, no. */
+        private const val SEARCH_ROW_WIDTH = 0.8f
+
+        /**
+         * Hoja en su propia ventana: la fila de contactos es la primera debajo del título. Una celda vale si empieza como
+         * mucho a esta parte de su alto por debajo del título (en TikTok 47.7: 45 px con celdas de 220; las opciones,
+         * a 335, y los emojis, más abajo).
+         */
+        private const val FIRST_ROW_GAP = 0.6f
+
+        /** Lado mínimo (px) de la foto de una celda o fila para recortarla. */
+        private const val MIN_PHOTO_PX = 48
         private val SEND_QUERIES = listOf("Enviar", "Send", "Envia", "Envoyer", "Invia", "Senden", "Verzenden", "Versturen", "Bidali")
         private val UNDO_QUERIES = listOf("Deshacer", "Undo", "Enviad", "Sent", "Desf", "Annul", "Envoy", "Inviat", "Gesendet")
 

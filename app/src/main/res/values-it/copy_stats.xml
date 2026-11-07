@@ -20,7 +20,7 @@
     <string name="stats_section_platforms">PIATTAFORME</string>
     <string name="stats_section_categories">CATEGORIE</string>
     <string name="stats_section_creators">CREATORI</string>
-    <!-- Ranking de personas y grupos a los que envías vídeos por mensaje en Instagram. -->
+    <!-- Ranking de personas y grupos a los que envías vídeos por mensaje en Instagram y TikTok. -->
     <string name="stats_section_recipients">A CHI INVII</string>
     <!-- Comparativa semanal (pestaña SEMANA). Tiene que caber en una línea con letra grande. -->
     <string name="stats_section_week_vs">CONTRO LA SETTIMANA PRIMA</string>

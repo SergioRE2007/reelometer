@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Solo en la build debug: herramientas de QA (galería de componentes y ganchos por adb). -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application>
         <!-- Galería del sistema de diseño:
@@ -13,10 +12,12 @@
             android:theme="@style/Theme.Reelometro" />
 
         <!-- Ganchos de QA (solo debug):
-             adb shell am broadcast -n com.reelometro.app/.debug.DebugReceiver -a com.reelometro.app.debug.SEED -->
+             adb shell am broadcast -n com.reelometro.app/.debug.DebugReceiver -a com.reelometro.app.debug.SEED
+             La APK que se publica es la debug: solo puede mandarlos quien tenga el permiso DUMP (el shell de adb lo
+             tiene; una app instalada, no). Sin él, cualquier app podría borrar, importar o sembrar datos. -->
         <receiver
             android:name=".debug.DebugReceiver"
             android:exported="true"
-            tools:ignore="ExportedReceiver" />
+            android:permission="android.permission.DUMP" />
     </application>
 </manifest>

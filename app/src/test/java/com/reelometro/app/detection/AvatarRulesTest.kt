@@ -1,5 +1,7 @@
 package com.reelometro.app.detection
 
+import com.reelometro.app.data.Platform
+import java.security.MessageDigest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
@@ -18,6 +20,9 @@ class AvatarRulesTest {
         assertEquals("AG", AvatarRules.initials("@ana.g_92"))
         assertEquals("P", AvatarRules.initials("Primos 2024"))
         assertEquals("?", AvatarRules.initials("  ·  "))
+        // 1.10.0: en TikTok hay nombres hechos solo de emojis; la burbuja sin foto lleva el emoji, no «?».
+        assertEquals("💿", AvatarRules.initials("💿"))
+        assertEquals("L", AvatarRules.initials("lucia 🦇"))
     }
 
     @Test
@@ -27,6 +32,29 @@ class AvatarRulesTest {
         assertEquals(a, AvatarRules.fileName("los del  PISO"))
         assertNotEquals(a, AvatarRules.fileName("Primos"))
         assertFalse(a.contains("piso"))
+    }
+
+    @Test
+    fun `el fichero de Instagram es el de la 1_9_0 aunque el nombre lleve marcas de direccion`() {
+        // La fórmula de la 1.9.0: SHA-256 del nombre sin tildes ni mayúsculas, con los espacios juntos y sus marcas de
+        // dirección (los fijados ya guardados conservan su foto, también la elegida de la galería, y lo aprendido).
+        fun old(name: String): String {
+            val key = CategoryClassifier.normalize(name).replace(Regex("\\s+"), " ").trim()
+            val digest = MessageDigest.getInstance("SHA-256").digest(key.toByteArray(Charsets.UTF_8))
+            return digest.take(16).joinToString("") { "%02x".format(it) } + ".png"
+        }
+        val lrm = Char(0x200E)
+        val rlm = Char(0x200F)
+        val fsi = Char(0x2068)
+        val pdi = Char(0x2069)
+        listOf("Ana García", "Los del piso", "@ana.g_92", "Ñoño Pérez", "أحمد", "Ana$rlm", "${lrm}Ana", "${fsi}Ana, Bea$pdi", "أحمد$rlm Ana")
+            .forEach { name ->
+                assertEquals(name, old(name), AvatarRules.fileName(name, Platform.INSTAGRAM))
+                assertEquals(name, old(name), AvatarRules.fileName(name))
+            }
+        // En TikTok las marcas no cuentan (las pone la app en los nombres).
+        assertEquals(AvatarRules.fileName("Ana", Platform.TIKTOK), AvatarRules.fileName("${lrm}Ana", Platform.TIKTOK))
+        assertEquals(AvatarRules.fileName("Ana, Bea", Platform.TIKTOK), AvatarRules.fileName("${fsi}Ana, Bea$pdi", Platform.TIKTOK))
     }
 
     @Test
@@ -204,5 +232,89 @@ class AvatarRulesTest {
         )
         // Tres que se encadenan, sí.
         assertEquals(listOf(box(0, 0, 160, 160)), AvatarRules.clusters(listOf(box(0, 0, 80, 80), box(100, 100, 160, 160), box(60, 60, 120, 120))))
+    }
+
+    // ------------------------------------------------------------------ TikTok 47.7 (volcados reales, 1.10.0)
+
+    private fun nodes(resource: String) = UiDump.all(UiDump.load(resource))
+
+    /** La celda de la fila de contactos: el `Button` descrito con el nombre entero. */
+    private fun List<UiNode>.cell(name: String) = single { it.contentDescription?.toString() == name && it.className?.contains("Button") == true }
+
+    @Test
+    fun `TikTok - la foto de la celda es la suya y nunca la de la celda de al lado`() {
+        val sheet = nodes("tiktok-47.7-hoja.xml")
+        // La celda entera (lo que se pulsa): la foto de 126 px de dentro, aunque a su izquierda haya otras celdas.
+        val rubio = AvatarRules.photo(sheet.cell("rubio_m"), "rubio_m", UiDump.H)!!
+        assertEquals(box(216, 1566, 342, 1692), rubio.bounds)
+        assertFalse(rubio.group)
+        assertEquals(box(42, 1566, 168, 1692), AvatarRules.photoOf(sheet.cell("lucia 🦇"), "lucia 🦇", UiDump.H))
+        assertEquals(box(564, 1566, 690, 1692), AvatarRules.photoOf(sheet.cell("MARÍA FERNÁNDEZ LÓPEZ"), "María Fernández López", UiDump.H))
+        // El texto del nombre (cortado en la celda; o el de la captura a mano): la misma foto, la de encima.
+        val text = sheet.single { it.text?.toString() == "rubio_m" }
+        assertEquals(rubio.bounds, AvatarRules.photoOf(text, "rubio_m", UiDump.H))
+        // Una celda que asoma por el borde (sin nada dentro) no da la foto de otra.
+        assertNull(AvatarRules.photoOf(sheet.cell("Carlos"), "Carlos", UiDump.H))
+    }
+
+    @Test
+    fun `TikTok - la celda marcada da su foto y el recorte deja fuera el CheckBox`() {
+        val marked = nodes("tiktok-47.7-hoja-marcado.xml")
+        val disc = marked.cell("💿")
+        val photo = AvatarRules.photo(disc, "💿", UiDump.H)!!
+        assertEquals(box(912, 1566, 1038, 1692), photo.bounds)
+        val crop = AvatarRules.cropBox(photo.bounds, UiDump.W, UiDump.H, group = photo.group)!!
+        assertEquals(box(922, 1576, 1010, 1664), crop)
+        // El círculo que pinta la burbuja (el inscrito en el recorte) no llega al CheckBox de abajo a la derecha.
+        val check = marked.single { it.className?.contains("CheckBox") == true && it.isChecked }.bounds
+        val cr = crop.width / 2.0
+        val gap = Math.hypot((check.left + check.right) / 2.0 - (crop.left + crop.right) / 2.0, (check.top + check.bottom) / 2.0 - (crop.top + crop.bottom) / 2.0) -
+            check.width / 2.0
+        assertTrue("el CheckBox queda a $gap px del centro y el círculo mide $cr", gap > cr)
+
+        // Celdas recicladas: el marcado en la primera celda y otra con «selected» que miente. Cada una, su foto.
+        val recycled = nodes("tiktok-47.7-hoja-celda-reciclada.xml")
+        assertEquals(box(42, 1566, 168, 1692), AvatarRules.photoOf(recycled.cell("💿"), "💿", UiDump.H))
+        assertEquals(box(912, 1566, 1038, 1692), AvatarRules.photoOf(recycled.cell("pablo_grc"), "pablo_grc", UiDump.H))
+    }
+
+    @Test
+    fun `TikTok - la foto de la fila del buscador`() {
+        val typed = nodes("tiktok-47.7-buscador-escrito.xml")
+        // La fila entera (un ViewGroup pulsable con la foto, el nombre, el usuario y el CheckBox).
+        fun row(nameText: String) = typed.single { n -> n.isClickable && n.children.any { c -> c.children.any { it.text?.toString() == nameText } } }
+        assertEquals(box(42, 523, 168, 649), AvatarRules.photoOf(row("rubio_m"), "rubio_m", UiDump.H))
+        // El grupo del que es miembro tiene su propia foto, la de su fila.
+        val groupName = typed.single { RecipientDetector.normalize(it.text?.toString().orEmpty()) == "carlos, bea, rubio_m" }.text.toString()
+        assertEquals(box(42, 701, 168, 827), AvatarRules.photoOf(row(groupName), "Carlos, Bea, rubio_m", UiDump.H))
+        // Desde el texto del nombre, la misma (a su izquierda, en su fila).
+        val text = typed.single { it.text?.toString() == "rubio_m" }
+        assertEquals(box(42, 523, 168, 649), AvatarRules.photoOf(text, "rubio_m", UiDump.H))
+
+        // Con un contacto ya marcado en el buscador, igual.
+        val marked = nodes("tiktok-47.7-buscador-marcado.xml")
+        val pablo = marked.single { n -> n.isClickable && n.children.any { c -> c.children.any { it.text?.toString()?.endsWith("pablo_grc") == true } } }
+        val photo = AvatarRules.photo(pablo, "pablo_grc", UiDump.H)!!
+        assertEquals(box(42, 1325, 168, 1451), photo.bounds)
+        assertTrue(AvatarRules.cropBox(photo.bounds, UiDump.W, UiDump.H) != null)
+    }
+
+    @Test
+    fun `una celda con la foto dentro descrita como suya o sin describir`() {
+        // Como en TikTok pero hecho a mano: la celda (lo encontrado) lleva dentro la foto, y a su izquierda otra celda.
+        val left = FakeNode(
+            contentDescription = "Ana",
+            bounds = box(0, 1000, 160, 1220),
+            children = listOf(FakeNode(className = "android.widget.ImageView", bounds = box(16, 1000, 144, 1128))),
+        )
+        val mine = FakeNode(className = "android.widget.ImageView", bounds = box(176, 1000, 304, 1128))
+        val cell = FakeNode(contentDescription = "Primos", bounds = box(160, 1000, 320, 1220), children = listOf(mine))
+        FakeNode(bounds = box(0, 1000, 1080, 1220), children = listOf(left, cell))
+        assertEquals(mine.bounds, AvatarRules.photoOf(cell, "Primos", SCREEN_H))
+        // Si dentro hay una descrita como su foto, esa (aunque haya otra imagen más grande).
+        val described = desc("Foto del perfil de Primos", box(176, 1000, 240, 1064))
+        val big = FakeNode(className = "android.widget.ImageView", bounds = box(176, 1064, 320, 1208))
+        val cell2 = FakeNode(contentDescription = "Primos", bounds = box(160, 1000, 320, 1220), children = listOf(big, described))
+        assertEquals(described.bounds, AvatarRules.photoOf(cell2, "Primos", SCREEN_H))
     }
 }

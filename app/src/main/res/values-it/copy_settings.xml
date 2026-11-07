@@ -113,30 +113,26 @@
     <!-- Con todas las apps apagadas. -->
     <string name="settings_all_apps_off">Le hai spente tutte. Così non c’è niente da contare.</string>
 
-    <!-- Interruptor «A quién envías» (solo Instagram). «Estadísticas» es la pestaña de la app. -->
+    <!-- Interruptor «A quién envías» (Instagram y TikTok). «Estadísticas» es la pestaña de la app. -->
     <string name="settings_recipients_label">A chi invii</string>
-    <string name="settings_recipients_description">Solo su Instagram. Quando condividi un video, segno il nome della persona o del gruppo che scegli, e in Statistiche vedi a chi invii di più. Non leggo la chat né quello che scrivi, e resta su questo telefono.</string>
+    <string name="settings_recipients_description">Su Instagram e TikTok. Quando condividi un video, segno il nome della persona o del gruppo che scegli, e in Statistiche vedi a chi invii di più. Non leggo la chat né quello che scrivi, e resta su questo telefono.</string>
 
-    <!-- Interruptor «Envío rápido» (solo Instagram): unas burbujas sobre los reels que comparten el reel
-         con un toque. «Compartir» y «Enviar» citan los botones de Instagram tal cual: en cada idioma,
-         como los muestre Instagram en ese idioma. «X» es la zona donde se sueltan las burbujas. -->
+    <!-- Interruptor «Envío rápido» (Instagram y TikTok): unas burbujas sobre los vídeos que los comparten
+         con un toque. «Compartir» y «Enviar» citan los botones de Instagram y TikTok tal cual: en cada idioma,
+         como los muestren esas apps en ese idioma. «X» es la zona donde se sueltan las burbujas.
+         Italiano: Instagram y TikTok dicen las dos «Condividi» y «Invia» (TikTok titula la hoja «Invia a»). -->
     <string name="settings_quick_send_label">Invio rapido</string>
-    <string name="settings_quick_send_description">Solo su Instagram. Mentre guardi i reel compare una bolla per ogni persona o gruppo che fissi. Quando la tocchi, premo per te «Condividi», quel nome e «Invia»; se non lo vedo, scrivo il suo nome nella ricerca del foglio. Niente di più. Se qualcosa non torna, mi fermo e finisci tu. Per mostrare la sua foto nella bolla, la ritaglio dal foglio di condivisione quando compare, oppure scegli tu una foto dalla galleria; resta su questo telefono. Trascinale dove vuoi (in basso, sopra il nome del reel, si mettono in fila) o rilasciale sulla «X» per nasconderle fino al reel successivo.</string>
+    <string name="settings_quick_send_description">Su Instagram e TikTok. Mentre guardi i video compare una bolla per ogni persona o gruppo che fissi in quell’app. Quando la tocchi, premo per te «Condividi», quel nome e «Invia»; se non lo vedo, lo cerco nella barra di ricerca del foglio (su TikTok, toccando prima la sua lente). Niente di più. Se qualcosa non torna, mi fermo e finisci tu. Per mostrare la sua foto nella bolla, la ritaglio dal foglio di condivisione quando compare, oppure scegli tu una foto dalla galleria; resta su questo telefono. Trascinale dove vuoi (in basso, sopra il nome del video, si mettono in fila) o rilasciale sulla «X» per nasconderle fino al video successivo.</string>
     <!-- El gesto para enviar a dos personas a la vez. -->
     <string name="settings_quick_send_pair_hint">Per mandarlo a due persone insieme, tieni premuta una bolla finché non si stacca e rilasciala sopra l’altra. Se ne tocchi un’altra mentre sto inviando, la aggiungo allo stesso foglio.</string>
     <!-- Con «A quién envías» apagado, el envío rápido no se puede encender. -->
     <string name="settings_quick_send_needs_recipients">Per usarlo, attiva prima «A chi invii»: l’invio rapido cerca nel foglio il nome che fissi.</string>
-    <!-- Sin historial de envíos todavía: no hay nada que fijar. -->
-    <string name="settings_quick_send_empty">Non c’è ancora nessuno da fissare. Condividi a mano un reel con «A chi invii» attivo: qui compariranno le persone e i gruppi a cui invii.</string>
-    <!-- Encima de la lista de personas y grupos para fijar. -->
-    <string name="settings_quick_send_list_label">A chi invii di più</string>
     <!-- Botones de cada fila, en MAYÚSCULAS y con poco sitio: fijar a alguien / ya fijado. -->
     <string name="settings_quick_send_pin">FISSA</string>
     <string name="settings_quick_send_pinned">FISSATO</string>
-    <!-- Botón en MAYÚSCULAS: devuelve las burbujas a su sitio (borde derecho, a media altura). -->
+    <!-- Botón en MAYÚSCULAS: devuelve las burbujas de esa app a su sitio por defecto (borde derecho;
+         la altura depende de la app, ver BubbleLayout.defaultFor). -->
     <string name="settings_quick_send_relocate">RIPOSIZIONA</string>
-    <string name="settings_quick_send_relocate_hint">Le bolle tornano sul bordo destro, a metà altezza.</string>
-    <string name="settings_quick_send_relocated">Fatto. Le vedrai al loro posto nel prossimo reel.</string>
     <!-- Ya hay el máximo de fijados. %1$s el máximo («3»). -->
     <plurals name="settings_quick_send_full">
         <item quantity="one">Hai già %1$s fissato. Rimuovilo per fissarne un altro.</item>
@@ -157,6 +153,19 @@
     <string name="settings_quick_send_photo_pick_description">Scegli dalla galleria la foto della bolla di %1$s</string>
     <string name="settings_quick_send_photo_change_description">Cambia la foto della bolla di %1$s con un’altra della galleria</string>
     <string name="settings_quick_send_photo_clear_description">Rimuovi la foto scelta per %1$s e torna a quella automatica</string>
+
+    <!-- 1.10.0, envío rápido en Instagram y en TikTok: cada app tiene sus fijados y su sitio para las burbujas.
+         Va encima de las dos pestañas con el nombre de cada app (INSTAGRAM, TIKTOK: las marcas no se traducen). -->
+    <string name="settings_quick_send_apps_hint">Ogni app ha le sue persone fissate e il suo posto per le bolle: i tuoi contatti di TikTok non sono quelli di Instagram.</string>
+    <!-- TalkBack de cada pestaña. %1$s el nombre de la app («TikTok», «Instagram»). -->
+    <string name="settings_quick_send_app_description">Vedi chi hai fissato su %1$s</string>
+    <!-- Sin historial de envíos en esa app todavía: no hay nada que fijar. %1$s el nombre de la app (sale dos veces). -->
+    <string name="settings_quick_send_empty_app">Non c’è ancora nessuno da fissare su %1$s. Condividi a mano un video su %1$s con «A chi invii» attivo: qui compariranno le persone e i gruppi a cui invii.</string>
+    <!-- Encima de la lista de personas y grupos para fijar. %1$s el nombre de la app. -->
+    <string name="settings_quick_send_list_label_app">A chi invii di più su %1$s</string>
+    <!-- Bajo RECOLOCAR y tras pulsarlo. %1$s el nombre de la app. -->
+    <string name="settings_quick_send_relocate_hint_app">Le bolle di %1$s tornano al loro posto, sul bordo destro.</string>
+    <string name="settings_quick_send_relocated_app">Fatto. Le vedrai al loro posto nel prossimo video di %1$s.</string>
 
     <!-- ============================================================ 04 tema e idioma -->
 

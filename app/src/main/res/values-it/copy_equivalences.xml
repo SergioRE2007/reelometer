@@ -23,6 +23,14 @@
   cocido, el Camino de Santiago, Madrid–Toledo, el Plan Bolonia…), puedes cambiarla por algo que se
   conozca y dure lo mismo, pero NO cambies las horas de la base: el cálculo es igual en todos los idiomas.
   \u00A0 es un espacio duro: la cifra y su palabra no se separan al partir la línea.
+
+  Italiano: el porcentaje va con «un» («un 40% di un libro») y no con «il», porque «il» falla con las
+  cifras que empiezan por vocal o por cero («l’80%», «l’8%», «l’11%», «lo 0,5%»). La forma «many»
+  (millones exactos) lleva «di»: «1.000.000 di libri», como en copy_words.xml. «e mezzo/e mezza»
+  concuerda con el sustantivo en singular y va antes del complemento con «di» («un bicchiere e mezzo
+  di latte», «una partita e mezza di calcio»). Obras y trayectos: «tutto il Don Chisciotte», «quasi
+  tutto il Cammino di Santiago»; los trayectos van con «fare» para que también las fracciones suenen
+  bien («fare a piedi la metà della strada da Firenze a Siena»).
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="it">
 
@@ -37,59 +45,60 @@
 
     <!-- ============================================================ estudio -->
 
-    <!-- GRADOS UNIVERSITARIOS: se cuenta por unidades (grado universitario / grados universitarios). -->
+    <!-- GRADOS UNIVERSITARIOS: se cuenta por unidades (grado universitario / grados universitarios).
+         Italiano: «laurea» a secas; la base son 240 ECTS (4 años), y la «laurea triennale» tiene 180. -->
     <string name="eq_degree_do">conseguire %1$s</string>
     <plurals name="eq_degree_n">
-        <item quantity="one">una laurea triennale</item>
-        <item quantity="many">%1$s\u00A0lauree triennali</item>
-        <item quantity="other">%1$s\u00A0lauree triennali</item>
+        <item quantity="one">una laurea</item>
+        <item quantity="many">%1$s\u00A0di lauree</item>
+        <item quantity="other">%1$s\u00A0lauree</item>
     </plurals>
     <plurals name="eq_degree_more">
-        <item quantity="one">più di una laurea triennale</item>
-        <item quantity="many">più di %1$s\u00A0lauree triennali</item>
-        <item quantity="other">più di %1$s\u00A0lauree triennali</item>
+        <item quantity="one">più di una laurea</item>
+        <item quantity="many">più di %1$s\u00A0di lauree</item>
+        <item quantity="other">più di %1$s\u00A0lauree</item>
     </plurals>
     <plurals name="eq_degree_and_half">
-        <item quantity="one">una laurea triennale e mezza</item>
-        <item quantity="many">%1$s\u00A0lauree triennali e mezza</item>
-        <item quantity="other">%1$s\u00A0lauree triennali e mezza</item>
+        <item quantity="one">una laurea e mezza</item>
+        <item quantity="many">%1$s\u00A0di lauree e mezza</item>
+        <item quantity="other">%1$s\u00A0lauree e mezza</item>
     </plurals>
     <plurals name="eq_degree_almost">
-        <item quantity="one">quasi una laurea triennale</item>
-        <item quantity="many">quasi %1$s\u00A0lauree triennali</item>
-        <item quantity="other">quasi %1$s\u00A0lauree triennali</item>
+        <item quantity="one">quasi una laurea</item>
+        <item quantity="many">quasi %1$s\u00A0di lauree</item>
+        <item quantity="other">quasi %1$s\u00A0lauree</item>
     </plurals>
-    <string name="eq_degree_percent">il %1$s di una laurea triennale</string>
-    <string name="eq_degree_less">meno dello %1$s di una laurea triennale</string>
-    <string name="eq_degree_quarter">un quarto di laurea triennale</string>
-    <string name="eq_degree_half">mezza laurea triennale</string>
-    <string name="eq_degree_three_quarters">tre quarti di laurea triennale</string>
-    <string name="eq_degree_label">LAUREE TRIENNALI</string>
-    <string name="eq_degree_basis">Base: 240\u00A0ECTS × 25\u00A0h (Processo di Bologna)</string>
+    <string name="eq_degree_percent">un %1$s di una laurea</string>
+    <string name="eq_degree_less">meno dello %1$s di una laurea</string>
+    <string name="eq_degree_quarter">un quarto di laurea</string>
+    <string name="eq_degree_half">mezza laurea</string>
+    <string name="eq_degree_three_quarters">tre quarti di laurea</string>
+    <string name="eq_degree_label">LAUREE</string>
+    <string name="eq_degree_basis">Base: 240\u00A0ECTS × 25\u00A0h (laurea di 4\u00A0anni, Processo di Bologna)</string>
 
     <!-- MÁSTERES: se cuenta por unidades (máster / másteres). -->
     <string name="eq_master_do">fare %1$s</string>
     <plurals name="eq_master_n">
         <item quantity="one">un master</item>
-        <item quantity="many">%1$s\u00A0master</item>
+        <item quantity="many">%1$s\u00A0di master</item>
         <item quantity="other">%1$s\u00A0master</item>
     </plurals>
     <plurals name="eq_master_more">
         <item quantity="one">più di un master</item>
-        <item quantity="many">più di %1$s\u00A0master</item>
+        <item quantity="many">più di %1$s\u00A0di master</item>
         <item quantity="other">più di %1$s\u00A0master</item>
     </plurals>
     <plurals name="eq_master_and_half">
         <item quantity="one">un master e mezzo</item>
-        <item quantity="many">%1$s\u00A0master e mezzo</item>
+        <item quantity="many">%1$s\u00A0di master e mezzo</item>
         <item quantity="other">%1$s\u00A0master e mezzo</item>
     </plurals>
     <plurals name="eq_master_almost">
         <item quantity="one">quasi un master</item>
-        <item quantity="many">quasi %1$s\u00A0master</item>
+        <item quantity="many">quasi %1$s\u00A0di master</item>
         <item quantity="other">quasi %1$s\u00A0master</item>
     </plurals>
-    <string name="eq_master_percent">il %1$s di un master</string>
+    <string name="eq_master_percent">un %1$s di un master</string>
     <string name="eq_master_less">meno dello %1$s di un master</string>
     <string name="eq_master_quarter">un quarto di master</string>
     <string name="eq_master_half">mezzo master</string>
@@ -101,25 +110,25 @@
     <string name="eq_language_do">imparare %1$s</string>
     <plurals name="eq_language_n">
         <item quantity="one">una lingua</item>
-        <item quantity="many">%1$s\u00A0lingue</item>
+        <item quantity="many">%1$s\u00A0di lingue</item>
         <item quantity="other">%1$s\u00A0lingue</item>
     </plurals>
     <plurals name="eq_language_more">
         <item quantity="one">più di una lingua</item>
-        <item quantity="many">più di %1$s\u00A0lingue</item>
+        <item quantity="many">più di %1$s\u00A0di lingue</item>
         <item quantity="other">più di %1$s\u00A0lingue</item>
     </plurals>
     <plurals name="eq_language_and_half">
         <item quantity="one">una lingua e mezza</item>
-        <item quantity="many">%1$s\u00A0lingue e mezza</item>
+        <item quantity="many">%1$s\u00A0di lingue e mezza</item>
         <item quantity="other">%1$s\u00A0lingue e mezza</item>
     </plurals>
     <plurals name="eq_language_almost">
         <item quantity="one">quasi una lingua</item>
-        <item quantity="many">quasi %1$s\u00A0lingue</item>
+        <item quantity="many">quasi %1$s\u00A0di lingue</item>
         <item quantity="other">quasi %1$s\u00A0lingue</item>
     </plurals>
-    <string name="eq_language_percent">il %1$s di una lingua</string>
+    <string name="eq_language_percent">un %1$s di una lingua</string>
     <string name="eq_language_less">meno dello %1$s di una lingua</string>
     <string name="eq_language_quarter">un quarto di lingua</string>
     <string name="eq_language_half">mezza lingua</string>
@@ -131,25 +140,25 @@
     <string name="eq_coding_do">fare %1$s</string>
     <plurals name="eq_coding_n">
         <item quantity="one">un bootcamp di programmazione</item>
-        <item quantity="many">%1$s\u00A0bootcamp di programmazione</item>
+        <item quantity="many">%1$s\u00A0di bootcamp di programmazione</item>
         <item quantity="other">%1$s\u00A0bootcamp di programmazione</item>
     </plurals>
     <plurals name="eq_coding_more">
         <item quantity="one">più di un bootcamp di programmazione</item>
-        <item quantity="many">più di %1$s\u00A0bootcamp di programmazione</item>
+        <item quantity="many">più di %1$s\u00A0di bootcamp di programmazione</item>
         <item quantity="other">più di %1$s\u00A0bootcamp di programmazione</item>
     </plurals>
     <plurals name="eq_coding_and_half">
         <item quantity="one">un bootcamp e mezzo di programmazione</item>
-        <item quantity="many">%1$s\u00A0bootcamp e mezzo di programmazione</item>
+        <item quantity="many">%1$s\u00A0di bootcamp e mezzo di programmazione</item>
         <item quantity="other">%1$s\u00A0bootcamp e mezzo di programmazione</item>
     </plurals>
     <plurals name="eq_coding_almost">
         <item quantity="one">quasi un bootcamp di programmazione</item>
-        <item quantity="many">quasi %1$s\u00A0bootcamp di programmazione</item>
+        <item quantity="many">quasi %1$s\u00A0di bootcamp di programmazione</item>
         <item quantity="other">quasi %1$s\u00A0bootcamp di programmazione</item>
     </plurals>
-    <string name="eq_coding_percent">il %1$s di un bootcamp di programmazione</string>
+    <string name="eq_coding_percent">un %1$s di un bootcamp di programmazione</string>
     <string name="eq_coding_less">meno dello %1$s di un bootcamp di programmazione</string>
     <string name="eq_coding_quarter">un quarto di bootcamp di programmazione</string>
     <string name="eq_coding_half">mezzo bootcamp di programmazione</string>
@@ -163,25 +172,25 @@
     <string name="eq_book_do">leggere %1$s</string>
     <plurals name="eq_book_n">
         <item quantity="one">un libro</item>
-        <item quantity="many">%1$s\u00A0libri</item>
+        <item quantity="many">%1$s\u00A0di libri</item>
         <item quantity="other">%1$s\u00A0libri</item>
     </plurals>
     <plurals name="eq_book_more">
         <item quantity="one">più di un libro</item>
-        <item quantity="many">più di %1$s\u00A0libri</item>
+        <item quantity="many">più di %1$s\u00A0di libri</item>
         <item quantity="other">più di %1$s\u00A0libri</item>
     </plurals>
     <plurals name="eq_book_and_half">
         <item quantity="one">un libro e mezzo</item>
-        <item quantity="many">%1$s\u00A0libri e mezzo</item>
+        <item quantity="many">%1$s\u00A0di libri e mezzo</item>
         <item quantity="other">%1$s\u00A0libri e mezzo</item>
     </plurals>
     <plurals name="eq_book_almost">
         <item quantity="one">quasi un libro</item>
-        <item quantity="many">quasi %1$s\u00A0libri</item>
+        <item quantity="many">quasi %1$s\u00A0di libri</item>
         <item quantity="other">quasi %1$s\u00A0libri</item>
     </plurals>
-    <string name="eq_book_percent">il %1$s di un libro</string>
+    <string name="eq_book_percent">un %1$s di un libro</string>
     <string name="eq_book_less">meno dello %1$s di un libro</string>
     <string name="eq_book_quarter">un quarto di libro</string>
     <string name="eq_book_half">mezzo libro</string>
@@ -193,30 +202,30 @@
          Italiano: se mantiene la obra (Don Chisciotte es conocida en Italia), misma duración. -->
     <string name="eq_quijote_do">leggere %1$s</string>
     <plurals name="eq_quijote_n">
-        <item quantity="one">Don Chisciotte intero</item>
-        <item quantity="many">Don Chisciotte intero %1$s\u00A0volte</item>
-        <item quantity="other">Don Chisciotte intero %1$s\u00A0volte</item>
+        <item quantity="one">tutto il Don Chisciotte</item>
+        <item quantity="many">tutto il Don Chisciotte %1$s\u00A0di volte</item>
+        <item quantity="other">tutto il Don Chisciotte %1$s\u00A0volte</item>
     </plurals>
     <plurals name="eq_quijote_more">
-        <item quantity="one">Don Chisciotte intero più di una volta</item>
-        <item quantity="many">Don Chisciotte intero più di %1$s\u00A0volte</item>
-        <item quantity="other">Don Chisciotte intero più di %1$s\u00A0volte</item>
+        <item quantity="one">tutto il Don Chisciotte più di una volta</item>
+        <item quantity="many">tutto il Don Chisciotte più di %1$s\u00A0di volte</item>
+        <item quantity="other">tutto il Don Chisciotte più di %1$s\u00A0volte</item>
     </plurals>
     <plurals name="eq_quijote_and_half">
-        <item quantity="one">Don Chisciotte intero una volta e mezza</item>
-        <item quantity="many">Don Chisciotte intero %1$s\u00A0volte e mezza</item>
-        <item quantity="other">Don Chisciotte intero %1$s\u00A0volte e mezza</item>
+        <item quantity="one">tutto il Don Chisciotte una volta e mezza</item>
+        <item quantity="many">tutto il Don Chisciotte %1$s\u00A0di volte e mezza</item>
+        <item quantity="other">tutto il Don Chisciotte %1$s\u00A0volte e mezza</item>
     </plurals>
     <plurals name="eq_quijote_almost">
-        <item quantity="one">quasi Don Chisciotte intero</item>
-        <item quantity="many">Don Chisciotte intero quasi %1$s\u00A0volte</item>
-        <item quantity="other">Don Chisciotte intero quasi %1$s\u00A0volte</item>
+        <item quantity="one">quasi tutto il Don Chisciotte</item>
+        <item quantity="many">tutto il Don Chisciotte quasi %1$s\u00A0di volte</item>
+        <item quantity="other">tutto il Don Chisciotte quasi %1$s\u00A0volte</item>
     </plurals>
-    <string name="eq_quijote_percent">il %1$s di Don Chisciotte</string>
-    <string name="eq_quijote_less">meno dello %1$s di Don Chisciotte</string>
-    <string name="eq_quijote_quarter">un quarto di Don Chisciotte</string>
-    <string name="eq_quijote_half">la metà di Don Chisciotte</string>
-    <string name="eq_quijote_three_quarters">tre quarti di Don Chisciotte</string>
+    <string name="eq_quijote_percent">un %1$s del Don Chisciotte</string>
+    <string name="eq_quijote_less">meno dello %1$s del Don Chisciotte</string>
+    <string name="eq_quijote_quarter">un quarto del Don Chisciotte</string>
+    <string name="eq_quijote_half">la metà del Don Chisciotte</string>
+    <string name="eq_quijote_three_quarters">tre quarti del Don Chisciotte</string>
     <string name="eq_quijote_label">DON CHISCIOTTE</string>
     <string name="eq_quijote_basis">Base: le due parti, ~380.000\u00A0parole a 250\u00A0parole/min ≈ 25\u00A0h</string>
 
@@ -224,25 +233,25 @@
     <string name="eq_proust_do">leggere %1$s</string>
     <plurals name="eq_proust_n">
         <item quantity="one">Alla ricerca del tempo perduto</item>
-        <item quantity="many">Alla ricerca del tempo perduto %1$s\u00A0volte</item>
+        <item quantity="many">Alla ricerca del tempo perduto %1$s\u00A0di volte</item>
         <item quantity="other">Alla ricerca del tempo perduto %1$s\u00A0volte</item>
     </plurals>
     <plurals name="eq_proust_more">
         <item quantity="one">Alla ricerca del tempo perduto più di una volta</item>
-        <item quantity="many">Alla ricerca del tempo perduto più di %1$s\u00A0volte</item>
+        <item quantity="many">Alla ricerca del tempo perduto più di %1$s\u00A0di volte</item>
         <item quantity="other">Alla ricerca del tempo perduto più di %1$s\u00A0volte</item>
     </plurals>
     <plurals name="eq_proust_and_half">
         <item quantity="one">Alla ricerca del tempo perduto una volta e mezza</item>
-        <item quantity="many">Alla ricerca del tempo perduto %1$s\u00A0volte e mezza</item>
+        <item quantity="many">Alla ricerca del tempo perduto %1$s\u00A0di volte e mezza</item>
         <item quantity="other">Alla ricerca del tempo perduto %1$s\u00A0volte e mezza</item>
     </plurals>
     <plurals name="eq_proust_almost">
-        <item quantity="one">quasi Alla ricerca del tempo perduto</item>
-        <item quantity="many">Alla ricerca del tempo perduto quasi %1$s\u00A0volte</item>
+        <item quantity="one">Alla ricerca del tempo perduto quasi per intero</item>
+        <item quantity="many">Alla ricerca del tempo perduto quasi %1$s\u00A0di volte</item>
         <item quantity="other">Alla ricerca del tempo perduto quasi %1$s\u00A0volte</item>
     </plurals>
-    <string name="eq_proust_percent">il %1$s di Alla ricerca del tempo perduto</string>
+    <string name="eq_proust_percent">un %1$s di Alla ricerca del tempo perduto</string>
     <string name="eq_proust_less">meno dello %1$s di Alla ricerca del tempo perduto</string>
     <string name="eq_proust_quarter">un quarto di Alla ricerca del tempo perduto</string>
     <string name="eq_proust_half">la metà di Alla ricerca del tempo perduto</string>
@@ -255,26 +264,26 @@
     <!-- JUEGO DE TRONOS: obra o trayecto que se repite («Juego de Tronos entera», contado en veces). -->
     <string name="eq_got_do">vedere %1$s</string>
     <plurals name="eq_got_n">
-        <item quantity="one">Il Trono di Spade intero</item>
-        <item quantity="many">Il Trono di Spade intero %1$s\u00A0volte</item>
-        <item quantity="other">Il Trono di Spade intero %1$s\u00A0volte</item>
+        <item quantity="one">tutto il Trono di Spade</item>
+        <item quantity="many">tutto il Trono di Spade %1$s\u00A0di volte</item>
+        <item quantity="other">tutto il Trono di Spade %1$s\u00A0volte</item>
     </plurals>
     <plurals name="eq_got_more">
-        <item quantity="one">Il Trono di Spade intero più di una volta</item>
-        <item quantity="many">Il Trono di Spade intero più di %1$s\u00A0volte</item>
-        <item quantity="other">Il Trono di Spade intero più di %1$s\u00A0volte</item>
+        <item quantity="one">tutto il Trono di Spade più di una volta</item>
+        <item quantity="many">tutto il Trono di Spade più di %1$s\u00A0di volte</item>
+        <item quantity="other">tutto il Trono di Spade più di %1$s\u00A0volte</item>
     </plurals>
     <plurals name="eq_got_and_half">
-        <item quantity="one">Il Trono di Spade intero una volta e mezza</item>
-        <item quantity="many">Il Trono di Spade intero %1$s\u00A0volte e mezza</item>
-        <item quantity="other">Il Trono di Spade intero %1$s\u00A0volte e mezza</item>
+        <item quantity="one">tutto il Trono di Spade una volta e mezza</item>
+        <item quantity="many">tutto il Trono di Spade %1$s\u00A0di volte e mezza</item>
+        <item quantity="other">tutto il Trono di Spade %1$s\u00A0volte e mezza</item>
     </plurals>
     <plurals name="eq_got_almost">
-        <item quantity="one">quasi Il Trono di Spade intero</item>
-        <item quantity="many">Il Trono di Spade intero quasi %1$s\u00A0volte</item>
-        <item quantity="other">Il Trono di Spade intero quasi %1$s\u00A0volte</item>
+        <item quantity="one">quasi tutto il Trono di Spade</item>
+        <item quantity="many">tutto il Trono di Spade quasi %1$s\u00A0di volte</item>
+        <item quantity="other">tutto il Trono di Spade quasi %1$s\u00A0volte</item>
     </plurals>
-    <string name="eq_got_percent">il %1$s del Trono di Spade</string>
+    <string name="eq_got_percent">un %1$s del Trono di Spade</string>
     <string name="eq_got_less">meno dello %1$s del Trono di Spade</string>
     <string name="eq_got_quarter">un quarto del Trono di Spade</string>
     <string name="eq_got_half">la metà del Trono di Spade</string>
@@ -285,26 +294,26 @@
     <!-- SAGA DE HARRY POTTER: obra o trayecto que se repite («la saga de Harry Potter entera», contado en veces). -->
     <string name="eq_harry_potter_do">vedere %1$s</string>
     <plurals name="eq_harry_potter_n">
-        <item quantity="one">la saga di Harry Potter intera</item>
-        <item quantity="many">la saga di Harry Potter intera %1$s\u00A0volte</item>
-        <item quantity="other">la saga di Harry Potter intera %1$s\u00A0volte</item>
+        <item quantity="one">tutta la saga di Harry Potter</item>
+        <item quantity="many">tutta la saga di Harry Potter %1$s\u00A0di volte</item>
+        <item quantity="other">tutta la saga di Harry Potter %1$s\u00A0volte</item>
     </plurals>
     <plurals name="eq_harry_potter_more">
-        <item quantity="one">la saga di Harry Potter intera più di una volta</item>
-        <item quantity="many">la saga di Harry Potter intera più di %1$s\u00A0volte</item>
-        <item quantity="other">la saga di Harry Potter intera più di %1$s\u00A0volte</item>
+        <item quantity="one">tutta la saga di Harry Potter più di una volta</item>
+        <item quantity="many">tutta la saga di Harry Potter più di %1$s\u00A0di volte</item>
+        <item quantity="other">tutta la saga di Harry Potter più di %1$s\u00A0volte</item>
     </plurals>
     <plurals name="eq_harry_potter_and_half">
-        <item quantity="one">la saga di Harry Potter intera una volta e mezza</item>
-        <item quantity="many">la saga di Harry Potter intera %1$s\u00A0volte e mezza</item>
-        <item quantity="other">la saga di Harry Potter intera %1$s\u00A0volte e mezza</item>
+        <item quantity="one">tutta la saga di Harry Potter una volta e mezza</item>
+        <item quantity="many">tutta la saga di Harry Potter %1$s\u00A0di volte e mezza</item>
+        <item quantity="other">tutta la saga di Harry Potter %1$s\u00A0volte e mezza</item>
     </plurals>
     <plurals name="eq_harry_potter_almost">
-        <item quantity="one">quasi la saga di Harry Potter intera</item>
-        <item quantity="many">la saga di Harry Potter intera quasi %1$s\u00A0volte</item>
-        <item quantity="other">la saga di Harry Potter intera quasi %1$s\u00A0volte</item>
+        <item quantity="one">quasi tutta la saga di Harry Potter</item>
+        <item quantity="many">tutta la saga di Harry Potter quasi %1$s\u00A0di volte</item>
+        <item quantity="other">tutta la saga di Harry Potter quasi %1$s\u00A0volte</item>
     </plurals>
-    <string name="eq_harry_potter_percent">il %1$s della saga di Harry Potter</string>
+    <string name="eq_harry_potter_percent">un %1$s della saga di Harry Potter</string>
     <string name="eq_harry_potter_less">meno dello %1$s della saga di Harry Potter</string>
     <string name="eq_harry_potter_quarter">un quarto della saga di Harry Potter</string>
     <string name="eq_harry_potter_half">la metà della saga di Harry Potter</string>
@@ -315,56 +324,56 @@
     <!-- EL SEÑOR DE LOS ANILLOS: obra o trayecto que se repite («El Señor de los Anillos en versión extendida», contado en veces). -->
     <string name="eq_lotr_do">vedere %1$s</string>
     <plurals name="eq_lotr_n">
-        <item quantity="one">Il Signore degli Anelli nella versione estesa</item>
-        <item quantity="many">Il Signore degli Anelli nella versione estesa %1$s\u00A0volte</item>
-        <item quantity="other">Il Signore degli Anelli nella versione estesa %1$s\u00A0volte</item>
+        <item quantity="one">tutto il Signore degli Anelli in versione estesa</item>
+        <item quantity="many">tutto il Signore degli Anelli in versione estesa %1$s\u00A0di volte</item>
+        <item quantity="other">tutto il Signore degli Anelli in versione estesa %1$s\u00A0volte</item>
     </plurals>
     <plurals name="eq_lotr_more">
-        <item quantity="one">Il Signore degli Anelli nella versione estesa più di una volta</item>
-        <item quantity="many">Il Signore degli Anelli nella versione estesa più di %1$s\u00A0volte</item>
-        <item quantity="other">Il Signore degli Anelli nella versione estesa più di %1$s\u00A0volte</item>
+        <item quantity="one">tutto il Signore degli Anelli in versione estesa più di una volta</item>
+        <item quantity="many">tutto il Signore degli Anelli in versione estesa più di %1$s\u00A0di volte</item>
+        <item quantity="other">tutto il Signore degli Anelli in versione estesa più di %1$s\u00A0volte</item>
     </plurals>
     <plurals name="eq_lotr_and_half">
-        <item quantity="one">Il Signore degli Anelli nella versione estesa una volta e mezza</item>
-        <item quantity="many">Il Signore degli Anelli nella versione estesa %1$s\u00A0volte e mezza</item>
-        <item quantity="other">Il Signore degli Anelli nella versione estesa %1$s\u00A0volte e mezza</item>
+        <item quantity="one">tutto il Signore degli Anelli in versione estesa una volta e mezza</item>
+        <item quantity="many">tutto il Signore degli Anelli in versione estesa %1$s\u00A0di volte e mezza</item>
+        <item quantity="other">tutto il Signore degli Anelli in versione estesa %1$s\u00A0volte e mezza</item>
     </plurals>
     <plurals name="eq_lotr_almost">
-        <item quantity="one">quasi Il Signore degli Anelli nella versione estesa</item>
-        <item quantity="many">Il Signore degli Anelli nella versione estesa quasi %1$s\u00A0volte</item>
-        <item quantity="other">Il Signore degli Anelli nella versione estesa quasi %1$s\u00A0volte</item>
+        <item quantity="one">quasi tutto il Signore degli Anelli in versione estesa</item>
+        <item quantity="many">tutto il Signore degli Anelli in versione estesa quasi %1$s\u00A0di volte</item>
+        <item quantity="other">tutto il Signore degli Anelli in versione estesa quasi %1$s\u00A0volte</item>
     </plurals>
-    <string name="eq_lotr_percent">il %1$s del Signore degli Anelli nella versione estesa</string>
-    <string name="eq_lotr_less">meno dello %1$s del Signore degli Anelli nella versione estesa</string>
-    <string name="eq_lotr_quarter">un quarto del Signore degli Anelli nella versione estesa</string>
-    <string name="eq_lotr_half">la metà del Signore degli Anelli nella versione estesa</string>
-    <string name="eq_lotr_three_quarters">tre quarti del Signore degli Anelli nella versione estesa</string>
+    <string name="eq_lotr_percent">un %1$s del Signore degli Anelli in versione estesa</string>
+    <string name="eq_lotr_less">meno dello %1$s del Signore degli Anelli in versione estesa</string>
+    <string name="eq_lotr_quarter">un quarto del Signore degli Anelli in versione estesa</string>
+    <string name="eq_lotr_half">la metà del Signore degli Anelli in versione estesa</string>
+    <string name="eq_lotr_three_quarters">tre quarti del Signore degli Anelli in versione estesa</string>
     <string name="eq_lotr_label">IL SIGNORE DEGLI ANELLI</string>
     <string name="eq_lotr_basis">Base: trilogia in versione estesa, 726\u00A0min ≈ 12\u00A0h</string>
 
-    <!-- PELÍCULAS: se cuenta por unidades (película / películas, femenino). -->
+    <!-- PELÍCULAS: se cuenta por unidades (película / películas, femenino). Italiano: «film», masculino e invariable. -->
     <string name="eq_movie_do">vedere %1$s</string>
     <plurals name="eq_movie_n">
         <item quantity="one">un film</item>
-        <item quantity="many">%1$s\u00A0film</item>
+        <item quantity="many">%1$s\u00A0di film</item>
         <item quantity="other">%1$s\u00A0film</item>
     </plurals>
     <plurals name="eq_movie_more">
         <item quantity="one">più di un film</item>
-        <item quantity="many">più di %1$s\u00A0film</item>
+        <item quantity="many">più di %1$s\u00A0di film</item>
         <item quantity="other">più di %1$s\u00A0film</item>
     </plurals>
     <plurals name="eq_movie_and_half">
         <item quantity="one">un film e mezzo</item>
-        <item quantity="many">%1$s\u00A0film e mezzo</item>
+        <item quantity="many">%1$s\u00A0di film e mezzo</item>
         <item quantity="other">%1$s\u00A0film e mezzo</item>
     </plurals>
     <plurals name="eq_movie_almost">
         <item quantity="one">quasi un film</item>
-        <item quantity="many">quasi %1$s\u00A0film</item>
+        <item quantity="many">quasi %1$s\u00A0di film</item>
         <item quantity="other">quasi %1$s\u00A0film</item>
     </plurals>
-    <string name="eq_movie_percent">il %1$s di un film</string>
+    <string name="eq_movie_percent">un %1$s di un film</string>
     <string name="eq_movie_less">meno dello %1$s di un film</string>
     <string name="eq_movie_quarter">un quarto di film</string>
     <string name="eq_movie_half">mezzo film</string>
@@ -376,25 +385,25 @@
     <string name="eq_football_do">vedere %1$s</string>
     <plurals name="eq_football_n">
         <item quantity="one">una partita di calcio</item>
-        <item quantity="many">%1$s\u00A0partite di calcio</item>
+        <item quantity="many">%1$s\u00A0di partite di calcio</item>
         <item quantity="other">%1$s\u00A0partite di calcio</item>
     </plurals>
     <plurals name="eq_football_more">
         <item quantity="one">più di una partita di calcio</item>
-        <item quantity="many">più di %1$s\u00A0partite di calcio</item>
+        <item quantity="many">più di %1$s\u00A0di partite di calcio</item>
         <item quantity="other">più di %1$s\u00A0partite di calcio</item>
     </plurals>
     <plurals name="eq_football_and_half">
         <item quantity="one">una partita e mezza di calcio</item>
-        <item quantity="many">%1$s\u00A0partite e mezza di calcio</item>
+        <item quantity="many">%1$s\u00A0di partite e mezza di calcio</item>
         <item quantity="other">%1$s\u00A0partite e mezza di calcio</item>
     </plurals>
     <plurals name="eq_football_almost">
         <item quantity="one">quasi una partita di calcio</item>
-        <item quantity="many">quasi %1$s\u00A0partite di calcio</item>
+        <item quantity="many">quasi %1$s\u00A0di partite di calcio</item>
         <item quantity="other">quasi %1$s\u00A0partite di calcio</item>
     </plurals>
-    <string name="eq_football_percent">il %1$s di una partita di calcio</string>
+    <string name="eq_football_percent">un %1$s di una partita di calcio</string>
     <string name="eq_football_less">meno dello %1$s di una partita di calcio</string>
     <string name="eq_football_quarter">un quarto di partita di calcio</string>
     <string name="eq_football_half">mezza partita di calcio</string>
@@ -408,25 +417,25 @@
     <string name="eq_marathon_do">correre %1$s</string>
     <plurals name="eq_marathon_n">
         <item quantity="one">una maratona</item>
-        <item quantity="many">%1$s\u00A0maratone</item>
+        <item quantity="many">%1$s\u00A0di maratone</item>
         <item quantity="other">%1$s\u00A0maratone</item>
     </plurals>
     <plurals name="eq_marathon_more">
         <item quantity="one">più di una maratona</item>
-        <item quantity="many">più di %1$s\u00A0maratone</item>
+        <item quantity="many">più di %1$s\u00A0di maratone</item>
         <item quantity="other">più di %1$s\u00A0maratone</item>
     </plurals>
     <plurals name="eq_marathon_and_half">
         <item quantity="one">una maratona e mezza</item>
-        <item quantity="many">%1$s\u00A0maratone e mezza</item>
+        <item quantity="many">%1$s\u00A0di maratone e mezza</item>
         <item quantity="other">%1$s\u00A0maratone e mezza</item>
     </plurals>
     <plurals name="eq_marathon_almost">
         <item quantity="one">quasi una maratona</item>
-        <item quantity="many">quasi %1$s\u00A0maratone</item>
+        <item quantity="many">quasi %1$s\u00A0di maratone</item>
         <item quantity="other">quasi %1$s\u00A0maratone</item>
     </plurals>
-    <string name="eq_marathon_percent">il %1$s di una maratona</string>
+    <string name="eq_marathon_percent">un %1$s di una maratona</string>
     <string name="eq_marathon_less">meno dello %1$s di una maratona</string>
     <string name="eq_marathon_quarter">un quarto di maratona</string>
     <string name="eq_marathon_half">mezza maratona</string>
@@ -438,26 +447,26 @@
          Italiano: se mantiene (el Cammino di Santiago se conoce en Italia), misma distancia. -->
     <string name="eq_camino_do">fare %1$s</string>
     <plurals name="eq_camino_n">
-        <item quantity="one">il Cammino di Santiago intero</item>
-        <item quantity="many">il Cammino di Santiago intero %1$s\u00A0volte</item>
-        <item quantity="other">il Cammino di Santiago intero %1$s\u00A0volte</item>
+        <item quantity="one">tutto il Cammino di Santiago</item>
+        <item quantity="many">tutto il Cammino di Santiago %1$s\u00A0di volte</item>
+        <item quantity="other">tutto il Cammino di Santiago %1$s\u00A0volte</item>
     </plurals>
     <plurals name="eq_camino_more">
-        <item quantity="one">il Cammino di Santiago intero più di una volta</item>
-        <item quantity="many">il Cammino di Santiago intero più di %1$s\u00A0volte</item>
-        <item quantity="other">il Cammino di Santiago intero più di %1$s\u00A0volte</item>
+        <item quantity="one">tutto il Cammino di Santiago più di una volta</item>
+        <item quantity="many">tutto il Cammino di Santiago più di %1$s\u00A0di volte</item>
+        <item quantity="other">tutto il Cammino di Santiago più di %1$s\u00A0volte</item>
     </plurals>
     <plurals name="eq_camino_and_half">
-        <item quantity="one">il Cammino di Santiago intero una volta e mezza</item>
-        <item quantity="many">il Cammino di Santiago intero %1$s\u00A0volte e mezza</item>
-        <item quantity="other">il Cammino di Santiago intero %1$s\u00A0volte e mezza</item>
+        <item quantity="one">tutto il Cammino di Santiago una volta e mezza</item>
+        <item quantity="many">tutto il Cammino di Santiago %1$s\u00A0di volte e mezza</item>
+        <item quantity="other">tutto il Cammino di Santiago %1$s\u00A0volte e mezza</item>
     </plurals>
     <plurals name="eq_camino_almost">
-        <item quantity="one">quasi il Cammino di Santiago intero</item>
-        <item quantity="many">il Cammino di Santiago intero quasi %1$s\u00A0volte</item>
-        <item quantity="other">il Cammino di Santiago intero quasi %1$s\u00A0volte</item>
+        <item quantity="one">quasi tutto il Cammino di Santiago</item>
+        <item quantity="many">tutto il Cammino di Santiago quasi %1$s\u00A0di volte</item>
+        <item quantity="other">tutto il Cammino di Santiago quasi %1$s\u00A0volte</item>
     </plurals>
-    <string name="eq_camino_percent">il %1$s del Cammino di Santiago</string>
+    <string name="eq_camino_percent">un %1$s del Cammino di Santiago</string>
     <string name="eq_camino_less">meno dello %1$s del Cammino di Santiago</string>
     <string name="eq_camino_quarter">un quarto del Cammino di Santiago</string>
     <string name="eq_camino_half">la metà del Cammino di Santiago</string>
@@ -466,95 +475,96 @@
     <string name="eq_camino_basis">Base: Cammino francese, ~780\u00A0km a 4\u00A0km/h ≈ 195\u00A0h a piedi</string>
 
     <!-- MADRID–TOLEDO A PIE: obra o trayecto que se repite («de Madrid a Toledo», contado en veces).
-         Italiano: Firenze–Siena a piedi, misma distancia aproximada (~72 km). -->
-    <string name="eq_toledo_do">andare a piedi %1$s</string>
+         Italiano: Firenze–Siena a piedi, misma distancia aproximada (~72 km); «fare a piedi la strada da
+         Firenze a Siena» para que las fracciones también suenen bien. -->
+    <string name="eq_toledo_do">fare a piedi %1$s</string>
     <plurals name="eq_toledo_n">
-        <item quantity="one">da Firenze a Siena</item>
-        <item quantity="many">da Firenze a Siena %1$s\u00A0volte</item>
-        <item quantity="other">da Firenze a Siena %1$s\u00A0volte</item>
+        <item quantity="one">la strada da Firenze a Siena</item>
+        <item quantity="many">la strada da Firenze a Siena %1$s\u00A0di volte</item>
+        <item quantity="other">la strada da Firenze a Siena %1$s\u00A0volte</item>
     </plurals>
     <plurals name="eq_toledo_more">
-        <item quantity="one">da Firenze a Siena più di una volta</item>
-        <item quantity="many">da Firenze a Siena più di %1$s\u00A0volte</item>
-        <item quantity="other">da Firenze a Siena più di %1$s\u00A0volte</item>
+        <item quantity="one">la strada da Firenze a Siena più di una volta</item>
+        <item quantity="many">la strada da Firenze a Siena più di %1$s\u00A0di volte</item>
+        <item quantity="other">la strada da Firenze a Siena più di %1$s\u00A0volte</item>
     </plurals>
     <plurals name="eq_toledo_and_half">
-        <item quantity="one">da Firenze a Siena una volta e mezza</item>
-        <item quantity="many">da Firenze a Siena %1$s\u00A0volte e mezza</item>
-        <item quantity="other">da Firenze a Siena %1$s\u00A0volte e mezza</item>
+        <item quantity="one">la strada da Firenze a Siena una volta e mezza</item>
+        <item quantity="many">la strada da Firenze a Siena %1$s\u00A0di volte e mezza</item>
+        <item quantity="other">la strada da Firenze a Siena %1$s\u00A0volte e mezza</item>
     </plurals>
     <plurals name="eq_toledo_almost">
-        <item quantity="one">quasi da Firenze a Siena</item>
-        <item quantity="many">da Firenze a Siena quasi %1$s\u00A0volte</item>
-        <item quantity="other">da Firenze a Siena quasi %1$s\u00A0volte</item>
+        <item quantity="one">quasi tutta la strada da Firenze a Siena</item>
+        <item quantity="many">la strada da Firenze a Siena quasi %1$s\u00A0di volte</item>
+        <item quantity="other">la strada da Firenze a Siena quasi %1$s\u00A0volte</item>
     </plurals>
-    <string name="eq_toledo_percent">il %1$s del cammino da Firenze a Siena</string>
-    <string name="eq_toledo_less">meno dello %1$s del cammino da Firenze a Siena</string>
-    <string name="eq_toledo_quarter">un quarto del cammino da Firenze a Siena</string>
-    <string name="eq_toledo_half">la metà del cammino da Firenze a Siena</string>
-    <string name="eq_toledo_three_quarters">tre quarti del cammino da Firenze a Siena</string>
+    <string name="eq_toledo_percent">un %1$s della strada da Firenze a Siena</string>
+    <string name="eq_toledo_less">meno dello %1$s della strada da Firenze a Siena</string>
+    <string name="eq_toledo_quarter">un quarto della strada da Firenze a Siena</string>
+    <string name="eq_toledo_half">la metà della strada da Firenze a Siena</string>
+    <string name="eq_toledo_three_quarters">tre quarti della strada da Firenze a Siena</string>
     <string name="eq_toledo_label">FIRENZE–SIENA A PIEDI</string>
     <string name="eq_toledo_basis">Base: ~72\u00A0km a 5\u00A0km/h ≈ 14,4\u00A0h</string>
 
     <!-- AVE MADRID–BARCELONA: obra o trayecto que se repite («de Madrid a Barcelona», contado en veces).
          Italiano: Frecciarossa Milano–Venezia, trayecto directo de unas 2 h 30 min. -->
-    <string name="eq_ave_do">andare in Frecciarossa %1$s</string>
+    <string name="eq_ave_do">fare %1$s in Frecciarossa</string>
     <plurals name="eq_ave_n">
-        <item quantity="one">da Milano a Venezia</item>
-        <item quantity="many">da Milano a Venezia %1$s\u00A0volte</item>
-        <item quantity="other">da Milano a Venezia %1$s\u00A0volte</item>
+        <item quantity="one">il viaggio da Milano a Venezia</item>
+        <item quantity="many">il viaggio da Milano a Venezia %1$s\u00A0di volte</item>
+        <item quantity="other">il viaggio da Milano a Venezia %1$s\u00A0volte</item>
     </plurals>
     <plurals name="eq_ave_more">
-        <item quantity="one">da Milano a Venezia più di una volta</item>
-        <item quantity="many">da Milano a Venezia più di %1$s\u00A0volte</item>
-        <item quantity="other">da Milano a Venezia più di %1$s\u00A0volte</item>
+        <item quantity="one">il viaggio da Milano a Venezia più di una volta</item>
+        <item quantity="many">il viaggio da Milano a Venezia più di %1$s\u00A0di volte</item>
+        <item quantity="other">il viaggio da Milano a Venezia più di %1$s\u00A0volte</item>
     </plurals>
     <plurals name="eq_ave_and_half">
-        <item quantity="one">da Milano a Venezia una volta e mezza</item>
-        <item quantity="many">da Milano a Venezia %1$s\u00A0volte e mezza</item>
-        <item quantity="other">da Milano a Venezia %1$s\u00A0volte e mezza</item>
+        <item quantity="one">il viaggio da Milano a Venezia una volta e mezza</item>
+        <item quantity="many">il viaggio da Milano a Venezia %1$s\u00A0di volte e mezza</item>
+        <item quantity="other">il viaggio da Milano a Venezia %1$s\u00A0volte e mezza</item>
     </plurals>
     <plurals name="eq_ave_almost">
-        <item quantity="one">quasi da Milano a Venezia</item>
-        <item quantity="many">da Milano a Venezia quasi %1$s\u00A0volte</item>
-        <item quantity="other">da Milano a Venezia quasi %1$s\u00A0volte</item>
+        <item quantity="one">quasi tutto il viaggio da Milano a Venezia</item>
+        <item quantity="many">il viaggio da Milano a Venezia quasi %1$s\u00A0di volte</item>
+        <item quantity="other">il viaggio da Milano a Venezia quasi %1$s\u00A0volte</item>
     </plurals>
-    <string name="eq_ave_percent">il %1$s del tragitto da Milano a Venezia</string>
-    <string name="eq_ave_less">meno dello %1$s del tragitto da Milano a Venezia</string>
-    <string name="eq_ave_quarter">un quarto del tragitto da Milano a Venezia</string>
-    <string name="eq_ave_half">la metà del tragitto da Milano a Venezia</string>
-    <string name="eq_ave_three_quarters">tre quarti del tragitto da Milano a Venezia</string>
+    <string name="eq_ave_percent">un %1$s del viaggio da Milano a Venezia</string>
+    <string name="eq_ave_less">meno dello %1$s del viaggio da Milano a Venezia</string>
+    <string name="eq_ave_quarter">un quarto del viaggio da Milano a Venezia</string>
+    <string name="eq_ave_half">la metà del viaggio da Milano a Venezia</string>
+    <string name="eq_ave_three_quarters">tre quarti del viaggio da Milano a Venezia</string>
     <string name="eq_ave_label">FRECCIAROSSA MILANO–VENEZIA</string>
     <string name="eq_ave_basis">Base: Frecciarossa diretto ≈ 2\u00A0h 30\u00A0min</string>
 
     <!-- VUELO MADRID–NUEVA YORK: obra o trayecto que se repite («de Madrid a Nueva York», contado en veces).
          Italiano: Milano–New York, vuelo directo de unas 8 h. -->
-    <string name="eq_flight_do">volare %1$s</string>
+    <string name="eq_flight_do">fare %1$s</string>
     <plurals name="eq_flight_n">
-        <item quantity="one">da Milano a New York</item>
-        <item quantity="many">da Milano a New York %1$s\u00A0volte</item>
-        <item quantity="other">da Milano a New York %1$s\u00A0volte</item>
+        <item quantity="one">il volo Milano–New York</item>
+        <item quantity="many">il volo Milano–New York %1$s\u00A0di volte</item>
+        <item quantity="other">il volo Milano–New York %1$s\u00A0volte</item>
     </plurals>
     <plurals name="eq_flight_more">
-        <item quantity="one">da Milano a New York più di una volta</item>
-        <item quantity="many">da Milano a New York più di %1$s\u00A0volte</item>
-        <item quantity="other">da Milano a New York più di %1$s\u00A0volte</item>
+        <item quantity="one">il volo Milano–New York più di una volta</item>
+        <item quantity="many">il volo Milano–New York più di %1$s\u00A0di volte</item>
+        <item quantity="other">il volo Milano–New York più di %1$s\u00A0volte</item>
     </plurals>
     <plurals name="eq_flight_and_half">
-        <item quantity="one">da Milano a New York una volta e mezza</item>
-        <item quantity="many">da Milano a New York %1$s\u00A0volte e mezza</item>
-        <item quantity="other">da Milano a New York %1$s\u00A0volte e mezza</item>
+        <item quantity="one">il volo Milano–New York una volta e mezza</item>
+        <item quantity="many">il volo Milano–New York %1$s\u00A0di volte e mezza</item>
+        <item quantity="other">il volo Milano–New York %1$s\u00A0volte e mezza</item>
     </plurals>
     <plurals name="eq_flight_almost">
-        <item quantity="one">quasi da Milano a New York</item>
-        <item quantity="many">da Milano a New York quasi %1$s\u00A0volte</item>
-        <item quantity="other">da Milano a New York quasi %1$s\u00A0volte</item>
+        <item quantity="one">quasi tutto il volo Milano–New York</item>
+        <item quantity="many">il volo Milano–New York quasi %1$s\u00A0di volte</item>
+        <item quantity="other">il volo Milano–New York quasi %1$s\u00A0volte</item>
     </plurals>
-    <string name="eq_flight_percent">il %1$s del volo da Milano a New York</string>
-    <string name="eq_flight_less">meno dello %1$s del volo da Milano a New York</string>
-    <string name="eq_flight_quarter">un quarto del volo da Milano a New York</string>
-    <string name="eq_flight_half">la metà del volo da Milano a New York</string>
-    <string name="eq_flight_three_quarters">tre quarti del volo da Milano a New York</string>
+    <string name="eq_flight_percent">un %1$s del volo Milano–New York</string>
+    <string name="eq_flight_less">meno dello %1$s del volo Milano–New York</string>
+    <string name="eq_flight_quarter">un quarto del volo Milano–New York</string>
+    <string name="eq_flight_half">la metà del volo Milano–New York</string>
+    <string name="eq_flight_three_quarters">tre quarti del volo Milano–New York</string>
     <string name="eq_flight_label">VOLO MILANO–NEW YORK</string>
     <string name="eq_flight_basis">Base: volo diretto ≈ 8\u00A0h</string>
 
@@ -562,34 +572,34 @@
     <string name="eq_walk_do">camminare per %1$s</string>
     <plurals name="eq_walk_n">
         <item quantity="one">un chilometro</item>
-        <item quantity="many">%1$s\u00A0chilometri</item>
+        <item quantity="many">%1$s\u00A0di chilometri</item>
         <item quantity="other">%1$s\u00A0chilometri</item>
     </plurals>
     <plurals name="eq_walk_more">
         <item quantity="one">più di un chilometro</item>
-        <item quantity="many">più di %1$s\u00A0chilometri</item>
+        <item quantity="many">più di %1$s\u00A0di chilometri</item>
         <item quantity="other">più di %1$s\u00A0chilometri</item>
     </plurals>
     <plurals name="eq_walk_and_half">
         <item quantity="one">un chilometro e mezzo</item>
-        <item quantity="many">%1$s\u00A0chilometri e mezzo</item>
+        <item quantity="many">%1$s\u00A0di chilometri e mezzo</item>
         <item quantity="other">%1$s\u00A0chilometri e mezzo</item>
     </plurals>
     <plurals name="eq_walk_almost">
         <item quantity="one">quasi un chilometro</item>
-        <item quantity="many">quasi %1$s\u00A0chilometri</item>
+        <item quantity="many">quasi %1$s\u00A0di chilometri</item>
         <item quantity="other">quasi %1$s\u00A0chilometri</item>
     </plurals>
     <!-- Menos de un kilómetro, en metros redondeados a la decena: %1$s es la cifra («830»). -->
     <plurals name="eq_walk_metres">
         <item quantity="one">%1$s\u00A0metro</item>
-        <item quantity="many">%1$s\u00A0metri</item>
+        <item quantity="many">%1$s\u00A0di metri</item>
         <item quantity="other">%1$s\u00A0metri</item>
     </plurals>
     <!-- Menos de 10 metros: %1$s es la cifra («10»). -->
     <plurals name="eq_walk_under_metres">
         <item quantity="one">meno di %1$s\u00A0metro</item>
-        <item quantity="many">meno di %1$s\u00A0metri</item>
+        <item quantity="many">meno di %1$s\u00A0di metri</item>
         <item quantity="other">meno di %1$s\u00A0metri</item>
     </plurals>
     <string name="eq_walk_label">CHILOMETRI A PIEDI</string>
@@ -602,25 +612,25 @@
     <string name="eq_tortilla_do">fare %1$s</string>
     <plurals name="eq_tortilla_n">
         <item quantity="one">una frittata di patate</item>
-        <item quantity="many">%1$s\u00A0frittate di patate</item>
+        <item quantity="many">%1$s\u00A0di frittate di patate</item>
         <item quantity="other">%1$s\u00A0frittate di patate</item>
     </plurals>
     <plurals name="eq_tortilla_more">
         <item quantity="one">più di una frittata di patate</item>
-        <item quantity="many">più di %1$s\u00A0frittate di patate</item>
+        <item quantity="many">più di %1$s\u00A0di frittate di patate</item>
         <item quantity="other">più di %1$s\u00A0frittate di patate</item>
     </plurals>
     <plurals name="eq_tortilla_and_half">
-        <item quantity="one">una frittata di patate e mezza</item>
-        <item quantity="many">%1$s\u00A0frittate di patate e mezza</item>
-        <item quantity="other">%1$s\u00A0frittate di patate e mezza</item>
+        <item quantity="one">una frittata e mezza di patate</item>
+        <item quantity="many">%1$s\u00A0di frittate e mezza di patate</item>
+        <item quantity="other">%1$s\u00A0frittate e mezza di patate</item>
     </plurals>
     <plurals name="eq_tortilla_almost">
         <item quantity="one">quasi una frittata di patate</item>
-        <item quantity="many">quasi %1$s\u00A0frittate di patate</item>
+        <item quantity="many">quasi %1$s\u00A0di frittate di patate</item>
         <item quantity="other">quasi %1$s\u00A0frittate di patate</item>
     </plurals>
-    <string name="eq_tortilla_percent">il %1$s di una frittata di patate</string>
+    <string name="eq_tortilla_percent">un %1$s di una frittata di patate</string>
     <string name="eq_tortilla_less">meno dello %1$s di una frittata di patate</string>
     <string name="eq_tortilla_quarter">un quarto di frittata di patate</string>
     <string name="eq_tortilla_half">mezza frittata di patate</string>
@@ -633,25 +643,25 @@
     <string name="eq_cocido_do">fare %1$s</string>
     <plurals name="eq_cocido_n">
         <item quantity="one">un ragù alla bolognese</item>
-        <item quantity="many">%1$s\u00A0ragù alla bolognese</item>
+        <item quantity="many">%1$s\u00A0di ragù alla bolognese</item>
         <item quantity="other">%1$s\u00A0ragù alla bolognese</item>
     </plurals>
     <plurals name="eq_cocido_more">
         <item quantity="one">più di un ragù alla bolognese</item>
-        <item quantity="many">più di %1$s\u00A0ragù alla bolognese</item>
+        <item quantity="many">più di %1$s\u00A0di ragù alla bolognese</item>
         <item quantity="other">più di %1$s\u00A0ragù alla bolognese</item>
     </plurals>
     <plurals name="eq_cocido_and_half">
         <item quantity="one">un ragù alla bolognese e mezzo</item>
-        <item quantity="many">%1$s\u00A0ragù alla bolognese e mezzo</item>
+        <item quantity="many">%1$s\u00A0di ragù alla bolognese e mezzo</item>
         <item quantity="other">%1$s\u00A0ragù alla bolognese e mezzo</item>
     </plurals>
     <plurals name="eq_cocido_almost">
         <item quantity="one">quasi un ragù alla bolognese</item>
-        <item quantity="many">quasi %1$s\u00A0ragù alla bolognese</item>
+        <item quantity="many">quasi %1$s\u00A0di ragù alla bolognese</item>
         <item quantity="other">quasi %1$s\u00A0ragù alla bolognese</item>
     </plurals>
-    <string name="eq_cocido_percent">il %1$s di un ragù alla bolognese</string>
+    <string name="eq_cocido_percent">un %1$s di un ragù alla bolognese</string>
     <string name="eq_cocido_less">meno dello %1$s di un ragù alla bolognese</string>
     <string name="eq_cocido_quarter">un quarto di ragù alla bolognese</string>
     <string name="eq_cocido_half">mezzo ragù alla bolognese</string>
@@ -659,29 +669,30 @@
     <string name="eq_cocido_label">RAGÙ</string>
     <string name="eq_cocido_basis">Base: 3\u00A0h 30\u00A0min a fuoco lento (la preparazione non conta)</string>
 
-    <!-- HUEVOS DUROS: se cuenta por unidades (huevo duro / huevos duros). -->
+    <!-- HUEVOS DUROS: se cuenta por unidades (huevo duro / huevos duros). Italiano: «uovo» es masculino
+         en singular («e mezzo», «mezzo uovo») y femenino en plural («uova sode»). -->
     <string name="eq_egg_do">cuocere %1$s</string>
     <plurals name="eq_egg_n">
         <item quantity="one">un uovo sodo</item>
-        <item quantity="many">%1$s\u00A0uova sode</item>
+        <item quantity="many">%1$s\u00A0di uova sode</item>
         <item quantity="other">%1$s\u00A0uova sode</item>
     </plurals>
     <plurals name="eq_egg_more">
         <item quantity="one">più di un uovo sodo</item>
-        <item quantity="many">più di %1$s\u00A0uova sode</item>
+        <item quantity="many">più di %1$s\u00A0di uova sode</item>
         <item quantity="other">più di %1$s\u00A0uova sode</item>
     </plurals>
     <plurals name="eq_egg_and_half">
         <item quantity="one">un uovo sodo e mezzo</item>
-        <item quantity="many">%1$s\u00A0uova sode e mezzo</item>
+        <item quantity="many">%1$s\u00A0di uova sode e mezzo</item>
         <item quantity="other">%1$s\u00A0uova sode e mezzo</item>
     </plurals>
     <plurals name="eq_egg_almost">
         <item quantity="one">quasi un uovo sodo</item>
-        <item quantity="many">quasi %1$s\u00A0uova sode</item>
+        <item quantity="many">quasi %1$s\u00A0di uova sode</item>
         <item quantity="other">quasi %1$s\u00A0uova sode</item>
     </plurals>
-    <string name="eq_egg_percent">il %1$s di un uovo sodo</string>
+    <string name="eq_egg_percent">un %1$s di un uovo sodo</string>
     <string name="eq_egg_less">meno dello %1$s di un uovo sodo</string>
     <string name="eq_egg_quarter">un quarto di uovo sodo</string>
     <string name="eq_egg_half">mezzo uovo sodo</string>
@@ -693,25 +704,25 @@
     <string name="eq_milk_do">scaldare %1$s</string>
     <plurals name="eq_milk_n">
         <item quantity="one">un bicchiere di latte nel microonde</item>
-        <item quantity="many">%1$s\u00A0bicchieri di latte nel microonde</item>
+        <item quantity="many">%1$s\u00A0di bicchieri di latte nel microonde</item>
         <item quantity="other">%1$s\u00A0bicchieri di latte nel microonde</item>
     </plurals>
     <plurals name="eq_milk_more">
         <item quantity="one">più di un bicchiere di latte nel microonde</item>
-        <item quantity="many">più di %1$s\u00A0bicchieri di latte nel microonde</item>
+        <item quantity="many">più di %1$s\u00A0di bicchieri di latte nel microonde</item>
         <item quantity="other">più di %1$s\u00A0bicchieri di latte nel microonde</item>
     </plurals>
     <plurals name="eq_milk_and_half">
         <item quantity="one">un bicchiere e mezzo di latte nel microonde</item>
-        <item quantity="many">%1$s\u00A0bicchieri e mezzo di latte nel microonde</item>
+        <item quantity="many">%1$s\u00A0di bicchieri e mezzo di latte nel microonde</item>
         <item quantity="other">%1$s\u00A0bicchieri e mezzo di latte nel microonde</item>
     </plurals>
     <plurals name="eq_milk_almost">
         <item quantity="one">quasi un bicchiere di latte nel microonde</item>
-        <item quantity="many">quasi %1$s\u00A0bicchieri di latte nel microonde</item>
+        <item quantity="many">quasi %1$s\u00A0di bicchieri di latte nel microonde</item>
         <item quantity="other">quasi %1$s\u00A0bicchieri di latte nel microonde</item>
     </plurals>
-    <string name="eq_milk_percent">il %1$s di un bicchiere di latte nel microonde</string>
+    <string name="eq_milk_percent">un %1$s di un bicchiere di latte nel microonde</string>
     <string name="eq_milk_less">meno dello %1$s di un bicchiere di latte nel microonde</string>
     <string name="eq_milk_quarter">un quarto di bicchiere di latte nel microonde</string>
     <string name="eq_milk_half">mezzo bicchiere di latte nel microonde</string>
@@ -719,29 +730,30 @@
     <string name="eq_milk_label">BICCHIERI DI LATTE AL MICROONDE</string>
     <string name="eq_milk_basis">Base: 1\u00A0min a potenza massima</string>
 
-    <!-- BOHEMIAN RHAPSODY: obra o trayecto que se repite («Bohemian Rhapsody», contado en veces). -->
+    <!-- BOHEMIAN RHAPSODY: obra o trayecto que se repite («Bohemian Rhapsody», contado en veces).
+         Italiano: femenino («quasi tutta Bohemian Rhapsody», como «la canzone»). -->
     <string name="eq_bohemian_do">ascoltare %1$s</string>
     <plurals name="eq_bohemian_n">
         <item quantity="one">Bohemian Rhapsody</item>
-        <item quantity="many">Bohemian Rhapsody %1$s\u00A0volte</item>
+        <item quantity="many">Bohemian Rhapsody %1$s\u00A0di volte</item>
         <item quantity="other">Bohemian Rhapsody %1$s\u00A0volte</item>
     </plurals>
     <plurals name="eq_bohemian_more">
         <item quantity="one">Bohemian Rhapsody più di una volta</item>
-        <item quantity="many">Bohemian Rhapsody più di %1$s\u00A0volte</item>
+        <item quantity="many">Bohemian Rhapsody più di %1$s\u00A0di volte</item>
         <item quantity="other">Bohemian Rhapsody più di %1$s\u00A0volte</item>
     </plurals>
     <plurals name="eq_bohemian_and_half">
         <item quantity="one">Bohemian Rhapsody una volta e mezza</item>
-        <item quantity="many">Bohemian Rhapsody %1$s\u00A0volte e mezza</item>
+        <item quantity="many">Bohemian Rhapsody %1$s\u00A0di volte e mezza</item>
         <item quantity="other">Bohemian Rhapsody %1$s\u00A0volte e mezza</item>
     </plurals>
     <plurals name="eq_bohemian_almost">
-        <item quantity="one">quasi Bohemian Rhapsody</item>
-        <item quantity="many">Bohemian Rhapsody quasi %1$s\u00A0volte</item>
+        <item quantity="one">quasi tutta Bohemian Rhapsody</item>
+        <item quantity="many">Bohemian Rhapsody quasi %1$s\u00A0di volte</item>
         <item quantity="other">Bohemian Rhapsody quasi %1$s\u00A0volte</item>
     </plurals>
-    <string name="eq_bohemian_percent">il %1$s di Bohemian Rhapsody</string>
+    <string name="eq_bohemian_percent">un %1$s di Bohemian Rhapsody</string>
     <string name="eq_bohemian_less">meno dello %1$s di Bohemian Rhapsody</string>
     <string name="eq_bohemian_quarter">un quarto di Bohemian Rhapsody</string>
     <string name="eq_bohemian_half">la metà di Bohemian Rhapsody</string>
@@ -749,29 +761,29 @@
     <string name="eq_bohemian_label">BOHEMIAN RHAPSODY</string>
     <string name="eq_bohemian_basis">Base: 5\u00A0min 55\u00A0s, versione in studio</string>
 
-    <!-- SIESTAS: se cuenta por unidades (siesta / siestas, femenino). -->
+    <!-- SIESTAS: se cuenta por unidades (siesta / siestas, femenino). Italiano: «pisolino», masculino. -->
     <string name="eq_nap_do">farti %1$s</string>
     <plurals name="eq_nap_n">
         <item quantity="one">un pisolino</item>
-        <item quantity="many">%1$s\u00A0pisolini</item>
+        <item quantity="many">%1$s\u00A0di pisolini</item>
         <item quantity="other">%1$s\u00A0pisolini</item>
     </plurals>
     <plurals name="eq_nap_more">
         <item quantity="one">più di un pisolino</item>
-        <item quantity="many">più di %1$s\u00A0pisolini</item>
+        <item quantity="many">più di %1$s\u00A0di pisolini</item>
         <item quantity="other">più di %1$s\u00A0pisolini</item>
     </plurals>
     <plurals name="eq_nap_and_half">
         <item quantity="one">un pisolino e mezzo</item>
-        <item quantity="many">%1$s\u00A0pisolini e mezzo</item>
+        <item quantity="many">%1$s\u00A0di pisolini e mezzo</item>
         <item quantity="other">%1$s\u00A0pisolini e mezzo</item>
     </plurals>
     <plurals name="eq_nap_almost">
         <item quantity="one">quasi un pisolino</item>
-        <item quantity="many">quasi %1$s\u00A0pisolini</item>
+        <item quantity="many">quasi %1$s\u00A0di pisolini</item>
         <item quantity="other">quasi %1$s\u00A0pisolini</item>
     </plurals>
-    <string name="eq_nap_percent">il %1$s di un pisolino</string>
+    <string name="eq_nap_percent">un %1$s di un pisolino</string>
     <string name="eq_nap_less">meno dello %1$s di un pisolino</string>
     <string name="eq_nap_quarter">un quarto di pisolino</string>
     <string name="eq_nap_half">mezzo pisolino</string>
@@ -779,59 +791,60 @@
     <string name="eq_nap_label">PISOLINI</string>
     <string name="eq_nap_basis">Base: pisolino di 30\u00A0min (senza pigiama)</string>
 
-    <!-- NOCHES DEL TIRÓN: se cuenta por unidades (noche / noches, femenino). -->
+    <!-- NOCHES DEL TIRÓN: se cuenta por unidades (noche / noches, femenino). Italiano: «notte intera»
+         («dormire una notte intera»); «di fila» no vale para una sola noche. -->
     <string name="eq_sleep_do">dormire %1$s</string>
     <plurals name="eq_sleep_n">
-        <item quantity="one">una notte di fila</item>
-        <item quantity="many">%1$s\u00A0notti di fila</item>
-        <item quantity="other">%1$s\u00A0notti di fila</item>
+        <item quantity="one">una notte intera</item>
+        <item quantity="many">%1$s\u00A0di notti intere</item>
+        <item quantity="other">%1$s\u00A0notti intere</item>
     </plurals>
     <plurals name="eq_sleep_more">
-        <item quantity="one">più di una notte di fila</item>
-        <item quantity="many">più di %1$s\u00A0notti di fila</item>
-        <item quantity="other">più di %1$s\u00A0notti di fila</item>
+        <item quantity="one">più di una notte intera</item>
+        <item quantity="many">più di %1$s\u00A0di notti intere</item>
+        <item quantity="other">più di %1$s\u00A0notti intere</item>
     </plurals>
     <plurals name="eq_sleep_and_half">
-        <item quantity="one">una notte e mezza di fila</item>
-        <item quantity="many">%1$s\u00A0notti e mezza di fila</item>
-        <item quantity="other">%1$s\u00A0notti e mezza di fila</item>
+        <item quantity="one">una notte e mezza</item>
+        <item quantity="many">%1$s\u00A0di notti e mezza</item>
+        <item quantity="other">%1$s\u00A0notti e mezza</item>
     </plurals>
     <plurals name="eq_sleep_almost">
-        <item quantity="one">quasi una notte di fila</item>
-        <item quantity="many">quasi %1$s\u00A0notti di fila</item>
-        <item quantity="other">quasi %1$s\u00A0notti di fila</item>
+        <item quantity="one">quasi una notte intera</item>
+        <item quantity="many">quasi %1$s\u00A0di notti intere</item>
+        <item quantity="other">quasi %1$s\u00A0notti intere</item>
     </plurals>
-    <string name="eq_sleep_percent">il %1$s di una notte di fila</string>
-    <string name="eq_sleep_less">meno dello %1$s di una notte di fila</string>
-    <string name="eq_sleep_quarter">un quarto di notte di fila</string>
-    <string name="eq_sleep_half">mezza notte di fila</string>
-    <string name="eq_sleep_three_quarters">tre quarti di notte di fila</string>
-    <string name="eq_sleep_label">NOTTI DI FILA</string>
+    <string name="eq_sleep_percent">un %1$s di una notte</string>
+    <string name="eq_sleep_less">meno dello %1$s di una notte</string>
+    <string name="eq_sleep_quarter">un quarto di notte</string>
+    <string name="eq_sleep_half">mezza notte</string>
+    <string name="eq_sleep_three_quarters">tre quarti di notte</string>
+    <string name="eq_sleep_label">NOTTI DI SONNO</string>
     <string name="eq_sleep_basis">Base: 8\u00A0h per notte</string>
 
     <!-- JORNADAS LABORALES: se cuenta por unidades (jornada laboral / jornadas laborales, femenino). -->
     <string name="eq_workday_do">fare %1$s</string>
     <plurals name="eq_workday_n">
         <item quantity="one">una giornata lavorativa</item>
-        <item quantity="many">%1$s\u00A0giornate lavorative</item>
+        <item quantity="many">%1$s\u00A0di giornate lavorative</item>
         <item quantity="other">%1$s\u00A0giornate lavorative</item>
     </plurals>
     <plurals name="eq_workday_more">
         <item quantity="one">più di una giornata lavorativa</item>
-        <item quantity="many">più di %1$s\u00A0giornate lavorative</item>
+        <item quantity="many">più di %1$s\u00A0di giornate lavorative</item>
         <item quantity="other">più di %1$s\u00A0giornate lavorative</item>
     </plurals>
     <plurals name="eq_workday_and_half">
         <item quantity="one">una giornata lavorativa e mezza</item>
-        <item quantity="many">%1$s\u00A0giornate lavorative e mezza</item>
+        <item quantity="many">%1$s\u00A0di giornate lavorative e mezza</item>
         <item quantity="other">%1$s\u00A0giornate lavorative e mezza</item>
     </plurals>
     <plurals name="eq_workday_almost">
         <item quantity="one">quasi una giornata lavorativa</item>
-        <item quantity="many">quasi %1$s\u00A0giornate lavorative</item>
+        <item quantity="many">quasi %1$s\u00A0di giornate lavorative</item>
         <item quantity="other">quasi %1$s\u00A0giornate lavorative</item>
     </plurals>
-    <string name="eq_workday_percent">il %1$s di una giornata lavorativa</string>
+    <string name="eq_workday_percent">un %1$s di una giornata lavorativa</string>
     <string name="eq_workday_less">meno dello %1$s di una giornata lavorativa</string>
     <string name="eq_workday_quarter">un quarto di giornata lavorativa</string>
     <string name="eq_workday_half">mezza giornata lavorativa</string>

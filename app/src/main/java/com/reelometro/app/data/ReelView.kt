@@ -49,7 +49,7 @@ data class ReelView(
 
 /**
  * Una pulsación de «compartir» en un vídeo corto: que ocurrió y en qué vídeo, si se sabe. A quién se
- * envía va aparte, en [ShareRecipient] (solo Instagram y solo con el ajuste encendido). Sin clave
+ * envía va aparte, en [ShareRecipient] (solo Instagram y TikTok y solo con el ajuste encendido). Sin clave
  * foránea: puede llegar antes que la fila del vídeo.
  */
 @Entity(
@@ -75,8 +75,9 @@ data class ShareEvent(
 }
 
 /**
- * Un envío a una persona o grupo desde la hoja de compartir de Instagram (v3). Solo se guarda con el
- * ajuste «A quién envías» encendido ([com.reelometro.app.data.settings.AppSettings.recordRecipients]).
+ * Un envío a una persona o grupo desde la hoja de compartir de Instagram (v3) o, desde la 1.10.0, de TikTok
+ * ([platform] dice de cuál). Solo se guarda con el ajuste «A quién envías» encendido
+ * ([com.reelometro.app.data.settings.AppSettings.recordRecipients]).
  * [recipient] es el nombre tal y como sale en la hoja; nunca se guarda el mensaje ni nada del chat.
  *
  * Índices: `day, recipient, platform` es cubriente para el ranking por rango de días; `reelId` para borrar los

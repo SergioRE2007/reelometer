@@ -1,5 +1,6 @@
 package com.reelometro.app.detection
 
+import com.reelometro.app.data.Platform
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -27,6 +28,43 @@ class BubbleLayoutTest {
         // Pegada a la derecha como en la 1.4.1: el hueco hasta el borde es pequeño y la pila no se sale.
         assertTrue(x + w <= SCREEN_W - 21)
         assertTrue(SCREEN_W - (x + w) < 60)
+    }
+
+    @Test
+    fun `sobre TikTok por defecto van entre las pestanas de arriba y la columna de botones`() {
+        // Volcado real de TikTok 47.7 (1080 × 2424): barra de estado hasta 137 px y de navegación de 63 px.
+        val feed = UiDump.all(UiDump.load("tiktok-47.7-feed.xml"))
+        val tt = BubbleLayout.safeArea(UiDump.W, UiDump.H, SafeArea(0, 137, 0, 63), edge = 21)
+        val tabsBottom = feed.filter { it.text?.toString() == "Para ti" || it.contentDescription?.toString() == "Buscar" }.maxOf { it.bounds.bottom }
+        // La columna de la derecha (directo, foto del creador, me gusta, comentar…): lo pulsable de la derecha bajo las pestañas.
+        val columnTop = feed.filter { it.isClickable && it.bounds.left >= 900 && it.bounds.top > tabsBottom }.minOf { it.bounds.top }
+        val creator = feed.single { shortViewId(it.viewId) == "title" }.bounds
+        assertTrue("la columna empieza hacia el 46 %", columnTop.toFloat() / UiDump.H in 0.44f..0.48f)
+
+        val spot = BubbleLayout.defaultFor(Platform.TIKTOK)
+        assertEquals(BubbleLayout.DEFAULT_TIKTOK, spot)
+        assertEquals(BubbleOrientation.COLUMN, BubbleLayout.orientationFor(spot.y))
+        val (w, h) = size(BubbleOrientation.COLUMN)
+        val (x, y) = BubbleLayout.windowXY(spot, w, h, UiDump.W, UiDump.H, tt)
+        assertTrue("debajo de las pestañas y la lupa ($y > $tabsBottom)", y > tabsBottom)
+        assertTrue("encima de la columna de botones (${y + h} < $columnTop)", y + h < columnTop)
+        assertTrue(x + w <= UiDump.W - 21)
+        // El sitio de Instagram taparía el principio de esa columna: por eso TikTok tiene el suyo.
+        val (_, iy) = BubbleLayout.windowXY(BubbleLayout.defaultFor(Platform.INSTAGRAM), w, h, UiDump.W, UiDump.H, tt)
+        assertTrue(iy + h > columnTop)
+
+        // Una fila soltada al principio de su franja, a la izquierda: encima del nombre del creador.
+        val row = BubbleLayout.drop(300f, BubbleLayout.ROW_FROM_Y * UiDump.H, UiDump.W, UiDump.H, tt, size = ::size)
+        assertEquals(BubbleOrientation.ROW, BubbleLayout.orientationFor(row.y))
+        val (rw, rh) = size(BubbleOrientation.ROW)
+        val (_, ry) = BubbleLayout.windowXY(row, rw, rh, UiDump.W, UiDump.H, tt)
+        assertTrue("${ry + rh} < ${creator.top}", ry + rh < creator.top)
+
+        // Instagram y YouTube (sin envío rápido) siguen con el de siempre; un valor roto vuelve al de su app.
+        assertEquals(BubbleLayout.DEFAULT, BubbleLayout.defaultFor(Platform.INSTAGRAM))
+        assertEquals(BubbleLayout.DEFAULT, BubbleLayout.defaultFor(Platform.YOUTUBE))
+        assertEquals(BubbleLayout.DEFAULT_TIKTOK, BubbleLayout.sanitize(BubbleSpot(Float.NaN, Float.NaN), BubbleLayout.DEFAULT_TIKTOK))
+        assertEquals(BubbleSpot(0.5f, 0.3f), BubbleLayout.sanitize(BubbleSpot(0.5f, Float.NaN), BubbleLayout.DEFAULT_TIKTOK))
     }
 
     @Test

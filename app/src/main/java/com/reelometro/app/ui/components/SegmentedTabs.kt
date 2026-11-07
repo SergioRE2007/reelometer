@@ -24,6 +24,8 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.reelometro.app.stats.Format
 import com.reelometro.app.ui.theme.Motion
@@ -43,6 +45,7 @@ internal val IndicatorThickness = 2.dp
  * Cada opción tiene 48 dp de alto; al cambiar, un tic háptico.
  *
  * @param divider filete `line` de 1 dp bajo todas las opciones.
+ * @param descriptions lo que lee TalkBack en cada opción, si no basta con su texto (p. ej. «Ver los fijados de TikTok»).
  */
 @Composable
 fun SegmentedTabs(
@@ -51,6 +54,7 @@ fun SegmentedTabs(
     onSelect: (Int) -> Unit,
     modifier: Modifier = Modifier,
     divider: Boolean = true,
+    descriptions: List<String>? = null,
 ) {
     val colors = ReelTheme.colors
     val reduced = ReelTheme.reducedMotion
@@ -118,6 +122,7 @@ fun SegmentedTabs(
                             }
                         },
                     )
+                    .then(descriptions?.getOrNull(index)?.let { d -> Modifier.semantics { contentDescription = d } } ?: Modifier)
                     .height(Space.touch)
                     .padding(end = if (index < options.lastIndex) Space.x6 else 0.dp)
                     .onPlaced {

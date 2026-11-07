@@ -43,6 +43,12 @@ interface UiNode {
     /** Ventana a la que pertenece (`AccessibilityNodeInfo.windowId`); [NO_WINDOW] si no se sabe (tests). */
     val windowId: Int get() = NO_WINDOW
 
+    /** 1.10.0: pulsable (`isClickable`). En TikTok, la celda de un contacto lo es; su foto y su texto también. */
+    val isClickable: Boolean get() = false
+
+    /** 1.10.0: marcado (`isChecked`, el `CheckBox` de un contacto elegido en la hoja de TikTok). */
+    val isChecked: Boolean get() = false
+
     companion object {
         const val NO_WINDOW = -1
     }

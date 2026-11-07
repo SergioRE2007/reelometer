@@ -1,6 +1,6 @@
 # Política de privacidad de Reelometer
 
-**Última actualización:** 6 de noviembre de 2026
+**Última actualización:** 7 de noviembre de 2026
 
 ## En resumen
 
@@ -25,7 +25,7 @@ Si activas el servicio de accesibilidad de Reelometer (después de leer la expli
 - Detecta cuándo pasas al siguiente vídeo del feed de vídeos cortos.
 - Lee los textos visibles de ese vídeo: el nombre del creador, la descripción y los hashtags.
 - Detecta cuándo pulsas el botón «Compartir» de un vídeo.
-- **Solo en Instagram y solo si activas «A quién envías»** (Ajustes > Apps; viene apagado): en la hoja de compartir de Instagram lee el nombre de la persona o el grupo que eliges, para enseñarte a quién envías más. No lee el chat, ni el mensaje que escribes, ni nada más de la conversación. En TikTok y YouTube nunca registra a quién ni dónde lo envías.
+- **Solo en Instagram y TikTok, y solo si activas «A quién envías»** (Ajustes > Apps; viene apagado): en la hoja de compartir de esas apps lee el nombre de la persona o el grupo que eliges (en TikTok, también el aviso «Enviado a …» que sale al enviar, solo para saber que se envió; no se guarda), para enseñarte a quién envías más. No lee el chat, ni el mensaje que escribes, ni nada más de la conversación. En YouTube nunca registra a quién ni dónde lo envías.
 
 De cada vídeo guarda en tu móvil:
 
@@ -38,7 +38,7 @@ De cada vídeo guarda en tu móvil:
 | Descripción del vídeo (hasta 300 caracteres, hashtags incluidos) | Clasificarlo por temas |
 | Categoría (humor, deporte, comida…) | Saber de qué va lo que ves |
 | Que pulsaste «Compartir», y cuándo | Contar los vídeos compartidos |
-| Con «A quién envías» encendido: el nombre de la persona o grupo de Instagram al que lo mandaste, y cuándo | El ranking «A quién envías» de Estadísticas |
+| Con «A quién envías» encendido: el nombre de la persona o grupo de Instagram o TikTok al que lo mandaste, y cuándo | El ranking «A quién envías» de Estadísticas |
 
 La categoría se calcula **en el propio móvil**, comparando la descripción y los hashtags con una lista de palabras clave. No se usa ningún servicio externo ni inteligencia artificial en la nube.
 
@@ -48,7 +48,7 @@ El servicio **no** guarda lo que escribes, no lee tus mensajes ni tus contraseñ
 
 ### 2.2. Tus ajustes
 
-La app guarda en el móvil tus preferencias: el objetivo diario, si quieres avisos y a qué hora (también el aviso en directo al pasar el objetivo), qué apps cuenta, si «A quién envías» y el envío rápido están encendidos, los nombres de las personas o grupos que fijas para el envío rápido (como mucho 3), el tema (claro u oscuro), si el modo Pasaporte está encendido, si has completado la presentación inicial y el recorrido guiado, y si has aceptado la explicación del servicio de accesibilidad.
+La app guarda en el móvil tus preferencias: el objetivo diario, si quieres avisos y a qué hora (también el aviso en directo al pasar el objetivo), qué apps cuenta, si «A quién envías» y el envío rápido están encendidos, los nombres de las personas o grupos que fijas para el envío rápido (como mucho 3 en cada app) y dónde dejas sus burbujas, el tema (claro u oscuro), si el modo Pasaporte está encendido, si has completado la presentación inicial y el recorrido guiado, y si has aceptado la explicación del servicio de accesibilidad.
 
 Para no repetir avisos, recuerda además el día del último aviso en directo y el último nivel del Pasaporte del que te avisó. **Borrar todo** también lo olvida.
 
@@ -71,13 +71,13 @@ En Ajustes hay una herramienta técnica escondida, pensada para ajustar la detec
 
 Tus datos solo sirven para enseñarte tus estadísticas, tus resúmenes, tu pasaporte, tus avisos y el widget. **No** se usan para publicidad, no se venden, no se ceden y no se usan para hacer perfiles de nadie.
 
-### 2.6. Envío rápido (solo Instagram)
+### 2.6. Envío rápido (Instagram y TikTok)
 
-Viene **apagado** y solo se puede encender con «A quién envías» encendido. Si lo enciendes en Ajustes y fijas hasta 3 personas o grupos de tu historial de «A quién envías», mientras ves reels en Instagram la app pone encima un botón por cada uno. Al tocar uno, el servicio de accesibilidad pulsa por ti **únicamente** tres cosas: «Compartir» en el reel que estás viendo, esa persona o grupo en la hoja de compartir (si no sale a la vista, escribe su nombre en el buscador de la hoja) y «Enviar». No pulsa nada más, nunca lo hace sin que toques el botón y, si algo no cuadra, para y te deja la hoja abierta para que termines tú.
+Viene **apagado** y solo se puede encender con «A quién envías» encendido. Si lo enciendes en Ajustes y fijas hasta 3 personas o grupos de tu historial de «A quién envías» en cada app (los de Instagram y los de TikTok van por separado), mientras ves vídeos en esa app la app pone encima un botón por cada uno. Al tocar uno, el servicio de accesibilidad pulsa por ti **únicamente** «Compartir» en el vídeo que estás viendo, esa persona o grupo en la hoja de compartir (si no sale a la vista, la busca en el buscador de la hoja; en TikTok, tocando antes su lupa) y «Enviar». No pulsa nada más, nunca lo hace sin que toques el botón y, si algo no cuadra, para y te deja la hoja abierta para que termines tú.
 
 Para encontrar a la persona o el grupo, lee los nombres que salen en la hoja de compartir (no los guarda: solo los compara con el que has fijado). El envío se apunta en el ranking de «A quién envías». Los nombres fijados se guardan en tus ajustes y **Borrar todo** también los olvida. Nada de esto sale del móvil.
 
-**Foto de perfil de los fijados.** Los botones son burbujas con la foto de perfil de cada persona o grupo fijado, como las de Instagram. La app no tiene internet y Android no le da las imágenes, así que, en Android 11 o posterior, el servicio de accesibilidad hace una captura de pantalla **solo** cuando la celda de un fijado está a la vista en la hoja de compartir de Instagram (al usar el envío rápido o al compartir a mano con «A quién envías» encendido), recorta de ella únicamente el círculo de su foto y descarta el resto al momento, sin guardarlo. La foto recortada (una imagen pequeña, de 144 × 144 píxeles) se guarda solo en el almacenamiento privado de la app, se renueva como mucho una vez al día, no va al CSV ni a ninguna copia en la nube, y se borra al quitar el fijado o con **Borrar todo**. No hace ninguna otra captura. En versiones anteriores de Android, o si la captura falla, la burbuja lleva las iniciales.
+**Foto de perfil de los fijados.** Los botones son burbujas con la foto de perfil de cada persona o grupo fijado, como las de Instagram y TikTok. La app no tiene internet y Android no le da las imágenes, así que, en Android 11 o posterior, el servicio de accesibilidad hace una captura de pantalla **solo** cuando la celda de un fijado está a la vista en la hoja de compartir de Instagram o TikTok (al usar el envío rápido o al compartir a mano con «A quién envías» encendido), recorta de ella únicamente el círculo de su foto y descarta el resto al momento, sin guardarlo. La foto recortada (una imagen pequeña, de 144 × 144 píxeles) se guarda solo en el almacenamiento privado de la app, se renueva como mucho una vez al día, no va al CSV ni a ninguna copia en la nube, y se borra al quitar el fijado o con **Borrar todo**. No hace ninguna otra captura. En versiones anteriores de Android, o si la captura falla, la burbuja lleva las iniciales.
 
 **Foto elegida de tu galería.** Si lo prefieres, en Ajustes › Envío rápido puedes elegir para cada fijado una foto de tu galería con el selector de fotos de Android, que solo le da a la app la foto que eliges (sin permiso para ver las demás). La app guarda de ella únicamente un cuadrado pequeño (144 × 144 píxeles), en su almacenamiento privado: no copia la foto original, no va al CSV ni a ninguna copia en la nube, la captura de la hoja ya no la sustituye, y se borra con **Quitar foto**, al quitar el fijado o con **Borrar todo**.
 

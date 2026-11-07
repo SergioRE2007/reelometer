@@ -3,13 +3,13 @@ package com.reelometro.app.copy
 import com.reelometro.app.R
 
 /**
- * Textos del **envío rápido** que pone el servicio sobre los reels de Instagram (ventanas propias, con Views),
+ * Textos del **envío rápido** que pone el servicio sobre los vídeos de Instagram y TikTok (ventanas propias, con Views),
  * en `res/values/copy_quicksend.xml`. Las burbujas no llevan texto visible: lo que sigue es para TalkBack y
  * para la pregunta de apagarlo.
  */
 object QuickSendCopy {
 
-    /** Para TalkBack, en cada burbuja: «Enviar este reel a Los del piso». */
+    /** Para TalkBack, en cada burbuja: «Enviar este vídeo a Los del piso». */
     fun bubbleDescription(name: String): String = str(R.string.quicksend_bubble_description, name)
 
     fun sendingDescription(name: String): String = str(R.string.quicksend_sending_description, name)

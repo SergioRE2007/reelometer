@@ -113,30 +113,25 @@
     <!-- Con todas las apps apagadas. -->
     <string name="settings_all_apps_off">Has apagado todas. Así no hay nada que contar.</string>
 
-    <!-- Interruptor «A quién envías» (solo Instagram). «Estadísticas» es la pestaña de la app. -->
+    <!-- Interruptor «A quién envías» (Instagram y TikTok). «Estadísticas» es la pestaña de la app. -->
     <string name="settings_recipients_label">A quién envías</string>
-    <string name="settings_recipients_description">Solo en Instagram. Al compartir un vídeo, apunto el nombre de la persona o el grupo que eliges y en Estadísticas ves a quién envías más. No leo el chat ni lo que escribes, y se queda en este móvil.</string>
+    <string name="settings_recipients_description">En Instagram y TikTok. Al compartir un vídeo, apunto el nombre de la persona o el grupo que eliges y en Estadísticas ves a quién envías más. No leo el chat ni lo que escribes, y se queda en este móvil.</string>
 
-    <!-- Interruptor «Envío rápido» (solo Instagram): unas burbujas sobre los reels que comparten el reel
-         con un toque. «Compartir» y «Enviar» citan los botones de Instagram tal cual: en cada idioma,
-         como los muestre Instagram en ese idioma. «X» es la zona donde se sueltan las burbujas. -->
+    <!-- Interruptor «Envío rápido» (Instagram y TikTok): unas burbujas sobre los vídeos que los comparten
+         con un toque. «Compartir» y «Enviar» citan los botones de Instagram y TikTok tal cual: en cada idioma,
+         como los muestren esas apps en ese idioma. «X» es la zona donde se sueltan las burbujas. -->
     <string name="settings_quick_send_label">Envío rápido</string>
-    <string name="settings_quick_send_description">Solo en Instagram. Mientras ves reels, sale una burbuja por cada persona o grupo que fijes. Al tocarla, pulso por ti «Compartir», ese nombre y «Enviar»; si no sale a la vista, escribo su nombre en el buscador de la hoja. Nada más. Si algo no cuadra, paro y terminas tú. Para enseñar su foto en la burbuja, la recorto de la hoja de compartir cuando sale a la vista, o eliges tú una de tu galería; se queda en este móvil. Arrástralas a donde quieras (abajo, encima del nombre del reel, se ponen en fila) o suéltalas en la «X» para esconderlas hasta el siguiente reel.</string>
+    <string name="settings_quick_send_description">En Instagram y TikTok. Mientras ves vídeos, sale una burbuja por cada persona o grupo que fijes en esa app. Al tocarla, pulso por ti «Compartir», ese nombre y «Enviar»; si no sale a la vista, lo busco en el buscador de la hoja (en TikTok, tocando antes su lupa). Nada más. Si algo no cuadra, paro y terminas tú. Para enseñar su foto en la burbuja, la recorto de la hoja de compartir cuando sale a la vista, o eliges tú una de tu galería; se queda en este móvil. Arrástralas a donde quieras (abajo, encima del nombre del vídeo, se ponen en fila) o suéltalas en la «X» para esconderlas hasta el siguiente vídeo.</string>
     <!-- El gesto para enviar a dos personas a la vez. -->
     <string name="settings_quick_send_pair_hint">Para mandarlo a dos a la vez, mantén pulsada una burbuja hasta que se despegue y suéltala encima de la otra. Si tocas otra mientras envía, la sumo a la misma hoja.</string>
     <!-- Con «A quién envías» apagado, el envío rápido no se puede encender. -->
     <string name="settings_quick_send_needs_recipients">Para usarlo, enciende antes «A quién envías»: el envío rápido busca en la hoja el nombre que fijas.</string>
-    <!-- Sin historial de envíos todavía: no hay nada que fijar. -->
-    <string name="settings_quick_send_empty">Aún no hay a quién fijar. Comparte un reel a mano con «A quién envías» encendido: aquí saldrán las personas y los grupos a los que envías.</string>
-    <!-- Encima de la lista de personas y grupos para fijar. -->
-    <string name="settings_quick_send_list_label">A quién envías más</string>
     <!-- Botones de cada fila, en MAYÚSCULAS y con poco sitio: fijar a alguien / ya fijado. -->
     <string name="settings_quick_send_pin">FIJAR</string>
     <string name="settings_quick_send_pinned">FIJADO</string>
-    <!-- Botón en MAYÚSCULAS: devuelve las burbujas a su sitio (borde derecho, a media altura). -->
+    <!-- Botón en MAYÚSCULAS: devuelve las burbujas de esa app a su sitio por defecto (borde derecho;
+         la altura depende de la app, ver BubbleLayout.defaultFor). -->
     <string name="settings_quick_send_relocate">RECOLOCAR</string>
-    <string name="settings_quick_send_relocate_hint">Las burbujas vuelven al borde derecho, a media altura.</string>
-    <string name="settings_quick_send_relocated">Hecho. Las verás en su sitio en el próximo reel.</string>
     <!-- Ya hay el máximo de fijados. %1$s el máximo («3»). -->
     <plurals name="settings_quick_send_full">
         <item quantity="one">Ya tienes %1$s fijado. Quítalo para fijar otro.</item>
@@ -157,6 +152,19 @@
     <string name="settings_quick_send_photo_pick_description">Elegir de la galería la foto de la burbuja de %1$s</string>
     <string name="settings_quick_send_photo_change_description">Cambiar la foto de la burbuja de %1$s por otra de la galería</string>
     <string name="settings_quick_send_photo_clear_description">Quitar la foto elegida para %1$s y volver a la automática</string>
+
+    <!-- 1.10.0, envío rápido en Instagram y en TikTok: cada app tiene sus fijados y su sitio para las burbujas.
+         Va encima de las dos pestañas con el nombre de cada app (INSTAGRAM, TIKTOK: las marcas no se traducen). -->
+    <string name="settings_quick_send_apps_hint">Cada app tiene sus fijados y su sitio para las burbujas: tus contactos de TikTok no son los de Instagram.</string>
+    <!-- TalkBack de cada pestaña. %1$s el nombre de la app («TikTok», «Instagram»). -->
+    <string name="settings_quick_send_app_description">Ver los fijados de %1$s</string>
+    <!-- Sin historial de envíos en esa app todavía: no hay nada que fijar. %1$s el nombre de la app (sale dos veces). -->
+    <string name="settings_quick_send_empty_app">Aún no hay a quién fijar en %1$s. Comparte un vídeo a mano en %1$s con «A quién envías» encendido: aquí saldrán las personas y los grupos a los que envías.</string>
+    <!-- Encima de la lista de personas y grupos para fijar. %1$s el nombre de la app. -->
+    <string name="settings_quick_send_list_label_app">A quién envías más en %1$s</string>
+    <!-- Bajo RECOLOCAR y tras pulsarlo. %1$s el nombre de la app. -->
+    <string name="settings_quick_send_relocate_hint_app">Las burbujas de %1$s vuelven a su sitio, en el borde derecho.</string>
+    <string name="settings_quick_send_relocated_app">Hecho. Las verás en su sitio en el próximo vídeo de %1$s.</string>
 
     <!-- ============================================================ 04 tema e idioma -->
 

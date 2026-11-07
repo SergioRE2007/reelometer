@@ -17,9 +17,10 @@ import kotlin.coroutines.resume
 
 /**
  * Recorta de la pantalla la **foto de perfil** de los fijados del envío rápido, y nada más (Android 11+,
- * `canTakeScreenshot`). Solo la pide el servicio con el envío rápido encendido, en la hoja de compartir de
- * Instagram y para un fijado cuya celda está a la vista. De la captura se recortan solo los círculos de
- * [crop] (en memoria): el resto se descarta al momento y nunca se guarda.
+ * `canTakeScreenshot`). Solo la pide el servicio con el envío rápido encendido, en la hoja de compartir de la app
+ * del envío (Instagram o TikTok; aquí no hay nada de una app en concreto: los cuadrados los da [AvatarRules.cropBox])
+ * y para un fijado cuya celda o fila está a la vista. De la captura se recortan solo los círculos de [crop] (en
+ * memoria): el resto se descarta al momento y nunca se guarda.
  *
  * Si la captura falla (pantallas con `FLAG_SECURE`, demasiadas seguidas, Android lo rechaza), devuelve `null`
  * y la burbuja sigue con las iniciales.

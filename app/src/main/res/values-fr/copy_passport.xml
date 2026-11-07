@@ -118,13 +118,14 @@
     <string name="passport_level_pasajero">PASSAGER</string>
     <string name="passport_level_frecuente">FRÉQUENT</string>
     <string name="passport_level_plata">ARGENT</string>
-    <string name="passport_level_oro">DORÉ</string>
+    <string name="passport_level_oro">OR</string>
     <string name="passport_level_platino">PLATINE</string>
 
     <!-- Código de TRES letras de cada nivel, como el de un aeropuerto («PAS → FRE»). Exactamente 3 letras, MAYÚSCULAS. -->
     <string name="passport_level_code_pasajero">PAS</string>
     <string name="passport_level_code_frecuente">FRE</string>
     <string name="passport_level_code_plata">ARG</string>
+    <!-- OR solo tiene dos letras: DOR se lee «D’OR» (como en «Ballon d’Or»). -->
     <string name="passport_level_code_oro">DOR</string>
     <string name="passport_level_code_platino">PLT</string>
 

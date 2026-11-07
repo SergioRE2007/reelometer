@@ -11,12 +11,12 @@
 Cuenta los vídeos que ves en TikTok, Instagram Reels y YouTube Shorts: cuántos, cuánto tiempo,
 de qué temas y de quién. Todo se queda en tu móvil.
 
-![Versión 1.5.0](https://img.shields.io/badge/versión-1.5.0-11100E?style=flat-square)
+![Versión 1.10.0](https://img.shields.io/badge/versión-1.10.0-11100E?style=flat-square)
 ![Android 8.0+](https://img.shields.io/badge/Android-8.0%2B-11100E?style=flat-square&logo=android&logoColor=EDE8DF)
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.4-11100E?style=flat-square&logo=kotlin&logoColor=EDE8DF)
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack_Compose-11100E?style=flat-square&logo=jetpackcompose&logoColor=EDE8DF)
 ![Sin internet](https://img.shields.io/badge/permiso_INTERNET-no-FF5A1F?style=flat-square)
-![Tests](https://img.shields.io/badge/tests-761-11100E?style=flat-square)
+![Tests](https://img.shields.io/badge/tests-969-11100E?style=flat-square)
 [![Invítame a un café](https://img.shields.io/badge/Buy_Me_a_Coffee-invítame_a_un_café-FF5A1F?style=flat-square&logo=buymeacoffee&logoColor=11100E)](https://www.buymeacoffee.com/Lopuzno)
 
 <br>
@@ -47,8 +47,8 @@ Reelometer no bloquea apps ni te echa sermones. Solo te pone el marcador delante
 | **Temas** | Reparte cada vídeo entre 16 temas (humor, deporte, comida, gaming, aprendizaje…) a partir de su descripción y hashtags, sin salir del móvil. |
 | **Widget y avisos** | Widget «Hoy» en 6 tamaños (con Flap en el grande), un aviso diario a la hora que elijas, uno mensual con tu resumen y, si lo activas, uno en el momento en que pasas tu objetivo. |
 | **Objetivo** | Si quieres, un límite diario: el marcador te dice cuánto te queda y lleva tus rachas. |
-| **A quién envías** | Solo en Instagram y solo si lo enciendes (viene apagado): cuenta a qué personas y grupos mandas reels, para ver con quién compartes más. |
-| **Envío rápido** | También en Instagram y también apagado de serie. Fija a tus personas o grupos de siempre y sobre los reels salen unas burbujas con su foto: un toque y el reel se envía solo, en menos de un segundo. Las burbujas se colocan donde quieras, puedes mandar a dos a la vez soltando una encima de otra y la foto de cada burbuja puede ser la de su perfil o una que elijas de tu galería. |
+| **A quién envías** | En Instagram y TikTok, y solo si lo enciendes (viene apagado): cuenta a qué personas y grupos mandas vídeos, para ver con quién compartes más. |
+| **Envío rápido** | En Instagram y TikTok, también apagado de serie. Fija a tus personas o grupos de siempre (cada app con los suyos) y sobre los vídeos salen unas burbujas con su foto: un toque y el vídeo se envía solo, en menos de un segundo. Las burbujas se colocan donde quieras, puedes mandar a dos a la vez soltando una encima de otra y la foto de cada burbuja puede ser la de su perfil o una que elijas de tu galería. |
 | **Tus datos** | Exporta todo a CSV, impórtalo en otro móvil (o tras restablecer este) sin duplicar nada, o bórralo con un botón. Si quieres, una copia semanal del CSV en una carpeta del móvil que eliges tú (se quedan las 4 últimas). |
 
 <div align="center">
@@ -66,11 +66,11 @@ potente, así que la app está hecha para no poder abusar de él:
 - Sin cuentas, sin servidores, sin anuncios, sin analítica y sin copia de seguridad en la nube.
 - El servicio solo escucha a TikTok, Instagram y YouTube (`android:packageNames`). En el resto de apps no lee nada.
 - De cada vídeo guarda la app, la hora, cuánto estuvo en pantalla, el creador y la descripción. Nunca lo que
-  escribes ni tus mensajes. A quién compartes algo, solo en Instagram y solo si enciendes «A quién envías»
+  escribes ni tus mensajes. A quién compartes algo, solo en Instagram y TikTok y solo si enciendes «A quién envías»
   (viene apagado): entonces guarda el nombre de la persona o el grupo, en el móvil.
-- No pulsa nada por ti, salvo con el **envío rápido** de Instagram (viene apagado y necesita «A quién envías»): al
-  tocar una burbuja, pulsa únicamente «Compartir», la persona o el grupo que has fijado y «Enviar» (si no lo ve,
-  escribe su nombre en el buscador de la hoja).
+- No pulsa nada por ti, salvo con el **envío rápido** de Instagram y TikTok (viene apagado y necesita «A quién
+  envías»): al tocar una burbuja, pulsa únicamente «Compartir», la persona o el grupo que has fijado y «Enviar» (si no
+  lo ve, lo busca en el buscador de la hoja; en TikTok, tocando antes su lupa).
 - No hace capturas de pantalla, salvo una: solo con el envío rápido, recorta de la hoja de compartir la foto de perfil
   de las personas o grupos que fijas, para enseñarla en su burbuja; la guarda solo en este móvil y no hace ninguna otra
   captura. Si prefieres otra foto, la eliges con el selector de fotos de Android, que no pide permisos y solo le da a
@@ -93,7 +93,7 @@ TikTok · Instagram · YouTube
    ├─ ContentExtractor   creador, descripción y hashtags de la página visible
    ├─ CategoryClassifier palabras clave → 16 temas
    ├─ ShareDetector      cuenta los «Compartir»
-   ├─ RecipientDetector  a quién envías en Instagram (solo si lo enciendes)
+   ├─ RecipientDetector  a quién envías en Instagram y TikTok (solo si lo enciendes)
    └─ QuickSender        envío rápido: Compartir → la persona o el grupo → Enviar
           │
           ▼
@@ -108,7 +108,7 @@ Acerca de › toca 7 veces la versión; queda al final, en «Licencias y herrami
 Nada de Material por defecto. Fondo tinta `#11100E` o papel `#F3EEE5`, hueso `#EDE8DF` y un único acento
 naranja `#FF5A1F`. Tipografías Bricolage Grotesque, JetBrains Mono e Instrument Serif. Retícula de 4 dp, sin
 tarjetas redondeadas, sin degradados, sin emojis y animaciones con muelles. La única excepción son las burbujas del
-envío rápido, que imitan el cristal para no desentonar encima de Instagram. El sistema completo está en
+envío rápido, que imitan el cristal para no desentonar encima de Instagram y TikTok. El sistema completo está en
 [`docs/DESIGN.md`](docs/DESIGN.md).
 
 ## Instalar
@@ -162,12 +162,17 @@ app/src/main/java/com/reelometro/app/
 
 ## Estado
 
-Versión **1.8.0**. Con honestidad:
+Versión **1.10.0**. Con honestidad:
 
 - **Probado en un móvil real** (un Pixel con Android 17): TikTok e Instagram cuentan bien. El envío rápido de
   Instagram está medido envío a envío: entre 0,5 y 0,93 s a una persona y 1,4–1,6 s a un grupo que hay que buscar
   (casi todo ese tiempo es la búsqueda de Instagram). Las burbujas y la foto elegida de la galería también se han
   probado en ese móvil.
+- **Envío rápido en TikTok** (1.10.0, TikTok 47.7): medido en ese móvil, 11 envíos seguidos a un contacto que sale en la
+  hoja, todos entre 0,5 y 0,67 s, el décimo igual de rápido que el primero. Sin probar en el móvil: el camino del
+  buscador (cuando el fijado no sale en la hoja; probado con el árbol real en tests) y TikTok en otros idiomas. TikTok
+  cambia los identificadores de su pantalla en cada versión: si una actualización lo rompe, el envío se para y deja la
+  hoja abierta para terminar a mano.
 - **YouTube Shorts** (1.6.1): calibrado con un registro real de un Pixel (YouTube 21.44). Antes contaba unos 6 de cada
   27 Shorts; ahora, en una ronda de comprobación, 7 de 7. Las versiones de YouTube cambian sin avisar: si deja de
   cuadrar, la consola de Calibración dice por qué.
@@ -184,7 +189,7 @@ Versión **1.8.0**. Con honestidad:
   (798 vídeos: entran todos y, al repetir, ninguno se duplica).
 - **1.7.0**: las gráficas se recorren deslizando el dedo en horizontal (sin mantener pulsado) y Ajustes tiene un
   índice arriba que salta a cada sección; el envío rápido y las herramientas van plegados. Probado en el emulador.
-- Compila y pasa sus 871 tests JVM. Las capturas de este README usan datos de ejemplo.
+- Compila y pasa sus 969 tests JVM. Las capturas de este README usan datos de ejemplo.
 
 ## Apoyar el proyecto
 

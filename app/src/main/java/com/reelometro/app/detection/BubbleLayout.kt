@@ -1,5 +1,7 @@
 package com.reelometro.app.detection
 
+import com.reelometro.app.data.Platform
+
 import kotlin.math.roundToInt
 
 /**
@@ -10,7 +12,7 @@ import kotlin.math.roundToInt
  */
 data class BubbleSpot(val x: Float, val y: Float)
 
-/** La pila en columna (una debajo de otra) o en fila (una al lado de otra, encima del nombre del reel). */
+/** La pila en columna (una debajo de otra) o en fila (una al lado de otra, encima del nombre del vídeo). */
 enum class BubbleOrientation { COLUMN, ROW }
 
 /**
@@ -30,6 +32,19 @@ object BubbleLayout {
     val DEFAULT = BubbleSpot(x = 1f - LEGACY_EDGE_X, y = 0.40f)
 
     /**
+     * 1.10.0, sobre TikTok: en la columna de la derecha la foto del creador empieza hacia el 46 % de la altura (y los
+     * botones siguen hasta el 92 %), así que la pila va más arriba, con el centro al 30 %, bajo las pestañas de arriba
+     * (acaban hacia el 12 %, con la lupa a la derecha). Lo demás vale igual sobre TikTok (medido con el volcado de
+     * TikTok 47.7 en `BubbleLayoutTest`): una fila soltada al principio de su franja ([ROW_FROM_Y]) queda encima del
+     * nombre del creador y de la descripción (abajo a la izquierda, desde el 84 %), y la zona «X» solo se ve mientras
+     * se arrastra (soltar ahí no toca nada de TikTok).
+     */
+    val DEFAULT_TIKTOK = BubbleSpot(x = DEFAULT.x, y = 0.30f)
+
+    /** El sitio por defecto de las burbujas en [platform] (donde las deja RECOLOCAR). */
+    fun defaultFor(platform: Platform): BubbleSpot = if (platform == Platform.TIKTOK) DEFAULT_TIKTOK else DEFAULT
+
+    /**
      * Sin los márgenes del sistema a mano, la pila no pasa de esta franja (ni bajo la barra de estado ni encima de
      * la de navegación).
      */
@@ -43,8 +58,8 @@ object BubbleLayout {
     const val LEGACY_EDGE_X = 0.08f
 
     /**
-     * Soltada con el centro en la franja de abajo (de aquí hacia abajo, encima del nombre del reel), la pila se
-     * pone en **fila**; en el resto, en **columna**.
+     * Soltada con el centro en la franja de abajo (de aquí hacia abajo, encima del nombre del vídeo, en Instagram y en
+     * TikTok), la pila se pone en **fila**; en el resto, en **columna**.
      */
     const val ROW_FROM_Y = 0.72f
 
@@ -73,10 +88,13 @@ object BubbleLayout {
             s.copy(y = s.y.coerceAtMost(LEGACY_MAX_Y))
         }
 
-    /** Fracciones entre 0 y 1; lo que no es un número vuelve al de [DEFAULT]. */
-    fun sanitize(spot: BubbleSpot): BubbleSpot = BubbleSpot(
-        x = spot.x.takeIf { it.isFinite() }?.coerceIn(0f, 1f) ?: DEFAULT.x,
-        y = spot.y.takeIf { it.isFinite() }?.coerceIn(0f, 1f) ?: DEFAULT.y,
+    /**
+     * Fracciones entre 0 y 1; lo que no es un número vuelve al de [fallback] (el sitio por defecto de la app:
+     * [defaultFor]; sin decirlo, el de Instagram).
+     */
+    fun sanitize(spot: BubbleSpot, fallback: BubbleSpot = DEFAULT): BubbleSpot = BubbleSpot(
+        x = spot.x.takeIf { it.isFinite() }?.coerceIn(0f, 1f) ?: fallback.x,
+        y = spot.y.takeIf { it.isFinite() }?.coerceIn(0f, 1f) ?: fallback.y,
     )
 
     /**

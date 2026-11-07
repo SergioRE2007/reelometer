@@ -1,14 +1,16 @@
 package com.reelometro.app.detection
 
+import com.reelometro.app.data.Platform
+
 /**
- * «A quién envías» (solo Instagram y solo con el ajuste encendido): lee en la hoja de compartir el
- * nombre de la persona o el grupo al que mandas un vídeo.
+ * «A quién envías» (Instagram y, desde la 1.10.0, TikTok; solo con el ajuste encendido): lee en la hoja de
+ * compartir el nombre de la persona o el grupo al que mandas un vídeo.
  *
- * Funciona por sesiones. Una sesión se abre ([start]) justo después de que [ShareDetector] detecte
- * «compartir» y se cierra ([stop]) cuando el feed vuelve a moverse, al enviar con el botón de abajo
- * o, como mucho, a los [Config.sessionMaxMs]. Fuera de una sesión no se mira ningún clic.
+ * Funciona por sesiones. Una sesión se abre ([start], con el [PlatformProfile] de la app) justo después de que
+ * [ShareDetector] detecte «compartir» y se cierra ([stop]) cuando el feed vuelve a moverse, al enviar con el botón
+ * de abajo o, como mucho, a los [Config.sessionMaxMs]. Fuera de una sesión no se mira ningún clic.
  *
- * Dentro de la sesión, cada `TYPE_VIEW_CLICKED` de Instagram se clasifica así:
+ * Dentro de la sesión, cada `TYPE_VIEW_CLICKED` de **Instagram** se clasifica así:
  *  1. Campo de texto (buscador, «Escribe un mensaje») o algo dentro del visor de Reels: se ignora.
  *  2. **Enviar** (el propio botón o un hijo directo dice «Enviar»/«Send»/«Enviar por separado»):
  *     - con personas marcadas → se envía a todas y la sesión se cierra (la hoja se cierra sola);
@@ -19,8 +21,28 @@ package com.reelometro.app.detection
  *  5. Si no, es una persona o grupo: el primer texto con pinta de nombre de lo pulsado (o de su fila)
  *     se marca, o se desmarca si ya lo estaba.
  *
+ * En **TikTok** (la hoja va en su propia ventana; ver el KDoc de [PlatformProfile]), [onTikTokClick]:
+ *  1. Campo de texto (buscador, «Escribe un mensaje…») o algo del visor ([PlatformProfile.feedIds]): se ignora.
+ *  2. **Enviar** (texto exacto o [PlatformProfile.sendIds], `tv_send`): con marcados → enviado a todos y la sesión
+ *     se cierra (la hoja de TikTok se cierra al momento); sin marcados → nada (TikTok no tiene «Enviar» por fila).
+ *  3. **Emojis de reacción** (celdas de un `GridView` debajo de «Escribe un mensaje…»): se ignoran. No se sabe si
+ *     mandan el vídeo con ese emoji, así que no se apuntan.
+ *  4. **Opciones** ([PlatformProfile.sheetOptions]: «Compartir» —que es repostear—, WhatsApp, Copiar enlace,
+ *     Denunciar…, la lupa, «Cerrar»): se ignoran.
+ *  5. **Celda de la fila de contactos** (lo pulsado o un antepasado pulsable con descripción): su descripción es el
+ *     nombre **entero** (el texto de debajo puede ir cortado). Se marca o se desmarca. De respaldo, una celda **debajo
+ *     de una línea divisoria** de la hoja ([belowDivider]: los contactos van entre la cabecera y la primera línea) es
+ *     una opción con una etiqueta que no conocemos y se ignora.
+ *  6. **Fila del buscador** (pulsable, con un `CheckBox`): su primer texto es el nombre (un grupo, «Ana, Bea,
+ *     Carlos», con su nombre entero). Se marca o se desmarca.
+ *    Para «Enviar» y las opciones se mira **solo lo pulsado**, nunca sus hijos: en una fila del buscador, un hijo es el
+ *    usuario de esa persona (un usuario «send» o «audio» no es un botón).
+ * Los nombres se limpian con [clean] y las reglas de nombres de TikTok ([PlatformProfile.symbolNames]: sin marcas de
+ * dirección y valen los que son solo emojis, como «💿»). Un clic sin nodo ([EventUiNode]) solo se mira en TikTok
+ * ([acceptsNodelessClicks]); en Instagram se descarta, como siempre.
+ *
  * Nunca se lee nada del chat ni del mensaje: solo el nombre que sale en la hoja. Sin Android: se
- * prueba en la JVM con árboles falsos.
+ * prueba en la JVM con árboles falsos y con volcados reales (`UiDump`).
  */
 class RecipientDetector(private val config: Config = Config()) {
 
@@ -38,6 +60,8 @@ class RecipientDetector(private val config: Config = Config()) {
         /** Antepasados que se miran para saber si el clic es dentro del visor de Reels. */
         val maxFeedAncestors: Int = 12,
         val maxNameLength: Int = 64,
+        /** TikTok: antepasados que se miran buscando una línea divisoria encima de lo pulsado ([belowDivider]). */
+        val maxSectionAncestors: Int = 6,
     )
 
     sealed interface Outcome {
@@ -56,7 +80,7 @@ class RecipientDetector(private val config: Config = Config()) {
         data class Undone(val name: String, val since: Long, override val rule: String) : Outcome
     }
 
-    private class Session(val startedAt: Long, val reelId: Long?) {
+    private class Session(val startedAt: Long, val reelId: Long?, val profile: PlatformProfile) {
         val selected = LinkedHashSet<String>()
         var lastSent: String? = null
     }
@@ -64,11 +88,11 @@ class RecipientDetector(private val config: Config = Config()) {
     private var session: Session? = null
 
     /**
-     * Se acaba de pulsar «compartir» en el vídeo [reelId]: empieza a escuchar la hoja. [preselected]:
-     * personas ya marcadas en la hoja (el envío rápido que se quedó a medias marcó al grupo fijado).
+     * Se acaba de pulsar «compartir» en el vídeo [reelId] de la app de [profile]: empieza a escuchar la hoja.
+     * [preselected]: personas ya marcadas en la hoja (el envío rápido que se quedó a medias marcó al grupo fijado).
      */
-    fun start(now: Long, reelId: Long?, preselected: List<String> = emptyList()) {
-        session = Session(now, reelId).apply { selected.addAll(preselected) }
+    fun start(now: Long, reelId: Long?, preselected: List<String> = emptyList(), profile: PlatformProfile = PlatformProfile.INSTAGRAM) {
+        session = Session(now, reelId, profile).apply { selected.addAll(preselected) }
     }
 
     fun stop() {
@@ -77,6 +101,17 @@ class RecipientDetector(private val config: Config = Config()) {
 
     /** Personas o grupos marcados en la hoja abierta (0 sin hoja). */
     val selectedCount: Int get() = session?.selected?.size ?: 0
+
+    /** La app de la sesión abierta (sus clics son los únicos que se miran), o `null` sin sesión. */
+    val platform: Platform? get() = session?.profile?.platform
+
+    /**
+     * ¿Vale en la sesión abierta un clic que llega sin nodo ([EventUiNode], con lo que trae el propio evento)? Solo en las
+     * apps cuya hoja va en su propia ventana ([PlatformProfile.sheetOwnWindow], TikTok: su «Enviar» cierra la hoja al
+     * momento y el clic llega sin nodo). En Instagram no: sin nodo no se sabe si el clic viene del visor, y se descarta
+     * como hasta la 1.9.0.
+     */
+    val acceptsNodelessClicks: Boolean get() = session?.profile?.sheetOwnWindow == true
 
     fun isOpen(now: Long): Boolean {
         val s = session ?: return false
@@ -90,6 +125,8 @@ class RecipientDetector(private val config: Config = Config()) {
     fun onClick(node: UiNode, screenHeight: Int, now: Long): Outcome {
         if (!isOpen(now)) return Outcome.Ignored("sin hoja de compartir abierta")
         val s = session ?: return Outcome.Ignored("sin hoja de compartir abierta")
+        if (node is EventUiNode && !s.profile.sheetOwnWindow) return Outcome.Ignored("clic sin nodo")
+        if (s.profile.platform == Platform.TIKTOK) return onTikTokClick(s, node, screenHeight)
         if (node.className?.contains("EditText") == true) return Outcome.Ignored("campo de texto")
         if (insideFeed(node)) return Outcome.Ignored("dentro del visor de Reels, no en la hoja")
 
@@ -108,12 +145,156 @@ class RecipientDetector(private val config: Config = Config()) {
         val below = labelsBelow(node)
         if (below.any { isOption(normalize(it.value)) }) return Outcome.Ignored("otra opción de la hoja")
         val name = nameOf(below) ?: rowName(node, screenHeight) ?: return Outcome.Ignored("sin nombre")
-        return if (s.selected.remove(name)) {
-            Outcome.Toggled(name, s.selected.size, "desmarcado")
+        return toggle(s, name)
+    }
+
+    private fun toggle(s: Session, name: String, where: String = ""): Outcome.Toggled =
+        if (s.selected.remove(name)) {
+            Outcome.Toggled(name, s.selected.size, "desmarcado$where")
         } else {
             s.selected += name
-            Outcome.Toggled(name, s.selected.size, "marcado")
+            Outcome.Toggled(name, s.selected.size, "marcado$where")
         }
+
+    // ── TikTok (1.10.0) ──────────────────────────────────────────────────────────────────────────
+
+    /**
+     * La hoja de TikTok se ha cerrado (medido en el móvil, TikTok 47.7: su «Enviar» cierra la hoja **sin** un
+     * `TYPE_VIEW_CLICKED`, así que el clic en «Enviar» nunca llega). El servicio mira entonces si TikTok enseña abajo el
+     * aviso «Enviado a …» ([isSentBanner]) y llama aquí con lo que vio: con el aviso, enviado a los marcados; sin él (se
+     * cerró con la «X», con atrás o tocando fuera), no se apunta nada. En los dos casos la sesión se cierra: TikTok olvida lo
+     * marcado al cerrar la hoja.
+     */
+    fun onTikTokSheetClosed(selection: Selection, sentBanner: Boolean): Outcome {
+        if (session?.startedAt == selection.startedAt) session = null
+        if (!sentBanner) return Outcome.Ignored("hoja cerrada sin enviar")
+        return Outcome.Sent(selection.names, selection.reelId, closesSession = true, rule = "aviso de enviado (${selection.names.size})")
+    }
+
+    /** Lo marcado en la hoja de una app que cierra la hoja al enviar (TikTok), en el momento de cerrarse. */
+    data class Selection(val names: List<String>, val reelId: Long?, val startedAt: Long)
+
+    /** Un aviso «Enviado a …» de TikTok en pantalla: su texto normalizado y su ventana ([UiNode.windowId]; cada aviso, una nueva). */
+    data class SentBanner(val text: String, val windowId: Int)
+
+    /**
+     * Lo marcado ahora en la hoja de TikTok (para decidir con [onTikTokSheetClosed] cuando se compruebe el aviso), o `null`
+     * sin sesión de TikTok o sin nadie marcado. No cierra la sesión: si la hoja sigue abierta, todo sigue igual.
+     */
+    fun tikTokSelection(now: Long): Selection? {
+        if (!isOpen(now)) return null
+        val s = session?.takeIf { it.profile.platform == Platform.TIKTOK && it.selected.isNotEmpty() } ?: return null
+        return Selection(s.selected.toList(), s.reelId, s.startedAt)
+    }
+
+    /** Un clic en la hoja de compartir de TikTok (reglas en el KDoc de la clase). */
+    private fun onTikTokClick(s: Session, node: UiNode, screenHeight: Int): Outcome {
+        val profile = s.profile
+        if (node.className?.contains("EditText") == true) return Outcome.Ignored("campo de texto")
+        if (insideFeed(node, profile.feedIds)) return Outcome.Ignored("dentro del visor de vídeos, no en la hoja")
+
+        // Solo lo pulsado: los dos «Enviar» (y las opciones) llevan su etiqueta en el propio nodo. Los hijos de una fila del
+        // buscador son su nombre y su usuario, y un usuario «send» o «audio» no es un botón (la fila se lee abajo).
+        val own = labelsOf(node).map { normalize(it.value) }
+        // Un contacto que se llama «Send» o «Enviar» (su celda, su foto, su nombre o su fila del buscador) nunca es el botón:
+        // los dos «Enviar» de verdad no tienen encima ninguna celda ni fila de contacto (segunda pasada de la revisión).
+        val inContact = cell(node) != null || searchRow(node, screenHeight) != null
+        if (!inContact && (own.any { SEND.matches(it) } || isSendId(node, profile))) {
+            if (s.selected.isEmpty()) {
+                // La hoja de TikTok se cierra al momento: no queda nada que escuchar.
+                session = null
+                return Outcome.Ignored("enviar sin destinatario")
+            }
+            return send(s, node, screenHeight)
+        }
+        if (inReactionGrid(node)) return Outcome.Ignored("emoji de reacción (no se apunta)")
+        if (own.any { isSheetOption(it, profile) }) return Outcome.Ignored("otra opción de la hoja")
+
+        cell(node)?.let { cell ->
+            val desc = cell.contentDescription?.toString().orEmpty()
+            if (isSheetOption(normalize(desc), profile)) return Outcome.Ignored("otra opción de la hoja")
+            // Solo en la hoja: en el buscador, la lista empieza con una vista fina vacía que no separa nada.
+            if (belowDivider(cell)) return Outcome.Ignored("debajo de los contactos (opción de la hoja)")
+            val name = clean(desc, fromText = true, symbolNames = profile.symbolNames) ?: return Outcome.Ignored("sin nombre")
+            return toggle(s, name, " (fila)")
+        }
+        val row = searchRow(node, screenHeight) ?: return Outcome.Ignored("sin nombre")
+        // Solo el primer texto de la fila: si no vale, nunca el segundo («· Amigos», el usuario o «3 miembros»).
+        val first = labelsBelow(row).firstOrNull { it.isText }?.value ?: return Outcome.Ignored("sin nombre")
+        if (isSheetOption(normalize(first), profile)) return Outcome.Ignored("otra opción de la hoja")
+        val name = clean(first, fromText = true, symbolNames = profile.symbolNames) ?: return Outcome.Ignored("sin nombre")
+        return toggle(s, name, " (buscador)")
+    }
+
+    /**
+     * La celda de un contacto de la fila de TikTok: lo pulsado o su primer antepasado **pulsable con descripción**
+     * (la foto, el `CheckBox` y el nombre de dentro también son pulsables y no la llevan). La descripción es el nombre.
+     */
+    private fun cell(node: UiNode): UiNode? {
+        var current: UiNode? = node
+        repeat(config.maxAncestors + 1) {
+            val n = current ?: return null
+            if (n.isClickable && !n.contentDescription.isNullOrBlank()) return n
+            current = n.parent
+        }
+        return null
+    }
+
+    /**
+     * La fila del buscador de TikTok: lo pulsado o un antepasado pulsable, no más alto que una fila, con un `CheckBox`
+     * dentro (el de marcar) y algún texto.
+     */
+    private fun searchRow(node: UiNode, screenHeight: Int): UiNode? {
+        var current: UiNode? = node
+        repeat(config.maxAncestors + 1) {
+            val n = current ?: return null
+            val small = screenHeight <= 0 || n.bounds.height <= screenHeight * config.maxRowHeight
+            if (n.isClickable && small && hasCheckBox(n, depth = 0) && labelsBelow(n).any { it.isText }) return n
+            current = n.parent
+        }
+        return null
+    }
+
+    private fun hasCheckBox(node: UiNode, depth: Int): Boolean =
+        node.className?.contains("CheckBox") == true ||
+            (depth < MAX_CHECKBOX_DEPTH && node.children.take(MAX_ROW_CHILDREN).any { hasCheckBox(it, depth + 1) })
+
+    /** ¿Es un emoji de reacción? (Celdas de un `GridView`; los contactos van en una fila, nunca en una cuadrícula.) */
+    private fun inReactionGrid(node: UiNode): Boolean {
+        var current: UiNode? = node
+        repeat(MAX_GRID_ANCESTORS + 1) {
+            val n = current ?: return false
+            if (n.className?.contains("GridView") == true) return true
+            current = n.parent
+        }
+        return false
+    }
+
+    /**
+     * Regla de posición de la hoja de TikTok: subiendo desde una celda, ¿hay en algún nivel una **línea divisoria** (una
+     * vista fina, ancha y sin etiquetas) encima? Los contactos van entre la cabecera y la primera línea; debajo, las
+     * opciones de compartir, «Escribe un mensaje…» y los emojis. Por geometría (no por identidad de nodos, que en el
+     * móvil se piden de nuevo cada vez). Solo para las celdas de la hoja, no para las filas del buscador (su lista empieza
+     * con una vista de 1 px vacía).
+     */
+    internal fun belowDivider(node: UiNode): Boolean {
+        var current = node
+        repeat(config.maxSectionAncestors) {
+            val parent = current.parent ?: return false
+            val top = current.bounds.top
+            val divider = parent.children.take(MAX_SIBLINGS).any { sibling ->
+                isDivider(sibling, parent) && sibling.bounds.bottom <= top
+            }
+            if (divider) return true
+            current = parent
+        }
+        return false
+    }
+
+    private fun isDivider(node: UiNode, parent: UiNode): Boolean {
+        val b = node.bounds
+        return !b.isEmpty && b.height <= DIVIDER_MAX_PX && b.width * 2 >= parent.bounds.width &&
+            node.text.isNullOrBlank() && node.contentDescription.isNullOrBlank()
     }
 
     private fun send(s: Session, node: UiNode, screenHeight: Int): Outcome {
@@ -178,13 +359,16 @@ class RecipientDetector(private val config: Config = Config()) {
         return null
     }
 
-    /** ¿El nodo está dentro del visor de Reels (ids `clips_*`)? Lo usa también [QuickSender]. */
-    internal fun insideFeed(node: UiNode): Boolean {
+    /**
+     * ¿El nodo está dentro del visor de vídeos? Por defecto, el de Reels (ids `clips_*`); en otra app, sus
+     * [feedIds] ([PlatformProfile.feedIds]: en TikTok, `viewpager`). Lo usa también [QuickSender].
+     */
+    internal fun insideFeed(node: UiNode, feedIds: List<String> = FEED_IDS): Boolean {
         var current: UiNode? = node
         repeat(config.maxFeedAncestors) {
             val n = current ?: return false
             val id = shortViewId(n.viewId)
-            if (FEED_IDS.any { id.contains(it) }) return true
+            if (feedIds.any { id.contains(it) }) return true
             current = n.parent
         }
         return false
@@ -198,19 +382,27 @@ class RecipientDetector(private val config: Config = Config()) {
     /**
      * «Foto del perfil de Ana» → «Ana»; «Ana García, seleccionado» → «Ana García». `null` si no parece
      * un nombre (vacío, largo, sin letras, un botón o un estado como «Activo hace 5 min»).
+     *
+     * [symbolNames] son **las reglas de nombres de TikTok** ([PlatformProfile.symbolNames], 1.10.0): se quitan las marcas
+     * de dirección invisibles con las que TikTok rodea los nombres (U+200E delante; en los grupos, U+2068/U+2069) y vale
+     * un nombre hecho solo de emojis («💿»). Sin ellas (Instagram) el nombre sale exactamente como en la 1.9.0, con sus
+     * marcas si las lleva: es lo que ya está guardado (estadísticas, fijados y la clave de sus fotos).
      */
-    internal fun clean(raw: String, fromText: Boolean): String? {
-        var name = raw.replace(WHITESPACE, " ").trim()
-        PREFIXES.firstOrNull { normalize(name).startsWith(it) }?.let { name = name.substring(it.length).trim() }
+    internal fun clean(raw: String, fromText: Boolean, symbolNames: Boolean = false): String? {
+        fun norm(text: String) = if (symbolNames) normalize(text) else normalizeKeepingMarks(text)
+        var name = (if (symbolNames) stripBidi(raw) else raw).replace(WHITESPACE, " ").trim()
+        PREFIXES.firstOrNull { norm(name).startsWith(it) }?.let { name = name.substring(it.length).trim() }
         if (!fromText) name = name.substringBefore(", ").trim()
         while (true) {
-            val n = normalize(name)
+            val n = norm(name)
             val suffix = SUFFIXES.firstOrNull { n.endsWith(it) } ?: break
             name = name.dropLast(suffix.length).trim().trimEnd(',').trim()
         }
         if (name.isEmpty() || name.length > config.maxNameLength) return null
-        if (name.none { it.isLetter() }) return null // contadores («12»), puntos, iconos
-        val n = normalize(name)
+        // Contadores («12»), puntos, iconos. Con las reglas de TikTok vale un nombre hecho solo de emojis («💿»): allí hay
+        // quien se llama así.
+        if (name.none { it.isLetter() } && !(symbolNames && hasSymbol(name))) return null
+        val n = norm(name)
         if (SEND.matches(n) || UNDO.matches(n) || isOption(n) || STATUS.containsMatchIn(n)) return null
         return name
     }
@@ -224,7 +416,84 @@ class RecipientDetector(private val config: Config = Config()) {
 
         val WHITESPACE = Regex("\\s+")
 
-        fun normalize(text: String): String = CategoryClassifier.normalize(text).replace(WHITESPACE, " ").trim()
+        /** Para comparar: sin tildes, mayúsculas ni marcas de dirección (las de TikTok), y con los espacios juntos. */
+        fun normalize(text: String): String = normalizeKeepingMarks(stripBidi(text))
+
+        /**
+         * La normalización de la 1.9.0, que **no** quita las marcas de dirección: la de los nombres de Instagram que se
+         * guardan ([clean] sin las reglas de TikTok) y la clave de sus fijados ([AvatarRules.fileName] y `QuickSendMemory`),
+         * para que lo guardado antes de la 1.10.0 siga valiendo aunque el nombre lleve alguna.
+         */
+        fun normalizeKeepingMarks(text: String): String = CategoryClassifier.normalize(text).replace(WHITESPACE, " ").trim()
+
+        /** Marcas de dirección invisibles (LRM/RLM, U+202A–U+202E, U+2066–U+2069) que TikTok pone en los nombres. */
+        private val BIDI: Set<Char> = (listOf(0x200E, 0x200F) + (0x202A..0x202E) + (0x2066..0x2069)).mapTo(HashSet()) { Char(it) }
+
+        /**
+         * El aviso que pone TikTok abajo tras enviar («Enviado a 💿», «Sent to Ana»). Español e inglés vistos o conocidos;
+         * los demás, supuestos. Una sola lista para lo que se pide al atajo de texto (que distingue tildes) y para la regla
+         * ([SENT_BANNER], normalizada): todo aviso que la regla reconoce se puede encontrar.
+         */
+        val SENT_BANNER_QUERIES = listOf("Enviado a", "Enviada a", "Enviado para", "Sent to", "Envoyé à", "Inviato a", "Gesendet an")
+        val SENT_BANNER = Regex("^(?:" + SENT_BANNER_QUERIES.joinToString("|") { Regex.escape(normalize(it)) } + ") .+")
+
+        /**
+         * Lo más largo que puede ser el aviso (normalizado): «Enviado a» y el nombre o los nombres. Un texto más largo es
+         * otra cosa, como el pie de un vídeo que empieza por «Sent to…».
+         */
+        const val MAX_SENT_BANNER_LENGTH = 100
+
+        /** TikTok: el pie del vídeo (id sin ofuscar en 47.7): nunca es el aviso, aunque empiece por «Sent to…». */
+        val CAPTION_IDS = listOf("desc")
+
+        /**
+         * ¿Es el aviso «Enviado a …»? Una línea corta sin «#»: el pie de un vídeo («Sent to my bestie… #fyp») puede empezar
+         * igual.
+         */
+        fun isSentBanner(label: CharSequence): Boolean {
+            val raw = label.toString()
+            if ('#' in raw || '\n' in raw) return false
+            val n = normalize(raw)
+            return n.length <= MAX_SENT_BANNER_LENGTH && SENT_BANNER.matches(n)
+        }
+
+        /**
+         * Los avisos «Enviado a …» que se ven en [roots] (normalizados, con su ventana), buscados con el atajo de texto de
+         * [finder] ([SENT_BANNER_QUERIES]); nunca el pie del vídeo ([CAPTION_IDS]).
+         */
+        fun sentBanners(roots: List<UiNode>, finder: UiFinder): Set<SentBanner> {
+            val out = LinkedHashSet<SentBanner>()
+            for (root in roots) {
+                for (query in SENT_BANNER_QUERIES) {
+                    for (n in finder.byText(root, query)) {
+                        if (shortViewId(n.viewId) in CAPTION_IDS) continue
+                        listOfNotNull(n.text, n.contentDescription).filter { isSentBanner(it) }
+                            .forEach { out += SentBanner(normalize(it.toString()), n.windowId) }
+                    }
+                }
+            }
+            return out
+        }
+
+        /**
+         * Los avisos de [now] que son de **este** cierre de la hoja: los que no son ninguno de [before] (los de envíos anteriores
+         * que se veían al empezar la sesión). Un aviso es el mismo si dice lo mismo **en la misma ventana**: medido en el móvil
+         * (TikTok 47.7.3, 7 nov 2026), cada aviso sale en una ventana nueva (6437, 6458, 6459) y dura unos 5 s (aún a 4,2 y
+         * 4,7 s del envío; ya no a 5,0 y 6,4 s), también con la hoja encima. Así el de un envío anterior que sigue en pantalla
+         * nunca vale, por mucho que dure, y uno nuevo a las mismas personas sí, aunque diga lo mismo. Sin ventana conocida
+         * ([UiNode.NO_WINDOW]) basta el texto: un reenvío a las mismas personas con el aviso viejo aún a la vista no se apunta
+         * (mejor eso que uno inventado). Verificación final de la 1.10.0: comparando solo el texto, el aviso visto al pulsar
+         * «Compartir» dejaba sin apuntar cualquier envío a esa persona desde la hoja, por mucho que se tardara.
+         */
+        fun freshSentBanners(before: Set<SentBanner>, now: Set<SentBanner>): Set<SentBanner> =
+            now.filterTo(LinkedHashSet()) { b -> before.none { old -> old.text == b.text && sameWindow(old.windowId, b.windowId) } }
+
+        private fun sameWindow(a: Int, b: Int): Boolean = a == b || a == UiNode.NO_WINDOW || b == UiNode.NO_WINDOW
+
+        fun stripBidi(text: String): String = if (text.none { it in BIDI }) text else text.filterNot { it in BIDI }
+
+        /** ¿Lleva algún emoji o símbolo («💿», «🦇»)? */
+        fun hasSymbol(text: String): Boolean = text.codePoints().anyMatch { Character.getType(it) == Character.OTHER_SYMBOL.toInt() }
 
         /**
          * El «Enviar» de abajo de la hoja de hoy, por su id (Instagram 454, nov. 2026; `Button` con la descripción
@@ -239,11 +508,42 @@ class RecipientDetector(private val config: Config = Config()) {
         )
 
         /** ¿Es el «Enviar» de la hoja por su id (y no «Crear grupo»)? */
-        fun isSendId(node: UiNode): Boolean =
-            node.viewId == SEND_BUTTON_ID &&
-                (listOf(node) + node.children.take(MAX_OWN_CHILDREN))
-                    .flatMap { listOfNotNull(it.text, it.contentDescription) }
-                    .none { CREATE_GROUP.matches(normalize(it.toString())) }
+        fun isSendId(node: UiNode): Boolean = node.viewId == SEND_BUTTON_ID && !isCreateGroup(node)
+
+        /**
+         * Lo mismo en la hoja de [profile] (1.10.0): en Instagram, [SEND_BUTTON_ID]; en las demás, sus
+         * [PlatformProfile.sendIds] en cualquiera de sus paquetes (TikTok: `tv_send`, el del buscador).
+         */
+        fun isSendId(node: UiNode, profile: PlatformProfile): Boolean {
+            if (profile.platform == Platform.INSTAGRAM) return isSendId(node)
+            val id = node.viewId ?: return false
+            return profile.sendIds.any { id in profile.fullIds(it) } && !isCreateGroup(node)
+        }
+
+        private fun isCreateGroup(node: UiNode): Boolean =
+            (listOf(node) + node.children.take(MAX_OWN_CHILDREN))
+                .flatMap { listOfNotNull(it.text, it.contentDescription) }
+                .any { CREATE_GROUP.matches(normalize(it.toString())) }
+
+        /**
+         * ¿[n] (normalizado) es una opción de la hoja de [profile] y no un contacto? Sin los puntos finales de
+         * «Escribe un mensaje...».
+         */
+        fun isSheetOption(n: String, profile: PlatformProfile): Boolean {
+            val t = n.trimEnd('.', '…', ':', ' ')
+            return isOption(t) || t in profile.sheetOptions
+        }
+
+        /** TikTok: hasta dónde se busca el `CheckBox` de una fila del buscador, y cuántos hijos por nivel. */
+        private const val MAX_CHECKBOX_DEPTH = 2
+        private const val MAX_ROW_CHILDREN = 8
+
+        /** TikTok: antepasados que se miran buscando la cuadrícula de los emojis de reacción. */
+        private const val MAX_GRID_ANCESTORS = 3
+
+        /** TikTok: hermanos que se miran por nivel buscando una línea divisoria, y lo más gruesa que puede ser (px). */
+        private const val MAX_SIBLINGS = 16
+        private const val DIVIDER_MAX_PX = 6
 
         /**
          * Sobre texto normalizado (minúsculas, sin tildes). Español e inglés, y de respaldo (por si el id cambia) los

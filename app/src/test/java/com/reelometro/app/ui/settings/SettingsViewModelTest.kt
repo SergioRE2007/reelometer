@@ -627,7 +627,7 @@ class SettingsViewModelTest {
         advanceUntilIdle()
         assertEquals(null, settings.current().quickSendBubble)
         assertFalse(vm.content().quickSendMoved)
-        assertEquals(SettingsCopy.QUICK_SEND_RELOCATED, vm.content().quickSendMessage)
+        assertEquals(SettingsCopy.quickSendRelocated(Platform.INSTAGRAM.appName), vm.content().quickSendMessage)
     }
 
     @Test
@@ -660,5 +660,190 @@ class SettingsViewModelTest {
         assertEquals("la nueva manda sobre la vieja", BubbleSpot(x = 0.5f, y = 0.85f), settings.current().quickSendBubble)
         settings.resetQuickSendBubble()
         assertNull(settings.current().quickSendBubble)
+    }
+
+    // ------------------------------------------------------------------ envío rápido por app (1.10.0)
+
+    @Test
+    fun `una pestana por app y se abre en la primera con fijados o en Instagram`() = runTest(dispatcher) {
+        // Sin fijados: Instagram, con su lista.
+        val usage = FakeUsage().apply {
+            topFlow.value = listOf("Ana", "Primos")
+            tikTokTopFlow.value = listOf("rubio_m", "💿")
+        }
+        var vm = viewModel(usage = usage)
+        assertEquals(listOf(Platform.INSTAGRAM, Platform.TIKTOK), vm.content().quickSendApps)
+        assertEquals(Platform.INSTAGRAM, vm.content().quickSendApp)
+        assertEquals(listOf("Ana", "Primos"), vm.content().quickSendLines.map { it.name })
+        assertTrue(vm.content().quickSendLines.all { it.platform == Platform.INSTAGRAM })
+
+        // Solo con fijados en TikTok: se abre en TikTok, con sus contactos (no los de Instagram).
+        val settings = fakeSettings()
+        settings.toggleQuickSendTarget(Platform.TIKTOK, "💿")
+        vm = viewModel(settings, usage)
+        assertEquals(Platform.TIKTOK, vm.content().quickSendApp)
+        assertEquals(
+            listOf(QuickSendLine("rubio_m", false, Platform.TIKTOK), QuickSendLine("💿", true, Platform.TIKTOK)),
+            vm.content().quickSendLines,
+        )
+        assertEquals(1, vm.content().quickSendPinnedTotal)
+
+        // Con fijados en las dos: la primera (Instagram). La línea plegable cuenta los de las dos.
+        settings.toggleQuickSendTarget(Platform.INSTAGRAM, "Ana")
+        vm = viewModel(settings, usage)
+        assertEquals(Platform.INSTAGRAM, vm.content().quickSendApp)
+        assertEquals(2, vm.content().quickSendPinnedTotal)
+
+        // Cambiar de pestaña cambia la lista; YouTube no tiene pestaña.
+        vm.selectQuickSendApp(Platform.TIKTOK)
+        advanceUntilIdle()
+        assertEquals(Platform.TIKTOK, vm.content().quickSendApp)
+        assertEquals(listOf("rubio_m", "💿"), vm.content().quickSendLines.map { it.name })
+        vm.selectQuickSendApp(Platform.YOUTUBE)
+        advanceUntilIdle()
+        assertEquals(Platform.TIKTOK, vm.content().quickSendApp)
+    }
+
+    @Test
+    fun `fijar en TikTok no toca Instagram y el cupo de tres es por app`() = runTest(dispatcher) {
+        val settings = fakeSettings()
+        settings.setQuickSendTargets(listOf("Ana", "Primos", "Marta"))
+        val system = FakeSettingsSystem()
+        val usage = FakeUsage().apply {
+            topFlow.value = listOf("Ana", "Primos", "Marta", "Abuela")
+            tikTokTopFlow.value = listOf("Ana", "rubio_m", "nico_78x", "💿")
+        }
+        val vm = viewModel(settings, usage, system)
+        assertTrue("Instagram ya tiene 3", vm.content().quickSendFull)
+
+        vm.selectQuickSendApp(Platform.TIKTOK)
+        advanceUntilIdle()
+        assertFalse("en TikTok aún no tiene ninguno", vm.content().quickSendFull)
+        // La misma persona puede estar fijada en las dos apps: son dos fijados.
+        listOf("Ana", "rubio_m", "💿").forEach { vm.toggleQuickSendTarget(Platform.TIKTOK, it) }
+        advanceUntilIdle()
+        assertEquals(listOf("Ana", "rubio_m", "💿"), settings.current().quickSendTargets(Platform.TIKTOK))
+        assertEquals(listOf("Ana", "Primos", "Marta"), settings.current().quickSendTargets)
+        assertTrue(vm.content().quickSendFull)
+        assertEquals(6, vm.content().quickSendPinnedTotal)
+
+        // Con el cupo de TikTok lleno no se fija otro; quitar uno de TikTok deja a Ana en Instagram.
+        vm.toggleQuickSendTarget(Platform.TIKTOK, "nico_78x")
+        vm.toggleQuickSendTarget(Platform.TIKTOK, "Ana")
+        advanceUntilIdle()
+        assertEquals(listOf("rubio_m", "💿"), settings.current().quickSendTargets(Platform.TIKTOK))
+        assertEquals(listOf("Ana", "Primos", "Marta"), settings.current().quickSendTargets)
+        assertFalse(vm.content().quickSendFull)
+        // Para borrar fotos se pasan los fijados de las dos apps (con los de una, se irían las de la otra).
+        assertEquals(
+            mapOf(Platform.INSTAGRAM to listOf("Ana", "Primos", "Marta"), Platform.TIKTOK to listOf("rubio_m", "💿")),
+            system.pinnedMaps.last(),
+        )
+        // La de un argumento fija en la pestaña que se ve (aquí, TikTok).
+        vm.toggleQuickSendTarget("nico_78x")
+        advanceUntilIdle()
+        assertEquals(listOf("rubio_m", "💿", "nico_78x"), settings.current().quickSendTargets(Platform.TIKTOK))
+        // YouTube no tiene envío rápido.
+        vm.toggleQuickSendTarget(Platform.YOUTUBE, "Ana")
+        advanceUntilIdle()
+        assertTrue(settings.current().quickSendTargets(Platform.YOUTUBE).isEmpty())
+    }
+
+    @Test
+    fun `quitar el ultimo fijado de una pestana no salta a la otra`() = runTest(dispatcher) {
+        val settings = fakeSettings()
+        settings.toggleQuickSendTarget(Platform.INSTAGRAM, "Ana")
+        settings.toggleQuickSendTarget(Platform.TIKTOK, "rubio_m")
+        val usage = FakeUsage().apply { topFlow.value = listOf("Ana") }
+        val vm = viewModel(settings, usage)
+        assertEquals(Platform.INSTAGRAM, vm.content().quickSendApp)
+        vm.toggleQuickSendTarget(Platform.INSTAGRAM, "Ana")
+        advanceUntilIdle()
+        assertTrue(settings.current().quickSendTargets.isEmpty())
+        assertEquals("sigue en Instagram, donde se ha tocado", Platform.INSTAGRAM, vm.content().quickSendApp)
+        assertEquals(listOf(QuickSendLine("Ana", false, Platform.INSTAGRAM)), vm.content().quickSendLines)
+    }
+
+    @Test
+    fun `fotos y recolocar van por app`() = runTest(dispatcher) {
+        val settings = fakeSettings()
+        settings.toggleQuickSendTarget(Platform.INSTAGRAM, "Ana")
+        settings.toggleQuickSendTarget(Platform.TIKTOK, "Ana")
+        settings.setQuickSendBubble(Platform.INSTAGRAM, BubbleSpot(0.3f, 0.8f))
+        settings.setQuickSendBubble(Platform.TIKTOK, BubbleSpot(0.2f, 0.5f))
+        val system = FakeSettingsSystem()
+        val vm = viewModel(settings, system = system)
+        assertTrue(vm.content().quickSendMoved)
+
+        // La foto de Ana en TikTok no es la de Instagram.
+        vm.setQuickSendPhoto(Platform.TIKTOK, "Ana", "content://media/picker/0/7")
+        advanceUntilIdle()
+        assertEquals(mapOf("Ana" to "content://media/picker/0/7"), system.photosOf(Platform.TIKTOK))
+        assertTrue(system.chosenPhotos.isEmpty())
+        assertEquals("el aviso sale en la pestaña de esa app", Platform.TIKTOK, vm.content().quickSendApp)
+        assertEquals(SettingsCopy.QUICK_SEND_PHOTO_SET, vm.content().quickSendMessage)
+        // Solo a un fijado de esa app.
+        vm.setQuickSendPhoto(Platform.TIKTOK, "Primos", "content://media/picker/0/8")
+        vm.setQuickSendPhoto(Platform.YOUTUBE, "Ana", "content://media/picker/0/9")
+        advanceUntilIdle()
+        assertEquals(setOf(Platform.TIKTOK to "Ana"), system.photos.keys)
+
+        // Cambiar de pestaña borra el aviso de la otra.
+        vm.selectQuickSendApp(Platform.INSTAGRAM)
+        advanceUntilIdle()
+        assertNull(vm.content().quickSendMessage)
+        vm.setQuickSendPhoto(Platform.INSTAGRAM, "Ana", "content://media/picker/0/10")
+        vm.clearQuickSendPhoto(Platform.TIKTOK, "Ana")
+        advanceUntilIdle()
+        assertEquals(mapOf("Ana" to "content://media/picker/0/10"), system.chosenPhotos)
+        assertTrue(system.photosOf(Platform.TIKTOK).isEmpty())
+
+        // RECOLOCAR en TikTok solo mueve las de TikTok, y lo dice con su nombre.
+        vm.selectQuickSendApp(Platform.TIKTOK)
+        advanceUntilIdle()
+        assertTrue(vm.content().quickSendMoved)
+        vm.relocateQuickSend(Platform.TIKTOK)
+        advanceUntilIdle()
+        assertNull(settings.current().quickSendBubble(Platform.TIKTOK))
+        assertEquals(BubbleSpot(0.3f, 0.8f), settings.current().quickSendBubble(Platform.INSTAGRAM))
+        assertFalse(vm.content().quickSendMoved)
+        assertEquals(SettingsCopy.quickSendRelocated(Platform.TIKTOK.appName), vm.content().quickSendMessage)
+        vm.selectQuickSendApp(Platform.INSTAGRAM)
+        advanceUntilIdle()
+        assertTrue("las de Instagram siguen movidas", vm.content().quickSendMoved)
+    }
+
+    @Test
+    fun `una foto elegida tras recrear la app va a su pestana`() = runTest(dispatcher) {
+        // El selector de fotos devuelve el resultado a un ViewModel nuevo (Android mató la app): la app viene guardada.
+        val settings = fakeSettings()
+        settings.toggleQuickSendTarget(Platform.INSTAGRAM, "Ana")
+        settings.toggleQuickSendTarget(Platform.TIKTOK, "rubio_m")
+        val system = FakeSettingsSystem()
+        val vm = viewModel(settings, system = system)
+        assertEquals(Platform.INSTAGRAM, vm.content().quickSendApp)
+        vm.setQuickSendPhoto(Platform.TIKTOK, "rubio_m", "content://media/picker/0/11")
+        advanceUntilIdle()
+        assertEquals(Platform.TIKTOK, vm.content().quickSendApp)
+        assertEquals(SettingsCopy.QUICK_SEND_PHOTO_SET, vm.content().quickSendMessage)
+        // Si mientras tanto se eligió otra pestaña, el aviso no sale en la que no es.
+        vm.selectQuickSendApp(Platform.INSTAGRAM)
+        vm.setQuickSendPhoto(Platform.TIKTOK, "rubio_m", "content://media/picker/0/12")
+        advanceUntilIdle()
+        assertEquals(Platform.INSTAGRAM, vm.content().quickSendApp)
+        assertNull(vm.content().quickSendMessage)
+        assertEquals("content://media/picker/0/12", system.photosOf(Platform.TIKTOK)["rubio_m"])
+    }
+
+    @Test
+    fun `borrar todo vacia los fijados de las dos apps`() = runTest(dispatcher) {
+        val settings = fakeSettings()
+        settings.toggleQuickSendTarget(Platform.INSTAGRAM, "Ana")
+        settings.toggleQuickSendTarget(Platform.TIKTOK, "rubio_m")
+        val vm = viewModel(settings)
+        vm.clearAll()
+        advanceUntilIdle()
+        assertTrue(settings.current().allQuickSendTargets().values.all { it.isEmpty() })
+        assertEquals(0, vm.content().quickSendPinnedTotal)
     }
 }

@@ -12,7 +12,7 @@ más tipografía, números enormes, líneas finas, un solo acento**.
 ## 0. Prohibido (si lo ves, quítalo)
 
 - Degradados (de ningún tipo, salvo el sombreado sutil de las fichas split-flap y el reflejo y la sombra de las
-  burbujas de cristal del envío rápido, que van sobre Instagram: ver la excepción de la 1.4.2 en §3).
+  burbujas de cristal del envío rápido, que van sobre Instagram y TikTok: ver la excepción de la 1.4.2 en §3).
 - Morado, rosa o cian como color de interfaz. Solo existen tinta, hueso, grises cálidos y naranja señal.
 - Tarjetas redondeadas apiladas (`Card`, `ElevatedCard`, contenedores con radio ≥ 8 dp y sombra).
 - Sombras/elevación. La jerarquía se hace con tipografía, filetes y espacio. (Única excepción: la sombra suave de
@@ -102,15 +102,15 @@ tamaños por bloque. Las mayúsculas siempre con tracking. Números siempre form
 - **Retícula de 4 dp.** Tokens `Space` (`ui/theme/Space.kt`): `x1=4, x2=8, x3=12, x4=16, x5=20, x6=24, x8=32, x10=40, x12=48, x16=64, x20=80`.
 - Margen lateral de pantalla: **20 dp**. Separación entre secciones: **48 dp**. Dentro de sección: 12–16 dp.
 - Formas: bloques con **esquinas rectas (0 dp)**; fichas split-flap y botones **2 dp**; puntos circulares. Nada más.
-- **Excepción deliberada (1.4.0): avatares circulares.** Las burbujas del envío rápido (sobre los reels de
-  Instagram, `detection/QuickSendOverlay.kt`) y su vista previa en Ajustes son círculos, como la burbuja de
-  Instagram cuando un amigo da «me gusta» a un reel, con una **foto de perfil** (o las iniciales en Bricolage).
-  Es un avatar, no una tarjeta: no vale como precedente para contenedores redondeados. Sin texto visible (el
-  nombre va a TalkBack).
+- **Excepción deliberada (1.4.0): avatares circulares.** Las burbujas del envío rápido (sobre los vídeos de
+  Instagram y, desde la 1.10.0, de TikTok, `detection/QuickSendOverlay.kt`) y su vista previa en Ajustes son
+  círculos, como la burbuja de Instagram cuando un amigo da «me gusta» a un reel, con una **foto de perfil** (o
+  las iniciales en Bricolage; si el nombre es solo emojis, como los hay en TikTok, su primer emoji entero). Es un avatar, no una tarjeta: no vale como precedente para contenedores
+  redondeados. Sin texto visible (el nombre va a TalkBack).
 - **Excepción deliberada (1.4.2): burbujas de cristal.** Esas mismas burbujas ya no llevan aro de `signal` ni
   insignia (fuera el avión de papel): son de **cristal**, como las del sistema del iPhone actual, porque van
-  **encima de Instagram**, no dentro de la app. Un único dibujo, `detection/GlassBubbleArt.kt`, para las de verdad,
-  la vista previa de Ajustes y la galería (sección 16).
+  **encima de Instagram y TikTok**, no dentro de la app. Un único dibujo, `detection/GlassBubbleArt.kt`, para
+  las de verdad, la vista previa de Ajustes y la galería (sección 16).
   - **Medidas:** círculo de **42 dp** en una zona táctil de **48 dp** (`Space.x12`, accesibilidad), **4 dp**
     (`Space.x1`) entre burbujas.
   - **Cristal:** la foto recortada en círculo (o las iniciales en `text` sobre `bg` al 62 %); un **anillo** de

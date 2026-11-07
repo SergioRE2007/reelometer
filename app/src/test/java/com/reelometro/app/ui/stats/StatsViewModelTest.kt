@@ -5,10 +5,12 @@ import com.reelometro.app.copy.CopyPeriod
 import com.reelometro.app.copy.CopyRules
 import com.reelometro.app.copy.StatsCopy
 import com.reelometro.app.copy.Variants
+import com.reelometro.app.data.Platform
 import com.reelometro.app.stats.DateSpan
 import com.reelometro.app.stats.PeriodKind
 import com.reelometro.app.stats.PeriodRef
 import com.reelometro.app.stats.PeriodStats
+import com.reelometro.app.stats.RecipientRank
 import com.reelometro.app.stats.Streak
 import com.reelometro.app.stats.Totals
 import com.reelometro.app.stats.Trend
@@ -269,5 +271,25 @@ class StatsViewModelTest {
         assertNull(StatsMapper.trend(periodStats(PeriodRef.ALL_TIME)))
         val fromZero = Trend(DateSpan(TODAY.minusDays(8), TODAY.minusDays(7)), null, Totals.ZERO, 2, null, null)
         assertEquals("LA SEMANA ANTERIOR FUE A CERO", StatsMapper.trend(periodStats(PeriodRef.THIS_WEEK, trend = fromZero))!!.text)
+    }
+
+    @Test
+    fun `a quien envias dice la app de cada fila y la misma persona en dos apps son dos filas`() {
+        // 1.10.0: con envíos de Instagram y de TikTok, cada fila lleva la marca de su app (como los creadores).
+        val stats = periodStats(PeriodRef.THIS_MONTH).copy(
+            recipients = listOf(
+                RecipientRank(1, "Ana", Platform.INSTAGRAM, 9),
+                RecipientRank(2, "Ana", Platform.TIKTOK, 5),
+                RecipientRank(3, "rubio_m", Platform.TIKTOK, 2),
+            ),
+        )
+        val rows = StatsMapper.sections(stats, seed = 1L).recipients
+        assertEquals(listOf("Ana", "Ana", "rubio_m"), rows.map { it.handle })
+        assertEquals(listOf(Platform.INSTAGRAM, Platform.TIKTOK, Platform.TIKTOK), rows.map { it.platform })
+        assertEquals(3, rows.map { it.key }.toSet().size)
+        assertEquals(listOf("9", "5", "2"), rows.map { it.value })
+        // Con una sola app, igual que siempre.
+        val one = StatsMapper.sections(periodStats(PeriodRef.THIS_MONTH).copy(recipients = listOf(RecipientRank(1, "Ana", Platform.INSTAGRAM, 3))), seed = 1L)
+        assertEquals(listOf(Platform.INSTAGRAM), one.recipients.map { it.platform })
     }
 }

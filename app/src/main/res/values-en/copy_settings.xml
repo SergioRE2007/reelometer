@@ -112,30 +112,26 @@
     <!-- Con todas las apps apagadas. -->
     <string name="settings_all_apps_off">You\'ve turned them all off. That leaves nothing to count.</string>
 
-    <!-- Interruptor «A quién envías» (solo Instagram). «Estadísticas» es la pestaña de la app. -->
+    <!-- Interruptor «A quién envías» (Instagram y TikTok). «Estadísticas» es la pestaña de la app. -->
     <string name="settings_recipients_label">Who you send to</string>
-    <string name="settings_recipients_description">Instagram only. When you share a video, I note the name of the person or group you choose, and in Stats you can see who you send to most. I don\'t read the chat or what you type, and it stays on this phone.</string>
+    <string name="settings_recipients_description">On Instagram and TikTok. When you share a video, I note the name of the person or group you choose, and in Stats you can see who you send to most. I don\'t read the chat or what you type, and it stays on this phone.</string>
 
-    <!-- Interruptor «Envío rápido» (solo Instagram): unas burbujas sobre los reels que comparten el reel
-         con un toque. «Compartir» y «Enviar» citan los botones de Instagram tal cual: en cada idioma,
-         como los muestre Instagram en ese idioma. «X» es la zona donde se sueltan las burbujas. -->
+    <!-- Interruptor «Envío rápido» (Instagram y TikTok): unas burbujas sobre los vídeos que los comparten
+         con un toque. «Compartir» y «Enviar» citan los botones de Instagram y TikTok tal cual: en cada idioma,
+         como los muestren esas apps en ese idioma (en inglés las dos dicen «Share» y «Send»). «X» es la zona
+         donde se sueltan las burbujas. -->
     <string name="settings_quick_send_label">Quick send</string>
-    <string name="settings_quick_send_description">Instagram only. While you watch reels, a bubble appears for each person or group you pin. When you tap it, I tap “Share”, that name and “Send” for you; if it isn\'t in view, I type its name into the search box on the sheet. Nothing else. If something doesn\'t add up, I stop and you finish it. To show their photo in the bubble, I crop it from the share sheet when it\'s in view, or you can pick one from your gallery; it stays on this phone. Drag them wherever you like (at the bottom, above the reel\'s name, they line up in a row) or drop them on the “X” to hide them until the next reel.</string>
+    <string name="settings_quick_send_description">On Instagram and TikTok. While you watch videos, a bubble appears for each person or group you pin in that app. When you tap it, I tap “Share”, that name and “Send” for you; if it isn\'t in view, I look it up in the sheet\'s search bar (on TikTok, tapping its search icon first). Nothing else. If something doesn\'t add up, I stop and you finish it. To show their photo in the bubble, I crop it from the share sheet when it\'s in view, or you can pick one from your gallery; it stays on this phone. Drag them wherever you like (at the bottom, above the video\'s name, they line up in a row) or drop them on the “X” to hide them until the next video.</string>
     <!-- El gesto para enviar a dos personas a la vez. -->
     <string name="settings_quick_send_pair_hint">To send it to two people at once, press and hold a bubble until it comes loose, then drop it on top of another. If you tap another while one is sending, I add it to the same sheet.</string>
     <!-- Con «A quién envías» apagado, el envío rápido no se puede encender. -->
     <string name="settings_quick_send_needs_recipients">To use it, turn on “Who you send to” first: quick send looks up the name you pin in the sheet.</string>
-    <!-- Sin historial de envíos todavía: no hay nada que fijar. -->
-    <string name="settings_quick_send_empty">No one to pin yet. Share a reel by hand with “Who you send to” turned on: the people and groups you send to will appear here.</string>
-    <!-- Encima de la lista de personas y grupos para fijar. -->
-    <string name="settings_quick_send_list_label">Who you send to most</string>
     <!-- Botones de cada fila, en MAYÚSCULAS y con poco sitio: fijar a alguien / ya fijado. -->
     <string name="settings_quick_send_pin">PIN</string>
     <string name="settings_quick_send_pinned">PINNED</string>
-    <!-- Botón en MAYÚSCULAS: devuelve las burbujas a su sitio (borde derecho, a media altura). -->
+    <!-- Botón en MAYÚSCULAS: devuelve las burbujas de esa app a su sitio por defecto (borde derecho;
+         la altura depende de la app, ver BubbleLayout.defaultFor). -->
     <string name="settings_quick_send_relocate">RESET</string>
-    <string name="settings_quick_send_relocate_hint">The bubbles go back to the right edge, halfway down.</string>
-    <string name="settings_quick_send_relocated">Done. You\'ll see them in place on the next reel.</string>
     <!-- Ya hay el máximo de fijados. %1$s el máximo («3»). -->
     <plurals name="settings_quick_send_full">
         <item quantity="one">You already have %1$s pinned. Unpin it to pin another.</item>
@@ -155,6 +151,19 @@
     <string name="settings_quick_send_photo_pick_description">Pick a photo from the gallery for %1$s\'s bubble</string>
     <string name="settings_quick_send_photo_change_description">Change %1$s\'s bubble photo to another one from the gallery</string>
     <string name="settings_quick_send_photo_clear_description">Remove the photo chosen for %1$s and go back to the automatic one</string>
+
+    <!-- 1.10.0, envío rápido en Instagram y en TikTok: cada app tiene sus fijados y su sitio para las burbujas.
+         Va encima de las dos pestañas con el nombre de cada app (INSTAGRAM, TIKTOK: las marcas no se traducen). -->
+    <string name="settings_quick_send_apps_hint">Each app has its own pinned people and its own spot for the bubbles: your TikTok contacts aren\'t your Instagram ones.</string>
+    <!-- TalkBack de cada pestaña. %1$s el nombre de la app («TikTok», «Instagram»). -->
+    <string name="settings_quick_send_app_description">See who\'s pinned on %1$s</string>
+    <!-- Sin historial de envíos en esa app todavía: no hay nada que fijar. %1$s el nombre de la app (sale dos veces). -->
+    <string name="settings_quick_send_empty_app">No one to pin on %1$s yet. Share a video by hand on %1$s with “Who you send to” turned on: the people and groups you send to will appear here.</string>
+    <!-- Encima de la lista de personas y grupos para fijar. %1$s el nombre de la app. -->
+    <string name="settings_quick_send_list_label_app">Who you send to most on %1$s</string>
+    <!-- Bajo RECOLOCAR y tras pulsarlo. %1$s el nombre de la app. -->
+    <string name="settings_quick_send_relocate_hint_app">Your %1$s bubbles go back to their spot on the right edge.</string>
+    <string name="settings_quick_send_relocated_app">Done. You\'ll see them in place on the next %1$s video.</string>
 
     <!-- ============================================================ 04 tema e idioma -->
 

@@ -18,6 +18,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.reelometro.app.data.Platform
 import com.reelometro.app.ui.onboarding.SystemScreens
 import com.reelometro.app.ui.theme.rememberHaptics
 
@@ -61,12 +62,16 @@ fun SettingsRoute(
         if (uri != null) vm.onBackupFolderPicked(uri.toString())
     }
     // ELEGIR FOTO (1.4.3): el selector de fotos de Android, sin permisos (en versiones viejas, el respaldo de
-    // androidx abre el selector de documentos). Para quién era se guarda por si Android recrea la actividad.
+    // androidx abre el selector de documentos). Para quién (y de qué app, 1.10.0) era se guarda por si Android recrea
+    // la actividad.
     var photoFor by rememberSaveable { mutableStateOf<String?>(null) }
+    var photoApp by rememberSaveable { mutableStateOf<Platform?>(null) }
     val pickPhoto = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         val name = photoFor
+        val app = photoApp
         photoFor = null
-        if (uri != null && name != null) vm.setQuickSendPhoto(name, uri.toString())
+        photoApp = null
+        if (uri != null && name != null && app != null) vm.setQuickSendPhoto(app, name, uri.toString())
     }
 
     LaunchedEffect(vm) {
@@ -116,13 +121,15 @@ fun SettingsRoute(
             onNotifyGoalLive = vm::setNotifyGoalLive,
             onRecordRecipients = vm::setRecordRecipients,
             onQuickSend = vm::setQuickSendEnabled,
-            onQuickSendTarget = vm::toggleQuickSendTarget,
-            onQuickSendRelocate = vm::relocateQuickSend,
-            onQuickSendPickPhoto = { name ->
+            onQuickSendApp = vm::selectQuickSendApp,
+            onQuickSendTarget = { app, name -> vm.toggleQuickSendTarget(app, name) },
+            onQuickSendRelocate = { app -> vm.relocateQuickSend(app) },
+            onQuickSendPickPhoto = { app, name ->
                 photoFor = name
+                photoApp = app
                 pickPhoto.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
             },
-            onQuickSendClearPhoto = vm::clearQuickSendPhoto,
+            onQuickSendClearPhoto = { app, name -> vm.clearQuickSendPhoto(app, name) },
             onReplayTour = { vm.replayTour(onReady = onReplayTour) },
         ),
     )

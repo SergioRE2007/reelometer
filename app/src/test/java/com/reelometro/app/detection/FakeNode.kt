@@ -9,6 +9,9 @@ class FakeNode(
     override val bounds: NodeBounds = NodeBounds(0, 0, 100, 100),
     override val isVisible: Boolean = true,
     children: List<FakeNode> = emptyList(),
+    override val windowId: Int = UiNode.NO_WINDOW,
+    override val isClickable: Boolean = false,
+    override val isChecked: Boolean = false,
 ) : UiNode {
     override val children: List<UiNode> = children
     override var parent: UiNode? = null

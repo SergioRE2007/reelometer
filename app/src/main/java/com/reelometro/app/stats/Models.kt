@@ -70,7 +70,7 @@ data class CreatorRank(
     val totalMs: Long,
 )
 
-/** Puesto en el ranking de «a quién envías» ([rank] empieza en 1): persona o grupo de Instagram. */
+/** Puesto en el ranking de «a quién envías» ([rank] empieza en 1): persona o grupo de Instagram o TikTok. */
 data class RecipientRank(
     val rank: Int,
     val name: String,
@@ -191,7 +191,7 @@ data class DayStats(
  * @property hours 24 puntos con los totales del periodo por hora.
  * @property weekdays 7 puntos, de lunes a domingo, con medias por día registrado.
  * @property creators top 10.
- * @property recipients a quién envías más (top 10; solo Instagram y con el ajuste encendido; vacío si no).
+ * @property recipients a quién envías más (top 10; solo Instagram y TikTok y con el ajuste encendido; vacío si no).
  * @property trackedDays días del periodo desde el primer registro hasta hoy (hoy cuenta como día):
  *   es el divisor de las medias.
  * @property activeDays días con al menos un vídeo.
