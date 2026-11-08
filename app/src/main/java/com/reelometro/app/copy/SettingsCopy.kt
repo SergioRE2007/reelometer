@@ -523,7 +523,10 @@ object SettingsCopy {
 
     val SIGNATURE: String get() = str(R.string.settings_signature)
 
-    /** El proyecto en GitHub (solo si hay enlace en `AppLinks.PROJECT_URL`). Sin hablar de pagos: ver `AppLinks`. */
+    /**
+     * El proyecto en GitHub (solo si hay enlace en `AppLinks.PROJECT_URL`). Sin hablar de pagos: ver `AppLinks`.
+     * [PROJECT_NOTE] y [PROJECT_NO_BROWSER] sirven también para el enlace de la política (07 PRIVACIDAD).
+     */
     val PROJECT_TEXT: String get() = str(R.string.settings_project_text)
     val PROJECT_BUTTON: String get() = str(R.string.settings_project_button)
     val PROJECT_NOTE: String get() = str(R.string.settings_project_note)

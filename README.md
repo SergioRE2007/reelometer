@@ -13,7 +13,7 @@ de qué temas y de quién. Todo se queda en tu móvil.
 
 **[sergiore2007.github.io/reelometer](https://sergiore2007.github.io/reelometer/)**
 
-![Versión 1.10.0](https://img.shields.io/badge/versión-1.10.0-11100E?style=flat-square)
+![Versión 1.10.3](https://img.shields.io/badge/versión-1.10.3-11100E?style=flat-square)
 ![Android 8.0+](https://img.shields.io/badge/Android-8.0%2B-11100E?style=flat-square&logo=android&logoColor=EDE8DF)
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.4-11100E?style=flat-square&logo=kotlin&logoColor=EDE8DF)
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack_Compose-11100E?style=flat-square&logo=jetpackcompose&logoColor=EDE8DF)
@@ -78,8 +78,9 @@ potente, así que la app está hecha para no poder abusar de él:
   captura. Si prefieres otra foto, la eliges con el selector de fotos de Android, que no pide permisos y solo le da a
   la app la foto que tú eliges.
 - Antes de activar nada, la app explica todo esto en una pantalla propia.
-- El único enlace de la app (al GitHub del proyecto, en Ajustes y en un aviso que sale como mucho dos veces) lo abre
-  tu navegador: la app sigue sin internet y no sabe si lo abres ni si apoyas el proyecto.
+- La app solo tiene dos enlaces: la política de privacidad (Ajustes › Privacidad) y el GitHub del proyecto (en Ajustes y en
+  un aviso que sale como mucho dos veces). Los abre tu navegador: la app sigue sin internet y no sabe si los abres ni si
+  apoyas el proyecto.
 
 Todos los detalles están en la [política de privacidad](https://sergiore2007.github.io/reelometer/privacidad/) (también en [PRIVACY.md](PRIVACY.md)).
 
@@ -164,7 +165,7 @@ app/src/main/java/com/reelometro/app/
 
 ## Estado
 
-Versión **1.10.0**. Con honestidad:
+Versión **1.10.3** (la política de privacidad, enlazada desde Ajustes). Con honestidad:
 
 - **Probado en un móvil real** (un Pixel con Android 17): TikTok e Instagram cuentan bien. El envío rápido de
   Instagram está medido envío a envío: entre 0,5 y 0,93 s a una persona y 1,4–1,6 s a un grupo que hay que buscar

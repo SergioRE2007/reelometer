@@ -55,6 +55,7 @@ import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import com.reelometro.app.copy.AppLanguage
+import com.reelometro.app.copy.AppTexts
 import com.reelometro.app.copy.A11y
 import com.reelometro.app.copy.Buttons
 import com.reelometro.app.copy.DisclosureCopy
@@ -308,6 +309,7 @@ private fun SettingsList(s: SettingsState, actions: SettingsActions) {
                         Text(it, style = ReelTheme.type.body, color = ReelTheme.colors.text)
                     }
                 }
+                PrivacyPolicyBlock()
             }
         }
         item(key = SettingsPart.ABOUT.key) {
@@ -1144,6 +1146,28 @@ private fun ProjectBlock(url: String) {
         SettingsCopy.PROJECT_BUTTON,
         onClick = {
             failed = !AppLinks.open(context, url)
+        },
+        style = ReelButtonStyle.Secondary,
+        icon = ReelIcons.External,
+    )
+    Spacer(Modifier.height(Space.x2))
+    Text(SettingsCopy.PROJECT_NOTE, style = ReelTheme.type.bodySmall, color = ReelTheme.colors.textMuted)
+    Feedback(if (failed) SettingsCopy.PROJECT_NO_BROWSER else null, Modifier.padding(top = Space.x2))
+}
+
+/**
+ * 07 PRIVACIDAD: la política completa en la web (en español o en inglés, según el idioma de los textos). Siempre visible,
+ * también en la build de Play (Play pide que la política se pueda abrir desde la app). La abre el navegador.
+ */
+@Composable
+private fun PrivacyPolicyBlock() {
+    val context = LocalContext.current
+    var failed by remember { mutableStateOf(false) }
+    Spacer(Modifier.height(Space.x6))
+    ReelButton(
+        SettingsCopy.PRIVACY_POLICY_LINK,
+        onClick = {
+            failed = !AppLinks.open(context, AppLinks.privacyUrl(AppTexts.current.locale))
         },
         style = ReelButtonStyle.Secondary,
         icon = ReelIcons.External,

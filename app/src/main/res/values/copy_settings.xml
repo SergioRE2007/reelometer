@@ -317,7 +317,7 @@
         <item>Tus datos solo salen de aquí si los sacas tú: al exportar el CSV o al compartir tu ticket.</item>
         <item>Si desactivas el servicio, deja de contar. Si borras los datos o desinstalas la app, desaparecen.</item>
     </string-array>
-    <!-- Enlace en MAYÚSCULAS. -->
+    <!-- Enlace en MAYÚSCULAS. Abre la política en el navegador: en español si los textos están en español; en inglés con cualquier otro idioma. -->
     <string name="settings_privacy_policy_link">POLÍTICA DE PRIVACIDAD COMPLETA</string>
 
     <!-- ============================================================ 08 acerca de -->
@@ -352,6 +352,7 @@
     <!-- El proyecto en GitHub. El botón va en MAYÚSCULAS. -->
     <string name="settings_project_text">Reelometer es gratis, no tiene anuncios y lo hace una sola persona. El proyecto está en GitHub.</string>
     <string name="settings_project_button">VER EN GITHUB</string>
+    <!-- Nota y error genéricos: salen también bajo el enlace de la política de privacidad (07). No nombres GitHub. -->
     <string name="settings_project_note">Se abre en tu navegador. La app sigue sin internet.</string>
     <string name="settings_project_no_browser">No hay ningún navegador para abrir el enlace.</string>
 

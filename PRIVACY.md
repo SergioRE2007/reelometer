@@ -12,7 +12,7 @@
 
 ## 1. Quién está detrás
 
-Reelometer es una app desarrollada por **Sergio** ([SergioRE2007](https://github.com/SergioRE2007) en GitHub), un estudiante. Para cualquier pregunta sobre esta política o sobre tus datos, abre una incidencia en **https://github.com/SergioRE2007/reelometer/issues**.
+Reelometer es una app desarrollada por **Sergio Rodríguez Espinosa**, una persona particular que la hace en su tiempo libre. Para cualquier pregunta sobre esta política o sobre tus datos, escribe a **sergiore2007@gmail.com** o abre una incidencia en **https://github.com/SergioRE2007/reelometer/issues**.
 
 Como la app no envía ningún dato fuera de tu móvil, nosotros no recibimos, no vemos y no guardamos ninguna información sobre ti ni sobre lo que haces con ella.
 
@@ -133,7 +133,7 @@ Reelometer no está dirigida a menores de 13 años. Como la app no recoge ni env
 
 Según el Reglamento General de Protección de Datos (RGPD) y la normativa española, tienes derecho a acceder a tus datos, rectificarlos, suprimirlos, llevártelos y oponerte a su tratamiento. Como tus datos están solo en tu móvil, puedes ejercer estos derechos directamente desde la app: verlos (Hoy, Estadísticas, Resumen, Pasaporte), llevártelos (Exportar CSV) y borrarlos (Borrar todo). Nosotros no tenemos ninguna copia que consultar, corregir o borrar.
 
-Si tienes cualquier duda, abre una incidencia en **https://github.com/SergioRE2007/reelometer/issues**. También puedes presentar una reclamación ante la Agencia Española de Protección de Datos (www.aepd.es).
+Si tienes cualquier duda, escribe a **sergiore2007@gmail.com** o abre una incidencia en **https://github.com/SergioRE2007/reelometer/issues**. También puedes presentar una reclamación ante la Agencia Española de Protección de Datos (www.aepd.es).
 
 ## 10. Otras apps
 
@@ -145,4 +145,4 @@ Si cambia la forma en que la app trata tus datos, actualizaremos esta página y 
 
 ## 12. Contacto
 
-Incidencias del proyecto en GitHub: **https://github.com/SergioRE2007/reelometer/issues**
+Responsable: **Sergio Rodríguez Espinosa**. Correo: **sergiore2007@gmail.com**. Incidencias del proyecto en GitHub: **https://github.com/SergioRE2007/reelometer/issues**

@@ -13,7 +13,7 @@ on which topics and from whom. Everything stays on your phone.
 
 **[sergiore2007.github.io/reelometer](https://sergiore2007.github.io/reelometer/en/)**
 
-![Version 1.10.0](https://img.shields.io/badge/version-1.10.0-11100E?style=flat-square)
+![Version 1.10.3](https://img.shields.io/badge/version-1.10.3-11100E?style=flat-square)
 ![Android 8.0+](https://img.shields.io/badge/Android-8.0%2B-11100E?style=flat-square&logo=android&logoColor=EDE8DF)
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.4-11100E?style=flat-square&logo=kotlin&logoColor=EDE8DF)
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack_Compose-11100E?style=flat-square&logo=jetpackcompose&logoColor=EDE8DF)
@@ -82,8 +82,9 @@ permission, so the app is built so that it can't abuse it:
   screenshot. If you'd rather use another photo, you choose it with Android's photo picker, which asks for no
   permissions and only gives the app the photo you pick.
 - Before you turn anything on, the app explains all of this on a screen of its own.
-- The app's only link (to the project's GitHub, in Settings and in a notice shown at most twice) is opened by your
-  browser: the app still has no internet and doesn't know whether you open it or support the project.
+- The app has only two links: the privacy policy (Settings › Privacy) and the project's GitHub (in Settings and in a
+  notice shown at most twice). Your browser opens them: the app still has no internet and doesn't know whether you open
+  them or support the project.
 
 All the details are in the [privacy policy](https://sergiore2007.github.io/reelometer/en/privacy/) (the Spanish original is [PRIVACY.md](PRIVACY.md)).
 
@@ -167,7 +168,7 @@ app/src/main/java/com/reelometro/app/
 
 ## Status
 
-Version **1.10.0**. Honestly:
+Version **1.10.3** (the privacy policy, linked from Settings). Honestly:
 
 - **Tested on a real phone** (a Pixel with Android 17): TikTok and Instagram count correctly. Instagram quick send has
   been measured send by send: between 0.5 and 0.93 s to a person and 1.4–1.6 s to a group that has to be searched for
