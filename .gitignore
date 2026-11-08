@@ -13,3 +13,6 @@ local.properties
 # Claves de firma: nunca en git.
 keystore/*.keystore
 keystore/*.bin
+
+# Web: salida del montaje
+/web/dist/

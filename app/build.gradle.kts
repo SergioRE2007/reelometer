@@ -17,8 +17,8 @@ android {
         applicationId = "com.reelometro.app"
         minSdk = 26
         targetSdk = 37
-        versionCode = 18
-        versionName = "1.10.1"
+        versionCode = 19
+        versionName = "1.10.2"
     }
 
     androidResources {
@@ -66,15 +66,35 @@ android {
         logger.info("Reelometer: sin llave debug fija; las APK debug se firman con la clave debug del equipo")
     }
 
+    // Llave propia para firmar la release. Se lee de local.properties (reelometro.releaseKeystore / …Password /
+    // …KeyAlias) o de las variables de entorno REELOMETRO_RELEASE_KEYSTORE / _PASSWORD / _KEY_ALIAS, igual que la debug.
+    // Sin ella (o sin el fichero), assembleRelease genera una APK sin firmar.
+    val fixedReleaseKey = signingValue("reelometro.releaseKeystore", "REELOMETRO_RELEASE_KEYSTORE")?.let { rootProject.file(it) }
+    val fixedReleasePassword = signingValue("reelometro.releaseKeystorePassword", "REELOMETRO_RELEASE_KEYSTORE_PASSWORD")
+    val fixedReleaseAlias = signingValue("reelometro.releaseKeyAlias", "REELOMETRO_RELEASE_KEY_ALIAS") ?: "reelometer-release"
+    val hasReleaseKey = fixedReleaseKey != null && fixedReleaseKey.exists() && fixedReleasePassword != null
+    if (hasReleaseKey) {
+        signingConfigs {
+            create("release") {
+                storeFile = fixedReleaseKey
+                storePassword = fixedReleasePassword
+                keyAlias = fixedReleaseAlias
+                keyPassword = fixedReleasePassword
+            }
+        }
+    }
+
     buildTypes {
         release {
             optimization {
                 enable = true
                 packageScope = setOf("androidx.**", "kotlin.**", "kotlinx.**")
             }
-            // Solo para probar la build de release en local: ./gradlew assembleRelease -PsignReleaseWithDebug=true
+            // Prioridad: -PsignReleaseWithDebug=true (solo prueba local) > llave release propia > sin firmar.
             if (providers.gradleProperty("signReleaseWithDebug").orNull == "true") {
                 signingConfig = signingConfigs.getByName("debug")
+            } else if (hasReleaseKey) {
+                signingConfig = signingConfigs.getByName("release")
             }
         }
     }

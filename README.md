@@ -11,6 +11,8 @@
 Cuenta los vídeos que ves en TikTok, Instagram Reels y YouTube Shorts: cuántos, cuánto tiempo,
 de qué temas y de quién. Todo se queda en tu móvil.
 
+**[sergiore2007.github.io/reelometer](https://sergiore2007.github.io/reelometer/)**
+
 ![Versión 1.10.0](https://img.shields.io/badge/versión-1.10.0-11100E?style=flat-square)
 ![Android 8.0+](https://img.shields.io/badge/Android-8.0%2B-11100E?style=flat-square&logo=android&logoColor=EDE8DF)
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.4-11100E?style=flat-square&logo=kotlin&logoColor=EDE8DF)
@@ -79,7 +81,7 @@ potente, así que la app está hecha para no poder abusar de él:
 - El único enlace de la app (al GitHub del proyecto, en Ajustes y en un aviso que sale como mucho dos veces) lo abre
   tu navegador: la app sigue sin internet y no sabe si lo abres ni si apoyas el proyecto.
 
-Todos los detalles están en la [política de privacidad](PRIVACY.md).
+Todos los detalles están en la [política de privacidad](https://sergiore2007.github.io/reelometer/privacidad/) (también en [PRIVACY.md](PRIVACY.md)).
 
 ## Cómo funciona
 

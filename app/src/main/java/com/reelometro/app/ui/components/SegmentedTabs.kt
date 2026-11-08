@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.text.BasicText
@@ -123,6 +124,7 @@ fun SegmentedTabs(
                         },
                     )
                     .then(descriptions?.getOrNull(index)?.let { d -> Modifier.semantics { contentDescription = d } } ?: Modifier)
+                    .widthIn(min = Space.touch)
                     .height(Space.touch)
                     .padding(end = if (index < options.lastIndex) Space.x6 else 0.dp)
                     .onPlaced {

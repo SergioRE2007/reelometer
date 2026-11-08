@@ -6,8 +6,7 @@ import androidx.compose.animation.core.rememberTransition
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.semantics.LiveRegionMode
@@ -226,7 +226,7 @@ private fun SupportPromptDialog(
             Modifier
                 .fillMaxSize()
                 .drawBehind { drawRect(colors.bg, alpha = SCRIM_ALPHA * scrim) }
-                .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, onClick = onLater)
+                .pointerInput(onLater) { detectTapGestures { onLater() } }
                 .safeDrawingPadding()
                 .padding(Space.screen),
             contentAlignment = Alignment.Center,
@@ -241,7 +241,7 @@ private fun SupportPromptDialog(
                         translationY = (1f - sheet) * 24.dp.toPx() * rise
                     }
                     .semantics { paneTitle = SupportCopy.PANE_TITLE }
-                    .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, onClick = {})
+                    .pointerInput(Unit) { detectTapGestures { } }
                     .background(colors.bgRaised, shape)
                     .border(Space.hairline, colors.lineStrong, shape)
                     .verticalScroll(rememberScrollState()),

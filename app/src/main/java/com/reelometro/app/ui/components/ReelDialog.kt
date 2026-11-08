@@ -8,8 +8,7 @@ import androidx.compose.animation.core.rememberTransition
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.semantics.heading
@@ -109,7 +109,7 @@ fun ReelDialog(
             Modifier
                 .fillMaxSize()
                 .drawBehind { drawRect(colors.bg, alpha = SCRIM_ALPHA * scrim) }
-                .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, onClick = onDismiss)
+                .pointerInput(onDismiss) { detectTapGestures { onDismiss() } }
                 .safeDrawingPadding()
                 .padding(Space.screen),
             contentAlignment = Alignment.Center,
@@ -125,7 +125,7 @@ fun ReelDialog(
                     }
                     .semantics { paneTitle = title }
                     // Absorbe los toques para que no lleguen al velo.
-                    .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, onClick = {})
+                    .pointerInput(Unit) { detectTapGestures { } }
                     .background(colors.bgRaised, shape)
                     .border(Space.hairline, colors.lineStrong, shape)
                     .verticalScroll(rememberScrollState()),

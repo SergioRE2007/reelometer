@@ -298,8 +298,14 @@ class ReelAccessibilityService : AccessibilityService() {
             "⇢ depuración: envío rápido en ${platform?.shortName ?: "ningún vídeo"} · ${names.size} nombre(s), " +
                 "${names.count { it in pinned }} fijado(s) en esa app · activo: ${quickSendActive()}",
         )
+        // `--ez search true`: directo al buscador (como un fijado que no suele salir en la fila), para medir ese camino.
+        debugForceSearch = intent.getBooleanExtra("search", false)
         if (names.isNotEmpty()) onQuickSendRequest(names, gesture = "depuración")
+        debugForceSearch = false
     }
+
+    /** Solo debug ([onDebugQuickSend]): el envío que se lanza ahora va directo al buscador. */
+    private var debugForceSearch = false
 
     private val screenOffReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -749,6 +755,9 @@ class ReelAccessibilityService : AccessibilityService() {
         }
         board.onUserSheetOpened(now)
         CalibrationLog.log { CalibrationEvent(now, INFO, platform = platform, rule = "envío rápido: hoja abierta a mano (burbujas fuera)") }
+        // 1.10.2: si la app no llega a abrir la hoja (un toque que ignora, p. ej. justo tras un envío rápido), no hay cambio de
+        // ventana que lo diga: se mira igual, con margen para que la hoja tenga tiempo de salir.
+        checkSheetGone(platform, firstDelay = SHEET_CLICK_CHECK_MS)
         // Un compartir a mano en el mismo reel tras un envío rápido: el detector está en pausa (no lo cuenta otra vez),
         // pero lo que se envíe desde la hoja se apunta y, al enviarlo, la hoja se da por cerrada.
         val t = tracker
@@ -1667,6 +1676,7 @@ class ReelAccessibilityService : AccessibilityService() {
         memory?.let { it.streak = it.streak.used() }
         val hints = memory?.hints(platform) ?: QuickSender.Hints()
         val targets = names.map { memory?.target(it, wantAvatar = wantsQuickAvatar(platform, it, now), platform = platform) ?: QuickSender.Target(it) }
+            .map { if (debugForceSearch) it.copy(skipGrid = true) else it }
         // En el hilo de los pasos (start está sincronizado con tick: así no espera aquí a un paso que acaba).
         readScope.launch { quickSender.start(targets, now, hints, waitClosed, profile = profile) }
         board.onSending(names, quickVideoId)
@@ -2189,15 +2199,23 @@ class ReelAccessibilityService : AccessibilityService() {
      * ([BubbleBoard.onSheetGone]). Con los comentarios u otra hoja abierta (otra ventana encima) siguen fuera. Solo en las apps
      * cuya hoja va en su propia ventana: en Instagram, todo como antes.
      */
-    private fun checkSheetGone(platform: Platform) {
+    private fun checkSheetGone(platform: Platform, firstDelay: Long = BubbleBoard.SETTLE_MS) {
         if (PlatformProfile.of(platform)?.sheetOwnWindow != true) return
         val openedAt = board.sheetOpenedAt ?: return
         val feedWindow = feedNode?.takeIf { feedPlatform == platform }?.let { runCatching { it.windowId }.getOrNull() } ?: return
         val run = ++sheetGoneRun
         readScope.launch {
-            delay(BubbleBoard.SETTLE_MS)
-            if (run != sheetGoneRun || quickBusy) return@launch
-            if (sheetWindowAbove(feedWindow) != false) return@launch
+            delay(firstDelay)
+            // 1.10.2: una ventana encima puede irse sin avisar (el aviso «Enviado a …» de TikTok, de pantalla completa, dura ~5 s
+            // y al quitarse no hay cambio de ventana): se sigue mirando cada SHEET_POLL_MS hasta SHEET_WATCH_MS.
+            var waited = firstDelay
+            while (true) {
+                if (run != sheetGoneRun || quickBusy) return@launch
+                if (sheetWindowAbove(feedWindow) == false) break
+                if (waited >= SHEET_WATCH_MS) return@launch
+                delay(SHEET_POLL_MS)
+                waited += SHEET_POLL_MS
+            }
             withContext(Dispatchers.Main) {
                 if (run != sheetGoneRun || quickBusy) return@withContext
                 val now = System.currentTimeMillis()
@@ -2372,6 +2390,11 @@ class ReelAccessibilityService : AccessibilityService() {
     }
 
     companion object {
+        /** Tras un clic que debería abrir la hoja: lo que se espera antes de mirar si salió (en el móvil sale en ~0,3 s). */
+        private const val SHEET_CLICK_CHECK_MS = 1_500L
+        /** Cada cuánto se vuelve a mirar si queda una ventana encima del feed, y hasta cuándo (el aviso dura ~5 s). */
+        private const val SHEET_POLL_MS = 500L
+        private const val SHEET_WATCH_MS = 8_000L
         const val TAG = "Reelometro"
 
         /**
