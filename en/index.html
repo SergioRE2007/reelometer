@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="en" data-page="home">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reelometer · The scoreboard for your short videos</title>
+<meta name="description" content="Counts the videos you watch on TikTok, Instagram Reels and YouTube Shorts: how many, how long and whose. No internet. Everything stays on your phone.">
+<meta name="color-scheme" content="dark light">
+<meta name="referrer" content="no-referrer">
+<link rel="canonical" href="https://sergiore2007.github.io/reelometer/en/">
+<link rel="alternate" hreflang="es" href="https://sergiore2007.github.io/reelometer/">
+<link rel="alternate" hreflang="en" href="https://sergiore2007.github.io/reelometer/en/">
+<link rel="alternate" hreflang="x-default" href="https://sergiore2007.github.io/reelometer/">
+<script>try{var m=localStorage.getItem('reelometer-theme');if(m==='dark'||m==='light')document.documentElement.dataset.theme=m}catch(e){}</script>
+<link rel="preload" href="/reelometer/assets/fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/reelometer/assets/fonts/jetbrains-mono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/reelometer/assets/site.css?v=84d41b949a">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#11100E" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F3EEE5" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/reelometer/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/reelometer/assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Reelometer">
+<meta property="og:title" content="Reelometer · The scoreboard for your short videos">
+<meta property="og:description" content="Counts the videos you watch on TikTok, Instagram Reels and YouTube Shorts: how many, how long and whose. No internet. Everything stays on your phone.">
+<meta property="og:url" content="https://sergiore2007.github.io/reelometer/en/">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:image" content="https://sergiore2007.github.io/reelometer/assets/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Split-flap scoreboard reading 212 next to a strip of receipt stamped in Spanish, «Pagado con tu tiempo» (paid with your time). Reelometer.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Reelometer · The scoreboard for your short videos">
+<meta name="twitter:description" content="Counts the videos you watch on TikTok, Instagram Reels and YouTube Shorts: how many, how long and whose. No internet. Everything stays on your phone.">
+<meta name="twitter:image" content="https://sergiore2007.github.io/reelometer/assets/og-image.png">
+<meta name="twitter:image:alt" content="Split-flap scoreboard reading 212 next to a strip of receipt stamped in Spanish, «Pagado con tu tiempo» (paid with your time). Reelometer.">
+<script>(function(d){if(d.dataset.page!=="notfound")return;if(location.pathname.indexOf("/reelometer/en/")===0)d.lang="en";d.querySelectorAll("link[rel=canonical],link[rel=alternate][hreflang]").forEach(function(l){l.remove()})})(document.documentElement)</script>
+
+<script defer src="/reelometer/assets/site.js?v=ff1da23301"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header id="header" class="header">
+  <div class="wrap header-row">
+    <p class="header-id">
+      <a class="header-brand" href="/reelometer/en/" aria-label="Reelometer, home">Reelometer</a>
+      <span class="label header-ver">POS 1.10.2</span>
+    </p>
+    <nav class="header-nav" aria-label="Sections">
+      <ul role="list">
+        <li><a class="label-l" href="/reelometer/en/#feed">Feed</a></li>
+        <li><a class="label-l" href="/reelometer/en/#screens">Screens</a></li>
+        <li><a class="label-l" href="/reelometer/en/#calc">Maths</a></li>
+        <li><a class="label-l" href="/reelometer/en/#ticket">Privacy</a></li>
+        <li><a class="label-l" href="/reelometer/en/#download">Download</a></li>
+      </ul>
+    </nav>
+    <div class="header-tools">
+      <p class="header-lang label-l">
+        <span class="header-lang-cur" aria-hidden="true">EN</span>
+        <a class="header-lang-alt" href="/reelometer/" hreflang="es" lang="es">ES<span class="visually-hidden"> Español</span></a>
+      </p>
+      <button class="header-theme label-l" type="button" data-theme-btn>
+        <span class="header-theme-word">Theme</span> <span class="header-theme-name" data-theme-name>system</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+<section id="hero" class="sec" aria-labelledby="hero-title">
+  <div class="wrap hero-grid">
+
+    <div class="hero-head">
+      <p class="label hero-kicker" data-kicker>Receipt for your visit</p>
+      <h1 id="hero-title" class="display-m hero-title">It counts what you don’t.</h1>
+      <div class="hero-meter">
+        <p class="label hero-meter-label" id="hero-meter-label">Videos you’d have watched by now</p>
+        <div class="counter hero-flap" data-flap role="img" aria-label="0 videos"></div>
+      </div>
+      <p class="quote hero-quote" data-quote>“So far, you’re winning.”</p>
+      <p class="data-s hero-base">Base: one video every 15 s, a round average. The app measures yours.</p>
+    </div>
+
+    <div class="hero-body">
+      <p class="hero-lede">Reelometer counts the short videos you watch on <span class="nowrap"><span class="dot dot--tiktok" aria-hidden="true"></span> TikTok</span>, <span class="nowrap"><span class="dot dot--reels" aria-hidden="true"></span> Instagram Reels</span> and <span class="nowrap"><span class="dot dot--shorts" aria-hidden="true"></span> YouTube Shorts</span>: how many, for how long, on what and by whom. No internet. It blocks nothing: it just hands you the receipt.</p>
+      <div class="hero-cta">
+        <a class="btn btn--primary" href="https://github.com/SergioRE2007/reelometer/releases/latest">Download APK<span aria-hidden="true"> ↗</span></a>
+        <a class="btn btn--ghost hero-more" href="#ticket">See what it takes<span aria-hidden="true"> ↓</span></a>
+      </div>
+      <p class="label hero-note"><span class="hero-note-list"><span class="hero-note-i">Android 8.0 or later</span> <span class="hero-note-i"><span class="hero-note-sep" aria-hidden="true">· </span>free</span> <span class="hero-note-i"><span class="hero-note-sep" aria-hidden="true">· </span>no ads</span></span></p>
+    </div>
+
+    <div class="hero-roll">
+      <p class="label hero-printer"><span class="hero-printer-dot" aria-hidden="true"></span>Printer offline. As it should be.</p>
+      <div class="hero-slot" aria-hidden="true"></div>
+      <div class="hero-out" data-out>
+        <div class="jag-bottom hero-edge" data-paper>
+        <article class="paper jag-bottom hero-paper" aria-label="Receipt for your visit">
+          <header class="hero-rcpt-head">
+            <p class="hero-rcpt-brand">Reelometer</p>
+            <p class="label">The scoreboard for your short videos</p>
+            <p class="label"><span class="nowrap">Your phone ·</span> <span class="nowrap">Offline</span></p>
+          </header>
+          <hr class="divider-dashed hero-gap">
+          <div class="hero-meta data-s">
+            <p><span data-ticket-no>Receipt no. 0000</span><span data-date></span></p>
+            <p><span>Served by: your thumb</span><span>Till 01</span></p>
+          </div>
+          <hr class="hero-double">
+          <p class="hero-cols label"><span>Time</span><span>Item</span><span>Amount</span></p>
+          <ol class="hero-items" role="list" data-items>
+            <li class="hero-item hero-item--older is-in" data-older hidden>
+              <div><span class="hero-item-time" aria-hidden="true"></span><p class="receipt-line"><span data-older-label></span><span data-older-sum></span></p></div>
+            </li>
+            <li class="hero-item hero-item--live is-in" data-live>
+              <div><span class="hero-item-time" data-live-time></span><p class="receipt-line"><span><span data-live-label></span><span class="hero-caret" aria-hidden="true"></span></span><span data-live-secs></span></p></div>
+            </li>
+          </ol>
+          <hr class="divider-dashed hero-gap">
+          <p class="receipt-line"><span>Videos</span><span data-count>0</span></p>
+          <hr class="hero-double">
+          <p class="hero-total"><span class="label-l">Total</span><span class="hero-total-num" data-total></span></p>
+          <p class="receipt-line"><span>Paid with</span><span>Your time</span></p>
+          <p class="receipt-line"><span>Change</span><span>Non-refundable</span></p>
+          <div class="hero-barcode" data-barcode aria-hidden="true"></div>
+          <p class="barcode-digits" data-barcode-digits aria-hidden="true"></p>
+          <p class="hero-stamp-wrap"><span class="stamp stamp--pending hero-stamp" data-stamp>Paid with<br>your time</span></p>
+          <p class="label hero-rcpt-foot">Time cannot be refunded</p>
+        </article>
+        </div>
+      </div>
+    </div>
+
+    <p class="visually-hidden" aria-live="polite" data-announce></p>
+  </div>
+</section>
+
+<section id="board" class="sec board" aria-labelledby="board-title">
+  <div class="wrap">
+    <div class="board-panel">
+      <div class="board-head">
+        <h2 class="label-l board-title" id="board-title">Departures</h2>
+        <p class="label board-hint">Pick a destination. They are all on this page.</p>
+        <p class="board-clock" aria-hidden="true" hidden data-board-clock-wrap><span class="label">Local time</span> <span class="board-clock-flap" data-board-clock></span></p>
+      </div>
+
+      <nav class="board-nav" aria-label="On this page">
+        <div class="board-cols label" aria-hidden="true">
+          <span>Gate</span><span>Destination</span><span>On board</span><span>Status</span><span class="board-cols-note">Remarks</span>
+        </div>
+        <ol class="board-rows" role="list">
+          <li><a class="board-row" href="#feed" data-board-row>
+            <span class="visually-hidden">Gate 01. The feed, 9 videos. <span data-board-sr>On time</span>.</span>
+            <span class="board-c board-gate" aria-hidden="true">01</span>
+            <span class="board-c board-dest" aria-hidden="true">The feed</span>
+            <span class="board-c board-meta" aria-hidden="true">9 videos</span>
+            <span class="board-c board-status" aria-hidden="true">On time</span>
+            <span class="board-note body-s">Nine videos, then it ends. As it should.</span>
+          </a></li>
+          <li><a class="board-row" href="#screens" data-board-row>
+            <span class="visually-hidden">Gate 02. The screens, 6 screenshots. <span data-board-sr>On time</span>.</span>
+            <span class="board-c board-gate" aria-hidden="true">02</span>
+            <span class="board-c board-dest" aria-hidden="true">The screens</span>
+            <span class="board-c board-meta" aria-hidden="true">6 screenshots</span>
+            <span class="board-c board-status" aria-hidden="true">On time</span>
+            <span class="board-note body-s">The app as it is. With sample data.</span>
+          </a></li>
+          <li><a class="board-row" href="#calc" data-board-row>
+            <span class="visually-hidden">Gate 03. The math, 8 comparisons. <span data-board-sr>On time</span>.</span>
+            <span class="board-c board-gate" aria-hidden="true">03</span>
+            <span class="board-c board-dest" aria-hidden="true">The math</span>
+            <span class="board-c board-meta" aria-hidden="true">8 comparisons</span>
+            <span class="board-c board-status" aria-hidden="true">On time</span>
+            <span class="board-note body-s">Your videos a day, turned into hours.</span>
+          </a></li>
+          <li><a class="board-row" href="#ticket" data-board-row>
+            <span class="visually-hidden">Gate 04. Privacy, 0 bytes. <span data-board-sr>On time</span>.</span>
+            <span class="board-c board-gate" aria-hidden="true">04</span>
+            <span class="board-c board-dest" aria-hidden="true">Privacy</span>
+            <span class="board-c board-meta" aria-hidden="true">0 bytes</span>
+            <span class="board-c board-status" aria-hidden="true">On time</span>
+            <span class="board-note body-s">What the app takes from your phone: nothing.</span>
+          </a></li>
+          <li><a class="board-row" href="#download" data-board-row>
+            <span class="visually-hidden">Gate 05. Download, APK 1.10.2. <span data-board-sr>On time</span>.</span>
+            <span class="board-c board-gate" aria-hidden="true">05</span>
+            <span class="board-c board-dest" aria-hidden="true">Download</span>
+            <span class="board-c board-meta" aria-hidden="true">APK 1.10.2</span>
+            <span class="board-c board-status" aria-hidden="true">On time</span>
+            <span class="board-note body-s">Direct APK. Google Play, coming soon.</span>
+          </a></li>
+          <li><a class="board-row" href="#faq" data-board-row>
+            <span class="visually-hidden">Gate 06. Complaints, 7 questions. <span data-board-sr>On time</span>.</span>
+            <span class="board-c board-gate" aria-hidden="true">06</span>
+            <span class="board-c board-dest" aria-hidden="true">Complaints</span>
+            <span class="board-c board-meta" aria-hidden="true">7 questions</span>
+            <span class="board-c board-status" aria-hidden="true">On time</span>
+            <span class="board-note body-s">Accessibility, battery and the rest.</span>
+          </a></li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</section>
+
+<section id="feed" class="sec ink feed" aria-labelledby="feed-title">
+  <div class="wrap">
+    <h2 class="sec-head" id="feed-title"><span class="sec-head-index">01</span> The feed <span class="sec-head-meta">9 videos</span></h2>
+
+    <div class="feed-grid">
+      <div class="feed-intro">
+        <p class="display-l feed-claim">A feed that ends.</p>
+        <p class="feed-lede">Swipe. This page counts like the app does: 600 ms on screen and that’s one more.</p>
+
+        <ol class="feed-list" role="list" aria-label="The videos in this feed">
+          <li><button type="button" class="feed-row" data-go="0" aria-controls="feed-scroller"><span class="feed-row-n">01</span><span class="feed-row-t">600 ms</span><span class="feed-row-s"></span></button></li>
+          <li><button type="button" class="feed-row" data-go="1" aria-controls="feed-scroller"><span class="feed-row-n">02</span><span class="feed-row-t">Today</span><span class="feed-row-s"></span></button></li>
+          <li><button type="button" class="feed-row" data-go="2" aria-controls="feed-scroller"><span class="feed-row-n">03</span><span class="feed-row-t">3 apps</span><span class="feed-row-s"></span></button></li>
+          <li><button type="button" class="feed-row" data-go="3" aria-controls="feed-scroller"><span class="feed-row-n">04</span><span class="feed-row-t">Stats</span><span class="feed-row-s"></span></button></li>
+          <li><button type="button" class="feed-row" data-go="4" aria-controls="feed-scroller"><span class="feed-row-n">05</span><span class="feed-row-t">16 topics</span><span class="feed-row-s"></span></button></li>
+          <li><button type="button" class="feed-row" data-go="5" aria-controls="feed-scroller"><span class="feed-row-n">06</span><span class="feed-row-t">Recap</span><span class="feed-row-s"></span></button></li>
+          <li><button type="button" class="feed-row" data-go="6" aria-controls="feed-scroller"><span class="feed-row-n">07</span><span class="feed-row-t">0 permissions</span><span class="feed-row-s"></span></button></li>
+          <li><button type="button" class="feed-row" data-go="7" aria-controls="feed-scroller"><span class="feed-row-n">08</span><span class="feed-row-t">Story</span><span class="feed-row-s"></span></button></li>
+          <li><button type="button" class="feed-row" data-go="8" aria-controls="feed-scroller"><span class="feed-row-n">09</span><span class="feed-row-t">End</span><span class="feed-row-s"></span></button></li>
+        </ol>
+      </div>
+
+      <div class="feed-phone" data-kind="data">
+        <div class="feed-top">
+          <div class="feed-segs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <p class="label feed-pos"><span>Video</span> <span class="feed-pos-i">01</span> / 09</p>
+          <div class="feed-corner">
+            <p class="label">Seen here</p>
+            <span class="feed-tally-n" aria-hidden="true">000</span>
+            <p class="quote-s feed-also" aria-hidden="true">This one counts too.</p>
+          </div>
+          <p class="visually-hidden" id="feed-live" aria-live="polite"></p>
+        </div>
+
+        <div class="feed-scroller" id="feed-scroller" tabindex="0" role="region" aria-label="Feed of 9 videos. Move with the arrow keys or Page Up and Page Down.">
+
+          <article class="feed-item" aria-labelledby="feed-v1-t">
+            <div class="feed-stage">
+              <p class="feed-big"><span class="feed-num" data-n="600" aria-hidden="true">600</span><span class="visually-hidden">600 </span><span class="data-l feed-unit">ms</span></p>
+              <ul class="feed-rail" role="list" aria-hidden="true">
+                <li><b>0</b><span>Likes</span></li><li><b>0</b><span>Comments</span></li><li><b>0</b><span>Bytes</span></li>
+              </ul>
+            </div>
+            <div class="feed-item-body">
+              <h3 class="label feed-item-label" id="feed-v1-t">How long a video takes to count</h3>
+              <p class="quote-s feed-line">Less time than it takes you to decide it’s not for you.</p>
+              <hr class="divider-dashed">
+              <p class="data-s">Base: the app’s threshold. A video counts after ≥ 600 ms on screen; going back doesn’t add another.</p>
+            </div>
+          </article>
+
+          <article class="feed-item feed-item--screen" aria-labelledby="feed-v2-t">
+            <img src="/reelometer/assets/img/hoy-oscuro-540.webp" srcset="/reelometer/assets/img/hoy-oscuro-360.webp 360w, /reelometer/assets/img/hoy-oscuro-540.webp 540w" sizes="(min-width: 768px) 380px, 100vw" width="540" height="1125" loading="lazy" decoding="async" alt="Reelometer’s Today screen, in Spanish: the scoreboard at 028 videos, 9 min of screen time and one share, TikTok as the only platform and the day hour by hour.">
+            <div class="feed-cap">
+              <h3 class="label feed-item-label" id="feed-v2-t">Today</h3>
+              <p class="quote-s feed-line">Today’s scoreboard. It flips like an airport departures board.</p>
+              <p class="data-s">Screenshot of the app, in Spanish. Sample data.</p>
+            </div>
+          </article>
+
+          <article class="feed-item" aria-labelledby="feed-v3-t">
+            <div class="feed-stage feed-stage--stack">
+              <p class="feed-big"><span class="feed-num" data-n="3" aria-hidden="true">3</span><span class="visually-hidden">3 </span><span class="data-l feed-unit">apps</span></p>
+              <ul class="data feed-plats" role="list">
+                <li><span class="dot dot--tiktok"></span>TikTok</li>
+                <li><span class="dot dot--reels"></span>Instagram Reels</li>
+                <li><span class="dot dot--shorts"></span>YouTube Shorts</li>
+              </ul>
+            </div>
+            <div class="feed-item-body">
+              <h3 class="label feed-item-label" id="feed-v3-t">The only ones it looks at</h3>
+              <p class="quote-s feed-line">Outside those three, the service sees nothing.</p>
+              <hr class="divider-dashed">
+              <p class="data-s">Base: the accessibility service’s list of apps, in the code, which is public.</p>
+            </div>
+          </article>
+
+          <article class="feed-item feed-item--screen" aria-labelledby="feed-v4-t">
+            <img src="/reelometer/assets/img/estadisticas-540.webp" srcset="/reelometer/assets/img/estadisticas-360.webp 360w, /reelometer/assets/img/estadisticas-540.webp 540w" sizes="(min-width: 768px) 380px, 100vw" width="540" height="1125" loading="lazy" decoding="async" alt="Stats screen for one week, in Spanish: 1,203 videos, 6 h 15 min, 201 a day, 69% more than the week before and one bar per day against the average.">
+            <div class="feed-cap">
+              <h3 class="label feed-item-label" id="feed-v4-t">Stats</h3>
+              <p class="quote-s feed-line">Week, month, year or all time. You decide how much you want to know.</p>
+              <p class="data-s">Screenshot of the app, in Spanish. Sample data.</p>
+            </div>
+          </article>
+
+          <article class="feed-item" aria-labelledby="feed-v5-t">
+            <div class="feed-stage">
+              <p class="feed-big"><span class="feed-num" data-n="16" aria-hidden="true">16</span><span class="visually-hidden">16 </span><span class="data-l feed-unit">topics</span></p>
+              <ul class="feed-rail" role="list" aria-hidden="true">
+                <li><b>0</b><span>Likes</span></li><li><b>0</b><span>Comments</span></li><li><b>0</b><span>Bytes</span></li>
+              </ul>
+            </div>
+            <div class="feed-item-body">
+              <h3 class="label feed-item-label" id="feed-v5-t">Humor, sports, food, gaming and twelve more</h3>
+              <p class="quote-s feed-line">Every video gets a topic from its caption and hashtags.</p>
+              <hr class="divider-dashed">
+              <p class="data-s">Base: keywords in the caption and hashtags, matched on the phone. Whatever doesn’t fit goes to “Unsorted”.</p>
+            </div>
+          </article>
+
+          <article class="feed-item feed-item--screen" aria-labelledby="feed-v6-t">
+            <img src="/reelometer/assets/img/resumen-540.webp" srcset="/reelometer/assets/img/resumen-360.webp 360w, /reelometer/assets/img/resumen-540.webp 540w" sizes="(min-width: 768px) 380px, 100vw" width="540" height="1125" loading="lazy" decoding="async" alt="Recap screen, in Spanish: October with 6,909 videos and 36 h; November, in progress, with 1,428; this week with 1,203.">
+            <div class="feed-cap">
+              <h3 class="label feed-item-label" id="feed-v6-t">Recap</h3>
+              <p class="quote-s feed-line">Your month, counted. No rounding down.</p>
+              <p class="data-s">Screenshot of the app, in Spanish. Sample data.</p>
+            </div>
+          </article>
+
+          <article class="feed-item" aria-labelledby="feed-v7-t">
+            <div class="feed-stage">
+              <p class="feed-big"><span class="feed-num" data-n="0" aria-hidden="true">0</span><span class="visually-hidden">0</span></p>
+              <ul class="feed-rail" role="list" aria-hidden="true">
+                <li><b>0</b><span>Accounts</span></li><li><b>0</b><span>Servers</span></li><li><b>0</b><span>Ads</span></li>
+              </ul>
+            </div>
+            <div class="feed-item-body">
+              <h3 class="label feed-item-label" id="feed-v7-t">INTERNET permissions</h3>
+              <p class="quote-s feed-line">It can’t send anything anywhere. Not even if it wanted to.</p>
+              <hr class="divider-dashed">
+              <p class="data-s">Base: the app’s manifest, which is public. Look for it: it isn’t there.</p>
+            </div>
+          </article>
+
+          <article class="feed-item feed-item--screen" aria-labelledby="feed-v8-t">
+            <img src="/reelometer/assets/img/historia-videos-540.webp" srcset="/reelometer/assets/img/historia-videos-360.webp 360w, /reelometer/assets/img/historia-videos-540.webp 540w" sizes="(min-width: 768px) 380px, 100vw" width="540" height="1125" loading="lazy" decoding="async" alt="Full-screen slide from the October recap, in Spanish: 6,909 videos on flip tiles, the line “6,909 videos. One after another.”, a daily average of 223 and 31 of 31 active days.">
+            <div class="feed-cap">
+              <h3 class="label feed-item-label" id="feed-v8-t">Story</h3>
+              <p class="quote-s feed-line">One number per slide. This is the one that stings.</p>
+              <p class="data-s">Screenshot of the app, in Spanish. Sample data.</p>
+            </div>
+          </article>
+
+          <article class="feed-item feed-item--end" aria-labelledby="feed-v9-t">
+            <div class="feed-stage">
+              <p class="feed-big feed-fin"><span class="feed-num" data-text="END" aria-hidden="true">END</span></p>
+            </div>
+            <div class="feed-item-body">
+              <h3 class="visually-hidden" id="feed-v9-t">END</h3>
+              <p class="quote feed-end-line">This one actually ends. The other apps don’t.</p>
+              <a class="btn btn--ghost feed-out" href="#screens">Keep scrolling <span aria-hidden="true">↓</span></a>
+            </div>
+          </article>
+        </div>
+
+        <div class="feed-nav">
+          <button type="button" class="label-l feed-prev" aria-controls="feed-scroller">Previous <span aria-hidden="true">↑</span></button>
+          <button type="button" class="label-l feed-next" aria-controls="feed-scroller">Next <span aria-hidden="true">↓</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="screens" class="sec" aria-labelledby="screens-title">
+  <div class="wrap">
+    <h2 class="sec-head" id="screens-title"><span class="sec-head-index">02</span> The screens <span class="sec-head-meta">6 screenshots</span></h2>
+
+    <div class="screens-plate">
+      <div class="screens-intro">
+        <p class="display-l screens-claim">The app, as it is.</p>
+        <p class="screens-lede">Six untouched screenshots from the Spanish version, with sample data. Yours stay on your phone.</p>
+      </div>
+
+      <figure class="fig screens-fig screens-fig--1a">
+        <div class="fig-frame">
+          <div class="screens-phone">
+            <img class="fig-img" src="/reelometer/assets/img/hoy-oscuro-540.webp"
+                 srcset="/reelometer/assets/img/hoy-oscuro-360.webp 360w, /reelometer/assets/img/hoy-oscuro-540.webp 540w"
+                 sizes="(min-width: 1200px) 272px, (min-width: 768px) 30vw, 48vw"
+                 width="540" height="1125" loading="lazy" decoding="async" alt="The Today screen in dark theme, in Spanish: a flip-tile counter at 028 videos, 9 min of screen time and 1 share, a line calling 28 videos neither too many nor too few, so far, TikTok as the only platform and the hour-by-hour chart.">
+          </div>
+          <span class="crop crop--tl"></span><span class="crop crop--tr"></span><span class="crop crop--bl"></span><span class="crop crop--br"></span>
+        </div>
+        <figcaption class="fig-cap"><span class="label fig-n">FIG. 1a</span><span class="body-s">Today, dark theme. A Saturday: 28 videos, 9 min of screen time, all on TikTok. So far.</span></figcaption>
+      </figure>
+
+      <figure class="fig screens-fig screens-fig--1b">
+        <div class="fig-frame">
+          <div class="screens-phone">
+            <img class="fig-img" src="/reelometer/assets/img/hoy-claro-540.webp"
+                 srcset="/reelometer/assets/img/hoy-claro-360.webp 360w, /reelometer/assets/img/hoy-claro-540.webp 540w"
+                 sizes="(min-width: 1200px) 162px, (min-width: 768px) 18vw, 32vw"
+                 width="540" height="1125" loading="lazy" decoding="async" alt="The same Today screen in light theme: paper background, black ink and the same numbers, 028 videos and 9 min.">
+          </div>
+          <span class="crop crop--tl"></span><span class="crop crop--tr"></span><span class="crop crop--bl"></span><span class="crop crop--br"></span>
+        </div>
+        <figcaption class="fig-cap"><span class="label fig-n">FIG. 1b</span><span class="body-s">Today, light theme. Different paper, same numbers.</span></figcaption>
+      </figure>
+
+      <div class="screens-rule screens-rule--a" aria-hidden="true"></div>
+
+      <figure class="fig screens-fig screens-fig--2">
+        <div class="fig-frame">
+          <div class="screens-phone">
+            <img class="fig-img" src="/reelometer/assets/img/estadisticas-540.webp"
+                 srcset="/reelometer/assets/img/estadisticas-360.webp 360w, /reelometer/assets/img/estadisticas-540.webp 540w"
+                 sizes="(min-width: 1200px) 217px, (min-width: 768px) 24vw, 48vw"
+                 width="540" height="1125" loading="lazy" decoding="async" alt="The Stats screen for the week of 2–8 November 2026: 1,203 videos, 6 h 15 min, 201 a day and 19 s per video, up 69% on the previous week, and one bar per day with Friday in orange, well above the average of 201.">
+          </div>
+          <span class="crop crop--tl"></span><span class="crop crop--tr"></span><span class="crop crop--bl"></span><span class="crop crop--br"></span>
+        </div>
+        <figcaption class="fig-cap"><span class="label fig-n">FIG. 2</span><span class="body-s">Stats for one week: 1,203 videos and 6 h 15 min, 69% more than the week before. Friday is the orange bar.</span></figcaption>
+      </figure>
+
+      <figure class="fig screens-fig screens-fig--3">
+        <div class="fig-frame">
+          <div class="screens-phone">
+            <img class="fig-img" src="/reelometer/assets/img/resumen-540.webp"
+                 srcset="/reelometer/assets/img/resumen-360.webp 360w, /reelometer/assets/img/resumen-540.webp 540w"
+                 sizes="(min-width: 1200px) 217px, (min-width: 768px) 24vw, 32vw"
+                 width="540" height="1125" loading="lazy" decoding="async" alt="The Recap screen, headed “Your October, counted.”: last month in an orange block (6,909 videos, 36 h), this month so far (1,428 videos, 7.4 h) and this week (1,203 videos, 6.3 h).">
+          </div>
+          <span class="crop crop--tl"></span><span class="crop crop--tr"></span><span class="crop crop--bl"></span><span class="crop crop--br"></span>
+        </div>
+        <figcaption class="fig-cap"><span class="label fig-n">FIG. 3</span><span class="body-s">Recap: October closed at 6,909 videos and 36 h. November is already at 1,428.</span></figcaption>
+      </figure>
+
+      <div class="screens-rule screens-rule--b" aria-hidden="true"></div>
+
+      <figure class="fig screens-fig screens-fig--4">
+        <div class="fig-frame">
+          <div class="screens-phone">
+            <img class="fig-img" src="/reelometer/assets/img/historia-videos-540.webp"
+                 srcset="/reelometer/assets/img/historia-videos-360.webp 360w, /reelometer/assets/img/historia-videos-540.webp 540w"
+                 sizes="(min-width: 1200px) 162px, (min-width: 768px) 18vw, 40vw"
+                 width="540" height="1125" loading="lazy" decoding="async" alt="The Videos slide of the October 2026 recap: 6,909 on flip tiles, a line saying they came one after another, a daily average of 223 and 31/31 active days.">
+          </div>
+          <span class="crop crop--tl"></span><span class="crop crop--tr"></span><span class="crop crop--bl"></span><span class="crop crop--br"></span>
+        </div>
+        <figcaption class="fig-cap"><span class="label fig-n">FIG. 4</span><span class="body-s">October’s recap, slide 2 of 9: 223 videos a day, active 31 days out of 31.</span></figcaption>
+      </figure>
+
+      <figure class="fig screens-fig screens-fig--5">
+        <div class="fig-frame">
+          <div class="screens-phone">
+            <img class="fig-img" src="/reelometer/assets/img/historia-tiempo-540.webp"
+                 srcset="/reelometer/assets/img/historia-tiempo-360.webp 360w, /reelometer/assets/img/historia-tiempo-540.webp 540w"
+                 sizes="(min-width: 1200px) 162px, (min-width: 768px) 18vw, 40vw"
+                 width="540" height="1125" loading="lazy" decoding="async" alt="The Time slide of the October 2026 recap: 36 H in large type, a line turning it into four and a half working days, 19 s per video and 141 shares.">
+          </div>
+          <span class="crop crop--tl"></span><span class="crop crop--tr"></span><span class="crop crop--bl"></span><span class="crop crop--br"></span>
+        </div>
+        <figcaption class="fig-cap"><span class="label fig-n">FIG. 5</span><span class="body-s">Slide 3 of 9: 36 h, or four and a half working days. At 19 s a video.</span></figcaption>
+      </figure>
+
+      <div class="screens-how" role="group" aria-labelledby="screens-how-title">
+        <h3 class="headline screens-how-title" id="screens-how-title">How it works</h3>
+        <ol class="screens-steps" role="list">
+          <li class="screens-step"><span class="screens-step-n" aria-hidden="true">1</span><p class="title">Install the APK</p><p class="body-s">Download it from GitHub. Android 8.0 or later. It isn’t on Google Play yet.</p></li>
+          <li class="screens-step"><span class="screens-step-n" aria-hidden="true">2</span><p class="title">Turn on the service</p><p class="body-s">It’s an accessibility service and it only reads TikTok, Instagram and YouTube; it ignores the rest of your phone. On Android 13 or later you first have to allow restricted settings: the app walks you through it.</p></li>
+          <li class="screens-step"><span class="screens-step-n" aria-hidden="true">3</span><p class="title">Use your apps as usual</p><p class="body-s">A video counts once it’s been on screen for 600 ms. Scrolling back doesn’t add another.</p></li>
+          <li class="screens-step"><span class="screens-step-n" aria-hidden="true">4</span><p class="title">Check the scoreboard</p><p class="body-s">How many, how long, which topics and whose. No internet: nothing leaves your phone.</p></li>
+        </ol>
+        <a class="btn btn--ghost screens-how-link" href="#download">To the download <span aria-hidden="true">↓</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="calc" class="sec" aria-labelledby="calc-title">
+  <div class="wrap">
+    <h2 class="sec-head" id="calc-title"><span class="sec-head-index">03</span> The math <span class="sec-head-meta">8 comparisons</span></h2>
+
+    <div class="calc-open">
+      <div class="calc-titlebox">
+        <p class="label calc-kicker">Back of the envelope</p>
+        <h3 class="calc-title">How many do you watch a day?</h3>
+      </div>
+      <div class="calc-intro">
+        <p class="quote-s calc-standfirst">Drag the ruler. The math and the bases are the same ones the app uses; the conclusions are yours.</p>
+        <p class="calc-body">The app counts the real videos, one by one, without leaving your phone. This is the pocket version: you say how many you watch and how fast, and the page does the multiplying. The 15 s it starts on is a round average; the app measures yours. The page doesn’t keep the number or tell anyone. Reload and it’s back to 212.</p>
+      </div>
+    </div>
+
+    <div class="calc-dial">
+      <div class="calc-readout">
+        <p class="calc-big" aria-hidden="true" id="calc-n">212</p>
+        <p class="label calc-big-unit" id="calc-n-label">Videos a day</p>
+      </div>
+
+      <div class="calc-controls">
+        <div class="calc-stepper" role="group" aria-label="Fine tuning">
+          <button class="calc-step calc-step--minus" type="button" data-step="-10" aria-label="Ten fewer videos" aria-controls="calc-range"></button>
+          <button class="calc-step calc-step--plus" type="button" data-step="10" aria-label="Ten more videos" aria-controls="calc-range"></button>
+        </div>
+        <div class="calc-opt">
+          <p class="label muted" id="calc-pace-l">Pace · seconds per video</p>
+          <div class="calc-seg" role="radiogroup" aria-labelledby="calc-pace-l" id="calc-pace">
+            <button type="button" role="radio" aria-checked="false" data-v="8">8 s</button>
+            <button type="button" role="radio" aria-checked="true" data-v="15">15 s</button>
+            <button type="button" role="radio" aria-checked="false" data-v="20">20 s</button>
+            <button type="button" role="radio" aria-checked="false" data-v="30">30 s</button>
+            <span class="calc-seg-bar" aria-hidden="true"></span>
+          </div>
+        </div>
+        <div class="calc-opt">
+          <p class="label muted" id="calc-period-l">Period</p>
+          <div class="calc-seg" role="radiogroup" aria-labelledby="calc-period-l" id="calc-period">
+            <button type="button" role="radio" aria-checked="false" data-v="month">A month</button>
+            <button type="button" role="radio" aria-checked="true" data-v="year">A year</button>
+            <button type="button" role="radio" aria-checked="false" data-v="decade">In 10 years</button>
+            <span class="calc-seg-bar" aria-hidden="true"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="calc-ruler" id="calc-ruler" style="--p: 0.212">
+        <div class="calc-ticks" id="calc-ticks" aria-hidden="true"></div>
+        <div class="calc-fill" aria-hidden="true"></div>
+        <div class="calc-needle" aria-hidden="true"><span class="calc-needle-tag" id="calc-tag">212</span></div>
+        <input class="calc-range" id="calc-range" type="range" min="0" max="1000" step="1" value="212" aria-labelledby="calc-n-label">
+      </div>
+    </div>
+
+    <div class="calc-out">
+      <div class="calc-total">
+        <p class="label" id="calc-per-label">A year</p>
+        <div class="calc-total-row">
+          <div class="calc-flap" id="calc-flap" aria-hidden="true"></div>
+          <span class="calc-flap-unit" aria-hidden="true">h</span>
+        </div>
+        <p class="visually-hidden" id="calc-hours-sr"></p>
+        <p class="data-l calc-days" id="calc-days"></p>
+        <p class="quote calc-sentence" id="calc-sentence"></p>
+        <p class="data-s calc-base" id="calc-base"></p>
+        <p class="visually-hidden" aria-live="polite" id="calc-live"></p>
+      </div>
+
+      <ol class="calc-eqs" role="list" id="calc-eqs" aria-label="Comparisons">
+        <li class="calc-eq" data-k="degree"><span class="calc-eq-val" aria-hidden="true"></span><div><p class="label muted">BACHELOR’S DEGREES</p><p class="quote-s calc-eq-say"></p><p class="data-s">Base: 240 ECTS × 25 h (Bologna Process)</p></div></li>
+        <li class="calc-eq" data-k="language"><span class="calc-eq-val" aria-hidden="true"></span><div><p class="label muted">LANGUAGES</p><p class="quote-s calc-eq-say"></p><p class="data-s">Base: FSI, ~600–750 h for Category I languages</p></div></li>
+        <li class="calc-eq" data-k="camino"><span class="calc-eq-val" aria-hidden="true"></span><div><p class="label muted">CAMINO DE SANTIAGO</p><p class="quote-s calc-eq-say"></p><p class="data-s">Base: French Way, ~780 km at 4 km/h ≈ 195 h on foot</p></div></li>
+        <li class="calc-eq" data-k="got"><span class="calc-eq-val" aria-hidden="true"></span><div><p class="label muted">GAME OF THRONES</p><p class="quote-s calc-eq-say"></p><p class="data-s">Base: 8 seasons, 73 episodes ≈ 70 h</p></div></li>
+        <li class="calc-eq" data-k="quijote"><span class="calc-eq-val" aria-hidden="true"></span><div><p class="label muted">DON QUIXOTE</p><p class="quote-s calc-eq-say"></p><p class="data-s">Base: both parts, ~380,000 words at 250 words/min ≈ 25 h</p></div></li>
+        <li class="calc-eq" data-k="sleep"><span class="calc-eq-val" aria-hidden="true"></span><div><p class="label muted">UNINTERRUPTED NIGHTS</p><p class="quote-s calc-eq-say"></p><p class="data-s">Base: 8 h a night</p></div></li>
+        <li class="calc-eq" data-k="marathon"><span class="calc-eq-val" aria-hidden="true"></span><div><p class="label muted">MARATHONS</p><p class="quote-s calc-eq-say"></p><p class="data-s">Base: 42.195 km at a recreational pace ≈ 4 h 30 min</p></div></li>
+        <li class="calc-eq" data-k="tortilla"><span class="calc-eq-val" aria-hidden="true"></span><div><p class="label muted">SPANISH OMELETS</p><p class="quote-s calc-eq-say"></p><p class="data-s">Base: peel, fry and set ≈ 45 min</p></div></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section id="ticket" class="sec" aria-labelledby="ticket-title">
+  <div class="wrap">
+    <h2 class="sec-head" id="ticket-title"><span class="sec-head-index">04</span> Privacy <span class="sec-head-meta">0 bytes</span></h2>
+
+    <div class="ticket-grid">
+      <div class="ticket-copy">
+        <p class="display-l ticket-claim">What you watch stays here.</p>
+        <p class="ticket-text">Reelometer has no permission to use the internet. Without it, Android won’t let the app open a single connection. That’s not a promise. That’s how Android works.</p>
+        <p class="ticket-text">It reads the screen in TikTok, Instagram and YouTube, logs each video, how long it lasted and what it was about, and keeps it on your phone. Export it as a CSV or wipe it with one button. If anything leaves the phone, you took it out. Not even the developer sees it.</p>
+        <p class="quote-s ticket-aside">An app that knows exactly what you watch and tells no one. Odd, yes.</p>
+        <a class="btn btn--ghost" href="/reelometer/en/privacy/">Read the full policy</a>
+      </div>
+
+      <div class="ticket-roll">
+        <article class="paper jag-both ticket-paper" aria-labelledby="ticket-paper-label ticket-paper-sub">
+          <header class="ticket-paper-head">
+            <p class="label" id="ticket-paper-label">Customer copy</p>
+            <p class="ticket-brand">Reelometer</p>
+            <p class="label" id="ticket-paper-sub">What leaves your phone</p>
+          </header>
+          <hr class="divider-dashed ticket-sep">
+          <div class="ticket-lines">
+            <p class="receipt-line"><span>INTERNET permission</span><span>0</span></p>
+            <p class="receipt-line"><span>Bytes sent</span><span>0</span></p>
+            <p class="receipt-line"><span>Accounts</span><span>0</span></p>
+            <p class="receipt-line"><span>Servers</span><span>0</span></p>
+            <p class="receipt-line"><span>Ads</span><span>0</span></p>
+            <p class="receipt-line"><span>Analytics</span><span>0</span></p>
+            <p class="receipt-line"><span>Cloud backups</span><span>0</span></p>
+          </div>
+          <div class="ticket-total">
+            <p class="label-l">Total</p>
+            <p class="display-xl ticket-nada">Nothing</p>
+          </div>
+          <hr class="divider-dashed ticket-sep">
+          <p class="label ticket-sub">What it does keep, on your phone</p>
+          <div class="ticket-lines">
+            <p class="receipt-line data-s"><span>Videos and seconds</span><span>Local</span></p>
+            <p class="receipt-line data-s"><span>Topics and creators</span><span>Local</span></p>
+            <p class="receipt-line data-s"><span>Export or delete</span><span>Whenever</span></p>
+          </div>
+          <div class="ticket-barcode" data-ticket-barcode aria-hidden="true"></div>
+          <p class="barcode-digits" aria-hidden="true">0000 0000 0000 0000</p>
+          <p class="label ticket-foot">Thanks for sending nothing</p>
+        </article>
+        <p class="stamp ticket-seal" aria-hidden="true">100% local</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="download" class="sec" aria-labelledby="download-title">
+  <div class="band download-band">
+    <div class="wrap download-grid">
+      <h2 class="sec-head" id="download-title"><span class="sec-head-index">05</span> Download <span class="sec-head-meta">APK 1.10.2</span></h2>
+      <p class="display-l download-since" data-download-since>Since you opened this page: 0 videos.</p>
+      <p class="download-lede">The other apps won’t tell you. This one does.</p>
+      <div class="download-cta">
+        <a class="btn download-btn" href="https://github.com/SergioRE2007/reelometer/releases/latest" aria-describedby="download-req">Download APK <span aria-hidden="true">↗</span></a>
+        <a class="btn btn--ghost download-back-link" href="#download-back">Instructions on the back <span aria-hidden="true">↓</span></a>
+      </div>
+      <p class="label download-req" id="download-req"><span class="nowrap">Android 8.0 or later ·</span> <span class="nowrap">Version 1.10.2 ·</span> <span class="nowrap">Free</span></p>
+      <p class="data-s download-base">Base: one video every 15 s, the same round average as up top. The app measures yours.</p>
+    </div>
+  </div>
+
+  <div class="wrap download-back" id="download-back">
+    <h3 class="title download-back-title">Instructions on the back</h3>
+    <p class="body-s muted download-back-note">It doesn’t come from Google Play, so Android puts two hurdles in the way. Four steps, and only once.</p>
+    <ol class="download-steps" role="list">
+      <li class="download-step"><span class="data-l download-step-n" aria-hidden="true">1</span><p class="body-s">Download the APK from GitHub and open it on your phone.</p></li>
+      <li class="download-step"><span class="data-l download-step-n" aria-hidden="true">2</span><p class="body-s">Android will ask you to let your browser or file manager “install unknown apps”. Accept and install.</p></li>
+      <li class="download-step"><span class="data-l download-step-n" aria-hidden="true">3</span><p class="body-s">Open Reelometer and turn on its accessibility service. On Android 13 or later the switch is grayed out: “Restricted setting”.</p></li>
+      <li class="download-step"><span class="data-l download-step-n" aria-hidden="true">4</span><p class="body-s">Go to the system Settings › Apps › Reelometer › three-dot menu › Allow restricted settings, then turn it on again. The app walks you through it.</p></li>
+    </ol>
+    <div class="download-after">
+      <p class="receipt-line"><span>Google Play</span><span>Coming soon</span></p>
+      <p class="receipt-line"><span>New versions</span><span>On top, nothing lost</span></p>
+    </div>
+  </div>
+</section>
+
+<section id="faq" class="sec" aria-labelledby="faq-title">
+  <div class="wrap faq-grid">
+    <h2 class="sec-head" id="faq-title"><span class="sec-head-index">06</span> Complaints <span class="sec-head-meta">7 questions</span></h2>
+    <p class="display-l faq-claim">Ask before you grant anything.</p>
+    <p class="faq-lede">What you’d ask before letting an app read your screen. Short answers, no small print.</p>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary><span class="label faq-n" aria-hidden="true">No. 01</span><span class="title faq-q">Why does it need accessibility?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+        <div class="faq-a"><p>Because Android has no other way to tell an app you’ve moved on to the next video. The service only reads TikTok, Instagram and YouTube: for each video, the creator, the caption and the hashtags. It doesn’t read your messages, what you type or your passwords, and it reads nothing in any other app. If you turn on “Who you send to” (off by default), it also reads the name of whoever you send the video to.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="label faq-n" aria-hidden="true">No. 02</span><span class="title faq-q">Which apps does it count?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+        <div class="faq-a"><p>Three: <span class="nowrap"><span class="dot dot--tiktok"></span> TikTok</span>, <span class="nowrap"><span class="dot dot--reels"></span> Instagram Reels</span> and <span class="nowrap"><span class="dot dot--shorts"></span> YouTube Shorts</span>. A video counts once it’s been on screen for at least 600 ms. If you don’t care about one of them, switch it off in Settings.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="label faq-n" aria-hidden="true">No. 03</span><span class="title faq-q">Does it drain the battery?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+        <div class="faq-a"><p>There’s no measured figure, and we’re not going to make one up. What we do know: the service only hears from those three apps and does nothing outside them. It doesn’t work in the background either, except for the daily and monthly notifications (you can turn them off in Settings) and the weekly CSV backup, if you turn it on.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="label faq-n" aria-hidden="true">No. 04</span><span class="title faq-q">Does it cost anything?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+        <div class="faq-a"><p>No. No ads, no subscription, no “pro” version. It’s made by a student in their spare time. If it’s useful and you feel like it, you can buy them a coffee on <a href="https://www.buymeacoffee.com/Lopuzno">Buy Me a Coffee <span aria-hidden="true">↗</span></a>.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="label faq-n" aria-hidden="true">No. 05</span><span class="title faq-q">Why isn’t it on Google Play?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+        <div class="faq-a"><p>It isn’t yet. Meanwhile, the APK comes from GitHub, with its source code right next to it for anyone who wants a look. That’s why Android 13 shows the “Restricted setting”: it does that with any app that doesn’t come from Play. The steps are in the <a href="#download-back">instructions on the back</a>.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="label faq-n" aria-hidden="true">No. 06</span><span class="title faq-q">What happens to my data?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+        <div class="faq-a"><p>It stays on your phone. The app has no permission to use the internet: it can’t send anything anywhere, not even to whoever makes it. No accounts, no servers, no ads, no analytics. It only leaves if you export the CSV or share your recap, and one button or uninstalling wipes it. The full version is in the <a href="/reelometer/en/privacy/">privacy policy</a>.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="label faq-n" aria-hidden="true">No. 07</span><span class="title faq-q">Does it block anything?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+        <div class="faq-a"><p>No. It doesn’t close apps, cut videos short, set timers or lecture you: it puts the scoreboard in front of you and the rest is up to you. If you set a daily goal, the most it’ll do is tell you when you pass it, and only if you turn that notification on.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer id="footer" class="footer">
+  <div class="wrap footer-grid">
+    <div class="footer-roll">
+      <p class="data footer-claim" data-k="footer.js.claim">This page has no cookies, no analytics and nothing to report. Neither does the app.</p>
+      <div class="footer-lines">
+        <p class="receipt-line"><span data-k="footer.js.videos">Videos you’d have watched here</span><span class="nums" data-footer-videos>0</span></p>
+        <p class="receipt-line"><span data-k="footer.js.requests">Third-party requests</span><span class="nums">0</span></p>
+        <p class="receipt-line"><span data-k="footer.js.cookies">Cookies</span><span class="nums">0</span></p>
+      </div>
+      <p class="data-s footer-note" data-k="footer.js.storage">The only thing your browser keeps is the theme, and only if you change it with the button.</p>
+    </div>
+    <div class="footer-side">
+      <nav class="footer-nav" aria-label="Footer" data-k-label="footer.js.nav">
+        <ul class="footer-links" role="list">
+          <li><a class="label-l footer-link" href="https://github.com/SergioRE2007/reelometer"><span data-k="footer.js.code">Source code</span> <span aria-hidden="true">↗</span></a></li>
+          <li><a class="label-l footer-link" href="/reelometer/en/privacy/" data-k="footer.js.privacy">Privacy</a></li>
+          <li class="footer-langs">
+            <a class="label-l footer-link" href="/reelometer/" hreflang="es" lang="es">ES<span class="visually-hidden"> Español</span></a>
+            <a class="label-l footer-link" href="/reelometer/en/" hreflang="en" lang="en">EN<span class="visually-hidden"> English</span></a>
+          </li>
+        </ul>
+      </nav>
+      <p class="data-s footer-fonts" data-k="footer.js.fonts">Type: <a href="/reelometer/assets/fonts/BricolageGrotesque-OFL.txt">Bricolage Grotesque</a>, <a href="/reelometer/assets/fonts/JetBrainsMono-OFL.txt">JetBrains Mono</a> and <a href="/reelometer/assets/fonts/InstrumentSerif-OFL.txt">Instrument Serif</a>, under the SIL Open Font License 1.1, served from here.</p>
+    </div>
+    <hr class="divider-perforated footer-cut">
+    <p class="label footer-end" data-k="footer.js.end">Reelometer 1.10.2 · End of the roll</p>
+  </div>
+</footer>
+
+<script type="application/json" id="i18n">{"header.js.theme.system":"system","header.js.theme.dark":"dark","header.js.theme.light":"light","header.js.theme.aria":"Theme: {cur}. Switch to {next}.","hero.js.blank":"–––","hero.js.kicker":"Receipt no. {n} · opened at {h}","hero.js.ticket":"Receipt no. {n}","hero.js.date":"{y}-{m}-{d} {h}","hero.js.video":"Video {n}","hero.js.feed":"Feed · this one counts too","hero.js.group":"Videos {r}","hero.js.groupFeed":"Videos {r} + {f} from the feed","hero.js.groupFeedOnly":"{f} from the feed","hero.js.aria":{"one":"{n} video you’d have watched by now","other":"{n} videos you’d have watched by now"},"hero.js.announce":{"one":"{t} here. At one video every 15 s, that’s {n} already.","other":"{t} here. At one video every 15 s, that’s {n} already."},"hero.js.quote":"“{q}”","hero.js.q0.1":"{t} here. So far, you’re winning.","hero.js.q0.2":"{t} and not one video. Enjoy it, it won’t last.","hero.js.q0.3":"{t} in. The first one is on its way.","hero.js.q1.1":"{t} here. On TikTok, that’s one already.","hero.js.q1.2":"{t}. One. Nobody stops at one.","hero.js.q1.3":"{t}: one. That’s how every evening starts.","hero.js.qn.1":"{t} here. On TikTok, that’d be {n} by now.","hero.js.qn.2":"{t} reading. Over there, that’s {n} videos.","hero.js.qn.3":"{t}. That’s {n}, and you wouldn’t remember one.","hero.js.qmany.1":"{t} here. Over there, {n} by now, and you’d still be going.","hero.js.qmany.2":"{n} videos. At least this page is counting them.","hero.js.qmany.3":"{t}. On TikTok, you’d have forgotten why you opened it.","feed.js.queued":"Queued","feed.js.now":"Now","feed.js.seen":"Seen","feed.js.count":{"one":"{n} video seen on this page. This one counts too.","other":"{n} videos seen on this page. This one counts too."},"calc.js.period.month":"A month","calc.js.period.year":"A year","calc.js.period.decade":"In 10 years","calc.js.per.month":"a month","calc.js.per.year":"a year","calc.js.per.decade":"in 10 years","calc.js.valuetext":{"one":"{n} video a day","other":"{n} videos a day"},"calc.js.hours":{"one":"{n} hour","other":"{n} hours"},"calc.js.days":{"one":"{n} full 24-hour day","other":"{n} full 24-hour days"},"calc.js.days0":"Not one full day. Yet.","calc.js.base":{"one":"Base: {n} video × {r} × {d} days","other":"Base: {n} videos × {r} × {d} days"},"calc.js.live":"{v}, one every {r}: {h} {p}. {s}","calc.js.sentence.0":"With that time you could {x}.","calc.js.sentence.1":"That’s enough time to {x}.","calc.js.sentence.2":"Time enough to {x}.","calc.js.none":"There’s no time to compare yet.","calc.js.eq.degree.do":"earn {x}","calc.js.eq.degree.n":{"one":"a bachelor’s degree","other":"{n} bachelor’s degrees"},"calc.js.eq.degree.more":{"one":"more than a bachelor’s degree","other":"more than {n} bachelor’s degrees"},"calc.js.eq.degree.andHalf":{"one":"one and a half bachelor’s degrees","other":"{n} and a half bachelor’s degrees"},"calc.js.eq.degree.almost":{"one":"almost a bachelor’s degree","other":"almost {n} bachelor’s degrees"},"calc.js.eq.degree.percent":"{p} of a bachelor’s degree","calc.js.eq.degree.less":"less than {p} of a bachelor’s degree","calc.js.eq.degree.quarter":"a quarter of a bachelor’s degree","calc.js.eq.degree.half":"half a bachelor’s degree","calc.js.eq.degree.threeQuarters":"three quarters of a bachelor’s degree","calc.js.eq.language.do":"learn {x}","calc.js.eq.language.n":{"one":"a language","other":"{n} languages"},"calc.js.eq.language.more":{"one":"more than one language","other":"more than {n} languages"},"calc.js.eq.language.andHalf":{"one":"one and a half languages","other":"{n} and a half languages"},"calc.js.eq.language.almost":{"one":"almost a whole language","other":"almost {n} languages"},"calc.js.eq.language.percent":"{p} of a language","calc.js.eq.language.less":"less than {p} of a language","calc.js.eq.language.quarter":"a quarter of a language","calc.js.eq.language.half":"half a language","calc.js.eq.language.threeQuarters":"three quarters of a language","calc.js.eq.camino.do":"walk {x}","calc.js.eq.camino.n":{"one":"the whole Camino de Santiago","other":"the whole Camino de Santiago {n} times"},"calc.js.eq.camino.more":{"one":"the whole Camino de Santiago more than once","other":"the whole Camino de Santiago more than {n} times"},"calc.js.eq.camino.andHalf":{"one":"the Camino de Santiago one and a half times","other":"the Camino de Santiago {n} and a half times"},"calc.js.eq.camino.almost":{"one":"almost the whole Camino de Santiago","other":"almost {n} times the whole Camino de Santiago"},"calc.js.eq.camino.percent":"{p} of the Camino de Santiago","calc.js.eq.camino.less":"less than {p} of the Camino de Santiago","calc.js.eq.camino.quarter":"a quarter of the Camino de Santiago","calc.js.eq.camino.half":"half of the Camino de Santiago","calc.js.eq.camino.threeQuarters":"three quarters of the Camino de Santiago","calc.js.eq.got.do":"watch {x}","calc.js.eq.got.n":{"one":"all of Game of Thrones","other":"all of Game of Thrones {n} times"},"calc.js.eq.got.more":{"one":"all of Game of Thrones more than once","other":"all of Game of Thrones more than {n} times"},"calc.js.eq.got.andHalf":{"one":"Game of Thrones one and a half times","other":"Game of Thrones {n} and a half times"},"calc.js.eq.got.almost":{"one":"almost all of Game of Thrones","other":"all of Game of Thrones almost {n} times"},"calc.js.eq.got.percent":"{p} of Game of Thrones","calc.js.eq.got.less":"less than {p} of Game of Thrones","calc.js.eq.got.quarter":"a quarter of Game of Thrones","calc.js.eq.got.half":"half of Game of Thrones","calc.js.eq.got.threeQuarters":"three quarters of Game of Thrones","calc.js.eq.quijote.do":"read {x}","calc.js.eq.quijote.n":{"one":"all of Don Quixote","other":"all of Don Quixote {n} times"},"calc.js.eq.quijote.more":{"one":"all of Don Quixote more than once","other":"all of Don Quixote more than {n} times"},"calc.js.eq.quijote.andHalf":{"one":"Don Quixote one and a half times","other":"Don Quixote {n} and a half times"},"calc.js.eq.quijote.almost":{"one":"almost all of Don Quixote","other":"all of Don Quixote almost {n} times"},"calc.js.eq.quijote.percent":"{p} of Don Quixote","calc.js.eq.quijote.less":"less than {p} of Don Quixote","calc.js.eq.quijote.quarter":"a quarter of Don Quixote","calc.js.eq.quijote.half":"half of Don Quixote","calc.js.eq.quijote.threeQuarters":"three quarters of Don Quixote","calc.js.eq.sleep.do":"get {x}","calc.js.eq.sleep.n":{"one":"a full night’s sleep","other":"{n} full nights of sleep"},"calc.js.eq.sleep.more":{"one":"more than a full night’s sleep","other":"more than {n} full nights of sleep"},"calc.js.eq.sleep.andHalf":{"one":"one and a half nights of sleep","other":"{n} and a half nights of sleep"},"calc.js.eq.sleep.almost":{"one":"almost a full night’s sleep","other":"almost {n} full nights of sleep"},"calc.js.eq.sleep.percent":"{p} of a night’s sleep","calc.js.eq.sleep.less":"less than {p} of a night’s sleep","calc.js.eq.sleep.quarter":"a quarter of a night’s sleep","calc.js.eq.sleep.half":"half a night’s sleep","calc.js.eq.sleep.threeQuarters":"three quarters of a night’s sleep","calc.js.eq.marathon.do":"run {x}","calc.js.eq.marathon.n":{"one":"a marathon","other":"{n} marathons"},"calc.js.eq.marathon.more":{"one":"more than one marathon","other":"more than {n} marathons"},"calc.js.eq.marathon.andHalf":{"one":"a marathon and a half","other":"{n} and a half marathons"},"calc.js.eq.marathon.almost":{"one":"almost a whole marathon","other":"almost {n} marathons"},"calc.js.eq.marathon.percent":"{p} of a marathon","calc.js.eq.marathon.less":"less than {p} of a marathon","calc.js.eq.marathon.quarter":"a quarter of a marathon","calc.js.eq.marathon.half":"half a marathon","calc.js.eq.marathon.threeQuarters":"three quarters of a marathon","calc.js.eq.tortilla.do":"make {x}","calc.js.eq.tortilla.n":{"one":"a Spanish omelet","other":"{n} Spanish omelets"},"calc.js.eq.tortilla.more":{"one":"more than one Spanish omelet","other":"more than {n} Spanish omelets"},"calc.js.eq.tortilla.andHalf":{"one":"one and a half Spanish omelets","other":"{n} and a half Spanish omelets"},"calc.js.eq.tortilla.almost":{"one":"almost a whole Spanish omelet","other":"almost {n} Spanish omelets"},"calc.js.eq.tortilla.percent":"{p} of a Spanish omelet","calc.js.eq.tortilla.less":"less than {p} of a Spanish omelet","calc.js.eq.tortilla.quarter":"a quarter of a Spanish omelet","calc.js.eq.tortilla.half":"half a Spanish omelet","calc.js.eq.tortilla.threeQuarters":"three quarters of a Spanish omelet","download.js.since":{"one":"Since you opened this page: {n} video.","other":"Since you opened this page: {n} videos."},"footer.js.claim":"This page has no cookies, no analytics and nothing to report. Neither does the app.","footer.js.videos":"Videos you’d have watched here","footer.js.requests":"Third-party requests","footer.js.cookies":"Cookies","footer.js.storage":"The only thing your browser keeps is the theme, and only if you change it with the button.","footer.js.nav":"Footer","footer.js.code":"Source code","footer.js.privacy":"Privacy","footer.js.fonts":"Type: \u003ca href=\"/reelometer/assets/fonts/BricolageGrotesque-OFL.txt\">Bricolage Grotesque\u003c/a>, \u003ca href=\"/reelometer/assets/fonts/JetBrainsMono-OFL.txt\">JetBrains Mono\u003c/a> and \u003ca href=\"/reelometer/assets/fonts/InstrumentSerif-OFL.txt\">Instrument Serif\u003c/a>, under the SIL Open Font License 1.1, served from here.","footer.js.end":"Reelometer 1.10.2 · End of the roll","board.js.ontime":"On time","board.js.boarding":"Boarding","board.js.seen":"Seen","calc.js.secs":{"one":"{n} second","other":"{n} seconds"}}</script>
+</body>
+</html>

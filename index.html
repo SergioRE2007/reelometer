@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="es" data-page="home">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reelometer · El marcador de tus vídeos cortos</title>
+<meta name="description" content="Cuenta los vídeos que ves en TikTok, Instagram Reels y YouTube Shorts: cuántos, cuánto tiempo y de quién. Sin internet. Todo se queda en tu móvil.">
+<meta name="color-scheme" content="dark light">
+<meta name="referrer" content="no-referrer">
+<link rel="canonical" href="https://sergiore2007.github.io/reelometer/">
+<link rel="alternate" hreflang="es" href="https://sergiore2007.github.io/reelometer/">
+<link rel="alternate" hreflang="en" href="https://sergiore2007.github.io/reelometer/en/">
+<link rel="alternate" hreflang="x-default" href="https://sergiore2007.github.io/reelometer/">
+<script>try{var m=localStorage.getItem('reelometer-theme');if(m==='dark'||m==='light')document.documentElement.dataset.theme=m}catch(e){}</script>
+<link rel="preload" href="/reelometer/assets/fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/reelometer/assets/fonts/jetbrains-mono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/reelometer/assets/site.css?v=84d41b949a">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#11100E" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F3EEE5" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/reelometer/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/reelometer/assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Reelometer">
+<meta property="og:title" content="Reelometer · El marcador de tus vídeos cortos">
+<meta property="og:description" content="Cuenta los vídeos que ves en TikTok, Instagram Reels y YouTube Shorts: cuántos, cuánto tiempo y de quién. Sin internet. Todo se queda en tu móvil.">
+<meta property="og:url" content="https://sergiore2007.github.io/reelometer/">
+<meta property="og:locale" content="es_ES">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:image" content="https://sergiore2007.github.io/reelometer/assets/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Marcador de fichas con la cifra 212 junto a una tira de ticket con el sello «Pagado con tu tiempo». Reelometer.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Reelometer · El marcador de tus vídeos cortos">
+<meta name="twitter:description" content="Cuenta los vídeos que ves en TikTok, Instagram Reels y YouTube Shorts: cuántos, cuánto tiempo y de quién. Sin internet. Todo se queda en tu móvil.">
+<meta name="twitter:image" content="https://sergiore2007.github.io/reelometer/assets/og-image.png">
+<meta name="twitter:image:alt" content="Marcador de fichas con la cifra 212 junto a una tira de ticket con el sello «Pagado con tu tiempo». Reelometer.">
+<script>(function(d){if(d.dataset.page!=="notfound")return;if(location.pathname.indexOf("/reelometer/en/")===0)d.lang="en";d.querySelectorAll("link[rel=canonical],link[rel=alternate][hreflang]").forEach(function(l){l.remove()})})(document.documentElement)</script>
+
+<script defer src="/reelometer/assets/site.js?v=ff1da23301"></script>
+</head>
+<body>
+<a class="skip" href="#main">Saltar al contenido</a>
+<header id="header" class="header">
+  <div class="wrap header-row">
+    <p class="header-id">
+      <a class="header-brand" href="/reelometer/" aria-label="Reelometer, inicio">Reelometer</a>
+      <span class="label header-ver">TPV 1.10.2</span>
+    </p>
+    <nav class="header-nav" aria-label="Secciones">
+      <ul role="list">
+        <li><a class="label-l" href="/reelometer/#feed">Feed</a></li>
+        <li><a class="label-l" href="/reelometer/#screens">Pantallas</a></li>
+        <li><a class="label-l" href="/reelometer/#calc">Cuentas</a></li>
+        <li><a class="label-l" href="/reelometer/#ticket">Privacidad</a></li>
+        <li><a class="label-l" href="/reelometer/#download">Descarga</a></li>
+      </ul>
+    </nav>
+    <div class="header-tools">
+      <p class="header-lang label-l">
+        <span class="header-lang-cur" aria-hidden="true">ES</span>
+        <a class="header-lang-alt" href="/reelometer/en/" hreflang="en" lang="en">EN<span class="visually-hidden"> English</span></a>
+      </p>
+      <button class="header-theme label-l" type="button" data-theme-btn>
+        <span class="header-theme-word">Tema</span> <span class="header-theme-name" data-theme-name>sistema</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+<section id="hero" class="sec" aria-labelledby="hero-title">
+  <div class="wrap hero-grid">
+
+    <div class="hero-head">
+      <p class="label hero-kicker" data-kicker>Ticket de tu visita</p>
+      <h1 id="hero-title" class="display-m hero-title">Cuenta lo que no cuentas.</h1>
+      <div class="hero-meter">
+        <p class="label hero-meter-label" id="hero-meter-label">Vídeos que ya habrías visto aquí</p>
+        <div class="counter hero-flap" data-flap role="img" aria-label="0 vídeos"></div>
+      </div>
+      <p class="quote hero-quote" data-quote>«De momento, ganas tú.»</p>
+      <p class="data-s hero-base">Base: un vídeo cada 15 s, una media redonda. La app mide la tuya.</p>
+    </div>
+
+    <div class="hero-body">
+      <p class="hero-lede">Reelometer cuenta los vídeos cortos que ves en <span class="nowrap"><span class="dot dot--tiktok" aria-hidden="true"></span> TikTok</span>, <span class="nowrap"><span class="dot dot--reels" aria-hidden="true"></span> Instagram Reels</span> y <span class="nowrap"><span class="dot dot--shorts" aria-hidden="true"></span> YouTube Shorts</span>: cuántos, cuánto tiempo, de qué temas y de quién. Sin internet. No bloquea nada: te da el ticket.</p>
+      <div class="hero-cta">
+        <a class="btn btn--primary" href="https://github.com/SergioRE2007/reelometer/releases/latest">Descargar APK<span aria-hidden="true"> ↗</span></a>
+        <a class="btn btn--ghost hero-more" href="#ticket">Ver qué se lleva<span aria-hidden="true"> ↓</span></a>
+      </div>
+      <p class="label hero-note"><span class="hero-note-list"><span class="hero-note-i">Android 8.0 o superior</span> <span class="hero-note-i"><span class="hero-note-sep" aria-hidden="true">· </span>gratis</span> <span class="hero-note-i"><span class="hero-note-sep" aria-hidden="true">· </span>sin anuncios</span></span></p>
+    </div>
+
+    <div class="hero-roll">
+      <p class="label hero-printer"><span class="hero-printer-dot" aria-hidden="true"></span>Impresora sin conexión. Como debe ser.</p>
+      <div class="hero-slot" aria-hidden="true"></div>
+      <div class="hero-out" data-out>
+        <div class="jag-bottom hero-edge" data-paper>
+        <article class="paper jag-bottom hero-paper" aria-label="Ticket de tu visita">
+          <header class="hero-rcpt-head">
+            <p class="hero-rcpt-brand">Reelometer</p>
+            <p class="label">El marcador de tus vídeos cortos</p>
+            <p class="label"><span class="nowrap">C/ Tu móvil, s/n ·</span> <span class="nowrap">Sin internet</span></p>
+          </header>
+          <hr class="divider-dashed hero-gap">
+          <div class="hero-meta data-s">
+            <p><span data-ticket-no>Ticket nº 0000</span><span data-date></span></p>
+            <p><span>Atiende: tu pulgar</span><span>Caja 01</span></p>
+          </div>
+          <hr class="hero-double">
+          <p class="hero-cols label"><span>Hora</span><span>Concepto</span><span>Importe</span></p>
+          <ol class="hero-items" role="list" data-items>
+            <li class="hero-item hero-item--older is-in" data-older hidden>
+              <div><span class="hero-item-time" aria-hidden="true"></span><p class="receipt-line"><span data-older-label></span><span data-older-sum></span></p></div>
+            </li>
+            <li class="hero-item hero-item--live is-in" data-live>
+              <div><span class="hero-item-time" data-live-time></span><p class="receipt-line"><span><span data-live-label></span><span class="hero-caret" aria-hidden="true"></span></span><span data-live-secs></span></p></div>
+            </li>
+          </ol>
+          <hr class="divider-dashed hero-gap">
+          <p class="receipt-line"><span>Vídeos</span><span data-count>0</span></p>
+          <hr class="hero-double">
+          <p class="hero-total"><span class="label-l">Total</span><span class="hero-total-num" data-total></span></p>
+          <p class="receipt-line"><span>Forma de pago</span><span>Tu tiempo</span></p>
+          <p class="receipt-line"><span>Cambio</span><span>No se devuelve</span></p>
+          <div class="hero-barcode" data-barcode aria-hidden="true"></div>
+          <p class="barcode-digits" data-barcode-digits aria-hidden="true"></p>
+          <p class="hero-stamp-wrap"><span class="stamp stamp--pending hero-stamp" data-stamp>Pagado con<br>tu tiempo</span></p>
+          <p class="label hero-rcpt-foot">No se admiten devoluciones de tiempo</p>
+        </article>
+        </div>
+      </div>
+    </div>
+
+    <p class="visually-hidden" aria-live="polite" data-announce></p>
+  </div>
+</section>
+
+<section id="board" class="sec board" aria-labelledby="board-title">
+  <div class="wrap">
+    <div class="board-panel">
+      <div class="board-head">
+        <h2 class="label-l board-title" id="board-title">Salidas</h2>
+        <p class="label board-hint">Elige destino. Todos están en esta página.</p>
+        <p class="board-clock" aria-hidden="true" hidden data-board-clock-wrap><span class="label">Hora local</span> <span class="board-clock-flap" data-board-clock></span></p>
+      </div>
+
+      <nav class="board-nav" aria-label="Índice de la página">
+        <div class="board-cols label" aria-hidden="true">
+          <span>Puerta</span><span>Destino</span><span>A bordo</span><span>Estado</span><span class="board-cols-note">Observaciones</span>
+        </div>
+        <ol class="board-rows" role="list">
+          <li><a class="board-row" href="#feed" data-board-row>
+            <span class="visually-hidden">Puerta 01. El feed, 9 vídeos. <span data-board-sr>En hora</span>.</span>
+            <span class="board-c board-gate" aria-hidden="true">01</span>
+            <span class="board-c board-dest" aria-hidden="true">El feed</span>
+            <span class="board-c board-meta" aria-hidden="true">9 vídeos</span>
+            <span class="board-c board-status" aria-hidden="true">En hora</span>
+            <span class="board-note body-s">Nueve vídeos y se acaba. Como debería.</span>
+          </a></li>
+          <li><a class="board-row" href="#screens" data-board-row>
+            <span class="visually-hidden">Puerta 02. Las pantallas, 6 capturas. <span data-board-sr>En hora</span>.</span>
+            <span class="board-c board-gate" aria-hidden="true">02</span>
+            <span class="board-c board-dest" aria-hidden="true">Las pantallas</span>
+            <span class="board-c board-meta" aria-hidden="true">6 capturas</span>
+            <span class="board-c board-status" aria-hidden="true">En hora</span>
+            <span class="board-note body-s">La app, tal cual. Con datos de ejemplo.</span>
+          </a></li>
+          <li><a class="board-row" href="#calc" data-board-row>
+            <span class="visually-hidden">Puerta 03. Las cuentas, 8 equivalencias. <span data-board-sr>En hora</span>.</span>
+            <span class="board-c board-gate" aria-hidden="true">03</span>
+            <span class="board-c board-dest" aria-hidden="true">Las cuentas</span>
+            <span class="board-c board-meta" aria-hidden="true">8 equivalencias</span>
+            <span class="board-c board-status" aria-hidden="true">En hora</span>
+            <span class="board-note body-s">Tus vídeos al día, pasados a horas.</span>
+          </a></li>
+          <li><a class="board-row" href="#ticket" data-board-row>
+            <span class="visually-hidden">Puerta 04. Privacidad, 0 bytes. <span data-board-sr>En hora</span>.</span>
+            <span class="board-c board-gate" aria-hidden="true">04</span>
+            <span class="board-c board-dest" aria-hidden="true">Privacidad</span>
+            <span class="board-c board-meta" aria-hidden="true">0 bytes</span>
+            <span class="board-c board-status" aria-hidden="true">En hora</span>
+            <span class="board-note body-s">Lo que se lleva la app de tu móvil: nada.</span>
+          </a></li>
+          <li><a class="board-row" href="#download" data-board-row>
+            <span class="visually-hidden">Puerta 05. Descarga, APK 1.10.2. <span data-board-sr>En hora</span>.</span>
+            <span class="board-c board-gate" aria-hidden="true">05</span>
+            <span class="board-c board-dest" aria-hidden="true">Descarga</span>
+            <span class="board-c board-meta" aria-hidden="true">APK 1.10.2</span>
+            <span class="board-c board-status" aria-hidden="true">En hora</span>
+            <span class="board-note body-s">APK directa. Google Play, próximamente.</span>
+          </a></li>
+          <li><a class="board-row" href="#faq" data-board-row>
+            <span class="visually-hidden">Puerta 06. Reclamaciones, 7 preguntas. <span data-board-sr>En hora</span>.</span>
+            <span class="board-c board-gate" aria-hidden="true">06</span>
+            <span class="board-c board-dest" aria-hidden="true">Reclamaciones</span>
+            <span class="board-c board-meta" aria-hidden="true">7 preguntas</span>
+            <span class="board-c board-status" aria-hidden="true">En hora</span>
+            <span class="board-note body-s">Accesibilidad, batería y lo demás.</span>
+          </a></li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</section>
+
+<section id="feed" class="sec ink feed" aria-labelledby="feed-title">
+  <div class="wrap">
+    <h2 class="sec-head" id="feed-title"><span class="sec-head-index">01</span> El feed <span class="sec-head-meta">9 vídeos</span></h2>
+
+    <div class="feed-grid">
+      <div class="feed-intro">
+        <p class="display-l feed-claim">Un feed que se acaba.</p>
+        <p class="feed-lede">Desliza. Esta web cuenta como la app: 600 ms en pantalla y ya es uno más.</p>
+
+        <ol class="feed-list" role="list" aria-label="Los vídeos de este feed">
+          <li><button type="button" class="feed-row" data-go="0" aria-controls="feed-scroller"><span class="feed-row-n">01</span><span class="feed-row-t">600 ms</span><span class="feed-row-s"></span></button></li>
+          <li><button type="button" class="feed-row" data-go="1" aria-controls="feed-scroller"><span class="feed-row-n">02</span><span class="feed-row-t">Hoy</span><span class="feed-row-s"></span></button></li>
+          <li><button type="button" class="feed-row" data-go="2" aria-controls="feed-scroller"><span class="feed-row-n">03</span><span class="feed-row-t">3 apps</span><span class="feed-row-s"></span></button></li>
+          <li><button type="button" class="feed-row" data-go="3" aria-controls="feed-scroller"><span class="feed-row-n">04</span><span class="feed-row-t">Estadísticas</span><span class="feed-row-s"></span></button></li>
+          <li><button type="button" class="feed-row" data-go="4" aria-controls="feed-scroller"><span class="feed-row-n">05</span><span class="feed-row-t">16 temas</span><span class="feed-row-s"></span></button></li>
+          <li><button type="button" class="feed-row" data-go="5" aria-controls="feed-scroller"><span class="feed-row-n">06</span><span class="feed-row-t">Resumen</span><span class="feed-row-s"></span></button></li>
+          <li><button type="button" class="feed-row" data-go="6" aria-controls="feed-scroller"><span class="feed-row-n">07</span><span class="feed-row-t">0 permisos</span><span class="feed-row-s"></span></button></li>
+          <li><button type="button" class="feed-row" data-go="7" aria-controls="feed-scroller"><span class="feed-row-n">08</span><span class="feed-row-t">Historia</span><span class="feed-row-s"></span></button></li>
+          <li><button type="button" class="feed-row" data-go="8" aria-controls="feed-scroller"><span class="feed-row-n">09</span><span class="feed-row-t">Fin</span><span class="feed-row-s"></span></button></li>
+        </ol>
+      </div>
+
+      <div class="feed-phone" data-kind="data">
+        <div class="feed-top">
+          <div class="feed-segs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <p class="label feed-pos"><span>Vídeo</span> <span class="feed-pos-i">01</span> / 09</p>
+          <div class="feed-corner">
+            <p class="label">Vistos aquí</p>
+            <span class="feed-tally-n" aria-hidden="true">000</span>
+            <p class="quote-s feed-also" aria-hidden="true">Este también cuenta.</p>
+          </div>
+          <p class="visually-hidden" id="feed-live" aria-live="polite"></p>
+        </div>
+
+        <div class="feed-scroller" id="feed-scroller" tabindex="0" role="region" aria-label="Feed de 9 vídeos. Pasa con las flechas o con Av Pág y Re Pág.">
+
+          <article class="feed-item" aria-labelledby="feed-v1-t">
+            <div class="feed-stage">
+              <p class="feed-big"><span class="feed-num" data-n="600" aria-hidden="true">600</span><span class="visually-hidden">600 </span><span class="data-l feed-unit">ms</span></p>
+              <ul class="feed-rail" role="list" aria-hidden="true">
+                <li><b>0</b><span>Me gusta</span></li><li><b>0</b><span>Comentarios</span></li><li><b>0</b><span>Bytes</span></li>
+              </ul>
+            </div>
+            <div class="feed-item-body">
+              <h3 class="label feed-item-label" id="feed-v1-t">Lo que tarda un vídeo en contar</h3>
+              <p class="quote-s feed-line">Menos de lo que tardas en decidir que no te interesa.</p>
+              <hr class="divider-dashed">
+              <p class="data-s">Base: el umbral de la app. Un vídeo cuenta con ≥ 600 ms en pantalla; volver atrás no suma otro.</p>
+            </div>
+          </article>
+
+          <article class="feed-item feed-item--screen" aria-labelledby="feed-v2-t">
+            <img src="/reelometer/assets/img/hoy-oscuro-540.webp" srcset="/reelometer/assets/img/hoy-oscuro-360.webp 360w, /reelometer/assets/img/hoy-oscuro-540.webp 540w" sizes="(min-width: 768px) 380px, 100vw" width="540" height="1125" loading="lazy" decoding="async" alt="Pantalla Hoy de Reelometer: el marcador en 028 vídeos, 9 min de pantalla y un compartido, TikTok como única plataforma y el día hora a hora.">
+            <div class="feed-cap">
+              <h3 class="label feed-item-label" id="feed-v2-t">Hoy</h3>
+              <p class="quote-s feed-line">El marcador del día. Voltea como los paneles de los aeropuertos.</p>
+              <p class="data-s">Captura de la app. Datos de ejemplo.</p>
+            </div>
+          </article>
+
+          <article class="feed-item" aria-labelledby="feed-v3-t">
+            <div class="feed-stage feed-stage--stack">
+              <p class="feed-big"><span class="feed-num" data-n="3" aria-hidden="true">3</span><span class="visually-hidden">3 </span><span class="data-l feed-unit">apps</span></p>
+              <ul class="data feed-plats" role="list">
+                <li><span class="dot dot--tiktok"></span>TikTok</li>
+                <li><span class="dot dot--reels"></span>Instagram Reels</li>
+                <li><span class="dot dot--shorts"></span>YouTube Shorts</li>
+              </ul>
+            </div>
+            <div class="feed-item-body">
+              <h3 class="label feed-item-label" id="feed-v3-t">Las únicas que mira</h3>
+              <p class="quote-s feed-line">Fuera de esas tres, el servicio no ve nada.</p>
+              <hr class="divider-dashed">
+              <p class="data-s">Base: la lista de apps del servicio de accesibilidad, en el código, que es público.</p>
+            </div>
+          </article>
+
+          <article class="feed-item feed-item--screen" aria-labelledby="feed-v4-t">
+            <img src="/reelometer/assets/img/estadisticas-540.webp" srcset="/reelometer/assets/img/estadisticas-360.webp 360w, /reelometer/assets/img/estadisticas-540.webp 540w" sizes="(min-width: 768px) 380px, 100vw" width="540" height="1125" loading="lazy" decoding="async" alt="Pantalla Estadísticas de una semana: 1.203 vídeos, 6 h 15 min, 201 al día, un 69 % más que la semana anterior y una barra por día con la media.">
+            <div class="feed-cap">
+              <h3 class="label feed-item-label" id="feed-v4-t">Estadísticas</h3>
+              <p class="quote-s feed-line">Semana, mes, año o desde siempre. Tú eliges cuánto quieres saber.</p>
+              <p class="data-s">Captura de la app. Datos de ejemplo.</p>
+            </div>
+          </article>
+
+          <article class="feed-item" aria-labelledby="feed-v5-t">
+            <div class="feed-stage">
+              <p class="feed-big"><span class="feed-num" data-n="16" aria-hidden="true">16</span><span class="visually-hidden">16 </span><span class="data-l feed-unit">temas</span></p>
+              <ul class="feed-rail" role="list" aria-hidden="true">
+                <li><b>0</b><span>Me gusta</span></li><li><b>0</b><span>Comentarios</span></li><li><b>0</b><span>Bytes</span></li>
+              </ul>
+            </div>
+            <div class="feed-item-body">
+              <h3 class="label feed-item-label" id="feed-v5-t">Humor, deporte, comida, gaming y doce más</h3>
+              <p class="quote-s feed-line">Cada vídeo, a su tema, por su descripción y sus hashtags.</p>
+              <hr class="divider-dashed">
+              <p class="data-s">Base: palabras clave en la descripción y los hashtags, sin salir del móvil. Lo que no encaja va a «Sin clasificar».</p>
+            </div>
+          </article>
+
+          <article class="feed-item feed-item--screen" aria-labelledby="feed-v6-t">
+            <img src="/reelometer/assets/img/resumen-540.webp" srcset="/reelometer/assets/img/resumen-360.webp 360w, /reelometer/assets/img/resumen-540.webp 540w" sizes="(min-width: 768px) 380px, 100vw" width="540" height="1125" loading="lazy" decoding="async" alt="Pantalla Resumen: octubre con 6.909 vídeos y 36 h; noviembre, en curso, con 1.428, y esta semana con 1.203.">
+            <div class="feed-cap">
+              <h3 class="label feed-item-label" id="feed-v6-t">Resumen</h3>
+              <p class="quote-s feed-line">Tu mes, contado. Sin redondear hacia abajo.</p>
+              <p class="data-s">Captura de la app. Datos de ejemplo.</p>
+            </div>
+          </article>
+
+          <article class="feed-item" aria-labelledby="feed-v7-t">
+            <div class="feed-stage">
+              <p class="feed-big"><span class="feed-num" data-n="0" aria-hidden="true">0</span><span class="visually-hidden">0</span></p>
+              <ul class="feed-rail" role="list" aria-hidden="true">
+                <li><b>0</b><span>Cuentas</span></li><li><b>0</b><span>Servidores</span></li><li><b>0</b><span>Anuncios</span></li>
+              </ul>
+            </div>
+            <div class="feed-item-body">
+              <h3 class="label feed-item-label" id="feed-v7-t">Permisos de INTERNET</h3>
+              <p class="quote-s feed-line">No puede enviar nada a ningún sitio. Ni aunque quisiera.</p>
+              <hr class="divider-dashed">
+              <p class="data-s">Base: el manifiesto de la app, que es público. Búscalo: no está.</p>
+            </div>
+          </article>
+
+          <article class="feed-item feed-item--screen" aria-labelledby="feed-v8-t">
+            <img src="/reelometer/assets/img/historia-videos-540.webp" srcset="/reelometer/assets/img/historia-videos-360.webp 360w, /reelometer/assets/img/historia-videos-540.webp 540w" sizes="(min-width: 768px) 380px, 100vw" width="540" height="1125" loading="lazy" decoding="async" alt="Diapositiva del resumen de octubre a pantalla completa: 6.909 vídeos en fichas, la frase «6.909 vídeos. Uno detrás de otro.», 223 de media diaria y 31 de 31 días activos.">
+            <div class="feed-cap">
+              <h3 class="label feed-item-label" id="feed-v8-t">Historia</h3>
+              <p class="quote-s feed-line">Una cifra por diapositiva. Esta es la que escuece.</p>
+              <p class="data-s">Captura de la app. Datos de ejemplo.</p>
+            </div>
+          </article>
+
+          <article class="feed-item feed-item--end" aria-labelledby="feed-v9-t">
+            <div class="feed-stage">
+              <p class="feed-big feed-fin"><span class="feed-num" data-text="FIN" aria-hidden="true">FIN</span></p>
+            </div>
+            <div class="feed-item-body">
+              <h3 class="visually-hidden" id="feed-v9-t">FIN</h3>
+              <p class="quote feed-end-line">Aquí sí hay final. En las otras apps, no.</p>
+              <a class="btn btn--ghost feed-out" href="#screens">Seguir bajando <span aria-hidden="true">↓</span></a>
+            </div>
+          </article>
+        </div>
+
+        <div class="feed-nav">
+          <button type="button" class="label-l feed-prev" aria-controls="feed-scroller">Anterior <span aria-hidden="true">↑</span></button>
+          <button type="button" class="label-l feed-next" aria-controls="feed-scroller">Siguiente <span aria-hidden="true">↓</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="screens" class="sec" aria-labelledby="screens-title">
+  <div class="wrap">
+    <h2 class="sec-head" id="screens-title"><span class="sec-head-index">02</span> Las pantallas <span class="sec-head-meta">6 capturas</span></h2>
+
+    <div class="screens-plate">
+      <div class="screens-intro">
+        <p class="display-l screens-claim">La app, tal cual.</p>
+        <p class="screens-lede">Seis capturas sin retocar. Los datos son de ejemplo; los tuyos se quedan en tu móvil.</p>
+      </div>
+
+      <figure class="fig screens-fig screens-fig--1a">
+        <div class="fig-frame">
+          <div class="screens-phone">
+            <img class="fig-img" src="/reelometer/assets/img/hoy-oscuro-540.webp"
+                 srcset="/reelometer/assets/img/hoy-oscuro-360.webp 360w, /reelometer/assets/img/hoy-oscuro-540.webp 540w"
+                 sizes="(min-width: 1200px) 272px, (min-width: 768px) 30vw, 48vw"
+                 width="540" height="1125" loading="lazy" decoding="async" alt="Pantalla Hoy en tema oscuro: un marcador de fichas con 028 vídeos, 9 min de pantalla y 1 compartido, la frase «28 vídeos. Ni tantos ni tan pocos, de momento.», TikTok como única plataforma y la gráfica del día hora a hora.">
+          </div>
+          <span class="crop crop--tl"></span><span class="crop crop--tr"></span><span class="crop crop--bl"></span><span class="crop crop--br"></span>
+        </div>
+        <figcaption class="fig-cap"><span class="label fig-n">FIG. 1a</span><span class="body-s">Hoy, en oscuro. Un sábado: 28 vídeos, 9 min de pantalla y todo en TikTok. De momento.</span></figcaption>
+      </figure>
+
+      <figure class="fig screens-fig screens-fig--1b">
+        <div class="fig-frame">
+          <div class="screens-phone">
+            <img class="fig-img" src="/reelometer/assets/img/hoy-claro-540.webp"
+                 srcset="/reelometer/assets/img/hoy-claro-360.webp 360w, /reelometer/assets/img/hoy-claro-540.webp 540w"
+                 sizes="(min-width: 1200px) 162px, (min-width: 768px) 18vw, 32vw"
+                 width="540" height="1125" loading="lazy" decoding="async" alt="La misma pantalla Hoy en tema claro: fondo de papel, tinta negra y las mismas cifras, 028 vídeos y 9 min.">
+          </div>
+          <span class="crop crop--tl"></span><span class="crop crop--tr"></span><span class="crop crop--bl"></span><span class="crop crop--br"></span>
+        </div>
+        <figcaption class="fig-cap"><span class="label fig-n">FIG. 1b</span><span class="body-s">Hoy, en claro. Cambia el papel; las cifras, no.</span></figcaption>
+      </figure>
+
+      <div class="screens-rule screens-rule--a" aria-hidden="true"></div>
+
+      <figure class="fig screens-fig screens-fig--2">
+        <div class="fig-frame">
+          <div class="screens-phone">
+            <img class="fig-img" src="/reelometer/assets/img/estadisticas-540.webp"
+                 srcset="/reelometer/assets/img/estadisticas-360.webp 360w, /reelometer/assets/img/estadisticas-540.webp 540w"
+                 sizes="(min-width: 1200px) 217px, (min-width: 768px) 24vw, 48vw"
+                 width="540" height="1125" loading="lazy" decoding="async" alt="Pantalla Estadísticas, semana del 2 al 8 de noviembre de 2026: 1.203 vídeos, 6 h 15 min, 201 al día y 19 s por vídeo, «+69 % que la semana anterior» y una barra por día, con el viernes en naranja muy por encima de la media de 201.">
+          </div>
+          <span class="crop crop--tl"></span><span class="crop crop--tr"></span><span class="crop crop--bl"></span><span class="crop crop--br"></span>
+        </div>
+        <figcaption class="fig-cap"><span class="label fig-n">FIG. 2</span><span class="body-s">Estadísticas de una semana: 1.203 vídeos y 6 h 15 min, un 69 % más que la anterior. El viernes es la barra naranja.</span></figcaption>
+      </figure>
+
+      <figure class="fig screens-fig screens-fig--3">
+        <div class="fig-frame">
+          <div class="screens-phone">
+            <img class="fig-img" src="/reelometer/assets/img/resumen-540.webp"
+                 srcset="/reelometer/assets/img/resumen-360.webp 360w, /reelometer/assets/img/resumen-540.webp 540w"
+                 sizes="(min-width: 1200px) 217px, (min-width: 768px) 24vw, 32vw"
+                 width="540" height="1125" loading="lazy" decoding="async" alt="Pantalla Resumen con el título «Tu octubre, contado.»: el mes pasado en un bloque naranja (6.909 vídeos, 36 h), este mes en curso (1.428 vídeos, 7,4 h) y esta semana (1.203 vídeos, 6,3 h).">
+          </div>
+          <span class="crop crop--tl"></span><span class="crop crop--tr"></span><span class="crop crop--bl"></span><span class="crop crop--br"></span>
+        </div>
+        <figcaption class="fig-cap"><span class="label fig-n">FIG. 3</span><span class="body-s">Resumen: octubre, cerrado en 6.909 vídeos y 36 h. Noviembre ya va por 1.428.</span></figcaption>
+      </figure>
+
+      <div class="screens-rule screens-rule--b" aria-hidden="true"></div>
+
+      <figure class="fig screens-fig screens-fig--4">
+        <div class="fig-frame">
+          <div class="screens-phone">
+            <img class="fig-img" src="/reelometer/assets/img/historia-videos-540.webp"
+                 srcset="/reelometer/assets/img/historia-videos-360.webp 360w, /reelometer/assets/img/historia-videos-540.webp 540w"
+                 sizes="(min-width: 1200px) 162px, (min-width: 768px) 18vw, 40vw"
+                 width="540" height="1125" loading="lazy" decoding="async" alt="Diapositiva Vídeos del repaso de octubre de 2026: 6.909 en fichas, la frase «6.909 vídeos. Uno detrás de otro.», media diaria 223 y días activos 31/31.">
+          </div>
+          <span class="crop crop--tl"></span><span class="crop crop--tr"></span><span class="crop crop--bl"></span><span class="crop crop--br"></span>
+        </div>
+        <figcaption class="fig-cap"><span class="label fig-n">FIG. 4</span><span class="body-s">El repaso de octubre, diapositiva 2 de 9: 223 vídeos al día y 31 días activos de 31.</span></figcaption>
+      </figure>
+
+      <figure class="fig screens-fig screens-fig--5">
+        <div class="fig-frame">
+          <div class="screens-phone">
+            <img class="fig-img" src="/reelometer/assets/img/historia-tiempo-540.webp"
+                 srcset="/reelometer/assets/img/historia-tiempo-360.webp 360w, /reelometer/assets/img/historia-tiempo-540.webp 540w"
+                 sizes="(min-width: 1200px) 162px, (min-width: 768px) 18vw, 40vw"
+                 width="540" height="1125" loading="lazy" decoding="async" alt="Diapositiva Tiempo del repaso de octubre de 2026: 36 H en grande, la frase «36 horas de pantalla o, lo que es lo mismo, 4 jornadas laborales y media.», 19 s por vídeo y 141 compartidos.">
+          </div>
+          <span class="crop crop--tl"></span><span class="crop crop--tr"></span><span class="crop crop--bl"></span><span class="crop crop--br"></span>
+        </div>
+        <figcaption class="fig-cap"><span class="label fig-n">FIG. 5</span><span class="body-s">Diapositiva 3 de 9: 36 h, o cuatro jornadas laborales y media. A 19 s por vídeo.</span></figcaption>
+      </figure>
+
+      <div class="screens-how" role="group" aria-labelledby="screens-how-title">
+        <h3 class="headline screens-how-title" id="screens-how-title">Cómo funciona</h3>
+        <ol class="screens-steps" role="list">
+          <li class="screens-step"><span class="screens-step-n" aria-hidden="true">1</span><p class="title">Instala la APK</p><p class="body-s">Se descarga de GitHub. Android 8.0 o superior. En Google Play todavía no está.</p></li>
+          <li class="screens-step"><span class="screens-step-n" aria-hidden="true">2</span><p class="title">Activa el servicio</p><p class="body-s">Es un servicio de accesibilidad y solo lee TikTok, Instagram y YouTube; el resto del móvil no lo mira. En Android 13 o superior, antes hay que permitir los ajustes restringidos: la app te guía.</p></li>
+          <li class="screens-step"><span class="screens-step-n" aria-hidden="true">3</span><p class="title">Usa tus apps como siempre</p><p class="body-s">Un vídeo cuenta si pasa 600 ms en pantalla. Volver atrás no suma otro.</p></li>
+          <li class="screens-step"><span class="screens-step-n" aria-hidden="true">4</span><p class="title">Mira el marcador</p><p class="body-s">Cuántos, cuánto tiempo, de qué temas y de quién. Sin internet: nada sale del móvil.</p></li>
+        </ol>
+        <a class="btn btn--ghost screens-how-link" href="#download">A la descarga <span aria-hidden="true">↓</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="calc" class="sec" aria-labelledby="calc-title">
+  <div class="wrap">
+    <h2 class="sec-head" id="calc-title"><span class="sec-head-index">03</span> Las cuentas <span class="sec-head-meta">8 equivalencias</span></h2>
+
+    <div class="calc-open">
+      <div class="calc-titlebox">
+        <p class="label calc-kicker">Cuentas de la vieja</p>
+        <h3 class="calc-title">¿Cuántos ves al día?</h3>
+      </div>
+      <div class="calc-intro">
+        <p class="quote-s calc-standfirst">Mueve la regla. Las cuentas y las bases son las mismas que usa la app; las conclusiones, tuyas.</p>
+        <p class="calc-body">La app cuenta los vídeos de verdad, uno a uno, sin salir de tu móvil. Esto es la versión de bolsillo: tú dices cuántos ves y a qué ritmo, y la página multiplica. Los 15 s de partida son una media redonda; la app mide la tuya. La página no guarda la cifra ni se la cuenta a nadie. Si recargas, vuelve a 212.</p>
+      </div>
+    </div>
+
+    <div class="calc-dial">
+      <div class="calc-readout">
+        <p class="calc-big" aria-hidden="true" id="calc-n">212</p>
+        <p class="label calc-big-unit" id="calc-n-label">Vídeos al día</p>
+      </div>
+
+      <div class="calc-controls">
+        <div class="calc-stepper" role="group" aria-label="Ajuste fino">
+          <button class="calc-step calc-step--minus" type="button" data-step="-10" aria-label="Diez vídeos menos" aria-controls="calc-range"></button>
+          <button class="calc-step calc-step--plus" type="button" data-step="10" aria-label="Diez vídeos más" aria-controls="calc-range"></button>
+        </div>
+        <div class="calc-opt">
+          <p class="label muted" id="calc-pace-l">Ritmo · segundos por vídeo</p>
+          <div class="calc-seg" role="radiogroup" aria-labelledby="calc-pace-l" id="calc-pace">
+            <button type="button" role="radio" aria-checked="false" data-v="8">8 s</button>
+            <button type="button" role="radio" aria-checked="true" data-v="15">15 s</button>
+            <button type="button" role="radio" aria-checked="false" data-v="20">20 s</button>
+            <button type="button" role="radio" aria-checked="false" data-v="30">30 s</button>
+            <span class="calc-seg-bar" aria-hidden="true"></span>
+          </div>
+        </div>
+        <div class="calc-opt">
+          <p class="label muted" id="calc-period-l">Periodo</p>
+          <div class="calc-seg" role="radiogroup" aria-labelledby="calc-period-l" id="calc-period">
+            <button type="button" role="radio" aria-checked="false" data-v="month">Al mes</button>
+            <button type="button" role="radio" aria-checked="true" data-v="year">Al año</button>
+            <button type="button" role="radio" aria-checked="false" data-v="decade">En 10 años</button>
+            <span class="calc-seg-bar" aria-hidden="true"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="calc-ruler" id="calc-ruler" style="--p: 0.212">
+        <div class="calc-ticks" id="calc-ticks" aria-hidden="true"></div>
+        <div class="calc-fill" aria-hidden="true"></div>
+        <div class="calc-needle" aria-hidden="true"><span class="calc-needle-tag" id="calc-tag">212</span></div>
+        <input class="calc-range" id="calc-range" type="range" min="0" max="1000" step="1" value="212" aria-labelledby="calc-n-label">
+      </div>
+    </div>
+
+    <div class="calc-out">
+      <div class="calc-total">
+        <p class="label" id="calc-per-label">Al año</p>
+        <div class="calc-total-row">
+          <div class="calc-flap" id="calc-flap" aria-hidden="true"></div>
+          <span class="calc-flap-unit" aria-hidden="true">h</span>
+        </div>
+        <p class="visually-hidden" id="calc-hours-sr"></p>
+        <p class="data-l calc-days" id="calc-days"></p>
+        <p class="quote calc-sentence" id="calc-sentence"></p>
+        <p class="data-s calc-base" id="calc-base"></p>
+        <p class="visually-hidden" aria-live="polite" id="calc-live"></p>
+      </div>
+
+      <ol class="calc-eqs" role="list" id="calc-eqs" aria-label="Equivalencias">
+        <li class="calc-eq" data-k="degree"><span class="calc-eq-val" aria-hidden="true"></span><div><p class="label muted">GRADOS UNIVERSITARIOS</p><p class="quote-s calc-eq-say"></p><p class="data-s">Base: 240 ECTS × 25 h (Plan Bolonia)</p></div></li>
+        <li class="calc-eq" data-k="language"><span class="calc-eq-val" aria-hidden="true"></span><div><p class="label muted">IDIOMAS</p><p class="quote-s calc-eq-say"></p><p class="data-s">Base: FSI, ~600–750 h para idiomas de categoría I</p></div></li>
+        <li class="calc-eq" data-k="camino"><span class="calc-eq-val" aria-hidden="true"></span><div><p class="label muted">CAMINO DE SANTIAGO</p><p class="quote-s calc-eq-say"></p><p class="data-s">Base: Camino Francés, ~780 km a 4 km/h ≈ 195 h andando</p></div></li>
+        <li class="calc-eq" data-k="got"><span class="calc-eq-val" aria-hidden="true"></span><div><p class="label muted">JUEGO DE TRONOS</p><p class="quote-s calc-eq-say"></p><p class="data-s">Base: 8 temporadas, 73 episodios ≈ 70 h</p></div></li>
+        <li class="calc-eq" data-k="quijote"><span class="calc-eq-val" aria-hidden="true"></span><div><p class="label muted">EL QUIJOTE</p><p class="quote-s calc-eq-say"></p><p class="data-s">Base: las dos partes, ~380.000 palabras a 250 palabras/min ≈ 25 h</p></div></li>
+        <li class="calc-eq" data-k="sleep"><span class="calc-eq-val" aria-hidden="true"></span><div><p class="label muted">NOCHES DEL TIRÓN</p><p class="quote-s calc-eq-say"></p><p class="data-s">Base: 8 h por noche</p></div></li>
+        <li class="calc-eq" data-k="marathon"><span class="calc-eq-val" aria-hidden="true"></span><div><p class="label muted">MARATONES</p><p class="quote-s calc-eq-say"></p><p class="data-s">Base: 42,195 km a ritmo popular ≈ 4 h 30 min</p></div></li>
+        <li class="calc-eq" data-k="tortilla"><span class="calc-eq-val" aria-hidden="true"></span><div><p class="label muted">TORTILLAS DE PATATAS</p><p class="quote-s calc-eq-say"></p><p class="data-s">Base: pelar, freír y cuajar ≈ 45 min</p></div></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section id="ticket" class="sec" aria-labelledby="ticket-title">
+  <div class="wrap">
+    <h2 class="sec-head" id="ticket-title"><span class="sec-head-index">04</span> Privacidad <span class="sec-head-meta">0 bytes</span></h2>
+
+    <div class="ticket-grid">
+      <div class="ticket-copy">
+        <p class="display-l ticket-claim">Lo que ves se queda aquí.</p>
+        <p class="ticket-text">Reelometer no tiene permiso para usar internet. Sin ese permiso, Android no la deja abrir ni una conexión. No es una promesa: es cómo funciona Android.</p>
+        <p class="ticket-text">Lee la pantalla de TikTok, Instagram y YouTube, apunta cada vídeo, cuánto duró y de qué iba, y lo guarda en tu móvil. Lo exportas a CSV o lo borras con un botón. Si algo sale del móvil, lo has sacado tú. Ni quien la ha hecho lo ve.</p>
+        <p class="quote-s ticket-aside">Una app que sabe exactamente lo que ves y no se lo cuenta a nadie. Rara, sí.</p>
+        <a class="btn btn--ghost" href="/reelometer/privacidad/">Leer la política completa</a>
+      </div>
+
+      <div class="ticket-roll">
+        <article class="paper jag-both ticket-paper" aria-labelledby="ticket-paper-label ticket-paper-sub">
+          <header class="ticket-paper-head">
+            <p class="label" id="ticket-paper-label">Copia para el cliente</p>
+            <p class="ticket-brand">Reelometer</p>
+            <p class="label" id="ticket-paper-sub">Lo que sale del móvil</p>
+          </header>
+          <hr class="divider-dashed ticket-sep">
+          <div class="ticket-lines">
+            <p class="receipt-line"><span>Permiso INTERNET</span><span>0</span></p>
+            <p class="receipt-line"><span>Bytes enviados</span><span>0</span></p>
+            <p class="receipt-line"><span>Cuentas</span><span>0</span></p>
+            <p class="receipt-line"><span>Servidores</span><span>0</span></p>
+            <p class="receipt-line"><span>Anuncios</span><span>0</span></p>
+            <p class="receipt-line"><span>Analíticas</span><span>0</span></p>
+            <p class="receipt-line"><span>Copias en la nube</span><span>0</span></p>
+          </div>
+          <div class="ticket-total">
+            <p class="label-l">Total</p>
+            <p class="display-xl ticket-nada">Nada</p>
+          </div>
+          <hr class="divider-dashed ticket-sep">
+          <p class="label ticket-sub">Lo que sí guarda, en tu móvil</p>
+          <div class="ticket-lines">
+            <p class="receipt-line data-s"><span>Vídeos y segundos</span><span>Local</span></p>
+            <p class="receipt-line data-s"><span>Temas y creadores</span><span>Local</span></p>
+            <p class="receipt-line data-s"><span>Exportar o borrar</span><span>Cuando quieras</span></p>
+          </div>
+          <div class="ticket-barcode" data-ticket-barcode aria-hidden="true"></div>
+          <p class="barcode-digits" aria-hidden="true">0000 0000 0000 0000</p>
+          <p class="label ticket-foot">Gracias por no enviar nada</p>
+        </article>
+        <p class="stamp ticket-seal" aria-hidden="true">100 % local</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="download" class="sec" aria-labelledby="download-title">
+  <div class="band download-band">
+    <div class="wrap download-grid">
+      <h2 class="sec-head" id="download-title"><span class="sec-head-index">05</span> Descarga <span class="sec-head-meta">APK 1.10.2</span></h2>
+      <p class="display-l download-since" data-download-since>Desde que abriste esta página: 0 vídeos.</p>
+      <p class="download-lede">Las otras apps no te lo cuentan. Esta, sí.</p>
+      <div class="download-cta">
+        <a class="btn download-btn" href="https://github.com/SergioRE2007/reelometer/releases/latest" aria-describedby="download-req">Descargar APK <span aria-hidden="true">↗</span></a>
+        <a class="btn btn--ghost download-back-link" href="#download-back">Instrucciones al dorso <span aria-hidden="true">↓</span></a>
+      </div>
+      <p class="label download-req" id="download-req"><span class="nowrap">Android 8.0 o superior ·</span> <span class="nowrap">Versión 1.10.2 ·</span> <span class="nowrap">Gratis</span></p>
+      <p class="data-s download-base">Base: un vídeo cada 15 s, la misma media redonda de arriba. La app mide la tuya.</p>
+    </div>
+  </div>
+
+  <div class="wrap download-back" id="download-back">
+    <h3 class="title download-back-title">Instrucciones al dorso</h3>
+    <p class="body-s muted download-back-note">Como no viene de Google Play, Android pone dos trabas. Cuatro pasos y una sola vez.</p>
+    <ol class="download-steps" role="list">
+      <li class="download-step"><span class="data-l download-step-n" aria-hidden="true">1</span><p class="body-s">Descarga la APK desde GitHub y ábrela en el móvil.</p></li>
+      <li class="download-step"><span class="data-l download-step-n" aria-hidden="true">2</span><p class="body-s">Android te pedirá permitir «instalar apps desconocidas» al navegador o al gestor de archivos. Acepta e instala.</p></li>
+      <li class="download-step"><span class="data-l download-step-n" aria-hidden="true">3</span><p class="body-s">Abre Reelometer y activa su servicio de accesibilidad. En Android 13 o superior, el interruptor sale gris: «Ajuste restringido».</p></li>
+      <li class="download-step"><span class="data-l download-step-n" aria-hidden="true">4</span><p class="body-s">Ve a Ajustes del sistema › Apps › Reelometer › menú de los tres puntos › Permitir ajustes restringidos, y vuelve a activarlo. La app te guía.</p></li>
+    </ol>
+    <div class="download-after">
+      <p class="receipt-line"><span>Google Play</span><span>Próximamente</span></p>
+      <p class="receipt-line"><span>Versiones nuevas</span><span>Encima, sin perder nada</span></p>
+    </div>
+  </div>
+</section>
+
+<section id="faq" class="sec" aria-labelledby="faq-title">
+  <div class="wrap faq-grid">
+    <h2 class="sec-head" id="faq-title"><span class="sec-head-index">06</span> Reclamaciones <span class="sec-head-meta">7 preguntas</span></h2>
+    <p class="display-l faq-claim">Antes de dar permisos, pregunta.</p>
+    <p class="faq-lede">Lo que preguntarías antes de dejar que una app lea tu pantalla. Respuestas cortas, sin letra pequeña.</p>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary><span class="label faq-n" aria-hidden="true">Nº 01</span><span class="title faq-q">¿Por qué pide accesibilidad?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+        <div class="faq-a"><p>Porque Android no tiene otra forma de avisar a una app de que has pasado al siguiente vídeo. El servicio solo lee TikTok, Instagram y YouTube: de cada vídeo, el creador, la descripción y los hashtags. No lee tus mensajes, ni lo que escribes, ni tus contraseñas, y en el resto de apps no lee nada. Si enciendes «A quién envías» (viene apagado), también lee el nombre de a quién le mandas el vídeo.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="label faq-n" aria-hidden="true">Nº 02</span><span class="title faq-q">¿Qué apps cuenta?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+        <div class="faq-a"><p>Tres: <span class="nowrap"><span class="dot dot--tiktok"></span> TikTok</span>, <span class="nowrap"><span class="dot dot--reels"></span> Instagram Reels</span> y <span class="nowrap"><span class="dot dot--shorts"></span> YouTube Shorts</span>. Un vídeo cuenta cuando pasa al menos 600 ms en pantalla. Si alguna te da igual, la apagas en Ajustes.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="label faq-n" aria-hidden="true">Nº 03</span><span class="title faq-q">¿Gasta batería?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+        <div class="faq-a"><p>No hay una cifra medida, y no te vamos a dar una inventada. Lo que sí se sabe: el servicio solo recibe avisos de esas tres apps y, fuera de ellas, no hace nada. Tampoco trabaja en segundo plano, salvo para los avisos diario y mensual (los apagas en Ajustes) y la copia semanal del CSV, si la enciendes.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="label faq-n" aria-hidden="true">Nº 04</span><span class="title faq-q">¿Es de pago?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+        <div class="faq-a"><p>No. Ni anuncios, ni suscripción, ni versión «pro». La hace un estudiante en sus ratos libres. Si te sirve y te apetece, puedes invitarle a un café en <a href="https://www.buymeacoffee.com/Lopuzno">Buy Me a Coffee <span aria-hidden="true">↗</span></a>.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="label faq-n" aria-hidden="true">Nº 05</span><span class="title faq-q">¿Por qué no está en Google Play?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+        <div class="faq-a"><p>Todavía no está. Mientras tanto, la APK sale de GitHub, con su código al lado para quien quiera mirarlo. Por eso Android 13 te pone el «Ajuste restringido»: lo hace con cualquier app que no viene de Play. Los pasos están en las <a href="#download-back">instrucciones al dorso</a>.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="label faq-n" aria-hidden="true">Nº 06</span><span class="title faq-q">¿Qué pasa con mis datos?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+        <div class="faq-a"><p>Se quedan en tu móvil. La app no tiene permiso para usar internet: no puede mandar nada a ningún sitio, tampoco a quien la hace. Sin cuentas, sin servidores, sin anuncios, sin analítica. Solo salen si tú exportas el CSV o compartes tu resumen, y se borran con un botón o desinstalando. Lo tienes entero en la <a href="/reelometer/privacidad/">política de privacidad</a>.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="label faq-n" aria-hidden="true">Nº 07</span><span class="title faq-q">¿Bloquea algo?</span><span class="faq-mark" aria-hidden="true"></span></summary>
+        <div class="faq-a"><p>No. No cierra apps, no corta vídeos, no pone temporizadores ni sermones: te pone el marcador delante y lo demás lo decides tú. Si te marcas un objetivo diario, como mucho te avisa cuando lo pasas, y solo si enciendes ese aviso.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer id="footer" class="footer">
+  <div class="wrap footer-grid">
+    <div class="footer-roll">
+      <p class="data footer-claim" data-k="footer.js.claim">Esta página no tiene cookies, ni analíticas, ni nada que contarte. La app tampoco.</p>
+      <div class="footer-lines">
+        <p class="receipt-line"><span data-k="footer.js.videos">Vídeos que habrías visto aquí</span><span class="nums" data-footer-videos>0</span></p>
+        <p class="receipt-line"><span data-k="footer.js.requests">Peticiones a terceros</span><span class="nums">0</span></p>
+        <p class="receipt-line"><span data-k="footer.js.cookies">Cookies</span><span class="nums">0</span></p>
+      </div>
+      <p class="data-s footer-note" data-k="footer.js.storage">Lo único que guarda tu navegador es el tema, y solo si lo cambias con el botón.</p>
+    </div>
+    <div class="footer-side">
+      <nav class="footer-nav" aria-label="Pie de página" data-k-label="footer.js.nav">
+        <ul class="footer-links" role="list">
+          <li><a class="label-l footer-link" href="https://github.com/SergioRE2007/reelometer"><span data-k="footer.js.code">Código</span> <span aria-hidden="true">↗</span></a></li>
+          <li><a class="label-l footer-link" href="/reelometer/privacidad/" data-k="footer.js.privacy">Privacidad</a></li>
+          <li class="footer-langs">
+            <a class="label-l footer-link" href="/reelometer/" hreflang="es" lang="es">ES<span class="visually-hidden"> Español</span></a>
+            <a class="label-l footer-link" href="/reelometer/en/" hreflang="en" lang="en">EN<span class="visually-hidden"> English</span></a>
+          </li>
+        </ul>
+      </nav>
+      <p class="data-s footer-fonts" data-k="footer.js.fonts">Letras: <a href="/reelometer/assets/fonts/BricolageGrotesque-OFL.txt">Bricolage Grotesque</a>, <a href="/reelometer/assets/fonts/JetBrainsMono-OFL.txt">JetBrains Mono</a> e <a href="/reelometer/assets/fonts/InstrumentSerif-OFL.txt">Instrument Serif</a>, con licencia SIL Open Font License 1.1 y servidas desde aquí.</p>
+    </div>
+    <hr class="divider-perforated footer-cut">
+    <p class="label footer-end" data-k="footer.js.end">Reelometer 1.10.2 · Fin del rollo</p>
+  </div>
+</footer>
+
+<script type="application/json" id="i18n">{"header.js.theme.system":"sistema","header.js.theme.dark":"oscuro","header.js.theme.light":"claro","header.js.theme.aria":"Tema: {cur}. Cambiar a {next}.","hero.js.blank":"–––","hero.js.kicker":"Ticket nº {n} · abierto a las {h}","hero.js.ticket":"Ticket nº {n}","hero.js.date":"{d}/{m}/{y} {h}","hero.js.video":"Vídeo {n}","hero.js.feed":"Feed · este también cuenta","hero.js.group":"Vídeos {r}","hero.js.groupFeed":"Vídeos {r} + {f} del feed","hero.js.groupFeedOnly":"{f} del feed","hero.js.aria":{"one":"{n} vídeo que ya habrías visto aquí","other":"{n} vídeos que ya habrías visto aquí"},"hero.js.announce":{"one":"Llevas {t} aquí. A un vídeo cada 15 s, ya iría {n}.","other":"Llevas {t} aquí. A un vídeo cada 15 s, ya irían {n}."},"hero.js.quote":"«{q}»","hero.js.q0.1":"Llevas {t} aquí. De momento, ganas tú.","hero.js.q0.2":"{t} y ni un vídeo. Disfrútalo, dura poco.","hero.js.q0.3":"Llevas {t}. El primero está al caer.","hero.js.q1.1":"Llevas {t} aquí. En TikTok ya iría uno.","hero.js.q1.2":"{t}. Uno. Nadie se queda en uno.","hero.js.q1.3":"Llevas {t}: uno. Así empiezan todas las tardes.","hero.js.qn.1":"Llevas {t} aquí. En TikTok ya irían {n}.","hero.js.qn.2":"{t} leyendo. Allí serían {n} vídeos.","hero.js.qn.3":"Llevas {t}. Serían {n}, y no recordarías ninguno.","hero.js.qmany.1":"Llevas {t} aquí. Allí ya irían {n}, y seguirías.","hero.js.qmany.2":"{n} vídeos. Por lo menos, esta página te los cuenta.","hero.js.qmany.3":"{t}. En TikTok ya no sabrías por qué entraste.","feed.js.queued":"En cola","feed.js.now":"Ahora","feed.js.seen":"Visto","feed.js.count":{"one":"{n} vídeo visto en esta web. Este también cuenta.","other":"{n} vídeos vistos en esta web. Este también cuenta."},"calc.js.period.month":"Al mes","calc.js.period.year":"Al año","calc.js.period.decade":"En 10 años","calc.js.per.month":"al mes","calc.js.per.year":"al año","calc.js.per.decade":"en 10 años","calc.js.valuetext":{"one":"{n} vídeo al día","other":"{n} vídeos al día"},"calc.js.hours":{"one":"{n} hora","other":"{n} horas"},"calc.js.days":{"one":"{n} día entero, de 24 h","other":"{n} días enteros, de 24 h"},"calc.js.days0":"Menos de un día entero. De momento.","calc.js.base":{"one":"Base: {n} vídeo × {r} × {d} días","other":"Base: {n} vídeos × {r} × {d} días"},"calc.js.live":"{v}, uno cada {r}: {h} {p}. {s}","calc.js.sentence.0":"Con ese tiempo podrías {x}.","calc.js.sentence.1":"Te daba para {x}.","calc.js.sentence.2":"Eso da para {x}.","calc.js.none":"Todavía no hay tiempo que comparar.","calc.js.eq.degree.do":"sacarte {x}","calc.js.eq.degree.n":{"one":"un grado universitario","other":"{n} grados universitarios"},"calc.js.eq.degree.more":{"one":"más de un grado universitario","other":"más de {n} grados universitarios"},"calc.js.eq.degree.andHalf":{"one":"un grado universitario y medio","other":"{n} grados universitarios y medio"},"calc.js.eq.degree.almost":{"one":"casi un grado universitario","other":"casi {n} grados universitarios"},"calc.js.eq.degree.percent":"el {p} de un grado universitario","calc.js.eq.degree.less":"menos del {p} de un grado universitario","calc.js.eq.degree.quarter":"un cuarto de grado universitario","calc.js.eq.degree.half":"medio grado universitario","calc.js.eq.degree.threeQuarters":"tres cuartos de grado universitario","calc.js.eq.language.do":"aprender {x}","calc.js.eq.language.n":{"one":"un idioma","other":"{n} idiomas"},"calc.js.eq.language.more":{"one":"más de un idioma","other":"más de {n} idiomas"},"calc.js.eq.language.andHalf":{"one":"un idioma y medio","other":"{n} idiomas y medio"},"calc.js.eq.language.almost":{"one":"casi un idioma","other":"casi {n} idiomas"},"calc.js.eq.language.percent":"el {p} de un idioma","calc.js.eq.language.less":"menos del {p} de un idioma","calc.js.eq.language.quarter":"un cuarto de idioma","calc.js.eq.language.half":"medio idioma","calc.js.eq.language.threeQuarters":"tres cuartos de idioma","calc.js.eq.camino.do":"hacer {x}","calc.js.eq.camino.n":{"one":"el Camino de Santiago entero","other":"el Camino de Santiago entero {n} veces"},"calc.js.eq.camino.more":{"one":"el Camino de Santiago entero más de una vez","other":"el Camino de Santiago entero más de {n} veces"},"calc.js.eq.camino.andHalf":{"one":"el Camino de Santiago entero una vez y media","other":"el Camino de Santiago entero {n} veces y media"},"calc.js.eq.camino.almost":{"one":"casi el Camino de Santiago entero","other":"el Camino de Santiago entero casi {n} veces"},"calc.js.eq.camino.percent":"el {p} del Camino de Santiago","calc.js.eq.camino.less":"menos del {p} del Camino de Santiago","calc.js.eq.camino.quarter":"un cuarto del Camino de Santiago","calc.js.eq.camino.half":"la mitad del Camino de Santiago","calc.js.eq.camino.threeQuarters":"tres cuartos del Camino de Santiago","calc.js.eq.got.do":"ver {x}","calc.js.eq.got.n":{"one":"Juego de Tronos entera","other":"Juego de Tronos entera {n} veces"},"calc.js.eq.got.more":{"one":"Juego de Tronos entera más de una vez","other":"Juego de Tronos entera más de {n} veces"},"calc.js.eq.got.andHalf":{"one":"Juego de Tronos entera una vez y media","other":"Juego de Tronos entera {n} veces y media"},"calc.js.eq.got.almost":{"one":"casi Juego de Tronos entera","other":"Juego de Tronos entera casi {n} veces"},"calc.js.eq.got.percent":"el {p} de Juego de Tronos","calc.js.eq.got.less":"menos del {p} de Juego de Tronos","calc.js.eq.got.quarter":"un cuarto de Juego de Tronos","calc.js.eq.got.half":"la mitad de Juego de Tronos","calc.js.eq.got.threeQuarters":"tres cuartos de Juego de Tronos","calc.js.eq.quijote.do":"leer {x}","calc.js.eq.quijote.n":{"one":"el Quijote entero","other":"el Quijote entero {n} veces"},"calc.js.eq.quijote.more":{"one":"el Quijote entero más de una vez","other":"el Quijote entero más de {n} veces"},"calc.js.eq.quijote.andHalf":{"one":"el Quijote entero una vez y media","other":"el Quijote entero {n} veces y media"},"calc.js.eq.quijote.almost":{"one":"casi el Quijote entero","other":"el Quijote entero casi {n} veces"},"calc.js.eq.quijote.percent":"el {p} del Quijote","calc.js.eq.quijote.less":"menos del {p} del Quijote","calc.js.eq.quijote.quarter":"un cuarto del Quijote","calc.js.eq.quijote.half":"la mitad del Quijote","calc.js.eq.quijote.threeQuarters":"tres cuartos del Quijote","calc.js.eq.sleep.do":"dormir {x}","calc.js.eq.sleep.n":{"one":"una noche del tirón","other":"{n} noches del tirón"},"calc.js.eq.sleep.more":{"one":"más de una noche del tirón","other":"más de {n} noches del tirón"},"calc.js.eq.sleep.andHalf":{"one":"una noche y media del tirón","other":"{n} noches y media del tirón"},"calc.js.eq.sleep.almost":{"one":"casi una noche del tirón","other":"casi {n} noches del tirón"},"calc.js.eq.sleep.percent":"el {p} de una noche del tirón","calc.js.eq.sleep.less":"menos del {p} de una noche del tirón","calc.js.eq.sleep.quarter":"un cuarto de noche del tirón","calc.js.eq.sleep.half":"media noche del tirón","calc.js.eq.sleep.threeQuarters":"tres cuartos de noche del tirón","calc.js.eq.marathon.do":"correr {x}","calc.js.eq.marathon.n":{"one":"una maratón","other":"{n} maratones"},"calc.js.eq.marathon.more":{"one":"más de una maratón","other":"más de {n} maratones"},"calc.js.eq.marathon.andHalf":{"one":"una maratón y media","other":"{n} maratones y media"},"calc.js.eq.marathon.almost":{"one":"casi una maratón","other":"casi {n} maratones"},"calc.js.eq.marathon.percent":"el {p} de una maratón","calc.js.eq.marathon.less":"menos del {p} de una maratón","calc.js.eq.marathon.quarter":"un cuarto de maratón","calc.js.eq.marathon.half":"media maratón","calc.js.eq.marathon.threeQuarters":"tres cuartos de maratón","calc.js.eq.tortilla.do":"hacer {x}","calc.js.eq.tortilla.n":{"one":"una tortilla de patatas","other":"{n} tortillas de patatas"},"calc.js.eq.tortilla.more":{"one":"más de una tortilla de patatas","other":"más de {n} tortillas de patatas"},"calc.js.eq.tortilla.andHalf":{"one":"una tortilla y media de patatas","other":"{n} tortillas y media de patatas"},"calc.js.eq.tortilla.almost":{"one":"casi una tortilla de patatas","other":"casi {n} tortillas de patatas"},"calc.js.eq.tortilla.percent":"el {p} de una tortilla de patatas","calc.js.eq.tortilla.less":"menos del {p} de una tortilla de patatas","calc.js.eq.tortilla.quarter":"un cuarto de tortilla de patatas","calc.js.eq.tortilla.half":"media tortilla de patatas","calc.js.eq.tortilla.threeQuarters":"tres cuartos de tortilla de patatas","download.js.since":{"one":"Desde que abriste esta página: {n} vídeo.","many":"Desde que abriste esta página: {n} vídeos.","other":"Desde que abriste esta página: {n} vídeos."},"footer.js.claim":"Esta página no tiene cookies, ni analíticas, ni nada que contarte. La app tampoco.","footer.js.videos":"Vídeos que habrías visto aquí","footer.js.requests":"Peticiones a terceros","footer.js.cookies":"Cookies","footer.js.storage":"Lo único que guarda tu navegador es el tema, y solo si lo cambias con el botón.","footer.js.nav":"Pie de página","footer.js.code":"Código","footer.js.privacy":"Privacidad","footer.js.fonts":"Letras: \u003ca href=\"/reelometer/assets/fonts/BricolageGrotesque-OFL.txt\">Bricolage Grotesque\u003c/a>, \u003ca href=\"/reelometer/assets/fonts/JetBrainsMono-OFL.txt\">JetBrains Mono\u003c/a> e \u003ca href=\"/reelometer/assets/fonts/InstrumentSerif-OFL.txt\">Instrument Serif\u003c/a>, con licencia SIL Open Font License 1.1 y servidas desde aquí.","footer.js.end":"Reelometer 1.10.2 · Fin del rollo","board.js.ontime":"En hora","board.js.boarding":"Embarcando","board.js.seen":"Visto","calc.js.secs":{"one":"{n} segundo","other":"{n} segundos"}}</script>
+</body>
+</html>
