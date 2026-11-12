@@ -36,10 +36,16 @@ class AccessibilityUiNode(
 
     override val children: List<UiNode> by lazy {
         val count = safe { node.childCount } ?: 0
+        ServiceMetrics.live.onChildFetch(count)
         (0 until count).mapNotNull { i -> safe { node.getChild(i) }?.let { AccessibilityUiNode(it, this) } }
     }
 
-    override val parent: UiNode? by lazy { knownParent ?: safe { node.parent }?.let { AccessibilityUiNode(it) } }
+    override val parent: UiNode? by lazy {
+        knownParent ?: run {
+            ServiceMetrics.live.onParentFetch()
+            safe { node.parent }?.let { AccessibilityUiNode(it) }
+        }
+    }
 
     private inline fun <T> safe(block: () -> T): T? = try {
         block()
@@ -61,6 +67,7 @@ object AccessibilityUiFinder : UiFinder {
 
     private inline fun find(root: UiNode, query: (AccessibilityNodeInfo) -> List<AccessibilityNodeInfo>?): List<UiNode> {
         val node = (root as? AccessibilityUiNode)?.node ?: return emptyList()
+        ServiceMetrics.live.onFinderQuery()
         return try {
             query(node).orEmpty().map { AccessibilityUiNode(it) }
         } catch (e: RuntimeException) {

@@ -70,6 +70,13 @@ fun OnboardingRoute(onFinished: () -> Unit) {
         permissionVm.refresh()
         vm.refreshNotifications()
     }
+    val openAccessibility = {
+        permissionVm.onOpenedSettings()
+        SystemScreens.openAccessibility(context)
+        Unit
+    }
+    // Sin enlaces a Calibración ni Ajustes: durante el onboarding los enlaces internos se ignoran.
+    val help = rememberConnectionHelp(linksToScreens = false, onOpenAccessibility = openAccessibility)
     val notificationPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
         vm.onNotificationPermission(it)
     }
@@ -91,10 +98,7 @@ fun OnboardingRoute(onFinished: () -> Unit) {
                 permissionVm.decline()
                 vm.next()
             },
-            onOpenAccessibility = {
-                permissionVm.onOpenedSettings()
-                SystemScreens.openAccessibility(context)
-            },
+            onOpenAccessibility = openAccessibility,
             onOpenAppInfo = { SystemScreens.openAppInfo(context) },
             onToggleRestrictedHelp = permissionVm::toggleRestrictedHelp,
             onNotifyDaily = vm::setNotifyDaily,
@@ -109,6 +113,7 @@ fun OnboardingRoute(onFinished: () -> Unit) {
             onChooseCustomGoal = vm::chooseCustomGoal,
             onCustomGoal = vm::setCustomGoal,
             onStart = { vm.finish(onFinished) },
+            help = help,
         ),
     )
 }
@@ -129,6 +134,8 @@ class OnboardingCallbacks(
     val onChooseCustomGoal: () -> Unit,
     val onCustomGoal: (Int) -> Unit,
     val onStart: () -> Unit,
+    /** Guía por marca y prueba de un minuto del paso 3 (null: sin ellas). */
+    val help: ConnectionHelp? = null,
 )
 
 @Composable
@@ -192,6 +199,10 @@ private fun Steps(state: OnboardingState, permission: ServicePermissionUiState, 
                         onOpenAppInfo = callbacks.onOpenAppInfo,
                         onToggleRestrictedHelp = callbacks.onToggleRestrictedHelp,
                         onContinue = callbacks.onNext,
+                        oem = callbacks.help?.oem,
+                        onOpenOem = callbacks.help?.onOpenOem ?: {},
+                        check = callbacks.help?.check,
+                        checkActions = callbacks.help?.checkActions,
                     )
                 }
                 else -> FinalStep(

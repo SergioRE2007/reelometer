@@ -55,12 +55,15 @@ object ReelIcons {
         }
     }
 
-    /** Pasaporte: la libreta con un sello redondo y la línea de la firma. */
-    val Passport: ImageVector by lazy {
-        reelIcon("Passport") {
-            rect(5f, 3f, 19f, 21f)
-            circle(12f, 10.5f, 3.5f)
-            line(8.5f, 17f, 15.5f, 17f)
+    /**
+     * Flap (la pestaña de la mascota): su ficha con los dos ojos y los pies, separados por el corte.
+     * Sin bisagra, para no confundirlo con [Today].
+     */
+    val Flap: ImageVector by lazy {
+        reelIcon("Flap") {
+            rect(5f, 3f, 19f, 18f)
+            dot(9.5f, 9.5f); dot(14.5f, 9.5f)
+            line(8.5f, 21f, 10.5f, 21f); line(13.5f, 21f, 15.5f, 21f)
         }
     }
 
@@ -384,7 +387,7 @@ object ReelIcons {
     /** Todos los iconos con su nombre (galería y pruebas). */
     val all: List<Pair<String, ImageVector>> by lazy {
         listOf(
-            "Today" to Today, "Stats" to Stats, "Wrapped" to Wrapped, "Settings" to Settings,
+            "Today" to Today, "Stats" to Stats, "Wrapped" to Wrapped, "Flap" to Flap, "Settings" to Settings,
             "Share" to Share, "Download" to Download, "Upload" to Upload, "Trash" to Trash, "Copy" to Copy,
             "External" to External, "Close" to Close, "Check" to Check, "Plus" to Plus,
             "Minus" to Minus, "Play" to Play, "Pause" to Pause, "Back" to Back,

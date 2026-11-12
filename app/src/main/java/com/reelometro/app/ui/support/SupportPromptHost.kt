@@ -29,7 +29,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -67,17 +66,12 @@ import com.reelometro.app.ui.theme.ReelTheme
 import com.reelometro.app.ui.theme.Space
 import com.reelometro.app.ui.theme.rememberHaptics
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeoutOrNull
 import java.time.LocalDate
 
 /** Lo que tarda en salir tras entrar a una pestaña: que dé tiempo a ver la pantalla antes. */
 private const val SHOW_DELAY_MS = 2_500L
-
-/** Lo que se espera a la primera lectura del Pasaporte para saber si hay celebraciones pendientes. */
-private const val PASSPORT_WAIT_MS = 3_000L
 
 /** Opacidad del velo (la misma que `ReelDialog`). */
 private const val SCRIM_ALPHA = 0.9f
@@ -90,7 +84,6 @@ private const val SCRIM_ALPHA = 0.9f
  *   (al recrear la actividad, el primer fotograma no lo tiene y no cuenta como «salir de las pestañas»);
  * - unos [SHOW_DELAY_MS] ms después de entrar a una pestaña, como mucho una vez por sesión (la de la
  *   actividad: sobrevive a girar la pantalla);
- * - nunca en una sesión en la que haya una celebración del Pasaporte pendiente (salen ellas y este espera);
  * - nunca si [link] está vacía.
  *
  * Se apunta como enseñado al salir. VER SU GITHUB abre el navegador y lo da por terminado; si no se puede abrir,
@@ -100,7 +93,6 @@ private const val SCRIM_ALPHA = 0.9f
 @Composable
 fun SupportPromptHost(
     enabled: Boolean,
-    passportEnabled: Boolean,
     modifier: Modifier = Modifier,
     navReady: Boolean = true,
     link: String = AppLinks.PROJECT_URL,
@@ -109,35 +101,14 @@ fun SupportPromptHost(
     val app = remember(context) { ReelometroApp.from(context) }
     val haptics = rememberHaptics()
 
-    // Ya decidido en esta sesión (enseñado o descartado por una celebración).
+    // Ya decidido en esta sesión (enseñado).
     var handled by rememberSaveable { mutableStateOf(false) }
-    var celebrationSeen by rememberSaveable { mutableStateOf(false) }
     var visible by rememberSaveable { mutableStateOf(false) }
     var failed by rememberSaveable { mutableStateOf(false) }
-    var passportRead by remember { mutableStateOf(false) }
 
-    // Si en algún momento de la sesión hay una celebración pendiente, el aviso ya no sale.
-    val watchPassport = enabled && passportEnabled && !handled
-    LaunchedEffect(watchPassport) {
-        if (!watchPassport) return@LaunchedEffect
-        app.passport.observe()
-            .catch { passportRead = true }
-            .collect { state ->
-                passportRead = true
-                if (state.pending.isNotEmpty()) celebrationSeen = true
-            }
-    }
-
-    LaunchedEffect(enabled, passportEnabled, link) {
+    LaunchedEffect(enabled, link) {
         if (!enabled || handled || link.isBlank()) return@LaunchedEffect
         delay(SHOW_DELAY_MS)
-        if (passportEnabled) {
-            withTimeoutOrNull(PASSPORT_WAIT_MS) { snapshotFlow { passportRead }.first { it } } ?: return@LaunchedEffect
-            if (celebrationSeen) {
-                handled = true
-                return@LaunchedEffect
-            }
-        }
         val settings = app.settings.current()
         val state = app.settings.supportPrompt.first()
         val today = LocalDate.now().toEpochDay()

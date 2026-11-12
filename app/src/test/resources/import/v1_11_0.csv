@@ -1,0 +1,19 @@
+﻿fecha_hora_local;plataforma;duración_s;creador;categoría;descripción;compartido;inicio_ms;zona;duración_ms
+2026-03-03T09:15:02;TikTok;12,3;gato_ejemplo;Humor;"Un gato ""serio""";1;1772525702123;Europe/Madrid;12345
+2026-03-03T09:15:20;Instagram Reels;8,0;'@cuenta_rara;Sin clasificar;'=1+1;0;1772525720456;Europe/Madrid;8017
+2026-03-04T22:01:00;YouTube Shorts;59,9;;Comida;"Receta; rápida
+segunda línea";2;1772658060789;Europe/Madrid;59900
+
+ENVÍOS
+fecha_hora_local;plataforma;destinatario;inicio_ms
+2026-03-03T09:15:25;Instagram Reels;Grupo de ejemplo;1772525725250
+2026-03-03T09:15:26;Instagram Reels;'=Persona;1772525726900
+
+PASAPORTE
+tipo;elemento;fecha;tope;vídeos;experiencia;clave
+nivel;Plata;;;;420;PLATA
+sello;Primer día;2026-03-03;;;20;PRIMER_DIA
+sello;Racha de 3;2026-03-05;;;30;RACHA_3
+reto;cumplido;2026-02-23;300;250;50;
+reto;no cumplido;2026-03-02;300;350;0;
+evento;Ticket guardado;2026-03-04;;;;TICKET_SAVED

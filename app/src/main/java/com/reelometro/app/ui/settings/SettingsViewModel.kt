@@ -22,6 +22,7 @@ import com.reelometro.app.data.export.ImportPreview
 import com.reelometro.app.data.export.ImportResult
 import com.reelometro.app.data.export.ParsedCsv
 import com.reelometro.app.data.settings.AppSettings
+import com.reelometro.app.data.settings.Discovery
 import com.reelometro.app.data.settings.SettingsRepository
 import com.reelometro.app.data.settings.ThemeMode
 import com.reelometro.app.debug.DebugTools
@@ -33,7 +34,6 @@ import com.reelometro.app.stats.Totals
 import com.reelometro.app.ui.onboarding.AndroidNotificationAccess
 import com.reelometro.app.ui.onboarding.AndroidServiceProbe
 import com.reelometro.app.widget.WidgetUpdater
-import com.reelometro.app.work.LevelAlert
 import com.reelometro.app.work.LiveAlerts
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -118,12 +118,12 @@ interface SettingsSystem {
     /** Tras borrar los datos: refrescar el widget. */
     fun onDataCleared()
 
-    /** Tras importar un CSV: repintar el widget y tomar una base nueva del aviso de nivel (lo importado no avisa). */
+    /** Tras importar un CSV: repintar el widget. */
     fun onDataImported() {}
 
     suspend fun loadLicenses(): List<License>
 
-    /** Tras cambiar el modo pasaporte: repintar el widget (Flap) y, si se apaga, quitar su aviso. */
+    /** Tras encender o apagar Flap: repintar el widget (Flap sale o deja de salir en el grande). */
     fun onPassportModeChanged(enabled: Boolean) {}
 
     /**
@@ -175,7 +175,7 @@ class AndroidSettingsSystem(context: Context) : SettingsSystem {
     }
 
     override fun onDataCleared() {
-        LiveAlerts.clear(app) // el día del aviso en directo y el último nivel avisado
+        LiveAlerts.clear(app) // el día del aviso en directo
         // Envío rápido: las fotos de los fijados y lo aprendido (ids, quién no sale en la cuadrícula).
         ReelometroApp.from(app).appScope.launch(Dispatchers.IO) { AvatarStore(app).clear() }
         QuickSendMemory.clear(app)
@@ -183,7 +183,6 @@ class AndroidSettingsSystem(context: Context) : SettingsSystem {
     }
 
     override fun onDataImported() {
-        LevelAlert.onPassportEnabled(app)
         WidgetUpdater.requestUpdate(app)
     }
 
@@ -212,14 +211,6 @@ class AndroidSettingsSystem(context: Context) : SettingsSystem {
 
     override fun onPassportModeChanged(enabled: Boolean) {
         WidgetUpdater.requestUpdate(app)
-        if (!enabled) {
-            LevelAlert.onPassportDisabled(app)
-        } else {
-            // Lo conseguido con el modo oculto no llega de golpe: ni celebraciones atrasadas ni aviso de nivel.
-            LevelAlert.onPassportEnabled(app)
-            val reel = ReelometroApp.from(app)
-            reel.appScope.launch { runCatching { reel.passport.rebase() } }
-        }
     }
 
     override suspend fun loadLicenses(): List<License> = withContext(Dispatchers.IO) {
@@ -282,8 +273,10 @@ data class SettingsState(
     val debugMessage: String?,
     /** `null` mientras no se han cargado. */
     val licenses: List<License>?,
-    /** Modo pasaporte (pestaña, aviso de nivel y Flap en el widget). */
+    /** Flap, la mascota (su pestaña y Flap en el widget grande). Se sigue llamando `passportEnabled`. */
     val passportEnabled: Boolean = true,
+    /** Descubrimiento progresivo: quedan pestañas por aparecer (sale ENSEÑAR TODAS LAS PESTAÑAS). */
+    val tabsHidden: Boolean = false,
     /** Aviso en directo al pasar el objetivo (solo tiene efecto con objetivo). */
     val notifyGoalLive: Boolean = false,
     /** «A quién envías» en Instagram y TikTok (apagado por defecto; uno para las dos). */
@@ -458,6 +451,7 @@ class SettingsViewModel(
             debugMessage = l.debugMessage,
             licenses = l.licenses,
             passportEnabled = s.passportEnabled,
+            tabsHidden = Discovery.hidden(s.discovery, s.passportEnabled).isNotEmpty(),
             notifyGoalLive = s.notifyGoalLive,
             recordRecipients = s.recordRecipients,
             quickSendEnabled = s.quickSendEnabled,
@@ -577,9 +571,9 @@ class SettingsViewModel(
         if (on) askForNotificationsIfNeeded()
     }
 
-    // ------------------------------------------------------------------ 01 modo pasaporte
+    // ------------------------------------------------------------------ 01 Flap
 
-    /** Modo pasaporte: con `false` desaparecen la pestaña, el aviso de nivel y Flap del widget. */
+    /** Flap: con `false` desaparecen su pestaña y Flap del widget. */
     fun setPassportEnabled(on: Boolean) {
         viewModelScope.launch {
             settings.setPassportEnabled(on)
@@ -916,6 +910,11 @@ class SettingsViewModel(
             runCatching { settings.setTourDone(false) }
             onReady()
         }
+    }
+
+    /** ENSEÑAR TODAS LAS PESTAÑAS: termina el descubrimiento progresivo (lo mismo que el botón de Hoy). */
+    fun showAllTabs() {
+        viewModelScope.launch { runCatching { settings.updateDiscovery(Discovery::showAll) } }
     }
 
     fun loadLicenses() {

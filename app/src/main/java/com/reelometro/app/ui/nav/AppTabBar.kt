@@ -18,23 +18,23 @@ private fun tabs(): List<ReelTab> = listOf(
     ReelTab(Labels.TAB_TODAY, ReelIcons.Today, contentDescription = A11y.TAB_TODAY),
     ReelTab(Labels.TAB_STATS, ReelIcons.Stats, contentDescription = A11y.TAB_STATS),
     ReelTab(Labels.TAB_WRAPPED, ReelIcons.Wrapped, contentDescription = A11y.TAB_WRAPPED),
-    ReelTab(Labels.TAB_PASSPORT, ReelIcons.Passport, contentDescription = A11y.TAB_PASSPORT),
+    ReelTab(Labels.TAB_PASSPORT, ReelIcons.Flap, contentDescription = A11y.TAB_PASSPORT),
 )
 
 /**
- * Barra de pestañas de la app (Hoy · Estadísticas · Resumen · Pasaporte) con el componente del
- * sistema de diseño. Sin el modo pasaporte, solo las tres primeras. Los textos se vuelven a leer
- * cuando cambia el idioma (de la app o del sistema).
+ * Barra de pestañas de la app (Hoy · Estadísticas · Resumen · Flap) con el componente del
+ * sistema de diseño. Solo las [count] primeras: con Flap apagado son tres, y con el descubrimiento
+ * progresivo, las ya descubiertas. Los textos se vuelven a leer cuando cambia el idioma (de la app o del sistema).
  */
 @Composable
 internal fun AppTabBar(
     selectedIndex: Int,
     onSelect: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    passportEnabled: Boolean = true,
+    count: Int = 4,
 ) {
     val locales = LocalConfiguration.current.locales
     val all = remember(locales) { tabs() }
-    val items = if (passportEnabled) all else all.take(3)
+    val items = all.take(count.coerceIn(1, all.size))
     ReelTabBar(items = items, selectedIndex = selectedIndex.coerceIn(0, items.size - 1), onSelect = onSelect, modifier = modifier)
 }

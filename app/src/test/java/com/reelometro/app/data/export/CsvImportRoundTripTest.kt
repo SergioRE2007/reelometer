@@ -19,6 +19,7 @@ import com.reelometro.app.data.inMemoryDatabase
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Before
@@ -28,13 +29,13 @@ import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.io.OutputStream
 import java.time.LocalDate
 
 /**
  * Exportar → BORRAR TODO → importar, con Room de verdad: los totales por día, plataforma y categoría, los
  * creadores, los compartidos y los envíos vuelven igual. Y AÑADIR dos veces no duplica, SUSTITUIR TODO
- * deja solo lo del fichero y un fallo a mitad no deja nada a medias.
+ * deja solo lo del fichero y un fallo a mitad no deja nada a medias. Los CSV viejos con el bloque PASAPORTE
+ * (hasta la 1.11.x) se importan igual y el bloque se ignora.
  */
 @RunWith(ReelRobolectricRunner::class)
 @Config(sdk = [ROBOLECTRIC_SDK], application = Application::class)
@@ -47,19 +48,9 @@ class CsvImportRoundTripTest {
     private val part = FakePart()
     private val day = LocalDate.of(2026, 11, 3)
 
-    /** Una parte de los datos del usuario que apunta lo que recibe (como el pasaporte). */
+    /** Una parte de los datos del usuario que cuenta los borrados (como lo visto de Flap). */
     private class FakePart : UserDataPart {
-        override val blockTitle = "FALSO"
-        val imported = mutableListOf<CsvBlock?>()
         var cleared = 0
-
-        override suspend fun exportCsv(out: OutputStream) {
-            out.write("\r\nFALSO\r\nclave;valor\r\nnivel;3\r\n".toByteArray())
-        }
-
-        override suspend fun importBlock(block: CsvBlock?) {
-            imported += block
-        }
 
         override suspend fun clearAll() {
             cleared++
@@ -141,7 +132,16 @@ class CsvImportRoundTripTest {
         assertEquals(0, result.badLines)
         assertEquals(before, snapshot())
         assertEquals(durations, db.reelDao().exportPage(Long.MIN_VALUE, Long.MIN_VALUE, 100).map { it.durationMs })
-        assertEquals("nivel", part.imported.single()!!.rows.single()[0])
+        // BORRAR TODO borró también la parte; AÑADIR no la toca.
+        assertEquals(1, part.cleared)
+    }
+
+    @Test
+    fun `el CSV ya no lleva el bloque PASAPORTE`() = runBlocking {
+        seed()
+        val text = String(export(), Charsets.UTF_8)
+        assertFalse(text, text.contains("PASAPORTE"))
+        assertTrue(text.contains(CsvExporter.RECIPIENTS_TITLE))
     }
 
     @Test
@@ -250,7 +250,8 @@ class CsvImportRoundTripTest {
         }
         assertEquals(0, db.statsDao().allTotals().count)
         assertEquals(0, db.statsDao().shareTotal())
-        assertTrue(part.imported.isEmpty())
+        // Solo el clearAll() de arriba: un SUSTITUIR TODO que falla no llega a borrar la parte.
+        assertEquals(1, part.cleared)
     }
 
     @Test
@@ -267,13 +268,36 @@ class CsvImportRoundTripTest {
 
     @Test
     fun `los CSV de versiones viejas se importan`() = runBlocking {
-        for (name in listOf("v1_0_0.csv", "v1_1_0.csv", "v1_2_0.csv")) {
+        for (name in listOf("v1_0_0.csv", "v1_1_0.csv", "v1_2_0.csv", "v1_11_0.csv")) {
             repository.clearAll()
             val bytes = requireNotNull(javaClass.getResourceAsStream("/import/$name")).use { it.readBytes() }
             val result = import(bytes, ImportMode.ADD)
             assertEquals(name, 3, result.imported)
+            assertEquals(name, 0, result.badLines)
             assertEquals(name, 3, db.statsDao().shareTotal())
         }
         assertEquals(2, db.statsDao().topRecipients(Long.MIN_VALUE, Long.MAX_VALUE, 10).size)
+    }
+
+    @Test
+    fun `un CSV viejo con PASAPORTE se importa entero e ignora el bloque, sin error ni aviso`() = runBlocking {
+        val bytes = requireNotNull(javaClass.getResourceAsStream("/import/v1_11_0.csv")).use { it.readBytes() }
+        val read = repository.readCsv(ByteArrayInputStream(bytes))
+        assertTrue("$read", read is CsvRead.Ready)
+        val preview = (read as CsvRead.Ready).preview
+        assertEquals(3, preview.videos)
+        assertEquals(0, preview.badLines)
+
+        for (mode in ImportMode.entries) {
+            val result = import(bytes, mode)
+            assertEquals("$mode", 0, result.badLines)
+            assertEquals("$mode", 3, db.statsDao().allTotals().count)
+            assertEquals("$mode", 3, db.statsDao().shareTotal())
+            assertEquals("$mode", 2, db.statsDao().topRecipients(Long.MIN_VALUE, Long.MAX_VALUE, 10).size)
+        }
+        // SUSTITUIR TODO borra también la parte (lo visto de Flap); el bloque viejo no llega a nadie.
+        assertEquals(1, part.cleared)
+        // Y lo que se exporta después ya no lo lleva.
+        assertFalse(String(export(), Charsets.UTF_8).contains("PASAPORTE"))
     }
 }

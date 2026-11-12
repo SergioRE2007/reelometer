@@ -39,7 +39,8 @@
     <!-- Widget con el servicio de accesibilidad desconectado (TalkBack). -->
     <string name="state_widget_description_off">Reelometer, senza segnale: il servizio è disconnesso.</string>
     <!-- Widget grande con la mascota a la vista: %1$s la descripción de arriba, %2$s el estado de
-         ánimo de Flap en minúsculas («en forma»). Flap es el nombre propio de la mascota. -->
+         ánimo de Flap como se dice en una frase (flap_mood_spoken_*: «en forma», «fuera de combate»).
+         Flap es el nombre propio de la mascota. -->
     <string name="state_widget_with_flap">%1$s Flap: %2$s.</string>
 
     <!-- ===== Calibración: pantalla oculta para ajustar la detección (consola técnica en letra

@@ -1,7 +1,5 @@
 package com.reelometro.app.work
 
-import com.reelometro.app.game.TravelerLevel
-import java.time.Duration
 import java.time.LocalDate
 import java.time.ZonedDateTime
 
@@ -54,48 +52,4 @@ object GoalAlertRules {
 
     /** El aviso habla de «hoy»: desaparece solo a medianoche. */
     fun expiry(now: ZonedDateTime): ZonedDateTime = SummaryRules.dailyExpiry(now)
-}
-
-/**
- * Reglas puras del **aviso de nivel nuevo** del Pasaporte (el único aviso del modo pasaporte).
- * Nunca con el modo pasaporte apagado. La primera vez que se mira, el nivel actual se toma como
- * punto de partida sin avisar (no se anuncia lo que ya se tenía al actualizar la app); después,
- * avisa cuando el nivel supera al último avisado. Si el nivel baja (BORRAR TODO), la base baja con él.
- */
-object LevelAlertRules {
-
-    /** Qué hacer con el nivel actual. */
-    sealed interface Outcome {
-        /** Avisar de [level] y guardarlo como el último avisado. */
-        data class Notify(val level: TravelerLevel) : Outcome
-
-        /** Guardar [level] como base, sin avisar (primera vez o el nivel ha bajado). */
-        data class Baseline(val level: TravelerLevel) : Outcome
-
-        /** Nada que hacer (modo pasaporte apagado o mismo nivel). */
-        data object Keep : Outcome
-    }
-
-    fun decide(passportEnabled: Boolean, current: TravelerLevel, lastNotified: TravelerLevel?): Outcome = when {
-        !passportEnabled -> Outcome.Keep
-        lastNotified == null -> Outcome.Baseline(current)
-        current > lastNotified -> Outcome.Notify(current)
-        current < lastNotified -> Outcome.Baseline(current)
-        else -> Outcome.Keep
-    }
-
-    /**
-     * ¿Toca mirar el nivel con este vídeo? Solo con el primero de cada día (el nivel cambia al cerrarse
-     * los días, a medianoche): así el servicio no recalcula el pasaporte en cada vídeo.
-     */
-    fun shouldCheckOnVideo(passportEnabled: Boolean, today: LocalDate, lastChecked: LocalDate?): Boolean =
-        passportEnabled && lastChecked != today
-
-    /** Lee el nivel guardado por su nombre; `null` si no hay o ya no existe. */
-    fun parse(name: String?): TravelerLevel? = TravelerLevel.entries.firstOrNull { it.name == name }
-
-    /** El aviso de nivel no habla de «hoy»: se queda dos días. */
-    val LIFETIME: Duration = Duration.ofDays(2)
-
-    fun expiry(now: ZonedDateTime): ZonedDateTime = now.plus(LIFETIME)
 }

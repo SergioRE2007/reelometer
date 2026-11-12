@@ -11,11 +11,14 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.AlignmentLine
 import androidx.compose.ui.layout.FirstBaseline
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
+import com.reelometro.app.R
+import com.reelometro.app.copy.str
 import com.reelometro.app.stats.Format
 import com.reelometro.app.ui.theme.ReelTheme
 import com.reelometro.app.ui.theme.Space
@@ -55,14 +58,18 @@ fun SectionHeader(
     Layout(
         content = {
             if (index != null) Text(String.format(Locale.ROOT, "%02d", index), style = style, color = colors.textMuted)
-            Text(Format.upper(title), style = style, color = colors.text, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(Format.upper(title), style = style, color = colors.text, maxLines = 2, overflow = TextOverflow.Ellipsis)
             if (trailing != null) {
                 Text(Format.upper(trailing), style = style, color = colors.textMuted, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
         },
         modifier = modifier
             .fillMaxWidth()
-            .semantics(mergeDescendants = true) { heading() }
+            .clearAndSetSemantics {
+                heading()
+                // Título natural (sin el «01» del índice ni las mayúsculas) y, si hay, el dato final.
+                contentDescription = trailing?.let { str(R.string.ui_section_header_description, title, it) } ?: title
+            }
             .drawBehind {
                 if (rule.end - rule.start > 0f) {
                     val hair = Space.hairline.toPx()

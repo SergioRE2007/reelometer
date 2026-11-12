@@ -224,10 +224,11 @@ class CsvImportTest {
     }
 
     @Test
-    fun `CSV de la 1_1_0 con PASAPORTE`() {
+    fun `CSV de la 1_1_0 con PASAPORTE - los vídeos entran y el bloque se aparta sin error`() {
         val csv = parseFixture("v1_1_0.csv")
         assertEquals(3, csv.videos.size)
-        assertEquals(listOf(PassportCsv.TITLE), csv.blocks.map { it.title })
+        assertEquals(0, csv.badLines)
+        assertEquals(listOf(OLD_PASSPORT), csv.blocks.map { it.title })
         assertEquals(5, csv.blocks.single().rows.size)
     }
 
@@ -235,8 +236,30 @@ class CsvImportTest {
     fun `CSV de la 1_2_0 a la 1_5_0 con ENVÍOS y PASAPORTE`() {
         val csv = parseFixture("v1_2_0.csv")
         assertEquals(3, csv.videos.size)
+        assertEquals(0, csv.badLines)
         assertEquals(listOf("Grupo de ejemplo", "=Persona"), csv.recipients.map { it.recipient })
         assertEquals(local("2026-03-03T09:15:25"), csv.recipients.first().at)
-        assertEquals(listOf(PassportCsv.TITLE), csv.blocks.map { it.title })
+        assertEquals(listOf(OLD_PASSPORT), csv.blocks.map { it.title })
+    }
+
+    @Test
+    fun `CSV de la 1_6_0 a la 1_11_x - PASAPORTE con clave, retos y eventos que ya no existen`() {
+        val csv = parseFixture("v1_11_0.csv")
+        assertEquals(3, csv.videos.size)
+        assertEquals(0, csv.badLines)
+        assertTrue(csv.videos.all { it.exact })
+        assertEquals(1_772_525_702_123L, csv.videos.first().startedAt)
+        assertEquals(listOf(12_345L, 8_017L, 59_900L), csv.videos.map { it.durationMs })
+        assertEquals(listOf(1, 0, 2), csv.videos.map { it.shares })
+        assertEquals(listOf("Grupo de ejemplo", "=Persona"), csv.recipients.map { it.recipient })
+        assertTrue(csv.orphanShares.isEmpty())
+        // El bloque viejo no se toma por vídeos, envíos ni compartidos: se queda aparte y nadie lo lee.
+        assertEquals(listOf(OLD_PASSPORT), csv.blocks.map { it.title })
+        assertEquals(6, csv.blocks.single().rows.size)
+    }
+
+    private companion object {
+        /** Título del bloque del pasaporte en los CSV de antes de la 1.12.0 (ya no se exporta). */
+        const val OLD_PASSPORT = "PASAPORTE"
     }
 }

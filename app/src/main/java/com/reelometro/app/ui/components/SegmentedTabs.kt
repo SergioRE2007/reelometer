@@ -2,12 +2,14 @@ package com.reelometro.app.ui.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.text.BasicText
@@ -65,12 +67,18 @@ fun SegmentedTabs(
     val widths = remember(options.size) { mutableStateListOf(*Array(options.size) { 0f }) }
     val x = remember { Animatable(0f) }
     val w = remember { Animatable(0f) }
+    val scroll = rememberScrollState()
 
     LaunchedEffect(selectedIndex, options.size) {
         var first = w.value == 0f
         snapshotFlow { lefts.getOrElse(selectedIndex) { -1f } to widths.getOrElse(selectedIndex) { 0f } }
             .collect { (left, width) ->
                 if (left < 0f || width <= 0f) return@collect
+                // Con letra grande las opciones no caben: la elegida siempre queda a la vista.
+                val start = scroll.value.toFloat()
+                if (left < start || left + width > start + scroll.viewportSize) {
+                    launch { if (first || reduced) scroll.scrollTo(left.toInt()) else scroll.animateScrollTo(left.toInt()) }
+                }
                 if (first || reduced) {
                     x.snapTo(left)
                     w.snapTo(width)
@@ -82,16 +90,24 @@ fun SegmentedTabs(
             }
     }
 
-    Row(
+    // Capa exterior: filete hasta el borde y desplazamiento horizontal (letra grande, idiomas largos).
+    // Fila interior: el indicador se dibuja sobre el contenido, así que lefts/positionInParent cuadran.
+    Box(
         modifier
             .fillMaxWidth()
-            .selectableGroup()
             .drawBehind {
-                val thickness = IndicatorThickness.toPx()
                 if (divider) {
                     val hair = Space.hairline.toPx()
                     drawRect(colors.line, topLeft = Offset(0f, size.height - hair), size = Size(size.width, hair))
                 }
+            }
+            .horizontalScroll(scroll),
+    ) {
+    Row(
+        Modifier
+            .selectableGroup()
+            .drawBehind {
+                val thickness = IndicatorThickness.toPx()
                 if (w.value > 0f) {
                     drawRect(
                         colors.signal,
@@ -123,7 +139,8 @@ fun SegmentedTabs(
                             }
                         },
                     )
-                    .then(descriptions?.getOrNull(index)?.let { d -> Modifier.semantics { contentDescription = d } } ?: Modifier)
+                    // Texto natural para TalkBack (no las mayúsculas mono que se ven).
+                    .semantics { contentDescription = descriptions?.getOrNull(index) ?: option }
                     .widthIn(min = Space.touch)
                     .height(Space.touch)
                     .padding(end = if (index < options.lastIndex) Space.x6 else 0.dp)
@@ -145,5 +162,6 @@ fun SegmentedTabs(
                 )
             }
         }
+    }
     }
 }

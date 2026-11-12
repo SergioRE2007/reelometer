@@ -1,28 +1,40 @@
 package com.reelometro.app.copy
 
+import android.view.accessibility.AccessibilityEvent
 import com.reelometro.app.data.Category
-import com.reelometro.app.game.ChallengeDay
-import com.reelometro.app.game.ChallengeResult
-import com.reelometro.app.game.ChallengeStatus
+import com.reelometro.app.data.Platform
+import com.reelometro.app.detection.ConnectionKind
+import com.reelometro.app.detection.DisconnectionKind
+import com.reelometro.app.detection.ExitCategory
+import com.reelometro.app.detection.ExitReasons
+import com.reelometro.app.detection.ExitRecord
+import com.reelometro.app.detection.ServiceConnection
+import com.reelometro.app.detection.ServiceDisconnection
+import com.reelometro.app.detection.ServiceFailures
+import com.reelometro.app.detection.ServiceJournalState
+import com.reelometro.app.detection.ServiceMetrics
+import com.reelometro.app.detection.ServiceStatus
+import com.reelometro.app.detection.SystemState
+import com.reelometro.app.game.FlapDay
+import com.reelometro.app.game.FlapFakes
 import com.reelometro.app.game.FlapMood
-import com.reelometro.app.game.FlapState
-import com.reelometro.app.game.StampId
-import com.reelometro.app.game.StampKind
-import com.reelometro.app.game.StampState
-import com.reelometro.app.game.TravelerLevel
-import com.reelometro.app.game.WeeklyChallenge
+import com.reelometro.app.game.FlapRules
 import com.reelometro.app.stats.Equivalences
 import org.junit.Assert.fail
 import org.junit.Test
 import java.io.File
 import java.lang.reflect.Modifier
 import java.time.LocalDate
+import java.time.ZoneOffset
 
 /**
- * Segunda foto de los textos en español: lo que no cubre la de [CopyCatalogTest] (Pasaporte,
- * imagen compartible y todas las formas de las equivalencias). Se sacó del código de antes de
- * pasar los textos a recursos y vive en `src/test/resources/i18n/copy-golden-extra.txt`.
- * Solo usa la API pública de `PassportCopy`, `ShareCopy` y `Equivalences`, que no cambió.
+ * Segunda foto de los textos en español: lo que no cubre la de [CopyCatalogTest] (pestaña Flap,
+ * imagen compartible, todas las formas de las equivalencias y las líneas de Calibración:
+ * RENDIMIENTO y CIERRES, con el aviso de servicio parado según el motivo del cierre). Se sacó del
+ * código de antes de pasar los textos a recursos y vive en `src/test/resources/i18n/copy-golden-extra.txt`.
+ * Usa la API pública de `FlapCopy`, `ShareCopy`, `Equivalences`, `CalibrationMetricsCopy` y
+ * `ExitCopy` (más `TodayCopy.serviceStalled` y `NotificationCopy.serviceStalled`); las líneas de
+ * Flap llevan delante «FlapCopy.» para no mezclarse con las demás.
  * Si cambia un texto a propósito: `REELOMETRO_GOLDEN_UPDATE=1 ./gradlew testDebugUnitTest --tests '*CopyGoldenExtraTest*'`.
  */
 class CopyGoldenExtraTest {
@@ -43,97 +55,155 @@ class CopyGoldenExtraTest {
         return (fields + getters).distinctBy { it.first }.map { (n, v) -> "${cls.simpleName}.$n" to v }
     }
 
+    /** El bloque «Estado del sistema»: sin nada que contar (ni Android da los datos) y con todo. */
+    private fun systemSamples(at: Long): List<Pair<String, SystemStateCopy.Input>> = listOf(
+        "vacío" to SystemStateCopy.Input(
+            system = SystemState(),
+            journal = ServiceJournalState(),
+            failures = ServiceFailures.Snapshot(),
+            memory = ServiceStatus.MemoryWarnings(),
+            lastVideoAt = null,
+        ),
+        "lleno" to SystemStateCopy.Input(
+            system = SystemState(
+                standbyBucket = 40,
+                batteryUnrestricted = false,
+                backgroundRestricted = true,
+                powerSave = false,
+                hibernationExempt = true,
+                notificationsAllowed = true,
+                processAgeMs = 3 * hour + 12 * min,
+            ),
+            journal = ServiceJournalState(
+                connections = listOf(
+                    ServiceConnection(at, ConnectionKind.COLD),
+                    ServiceConnection(at - 5 * hour, ConnectionKind.WARM),
+                    ServiceConnection(at - 30 * hour, ConnectionKind.BOOT),
+                ),
+                disconnections = listOf(
+                    ServiceDisconnection(at - 6 * hour, DisconnectionKind.TURNED_OFF),
+                    ServiceDisconnection(at - 40 * hour, DisconnectionKind.UNBOUND),
+                ),
+            ),
+            failures = ServiceFailures.Snapshot(3, at - hour, "lectura de pantalla", "IllegalStateException", "RecipientDetector.kt:412"),
+            memory = ServiceStatus.MemoryWarnings(2, 40, at - 2 * hour),
+            lastVideoAt = at - 10 * min,
+        ),
+    )
+
+    /** Fotos fijas de [ServiceMetrics]: vacía, recién arrancada (sin ritmo) y tras un buen rato con las tres apps. */
+    private fun metricsSamples(): List<Pair<String, ServiceMetrics.Snapshot>> {
+        val empty = ServiceMetrics(clockMs = { 0 }).snapshot()
+        var now = 0L
+        val busy = ServiceMetrics(clockMs = { now })
+        repeat(1_234) { busy.onEvent(Platform.TIKTOK, AccessibilityEvent.TYPE_VIEW_SCROLLED, 250_000) }
+        repeat(56) { busy.onEvent(Platform.TIKTOK, AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED, 2_500_000) }
+        repeat(7) { busy.onEvent(Platform.INSTAGRAM, AccessibilityEvent.TYPE_VIEW_CLICKED, 21_000_000, capturing = true) }
+        repeat(2) { busy.onEvent(Platform.INSTAGRAM, AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED, 40_000, forQuickSend = true) }
+        busy.onEvent(Platform.INSTAGRAM, AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED, 40_000)
+        busy.onEvent(Platform.YOUTUBE, AccessibilityEvent.TYPE_VIEW_SCROLLED, 900_000)
+        busy.onTreeRead(Platform.YOUTUBE, 300, 14_000_000, found = false)
+        busy.onTreeRead(Platform.YOUTUBE, 280, 9_500_000, found = false)
+        busy.onTreeRead(Platform.TIKTOK, 141, 3_200_000, found = true)
+        repeat(4) { busy.onTreeUnreadable(Platform.TIKTOK) }
+        repeat(45) { busy.onPresenceCheck(1_700_000) }
+        busy.quickStarted()
+        busy.onChildFetch(321)
+        busy.quickEnded(45_000_000)
+        busy.onChildFetch(12_024)
+        repeat(67) { busy.onParentFetch() }
+        repeat(8) { busy.onFinderQuery() }
+        busy.start()
+        now = 3_000
+        val fresh = busy.snapshot()
+        // Un evento cada 30 s hasta los 7 min y medio: todo ese rato cuenta como actividad.
+        while (now < 7 * 60_000 + 30_000) {
+            now += 30_000
+            busy.onEvent(Platform.YOUTUBE, AccessibilityEvent.TYPE_VIEW_SCROLLED, 900_000)
+        }
+        return listOf("vacía" to empty, "reciente" to fresh, "7 min" to busy.snapshot())
+    }
+
     private fun lines(): List<String> {
         val out = mutableListOf<String>()
         fun put(source: String, text: Any?) {
             out += "$source → $text"
         }
-        constants(PassportCopy::class.java).forEach { (n, v) -> put(n, v) }
+        constants(FlapCopy::class.java).forEach { (n, v) -> put(n, v) }
         constants(ShareCopy::class.java).forEach { (n, v) -> put(n, v) }
 
-        // ---------------------------------------------------------------- Pasaporte
-        val P = PassportCopy
-        listOf(0, 1, 2, 7, 1_234).forEach { put("onBoard($it)", P.onBoard(it)) }
+        // ---------------------------------------------------------------- Rendimiento del servicio (Calibración)
+        constants(CalibrationMetricsCopy::class.java).forEach { (n, v) -> put(n, v) }
+        for ((name, snapshot) in metricsSamples()) {
+            put("CalibrationMetricsCopy.summary($name)", CalibrationMetricsCopy.summary(snapshot))
+            CalibrationMetricsCopy.exportLines(snapshot).forEachIndexed { i, line -> put("CalibrationMetricsCopy.exportLines($name)[$i]", line) }
+        }
+        listOf(1, 2, 1_234).forEach { put("CalibrationMetricsCopy.redacted($it)", CalibrationMetricsCopy.redacted(it)) }
+
+        // ---------------------------------------------------------------- Motivo del cierre (diagnóstico y Calibración)
+        constants(ExitCopy::class.java).forEach { (n, v) -> put(n, v) }
+        val exitAt = LocalDate.of(2026, 11, 10).atTime(14, 32).toInstant(ZoneOffset.UTC).toEpochMilli()
+        for (category in ExitCategory.entries) {
+            put("ExitCopy.diagnosis($category)", ExitCopy.diagnosis(category))
+            put("ExitCopy.categoryLabel($category)", ExitCopy.categoryLabel(category))
+            put("TodayCopy.serviceStalled(0, $category)", TodayCopy.serviceStalled(0L, category))
+            put("NotificationCopy.serviceStalled($category)", NotificationCopy.serviceStalled(ExitCopy.diagnosis(category)).text)
+        }
+        listOf(
+            ExitRecord(13, 0, "SwipeUpClean", 125, exitAt),
+            ExitRecord(10, 21, "stop com.reelometro.app due to clear data", 400, exitAt),
+            ExitRecord(3, 0, null, 400, exitAt),
+        ).forEach { r -> put("ExitCopy.logLine(${r.reason}/${r.subreason})", ExitCopy.logLine(ExitReasons.classify(r), ZoneOffset.UTC)) }
+        // El paquete de otra app se tapa en la descripción (el de Reelometer no) y la categoría sale del original.
+        val otherApp = ExitRecord(13, 0, "kill by com.miui.powerkeeper for com.reelometro.app", 125, exitAt)
+        put("ExitCopy.logLine(otra app)", ExitCopy.logLine(ExitReasons.classify(otherApp), ZoneOffset.UTC))
+        listOf(1, 2).forEach { put("ExitCopy.otherApp($it)", ExitCopy.otherApp(it)) }
+        // Con la memoria del proceso al morir (kB): va detrás, en MB.
+        val withMemory = ExitRecord(3, 0, null, 125, exitAt, pssKb = 86_500, rssKb = 131_072)
+        put("ExitCopy.logLine(con memoria)", ExitCopy.logLine(ExitReasons.classify(withMemory), ZoneOffset.UTC))
+
+        // ---------------------------------------------------------------- El sistema ha apagado el servicio
+        put("OnboardingCopy.LOST_TITLE", OnboardingCopy.LOST_TITLE)
+        put("OnboardingCopy.lostBody(null)", OnboardingCopy.lostBody(null))
+        put("OnboardingCopy.lostBody(USER_STOPPED)", OnboardingCopy.lostBody(ExitCategory.USER_STOPPED))
+        (0L..2L).forEach { put("TodayCopy.serviceLost($it)", TodayCopy.serviceLost(it)) }
+        put("TodayCopy.serviceLost(0, RESTRICTED)", TodayCopy.serviceLost(0L, ExitCategory.RESTRICTED))
+
+        // ---------------------------------------------------------------- Estado del sistema (Calibración)
+        for ((name, input) in systemSamples(exitAt)) {
+            SystemStateCopy.lines(input, ZoneOffset.UTC).forEachIndexed { i, line -> put("SystemStateCopy.lines($name)[$i]", line) }
+        }
+
+        // ---------------------------------------------------------------- Flap
+        val F = FlapCopy
+        put("FlapCopy.kicker", F.kicker(today))
         for (mood in FlapMood.entries) {
-            put("moodLabel($mood)", P.moodLabel(mood))
-            seeds.forEach { put("moodPhrase($mood, $it)", P.moodPhrase(mood, it)) }
+            put("FlapCopy.moodLabel($mood)", F.moodLabel(mood))
+            put("FlapCopy.moodSpoken($mood)", F.moodSpoken(mood))
+            seeds.forEach { put("FlapCopy.moodPhrase($mood, $it)", F.moodPhrase(mood, it)) }
+            listOf(0, 1, 32, 100).forEach { put("FlapCopy.description($mood, $it)", F.description(mood, it)) }
+            listOf(1, 2, 9, 1_234).forEach { put("FlapCopy.toWorse($mood, $it)", F.toWorse(mood, it)) }
         }
         seeds.forEach {
-            put("warmingPhrase($it)", P.warmingPhrase(it))
-            put("recoveredPhrase($it)", P.recoveredPhrase(it))
-            put("warmupText($it)", P.warmupText(it))
-            put("ticketFooter($it)", P.ticketFooter(it))
-            put("levelUpNotificationText($it)", P.levelUpNotificationText(it))
+            put("FlapCopy.freshPhrase($it)", F.freshPhrase(it))
+            put("FlapCopy.recoveredPhrase($it)", F.recoveredPhrase(it))
         }
-        val flaps = buildList {
-            for (mood in FlapMood.entries) for (prev in listOf(null, FlapMood.ZOMBI, FlapMood.EN_FORMA))
-                for (ref in listOf<Pair<Int?, Boolean>>(null to false, 150 to true, 120 to false))
-                    for ((under, tracked) in listOf(0 to 0, 1 to 1, 0 to 3, 5 to 7, 7 to 7))
-                        add(FlapState(mood, prev, under, tracked, ref.first, ref.second))
+        listOf(0, 1, 62, 100).forEach {
+            put("FlapCopy.lifeValue($it)", F.lifeValue(it))
+            put("FlapCopy.lifeDescription($it)", F.lifeDescription(it))
         }
-        for (f in flaps) {
-            put("record($f)", P.record(f))
-            put("referenceLine($f)", P.referenceLine(f))
-            put("flapDescription($f)", P.flapDescription(f, "Frase."))
-            seeds.forEach { put("flapPhrase($f, $it)", P.flapPhrase(f, it)) }
-        }
-        for (level in TravelerLevel.entries) {
-            put("levelName($level)", P.levelName(level))
-            put("levelCode($level)", P.levelCode(level))
-            put("levelTagline($level)", P.levelTagline(level))
-            put("levelIndex($level)", P.levelIndex(level))
-            put("levelSpoken($level)", P.levelSpoken(level))
-            put("ticketShareText($level)", P.ticketShareText(level))
-            put("ticketFileName($level)", P.ticketFileName(level))
-            put("levelUpNotificationTitle($level)", P.levelUpNotificationTitle(level))
-            seeds.forEach { put("levelCaption($level, $it)", P.levelCaption(level, it)) }
-            listOf(0, 1, 2, 250).forEach { put("milesToNext($it, $level)", P.milesToNext(it, level)) }
-            for (xp in listOf(0, 1, 450)) for (remaining in listOf(null, 0, 1, 120)) for (streak in listOf(0, 1, 5)) {
-                put("levelDescription($level, $xp, $remaining, $streak)", P.levelDescription(level, xp, remaining, streak))
+        for (goal in listOf<Int?>(null, 1, 40, 1_500)) {
+            val limit = FlapRules.limitFor(goal)
+            put("FlapCopy.howLimit($limit, ${goal != null})", F.howLimit(limit, goal != null))
+            put("FlapCopy.noGoal($limit)", F.noGoal(limit))
+            for (count in listOf(0, 1, 2, limit / 2, limit, limit + 1, limit * 2 - 1, limit * 2, 12_345).distinct()) {
+                put("FlapCopy.todayLine($count, $limit)", F.todayLine(count, limit))
+                put("FlapCopy.nextLine($count, $limit)", F.nextLine(FlapFakes.state(today, goal, count)))
             }
         }
-        listOf(0, 1, 2, 150, 1_234).forEach {
-            put("miles($it)", P.miles(it))
-            put("milesValue($it)", P.milesValue(it))
-        }
-        listOf(0, 1, 7).forEach { put("streakValue($it)", P.streakValue(it)) }
-        listOf(true, false).forEach { put("lineDays($it)", P.lineDays(it)) }
-        for (id in StampId.entries) {
-            put("stampName($id)", P.stampName(id))
-            put("stampHint($id)", P.stampHint(id))
-            put("stampXp($id)", P.stampXp(id))
-            put("stampSpoken($id)", P.stampSpoken(id))
-            seeds.forEach { put("stampCaption($id, $it)", P.stampCaption(id, it)) }
-            listOf(StampState(id), StampState(id, earnedOn = today), StampState(id, progress = 0.4f), StampState(id, progress = 0f))
-                .forEach { put("stampDescription($it)", P.stampDescription(it)) }
-        }
-        StampKind.entries.forEach { put("stampKindLabel($it)", P.stampKindLabel(it)) }
-        put("stampDate", P.stampDate(today))
-        put("stampEarnedOn", P.stampEarnedOn(today))
-        listOf(0f, 0.345f, 1f).forEach { put("stampProgress($it)", P.stampProgress(it)) }
-        put("stampsCount", P.stampsCount(3, 23))
-        listOf(10, 20).forEach { put("challengeTitle($it)", P.challengeTitle(it)) }
-        ChallengeStatus.entries.forEach { put("challengeStatus($it)", P.challengeStatus(it)) }
-        listOf(0, 1, 1_234).forEach { put("challengeCaption($it)", P.challengeCaption(it)) }
-        val week = today.minusDays(1)
-        val days = (0..6).map { ChallengeDay(week.plusDays(it.toLong()), if (it < 2) 40 else null, 50) }
-        for (status in ChallengeStatus.entries) for (total in listOf(0, 1, 50, 270, 300)) for (ghost in listOf(0, 1, 50, 135)) {
-            val c = WeeklyChallenge(week, 10, 300, 270, total, ghost, days, status)
-            put("challengeDescription($c)", P.challengeDescription(c, "Frase."))
-            seeds.forEach { put("challengePhrase($status, $total, $ghost, $it)", P.challengePhrase(c, it)) }
-        }
-        for (count in listOf(null, 0, 1, 40)) for (ghost in listOf(null, 0, 1, 50)) {
-            put("ghostDayDescription($count, $ghost)", P.ghostDayDescription(today, count, ghost))
-        }
-        for (total in listOf(0, 1, 50)) for (ghost in listOf(0, 1, 50)) put("chartDescription($total, $ghost)", P.chartDescription(total, ghost))
-        put("pastLabel", P.pastLabel(week))
-        listOf(true, false).forEach { put("pastValue($it)", P.pastValue(it)) }
-        for (won in listOf(true, false)) for (total in listOf(0, 1, 240)) {
-            val r = ChallengeResult(week, 270, total, won)
-            put("pastDescription($r)", P.pastDescription(r))
-            put("challengeWonTitle($r)", P.challengeWonTitle(r))
-            seeds.forEach { put("challengeWonCaption($r, $it)", P.challengeWonCaption(r, it)) }
-        }
+        FlapFakes.state(today).week.forEach { put("FlapCopy.dayDescription(${it.date}, ${it.count})", F.dayDescription(it)) }
+        put("FlapCopy.dayDescription(sin registro)", F.dayDescription(FlapDay(today.minusDays(1), null, null)))
+        listOf(0, 1, 2, 7, 1_234).forEach { put("FlapCopy.streak($it)", F.streak(it)) }
 
         // ---------------------------------------------------------------- Imagen compartible
         val S = ShareCopy
@@ -190,7 +260,7 @@ class CopyGoldenExtraTest {
     }
 
     @Test
-    fun `los textos del pasaporte, compartir y equivalencias no cambian (foto)`() {
+    fun `los textos de Flap, compartir, equivalencias y Calibración no cambian (foto)`() {
         val lines = lines()
         val root = listOf(File("src/test"), File("app/src/test")).first { it.exists() }
         val golden = File(root, "resources/i18n/copy-golden-extra.txt")

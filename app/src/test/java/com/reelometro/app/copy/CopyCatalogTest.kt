@@ -215,6 +215,19 @@ class CopyCatalogTest {
             add(Sample("NotificationCopy.daily.title($c)", n.title))
             add(Sample("NotificationCopy.daily.text($c, $ms, $g)", n.text))
         }
+        // Descubrimiento progresivo: novedad, pista con lo oculto y el paso de Ajustes del recorrido.
+        for (f in com.reelometro.app.data.settings.DiscoveryFeature.entries) {
+            add(Sample("TodayCopy.newsTitle($f)", TodayCopy.newsTitle(f), upper = true))
+            add(Sample("TodayCopy.newsText($f)", TodayCopy.newsText(f)))
+            add(Sample("TodayCopy.newsAction($f)", TodayCopy.newsAction(f), upper = true))
+        }
+        for (hidden in com.reelometro.app.data.settings.DiscoveryFeature.entries.indices.flatMap { from ->
+            val rest = com.reelometro.app.data.settings.DiscoveryFeature.entries.drop(from)
+            listOf(rest, rest.filter { it != com.reelometro.app.data.settings.DiscoveryFeature.PASSPORT })
+        }.filter { it.isNotEmpty() }.distinct()) {
+            add(Sample("TodayCopy.revealHint($hidden)", TodayCopy.revealHint(hidden)))
+        }
+        add(Sample("TourCopy.text(SETTINGS, moreToCome)", TourCopy.text(com.reelometro.app.ui.tour.TourStep.SETTINGS, moreToCome = true)))
         for (c in counts) for (g in listOf(1, 5, 150, 2_000)) {
             add(Sample("TodayCopy.goalStatus($c, $g)", TodayCopy.goalStatus(c, g), upper = true))
             add(Sample("TodayCopy.goalStatusDescription($c, $g)", TodayCopy.goalStatusDescription(c, g)))
@@ -343,6 +356,29 @@ class CopyCatalogTest {
         add(Sample("OnboardingCopy.goalRange", OnboardingCopy.goalRange(5, 2_000)))
         listOf(null, 0, 1, 150, 2_000).forEach { add(Sample("OnboardingCopy.goalChosen($it)", OnboardingCopy.goalChosen(it))) }
         add(Sample("OnboardingCopy.stepLabel", OnboardingCopy.stepLabel(3), upper = true))
+        // Guía por marca y prueba de un minuto (todas las familias, pantallas y fallos)
+        for (f in com.reelometro.app.detection.OemFamily.entries) {
+            add(Sample("OnboardingCopy.oemTitle($f)", OnboardingCopy.oemTitle(f)))
+            OnboardingCopy.oemSteps(f).forEach { add(Sample("OnboardingCopy.oemSteps($f)", it.text)) }
+            for (k in com.reelometro.app.detection.OemStepKind.entries) {
+                add(Sample("OnboardingCopy.oemStepText($f, $k)", OnboardingCopy.oemStepText(f, k)))
+            }
+            for (s in com.reelometro.app.detection.OemScreen.entries) {
+                add(Sample("OnboardingCopy.oemButton($f, $s)", OnboardingCopy.oemButton(f, s), upper = true))
+            }
+        }
+        for (t in listOf(1, 3)) add(Sample("OnboardingCopy.checkBody($t)", OnboardingCopy.checkBody(t)))
+        for (n in listOf(0L, 1L, 2L, 3L)) {
+            add(Sample("OnboardingCopy.checkProgress($n)", OnboardingCopy.checkProgress(n, 3)))
+            if (n > 0) add(Sample("OnboardingCopy.checkPassed($n)", OnboardingCopy.checkPassed(n)))
+        }
+        add(Sample("OnboardingCopy.checkPassed(1.234)", OnboardingCopy.checkPassed(1_234)))
+        com.reelometro.app.data.Platform.entries.forEach {
+            add(Sample("OnboardingCopy.checkOpenApp($it)", OnboardingCopy.checkOpenApp(it)))
+        }
+        com.reelometro.app.detection.CheckFailure.entries.forEach {
+            add(Sample("OnboardingCopy.checkFailure($it)", OnboardingCopy.checkFailure(it)))
+        }
         DisclosureCopy.fullText.forEach { add(Sample("DisclosureCopy.fullText", it)) }
         DisclosureCopy.SECTIONS.forEach { add(Sample("DisclosureCopy.SECTIONS.label", it.label, upper = true)) }
         SettingsCopy.SECTIONS.forEach {

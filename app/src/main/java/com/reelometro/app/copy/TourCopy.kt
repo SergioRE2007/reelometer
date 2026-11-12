@@ -39,18 +39,20 @@ object TourCopy {
     /**
      * Texto del paso. [hasTarget] = `false` si el elemento no está en pantalla (p. ej. aún no hay
      * comparación «a esta hora» porque faltan días): el texto lo explica sin señalar nada.
+     * [moreToCome] = quedan pestañas por aparecer (descubrimiento progresivo): el paso de Ajustes lo cuenta.
      */
-    fun text(step: TourStep, hasTarget: Boolean = true): String = when (step) {
+    fun text(step: TourStep, hasTarget: Boolean = true, moreToCome: Boolean = false): String = when (step) {
         TourStep.COUNTER -> str(R.string.tour_counter_text)
         TourStep.COMPARISON ->
             if (hasTarget) str(R.string.tour_comparison_text) else str(R.string.tour_comparison_text_empty)
         TourStep.STATS_BARS -> str(R.string.tour_stats_bars_text)
         TourStep.WRAPPED -> str(R.string.tour_wrapped_text)
         TourStep.PASSPORT -> str(R.string.tour_passport_text)
-        TourStep.SETTINGS -> str(R.string.tour_settings_text)
+        TourStep.SETTINGS ->
+            if (moreToCome) str(R.string.tour_settings_text_more) else str(R.string.tour_settings_text)
     }
 
     /** Lo que anuncia TalkBack al llegar a cada paso: «Paso 2 de 6. A esta hora. …». */
-    fun announcement(step: TourStep, index: Int, total: Int, hasTarget: Boolean = true): String =
-        str(R.string.tour_announcement, Format.integer(index), Format.integer(total), title(step), text(step, hasTarget))
+    fun announcement(step: TourStep, index: Int, total: Int, hasTarget: Boolean = true, moreToCome: Boolean = false): String =
+        str(R.string.tour_announcement, Format.integer(index), Format.integer(total), title(step), text(step, hasTarget, moreToCome))
 }

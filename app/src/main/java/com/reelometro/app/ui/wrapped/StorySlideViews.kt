@@ -50,6 +50,7 @@ import com.reelometro.app.copy.TicketLine
 import com.reelometro.app.copy.Words
 import com.reelometro.app.copy.WrappedCopy
 import com.reelometro.app.ui.components.Barcode
+import com.reelometro.app.ui.components.ButtonRow
 import com.reelometro.app.ui.components.Label
 import com.reelometro.app.ui.components.PlatformMark
 import com.reelometro.app.ui.components.ReceiptLine
@@ -237,7 +238,7 @@ private fun WorstDaySlide(slide: Slide.WorstDay) {
     SlideColumn {
         Kicker(Labels.WORST_DAY)
         Spacer(Modifier.weight(1f))
-        Text(slide.day, style = ReelTheme.type.displayXL, color = colors.signalDisplay, modifier = Modifier.reveal(0))
+        FitText(slide.day, ReelTheme.type.displayXL, colors.signalDisplay, Modifier.reveal(0))
         Spacer(Modifier.height(Space.x2))
         Label(slide.weekday, large = true, modifier = Modifier.reveal(0))
         Spacer(Modifier.height(Space.x6))
@@ -258,7 +259,7 @@ private fun RhythmSlide(slide: Slide.Rhythm) {
             Kicker(Labels.PEAK_HOUR)
             Spacer(Modifier.weight(1f))
             // Sin el tracking negativo del token: en «22:00» los doses se tocarían.
-            Text(
+            FitText(
                 text = slide.peakHour,
                 style = type.displayXL.copy(letterSpacing = TextUnit.Unspecified),
                 color = colors.text,
@@ -336,20 +337,19 @@ private fun ClosingSlide(
             }
         }
         Spacer(Modifier.height(Space.x5))
-        Row {
+        ButtonRow { slot ->
             ReelButton(
                 text = Buttons.SHARE,
                 onClick = onShare,
-                modifier = Modifier.weight(1f),
+                modifier = slot,
                 icon = ReelIcons.Share,
                 enabled = ticket != null,
                 contentDescription = A11y.SHARE_SUMMARY,
             )
-            Spacer(Modifier.width(Space.x3))
             ReelButton(
                 text = Buttons.SAVE,
                 onClick = onSave,
-                modifier = Modifier.weight(1f),
+                modifier = slot,
                 style = ReelButtonStyle.Secondary,
                 icon = ReelIcons.Download,
                 enabled = ticket != null,

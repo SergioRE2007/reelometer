@@ -346,4 +346,45 @@
         <item>Não estou contando nenhum app. Assim até eu.</item>
         <item>Nenhum app ativado em Configurações. O placar, de férias.</item>
     </string-array>
+
+    <!-- Servicio activado en Ajustes, pero Android no lo ha arrancado (o su arranque ha fallado). Va con el botón de abajo. -->
+    <string-array name="today_service_stalled">
+        <item>O serviço está ativado, mas o Android não o iniciou: agora não estou contando nada. Tem conserto.</item>
+        <item>O botão está ligado, mas o sistema não me deixa trabalhar. Acontece muito em Xiaomi. Resolve em um minuto.</item>
+        <item>Ativado, sim. Funcionando, não: o Android não iniciou o serviço. O que você assistir agora não conta.</item>
+    </string-array>
+    <string name="today_service_stalled_action">RESOLVER</string>
+
+    <!-- El servicio funcionaba y ha salido apagado sin que el usuario lo apagara: lo quitó el móvil al cerrar la app. Va con el botón today_service_stalled_action. lost_reason: %1$s = una de today_service_lost, %2$s = una de calibration_exit_cat_* (copy_calibration.xml). -->
+    <string-array name="today_service_lost">
+        <item>Seu celular desativou o serviço por conta própria. Não foi você. O que você assistir agora não conta; tem conserto.</item>
+        <item>O serviço se desativou sozinho: seu celular fechou o Reelometer e o tirou de Acessibilidade. Dá para resolver em um minuto.</item>
+        <item>Não foi você que desativou: foi o celular, ao fechar o app. Enquanto isso, o contador não conta nada.</item>
+    </string-array>
+    <string name="today_service_lost_reason">%1$s Motivo registrado pelo Android: %2$s.</string>
+
+    <!-- Descubrimiento progresivo: el primer día solo está Hoy y las demás pestañas aparecen con los días. Novedad: presenta la pestaña recién aparecida (una cada vez); usa el nombre de la pestaña de copy_labels.xml. -->
+    <string name="today_news_stats_title">NOVO · ESTATÍSTICAS</string>
+    <string name="today_news_stats_text">Você já tem vários dias contados. Em Estatísticas, cada dia é uma barra: segure o dedo em cima para ver o número.</string>
+    <string name="today_news_stats_action">VER ESTATÍSTICAS</string>
+    <string name="today_news_wrapped_title">NOVO · RESUMO</string>
+    <string name="today_news_wrapped_text">Você já tem um resumo da sua semana: contado como uma história e com um ticket para compartilhar, se tiver coragem.</string>
+    <string name="today_news_wrapped_action">VER O RESUMO</string>
+    <string name="today_news_passport_title">NOVO · FLAP</string>
+    <string name="today_news_passport_text">O Flap começa todo dia com a vida cheia e cada vídeo que você vê tira um pouco dela. À meia-noite, ele revive. Se não for para você, dá para desligar em Configurações.</string>
+    <string name="today_news_passport_action">VER O FLAP</string>
+    <string name="today_news_dismiss">ENTENDI</string>
+    <string name="today_news_dismiss_description">Fechar esta novidade</string>
+
+    <!-- Pista al final de Hoy con lo que aún no ha aparecido y el botón para enseñarlo todo ya. -->
+    <string name="today_reveal_hint_stats_wrapped_passport">Estatísticas, Resumo e Flap vão aparecer conforme você contar mais dias.</string>
+    <string name="today_reveal_hint_stats_wrapped">Estatísticas e Resumo vão aparecer conforme você contar mais dias.</string>
+    <string name="today_reveal_hint_wrapped_passport">Resumo e Flap vão aparecer assim que você tiver uma semana contada.</string>
+    <string name="today_reveal_hint_wrapped">O Resumo vai aparecer assim que você tiver uma semana contada.</string>
+    <string name="today_reveal_hint_passport">O Flap vai aparecer mais para a frente.</string>
+    <string name="today_reveal_all">MOSTRAR TUDO JÁ</string>
+    <string name="today_reveal_all_description">Mostrar todas as abas agora</string>
+
+    <!-- Aviso «sin señal» de Hoy con el motivo del cierre: %1$s = la frase de today_service_stalled, %2$s = una de onboarding_exit_*. -->
+    <string name="today_service_stalled_reason">%1$s %2$s</string>
 </resources>

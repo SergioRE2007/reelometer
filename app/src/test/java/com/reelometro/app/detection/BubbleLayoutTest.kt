@@ -154,7 +154,7 @@ class BubbleLayoutTest {
         assertEquals(BubbleLayout.DEFAULT, BubbleLayout.fromLegacy(left = false, centerY = 0.40f))
         // Borde izquierdo al 70 %: pegada a la izquierda a esa altura, en columna (como estaba).
         val left = BubbleLayout.fromLegacy(left = true, centerY = 0.70f)
-        assertEquals(BubbleSpot(BubbleLayout.LEGACY_EDGE_X, 0.70f), left)
+        assertEquals(BubbleSpot(0f, 0.70f), left)
         assertEquals(BubbleOrientation.COLUMN, BubbleLayout.orientationFor(left.y))
         val (w, h) = size(BubbleOrientation.COLUMN)
         val (x, _) = BubbleLayout.windowXY(left, w, h, SCREEN_W, SCREEN_H, safe)

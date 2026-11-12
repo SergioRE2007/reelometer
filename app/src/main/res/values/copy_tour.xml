@@ -27,8 +27,8 @@
     <string name="tour_stats_bars_title">Cada día, una barra</string>
     <!-- La pestaña del resumen (semana, mes, año). -->
     <string name="tour_wrapped_title">El resumen</string>
-    <!-- La pestaña del pasaporte (Flap es la mascota: no se traduce). -->
-    <string name="tour_passport_title">El pasaporte</string>
+    <!-- La pestaña de Flap, la mascota que empeora con cada vídeo (nombre propio: no se traduce). -->
+    <string name="tour_passport_title">Flap</string>
     <string name="tour_settings_title">Ajustes y calibración</string>
 
     <!-- Frase de cada paso. -->
@@ -38,8 +38,10 @@
     <string name="tour_comparison_text_empty">Con unos días contados, aquí verás cómo vas frente a tu día medio a esta misma hora.</string>
     <string name="tour_stats_bars_text">Mantén el dedo sobre una barra y desliza para ver la cifra exacta de cada día.</string>
     <string name="tour_wrapped_text">Tu semana, tu mes y tu año, contados como una historia. Con ticket para compartir, si te atreves.</string>
-    <string name="tour_passport_text">Flap y tus sellos. Aquí la experiencia se gana viendo menos, nunca más.</string>
+    <string name="tour_passport_text">Empieza cada día a tope y cada vídeo que ves le quita vida. A medianoche revive.</string>
     <string name="tour_settings_text">Objetivo, avisos y tema, aquí arriba. Siete toques en la versión abren la calibración.</string>
+    <!-- Paso de Ajustes cuando aún quedan pestañas por aparecer (descubrimiento progresivo). Corto: cabe con la letra al 130 %. -->
+    <string name="tour_settings_text_more">Objetivo, avisos y tema, aquí arriba. Las demás pantallas irán apareciendo con los días.</string>
 
     <!-- Lo que anuncia TalkBack al llegar a cada paso: «Paso 2 de 6. A esta hora. Cómo vas…».
          %1$s el paso, %2$s el total, %3$s el título del paso (sin punto), %4$s su frase (con punto). -->

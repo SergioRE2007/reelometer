@@ -14,7 +14,7 @@ A11y.RESUME → Reanudar
 A11y.SAVE_IMAGE → Guardar imagen
 A11y.SETTINGS → Ajustes
 A11y.SHARE_SUMMARY → Compartir resumen
-A11y.TAB_PASSPORT → Pasaporte
+A11y.TAB_PASSPORT → Flap
 A11y.TAB_STATS → Estadísticas
 A11y.TAB_TODAY → Hoy
 A11y.TAB_WRAPPED → Resumen
@@ -7372,7 +7372,7 @@ Labels.PLATFORMS → PLATAFORMAS
 Labels.SHARES → COMPARTIDOS
 Labels.SINCE_START → DESDE EL PRINCIPIO
 Labels.STREAK → RACHA
-Labels.TAB_PASSPORT → PASAPORTE
+Labels.TAB_PASSPORT → FLAP
 Labels.TAB_STATS → ESTADÍSTICAS
 Labels.TAB_TODAY → HOY
 Labels.TAB_WRAPPED → RESUMEN
@@ -7390,8 +7390,8 @@ Labels.YES → SÍ
 Labels.YESTERDAY → AYER
 NotificationCopy.CHANNEL_GOAL_DESCRIPTION → Un solo aviso al día, en el momento en que pasas tu objetivo de vídeos.
 NotificationCopy.CHANNEL_GOAL_NAME → Aviso al pasar el objetivo
-NotificationCopy.CHANNEL_LEVEL_DESCRIPTION → Aviso cuando subes de nivel en el modo pasaporte.
-NotificationCopy.CHANNEL_LEVEL_NAME → Nivel del pasaporte
+NotificationCopy.CHANNEL_SERVICE_DESCRIPTION → Si el servicio de Reelometer deja de funcionar o tu móvil lo apaga. Como mucho, uno al día.
+NotificationCopy.CHANNEL_SERVICE_NAME → Avisos del servicio
 NotificationCopy.GOAL_PASSED_TITLE → Por encima del objetivo
 NotificationCopy.daily.text(0, 0, 1) → Día limpio. Que conste en acta.
 NotificationCopy.daily.text(0, 0, 1) → Hoy el algoritmo se ha quedado con las ganas.
@@ -9628,6 +9628,19 @@ NotificationCopy.monthly(99, 60000) → 99 vídeos, un minuto y un creador favo
 NotificationCopy.monthly(99, 60000) → El resumen está listo: 99 vídeos en un minuto.
 NotificationCopy.serviceLost.text → Android ha desconectado el servicio de accesibilidad. Toca para volver a conectarlo.
 NotificationCopy.serviceLost.title → Reelometer ha dejado de contar
+OnboardingCopy.CHECK_CANCEL → CANCELAR LA PRUEBA
+OnboardingCopy.CHECK_FAILED_LABEL → NO HE CONTADO NADA
+OnboardingCopy.CHECK_LABEL → PRUEBA DE UN MINUTO
+OnboardingCopy.CHECK_NONE_INSTALLED → No encuentro TikTok, Instagram ni YouTube en este móvil. Instala una de ellas para hacer la prueba.
+OnboardingCopy.CHECK_OPEN_CALIBRATION → ABRIR CALIBRACIÓN
+OnboardingCopy.CHECK_OPEN_SETTINGS → ABRIR AJUSTES
+OnboardingCopy.CHECK_PASSED_LABEL → PRUEBA SUPERADA
+OnboardingCopy.CHECK_PASSED_RESTARTED → Ha contado, pero Android ha cerrado Reelometer durante la prueba. Para que no vuelva a pasar:
+OnboardingCopy.CHECK_RETRY → REPETIR LA PRUEBA
+OnboardingCopy.CHECK_RUNNING_BODY → Pasa unos vídeos en la app y vuelve: lo miro al volver.
+OnboardingCopy.CHECK_RUNNING_LABEL → PRUEBA EN MARCHA
+OnboardingCopy.CHECK_TITLE → Comprueba que cuenta de verdad
+OnboardingCopy.CHECK_VERIFY → COMPROBAR AHORA
 OnboardingCopy.FINAL_BUTTON → EMPEZAR
 OnboardingCopy.FINAL_TITLE → Un aviso al día. Y un límite, si quieres.
 OnboardingCopy.GOAL_BODY → Un máximo de vídeos al día. Con él, el marcador te dice cuánto te queda y lleva la cuenta de tus rachas. Sin él, solo cuenta.
@@ -9644,6 +9657,7 @@ OnboardingCopy.GUIDE_DONE → HECHO
 OnboardingCopy.GUIDE_SKIP → SIGUIENTE
 OnboardingCopy.GUIDE_TITLE → Un interruptor y un «Permitir».
 OnboardingCopy.GUIDE_WAITING → ESPERANDO AL SERVICIO
+OnboardingCopy.LOST_TITLE → Tu móvil ha apagado el servicio
 OnboardingCopy.NOTIFY_BUTTON → PERMITIR AVISOS
 OnboardingCopy.NOTIFY_DAILY_LABEL → Aviso diario
 OnboardingCopy.NOTIFY_DENIED → Sin avisos, entonces. Puedes activarlos cuando quieras en Ajustes.
@@ -9651,6 +9665,8 @@ OnboardingCopy.NOTIFY_MONTHLY → El día 1 de cada mes, el mes anterior, contad
 OnboardingCopy.NOTIFY_MONTHLY_LABEL → Resumen mensual
 OnboardingCopy.NOTIFY_RATIONALE → Para avisarte, Android necesita tu permiso. Solo lo uso para esto.
 OnboardingCopy.NOTIFY_SECTION → AVISOS
+OnboardingCopy.OEM_OPEN_FAILED → No he podido abrir esa pantalla en tu móvil. Búscala con el buscador de Ajustes.
+OnboardingCopy.OEM_PREVENT_LINK → EVITA QUE SE DESCONECTE
 OnboardingCopy.PRIVACY_FOOTNOTE → Si desinstalas la app, todo se va con ella.
 OnboardingCopy.PRIVACY_POINTS.label → SIN ANUNCIOS
 OnboardingCopy.PRIVACY_POINTS.label → SIN CUENTAS
@@ -9669,8 +9685,31 @@ OnboardingCopy.RESTRICTED_LINK → ¿TE SALE «AJUSTE RESTRINGIDO»?
 OnboardingCopy.RESTRICTED_NOTE → «Permitir ajustes restringidos» solo aparece después de que Android te haya bloqueado una vez. Si no lo ves, intenta activar el servicio primero y vuelve aquí.
 OnboardingCopy.RESTRICTED_TITLE → ¿Android dice «Ajuste restringido»?
 OnboardingCopy.SKIP → SALTAR
+OnboardingCopy.STALLED_BODY → El interruptor de Accesibilidad está encendido, pero el sistema no ha puesto en marcha el servicio, así que no cuento nada. Pasa sobre todo en Xiaomi, Redmi y POCO, y en otros móviles que cierran las apps para ahorrar batería. Se arregla así:
+OnboardingCopy.STALLED_ERROR_LABEL → FALLO AL ARRANCAR
+OnboardingCopy.STALLED_LABEL → ACTIVADO, SIN CONECTAR
+OnboardingCopy.STALLED_TITLE → Está activado, pero Android no lo ha arrancado
 OnboardingCopy.WHAT_BODY → Reelometer cuenta los vídeos cortos que ves en TikTok, Instagram Reels y YouTube Shorts: cuántos, cuánto tiempo, de qué temas y de qué creadores. El dato es tuyo; las conclusiones, también.
 OnboardingCopy.WHAT_TITLE → Cuenta lo que no cuentas.
+OnboardingCopy.checkBody(1) → Abre TikTok, Instagram o YouTube, pasa 1 vídeo corto y vuelve aquí. Te digo si lo he contado.
+OnboardingCopy.checkBody(3) → Abre TikTok, Instagram o YouTube, pasa 3 vídeos cortos y vuelve aquí. Te digo si los he contado.
+OnboardingCopy.checkFailure(KILLED) → Android ha cerrado Reelometer mientras hacías la prueba, así que no ha podido contar. Sigue estos pasos:
+OnboardingCopy.checkFailure(NOT_CONNECTED) → El interruptor está encendido, pero Android no ha arrancado el servicio. Sigue estos pasos:
+OnboardingCopy.checkFailure(NO_EVENTS) → El servicio está conectado, pero no me ha llegado nada de TikTok, Instagram ni YouTube. Si las has abierto, sigue estos pasos:
+OnboardingCopy.checkFailure(NO_VIDEOS) → Me llegan datos de las apps, pero no he reconocido ningún vídeo. Comprueba que estabas en Para ti, Reels o Shorts. Si lo estabas, Calibración enseña lo que ve el servicio.
+OnboardingCopy.checkFailure(OFF) → El servicio está apagado. Actívalo en Accesibilidad y repite la prueba.
+OnboardingCopy.checkFailure(PLATFORMS_OFF) → Tienes desactivada esa app en los ajustes de Reelometer, así que no cuenta nada de ella. Actívala y repite la prueba.
+OnboardingCopy.checkOpenApp(INSTAGRAM) → ABRIR Instagram
+OnboardingCopy.checkOpenApp(TIKTOK) → ABRIR TikTok
+OnboardingCopy.checkOpenApp(YOUTUBE) → ABRIR YouTube
+OnboardingCopy.checkPassed(1) → He contado 1 vídeo. Todo funciona.
+OnboardingCopy.checkPassed(1.234) → He contado 1.234 vídeos. Todo funciona.
+OnboardingCopy.checkPassed(2) → He contado 2 vídeos. Todo funciona.
+OnboardingCopy.checkPassed(3) → He contado 3 vídeos. Todo funciona.
+OnboardingCopy.checkProgress(0) → 0 de 3 vídeos
+OnboardingCopy.checkProgress(1) → 1 de 3 vídeos
+OnboardingCopy.checkProgress(2) → 2 de 3 vídeos
+OnboardingCopy.checkProgress(3) → 3 de 3 vídeos
 OnboardingCopy.goalChosen(0) → Sin objetivo: solo contar.
 OnboardingCopy.goalChosen(1) → Como mucho, 1 al día.
 OnboardingCopy.goalChosen(150) → Como mucho, 150 al día.
@@ -9701,6 +9740,129 @@ OnboardingCopy.notifyDaily(6) → A las 06:30, tu cuenta del día.
 OnboardingCopy.notifyDaily(7) → A las 07:30, tu cuenta del día.
 OnboardingCopy.notifyDaily(8) → A las 08:30, tu cuenta del día.
 OnboardingCopy.notifyDaily(9) → A las 09:30, tu cuenta del día.
+OnboardingCopy.oemButton(COLOROS, ACCESSIBILITY) → ABRIR ACCESIBILIDAD
+OnboardingCopy.oemButton(COLOROS, APP_INFO) → ABRIR INFORMACIÓN DE LA APP
+OnboardingCopy.oemButton(COLOROS, AUTOSTART) → ABRIR INICIO AUTOMÁTICO
+OnboardingCopy.oemButton(COLOROS, BATTERY_APP) → ABRIR AHORRO DE BATERÍA
+OnboardingCopy.oemButton(COLOROS, BATTERY_SETTINGS) → ABRIR BATERÍA
+OnboardingCopy.oemButton(COLOROS, UNUSED_APPS) → ABRIR INFORMACIÓN DE LA APP
+OnboardingCopy.oemButton(HONOR, ACCESSIBILITY) → ABRIR ACCESIBILIDAD
+OnboardingCopy.oemButton(HONOR, APP_INFO) → ABRIR INFORMACIÓN DE LA APP
+OnboardingCopy.oemButton(HONOR, AUTOSTART) → ABRIR INICIO DE APPS
+OnboardingCopy.oemButton(HONOR, BATTERY_APP) → ABRIR AHORRO DE BATERÍA
+OnboardingCopy.oemButton(HONOR, BATTERY_SETTINGS) → ABRIR BATERÍA
+OnboardingCopy.oemButton(HONOR, UNUSED_APPS) → ABRIR INFORMACIÓN DE LA APP
+OnboardingCopy.oemButton(HUAWEI, ACCESSIBILITY) → ABRIR ACCESIBILIDAD
+OnboardingCopy.oemButton(HUAWEI, APP_INFO) → ABRIR INFORMACIÓN DE LA APP
+OnboardingCopy.oemButton(HUAWEI, AUTOSTART) → ABRIR INICIO DE APPS
+OnboardingCopy.oemButton(HUAWEI, BATTERY_APP) → ABRIR AHORRO DE BATERÍA
+OnboardingCopy.oemButton(HUAWEI, BATTERY_SETTINGS) → ABRIR BATERÍA
+OnboardingCopy.oemButton(HUAWEI, UNUSED_APPS) → ABRIR INFORMACIÓN DE LA APP
+OnboardingCopy.oemButton(SAMSUNG, ACCESSIBILITY) → ABRIR ACCESIBILIDAD
+OnboardingCopy.oemButton(SAMSUNG, APP_INFO) → ABRIR INFORMACIÓN DE LA APP
+OnboardingCopy.oemButton(SAMSUNG, AUTOSTART) → ABRIR INICIO AUTOMÁTICO
+OnboardingCopy.oemButton(SAMSUNG, BATTERY_APP) → ABRIR AHORRO DE BATERÍA
+OnboardingCopy.oemButton(SAMSUNG, BATTERY_SETTINGS) → ABRIR BATERÍA
+OnboardingCopy.oemButton(SAMSUNG, UNUSED_APPS) → ABRIR INFORMACIÓN DE LA APP
+OnboardingCopy.oemButton(STOCK, ACCESSIBILITY) → ABRIR ACCESIBILIDAD
+OnboardingCopy.oemButton(STOCK, APP_INFO) → ABRIR INFORMACIÓN DE LA APP
+OnboardingCopy.oemButton(STOCK, AUTOSTART) → ABRIR INICIO AUTOMÁTICO
+OnboardingCopy.oemButton(STOCK, BATTERY_APP) → ABRIR AHORRO DE BATERÍA
+OnboardingCopy.oemButton(STOCK, BATTERY_SETTINGS) → ABRIR BATERÍA
+OnboardingCopy.oemButton(STOCK, UNUSED_APPS) → ABRIR INFORMACIÓN DE LA APP
+OnboardingCopy.oemButton(VIVO, ACCESSIBILITY) → ABRIR ACCESIBILIDAD
+OnboardingCopy.oemButton(VIVO, APP_INFO) → ABRIR INFORMACIÓN DE LA APP
+OnboardingCopy.oemButton(VIVO, AUTOSTART) → ABRIR INICIO AUTOMÁTICO
+OnboardingCopy.oemButton(VIVO, BATTERY_APP) → ABRIR AHORRO DE BATERÍA
+OnboardingCopy.oemButton(VIVO, BATTERY_SETTINGS) → ABRIR BATERÍA
+OnboardingCopy.oemButton(VIVO, UNUSED_APPS) → ABRIR INFORMACIÓN DE LA APP
+OnboardingCopy.oemButton(XIAOMI, ACCESSIBILITY) → ABRIR ACCESIBILIDAD
+OnboardingCopy.oemButton(XIAOMI, APP_INFO) → ABRIR INFORMACIÓN DE LA APP
+OnboardingCopy.oemButton(XIAOMI, AUTOSTART) → ABRIR INICIO AUTOMÁTICO
+OnboardingCopy.oemButton(XIAOMI, BATTERY_APP) → ABRIR AHORRO DE BATERÍA
+OnboardingCopy.oemButton(XIAOMI, BATTERY_SETTINGS) → ABRIR BATERÍA
+OnboardingCopy.oemButton(XIAOMI, UNUSED_APPS) → ABRIR INFORMACIÓN DE LA APP
+OnboardingCopy.oemStepText(COLOROS, AUTOSTART) → Pulsa ABRIR INICIO AUTOMÁTICO y activa Reelometer.
+OnboardingCopy.oemStepText(COLOROS, BATTERY) → Pulsa ABRIR INFORMACIÓN DE LA APP, entra en «Uso de batería» y activa «Permitir actividad en segundo plano».
+OnboardingCopy.oemStepText(COLOROS, LOCK_RECENTS) → En Recientes, abre el menú de la tarjeta de Reelometer y elige «Bloquear».
+OnboardingCopy.oemStepText(COLOROS, NEVER_SLEEP) → Pulsa ABRIR BATERÍA, entra en «Límites de uso en segundo plano» › «Aplicaciones que nunca se suspenden» y añade Reelometer.
+OnboardingCopy.oemStepText(COLOROS, OTHER_MANAGERS) → Si tu móvil tiene «Inicio automático» o «Apps protegidas», activa Reelometer también ahí.
+OnboardingCopy.oemStepText(COLOROS, TOGGLE_SERVICE) → Pulsa ABRIR ACCESIBILIDAD, apaga «Usar Reelometer» y vuelve a encenderlo.
+OnboardingCopy.oemStepText(COLOROS, UNUSED_APPS) → Pulsa ABRIR INFORMACIÓN DE LA APP y apaga «Pausar actividad de la app si no se usa» (en móviles más antiguos, «Quitar permisos si no se usa la aplicación»). Reelometer trabaja sin que la abras, y Android puede tomarla por una app sin usar.
+OnboardingCopy.oemStepText(HONOR, AUTOSTART) → Pulsa ABRIR INICIO DE APPS, busca Reelometer, desactiva «Gestionar automáticamente» y deja encendidos los tres interruptores.
+OnboardingCopy.oemStepText(HONOR, BATTERY) → Pulsa ABRIR INFORMACIÓN DE LA APP, entra en «Batería» y elige «Sin restricciones».
+OnboardingCopy.oemStepText(HONOR, LOCK_RECENTS) → En la multitarea, desliza hacia abajo la tarjeta de Reelometer para bloquearla.
+OnboardingCopy.oemStepText(HONOR, NEVER_SLEEP) → Pulsa ABRIR BATERÍA, entra en «Límites de uso en segundo plano» › «Aplicaciones que nunca se suspenden» y añade Reelometer.
+OnboardingCopy.oemStepText(HONOR, OTHER_MANAGERS) → Si tu móvil tiene «Inicio automático» o «Apps protegidas», activa Reelometer también ahí.
+OnboardingCopy.oemStepText(HONOR, TOGGLE_SERVICE) → Pulsa ABRIR ACCESIBILIDAD, apaga «Usar Reelometer» y vuelve a encenderlo.
+OnboardingCopy.oemStepText(HONOR, UNUSED_APPS) → Pulsa ABRIR INFORMACIÓN DE LA APP y apaga «Pausar actividad de la app si no se usa» (en móviles más antiguos, «Quitar permisos si no se usa la aplicación»). Reelometer trabaja sin que la abras, y Android puede tomarla por una app sin usar.
+OnboardingCopy.oemStepText(HUAWEI, AUTOSTART) → Pulsa ABRIR INICIO DE APPS, busca Reelometer, desactiva «Gestionar automáticamente» y deja encendidos los tres interruptores.
+OnboardingCopy.oemStepText(HUAWEI, BATTERY) → Pulsa ABRIR INFORMACIÓN DE LA APP, entra en «Batería» y elige «Sin restricciones».
+OnboardingCopy.oemStepText(HUAWEI, LOCK_RECENTS) → En la multitarea, desliza hacia abajo la tarjeta de Reelometer para bloquearla.
+OnboardingCopy.oemStepText(HUAWEI, NEVER_SLEEP) → Pulsa ABRIR BATERÍA, entra en «Límites de uso en segundo plano» › «Aplicaciones que nunca se suspenden» y añade Reelometer.
+OnboardingCopy.oemStepText(HUAWEI, OTHER_MANAGERS) → Si tu móvil tiene «Inicio automático» o «Apps protegidas», activa Reelometer también ahí.
+OnboardingCopy.oemStepText(HUAWEI, TOGGLE_SERVICE) → Pulsa ABRIR ACCESIBILIDAD, apaga «Usar Reelometer» y vuelve a encenderlo.
+OnboardingCopy.oemStepText(HUAWEI, UNUSED_APPS) → Pulsa ABRIR INFORMACIÓN DE LA APP y apaga «Pausar actividad de la app si no se usa» (en móviles más antiguos, «Quitar permisos si no se usa la aplicación»). Reelometer trabaja sin que la abras, y Android puede tomarla por una app sin usar.
+OnboardingCopy.oemStepText(SAMSUNG, AUTOSTART) → Pulsa ABRIR INICIO AUTOMÁTICO y activa Reelometer.
+OnboardingCopy.oemStepText(SAMSUNG, BATTERY) → Pulsa ABRIR INFORMACIÓN DE LA APP, entra en «Batería» y elige «Sin restricciones».
+OnboardingCopy.oemStepText(SAMSUNG, LOCK_RECENTS) → En Recientes, toca el icono de Reelometer y elige «Mantener abierta».
+OnboardingCopy.oemStepText(SAMSUNG, NEVER_SLEEP) → Pulsa ABRIR BATERÍA, entra en «Límites de uso en segundo plano» › «Aplicaciones que nunca se suspenden» y añade Reelometer.
+OnboardingCopy.oemStepText(SAMSUNG, OTHER_MANAGERS) → Si tu móvil tiene «Inicio automático» o «Apps protegidas», activa Reelometer también ahí.
+OnboardingCopy.oemStepText(SAMSUNG, TOGGLE_SERVICE) → Pulsa ABRIR ACCESIBILIDAD, apaga «Usar Reelometer» y vuelve a encenderlo.
+OnboardingCopy.oemStepText(SAMSUNG, UNUSED_APPS) → Pulsa ABRIR INFORMACIÓN DE LA APP y apaga «Pausar actividad de la app si no se usa» (en móviles más antiguos, «Quitar permisos si no se usa la aplicación»). Reelometer trabaja sin que la abras, y Android puede tomarla por una app sin usar.
+OnboardingCopy.oemStepText(STOCK, AUTOSTART) → Pulsa ABRIR INICIO AUTOMÁTICO y activa Reelometer.
+OnboardingCopy.oemStepText(STOCK, BATTERY) → Pulsa ABRIR INFORMACIÓN DE LA APP, entra en «Batería» y elige «Sin restricciones».
+OnboardingCopy.oemStepText(STOCK, LOCK_RECENTS) → En la multitarea, mantén pulsada la tarjeta de Reelometer y toca el candado.
+OnboardingCopy.oemStepText(STOCK, NEVER_SLEEP) → Pulsa ABRIR BATERÍA, entra en «Límites de uso en segundo plano» › «Aplicaciones que nunca se suspenden» y añade Reelometer.
+OnboardingCopy.oemStepText(STOCK, OTHER_MANAGERS) → Si tu móvil tiene «Inicio automático» o «Apps protegidas», activa Reelometer también ahí.
+OnboardingCopy.oemStepText(STOCK, TOGGLE_SERVICE) → Pulsa ABRIR ACCESIBILIDAD, apaga «Usar Reelometer» y vuelve a encenderlo.
+OnboardingCopy.oemStepText(STOCK, UNUSED_APPS) → Pulsa ABRIR INFORMACIÓN DE LA APP y apaga «Pausar actividad de la app si no se usa» (en móviles más antiguos, «Quitar permisos si no se usa la aplicación»). Reelometer trabaja sin que la abras, y Android puede tomarla por una app sin usar.
+OnboardingCopy.oemStepText(VIVO, AUTOSTART) → Pulsa ABRIR INICIO AUTOMÁTICO y activa Reelometer.
+OnboardingCopy.oemStepText(VIVO, BATTERY) → Pulsa ABRIR BATERÍA, entra en «Consumo alto en segundo plano» y permite Reelometer.
+OnboardingCopy.oemStepText(VIVO, LOCK_RECENTS) → En la multitarea, desliza hacia abajo la tarjeta de Reelometer para bloquearla.
+OnboardingCopy.oemStepText(VIVO, NEVER_SLEEP) → Pulsa ABRIR BATERÍA, entra en «Límites de uso en segundo plano» › «Aplicaciones que nunca se suspenden» y añade Reelometer.
+OnboardingCopy.oemStepText(VIVO, OTHER_MANAGERS) → Si tu móvil tiene «Inicio automático» o «Apps protegidas», activa Reelometer también ahí.
+OnboardingCopy.oemStepText(VIVO, TOGGLE_SERVICE) → Pulsa ABRIR ACCESIBILIDAD, apaga «Usar Reelometer» y vuelve a encenderlo.
+OnboardingCopy.oemStepText(VIVO, UNUSED_APPS) → Pulsa ABRIR INFORMACIÓN DE LA APP y apaga «Pausar actividad de la app si no se usa» (en móviles más antiguos, «Quitar permisos si no se usa la aplicación»). Reelometer trabaja sin que la abras, y Android puede tomarla por una app sin usar.
+OnboardingCopy.oemStepText(XIAOMI, AUTOSTART) → Pulsa ABRIR INICIO AUTOMÁTICO y activa Reelometer. En HyperOS también está en Ajustes › Apps › Permisos › «Inicio automático».
+OnboardingCopy.oemStepText(XIAOMI, BATTERY) → Pulsa ABRIR AHORRO DE BATERÍA y elige «Sin restricciones».
+OnboardingCopy.oemStepText(XIAOMI, LOCK_RECENTS) → En la multitarea, mantén pulsada la tarjeta de Reelometer y toca el candado.
+OnboardingCopy.oemStepText(XIAOMI, NEVER_SLEEP) → Pulsa ABRIR BATERÍA, entra en «Límites de uso en segundo plano» › «Aplicaciones que nunca se suspenden» y añade Reelometer.
+OnboardingCopy.oemStepText(XIAOMI, OTHER_MANAGERS) → Si tu móvil tiene «Inicio automático» o «Apps protegidas», activa Reelometer también ahí.
+OnboardingCopy.oemStepText(XIAOMI, TOGGLE_SERVICE) → Pulsa ABRIR ACCESIBILIDAD, apaga «Usar Reelometer» y vuelve a encenderlo.
+OnboardingCopy.oemStepText(XIAOMI, UNUSED_APPS) → Pulsa ABRIR INFORMACIÓN DE LA APP y apaga «Pausar actividad de la app si no se usa» (en móviles más antiguos, «Quitar permisos si no se usa la aplicación»). Reelometer trabaja sin que la abras, y Android puede tomarla por una app sin usar.
+OnboardingCopy.oemSteps(COLOROS) → En Recientes, abre el menú de la tarjeta de Reelometer y elige «Bloquear».
+OnboardingCopy.oemSteps(COLOROS) → Pulsa ABRIR ACCESIBILIDAD, apaga «Usar Reelometer» y vuelve a encenderlo.
+OnboardingCopy.oemSteps(COLOROS) → Pulsa ABRIR INFORMACIÓN DE LA APP, entra en «Uso de batería» y activa «Permitir actividad en segundo plano».
+OnboardingCopy.oemSteps(COLOROS) → Pulsa ABRIR INICIO AUTOMÁTICO y activa Reelometer.
+OnboardingCopy.oemSteps(HONOR) → En la multitarea, desliza hacia abajo la tarjeta de Reelometer para bloquearla.
+OnboardingCopy.oemSteps(HONOR) → Pulsa ABRIR ACCESIBILIDAD, apaga «Usar Reelometer» y vuelve a encenderlo.
+OnboardingCopy.oemSteps(HONOR) → Pulsa ABRIR INICIO DE APPS, busca Reelometer, desactiva «Gestionar automáticamente» y deja encendidos los tres interruptores.
+OnboardingCopy.oemSteps(HUAWEI) → En la multitarea, desliza hacia abajo la tarjeta de Reelometer para bloquearla.
+OnboardingCopy.oemSteps(HUAWEI) → Pulsa ABRIR ACCESIBILIDAD, apaga «Usar Reelometer» y vuelve a encenderlo.
+OnboardingCopy.oemSteps(HUAWEI) → Pulsa ABRIR INICIO DE APPS, busca Reelometer, desactiva «Gestionar automáticamente» y deja encendidos los tres interruptores.
+OnboardingCopy.oemSteps(SAMSUNG) → En Recientes, toca el icono de Reelometer y elige «Mantener abierta».
+OnboardingCopy.oemSteps(SAMSUNG) → Pulsa ABRIR ACCESIBILIDAD, apaga «Usar Reelometer» y vuelve a encenderlo.
+OnboardingCopy.oemSteps(SAMSUNG) → Pulsa ABRIR BATERÍA, entra en «Límites de uso en segundo plano» › «Aplicaciones que nunca se suspenden» y añade Reelometer.
+OnboardingCopy.oemSteps(SAMSUNG) → Pulsa ABRIR INFORMACIÓN DE LA APP, entra en «Batería» y elige «Sin restricciones».
+OnboardingCopy.oemSteps(STOCK) → Pulsa ABRIR ACCESIBILIDAD, apaga «Usar Reelometer» y vuelve a encenderlo.
+OnboardingCopy.oemSteps(STOCK) → Pulsa ABRIR INFORMACIÓN DE LA APP, entra en «Batería» y elige «Sin restricciones».
+OnboardingCopy.oemSteps(STOCK) → Si tu móvil tiene «Inicio automático» o «Apps protegidas», activa Reelometer también ahí.
+OnboardingCopy.oemSteps(VIVO) → En la multitarea, desliza hacia abajo la tarjeta de Reelometer para bloquearla.
+OnboardingCopy.oemSteps(VIVO) → Pulsa ABRIR ACCESIBILIDAD, apaga «Usar Reelometer» y vuelve a encenderlo.
+OnboardingCopy.oemSteps(VIVO) → Pulsa ABRIR BATERÍA, entra en «Consumo alto en segundo plano» y permite Reelometer.
+OnboardingCopy.oemSteps(VIVO) → Pulsa ABRIR INICIO AUTOMÁTICO y activa Reelometer.
+OnboardingCopy.oemSteps(XIAOMI) → En la multitarea, mantén pulsada la tarjeta de Reelometer y toca el candado.
+OnboardingCopy.oemSteps(XIAOMI) → Pulsa ABRIR ACCESIBILIDAD, apaga «Usar Reelometer» y vuelve a encenderlo.
+OnboardingCopy.oemSteps(XIAOMI) → Pulsa ABRIR AHORRO DE BATERÍA y elige «Sin restricciones».
+OnboardingCopy.oemSteps(XIAOMI) → Pulsa ABRIR INICIO AUTOMÁTICO y activa Reelometer. En HyperOS también está en Ajustes › Apps › Permisos › «Inicio automático».
+OnboardingCopy.oemTitle(COLOROS) → Pasos para OPPO, realme y OnePlus
+OnboardingCopy.oemTitle(HONOR) → Pasos para Honor
+OnboardingCopy.oemTitle(HUAWEI) → Pasos para Huawei
+OnboardingCopy.oemTitle(SAMSUNG) → Pasos para Samsung
+OnboardingCopy.oemTitle(STOCK) → Pasos para tu móvil
+OnboardingCopy.oemTitle(VIVO) → Pasos para vivo e iQOO
+OnboardingCopy.oemTitle(XIAOMI) → Pasos para Xiaomi, Redmi y POCO
 OnboardingCopy.step → Android preguntará si permites que Reelometer «pueda controlar totalmente tu dispositivo». Es el aviso estándar de cualquier servicio de accesibilidad: Reelometer mira y cuenta, y solo pulsa por ti si usas el envío rápido de Instagram o TikTok. Toca «Permitir».
 OnboardingCopy.step → Busca «Reelometer» en «Aplicaciones descargadas». En algunos móviles está dentro de «Aplicaciones instaladas» o «Servicios instalados».
 OnboardingCopy.step → En «Información de la aplicación», toca el menú ⋮ de arriba a la derecha.
@@ -9800,8 +9962,8 @@ SettingsCopy.NOTIFICATIONS_ALLOW → PERMITIR AVISOS
 SettingsCopy.NOTIFICATIONS_ASK → Para avisarte, Android necesita tu permiso. Solo lo uso para esto.
 SettingsCopy.NOTIFICATIONS_BLOCKED → Android tiene los avisos de Reelometer desactivados. Actívalos en los ajustes del sistema para recibirlos.
 SettingsCopy.NOTIFICATIONS_OPEN → ABRIR AJUSTES
-SettingsCopy.PASSPORT_DESCRIPTION → Una pestaña más con Flap, niveles y sellos que se ganan viendo menos. Si lo apagas, desaparece del todo: la pestaña, su aviso y Flap en el widget.
-SettingsCopy.PASSPORT_LABEL → Modo pasaporte
+SettingsCopy.PASSPORT_DESCRIPTION → Una pestaña con Flap: cada día empieza a tope y se pone peor con cada vídeo que ves, y a medianoche revive. También sale en el widget grande. Si lo apagas, desaparece de los dos sitios.
+SettingsCopy.PASSPORT_LABEL → Flap, la mascota
 SettingsCopy.PRIVACY_PARAGRAPHS → Reelometer cuenta lo que ves en TikTok, Instagram y YouTube con el servicio de accesibilidad de Android. De cada vídeo guarda la app, la hora, cuánto lo viste, el creador y la descripción.
 SettingsCopy.PRIVACY_PARAGRAPHS → Si desactivas el servicio, deja de contar. Si borras los datos o desinstalas la app, desaparecen.
 SettingsCopy.PRIVACY_PARAGRAPHS → Todo se guarda en este móvil. No hay cuentas, ni servidores, ni anuncios, ni analítica. La app no tiene permiso para usar internet.
@@ -9834,6 +9996,7 @@ SettingsCopy.SERVICE_CONNECT → CONECTAR
 SettingsCopy.SERVICE_DISCLOSURE_LINK → QUÉ LEE Y PARA QUÉ
 SettingsCopy.SERVICE_DISCONNECTED → Sin el servicio no cuento nada. Actívalo en Accesibilidad.
 SettingsCopy.SERVICE_LINE → Permiso de accesibilidad
+SettingsCopy.SHOW_ALL_TABS → ENSEÑAR TODAS LAS PESTAÑAS
 SettingsCopy.SIGNATURE → Hecho a ratos de quince segundos.
 SettingsCopy.THEME_DARK → OSCURO
 SettingsCopy.THEME_LIGHT → CLARO
@@ -10926,12 +11089,17 @@ TodayCopy.EMPTY_CATEGORIES → Sin categorías todavía.
 TodayCopy.EMPTY_CREATORS → Sin creadores todavía.
 TodayCopy.EMPTY_HOURS → Sin actividad todavía.
 TodayCopy.EMPTY_PLATFORMS → Ninguna app todavía.
+TodayCopy.NEWS_DISMISS → ENTENDIDO
+TodayCopy.NEWS_DISMISS_DESCRIPTION → Cerrar esta novedad
+TodayCopy.REVEAL_ALL → ENSEÑARLO TODO YA
+TodayCopy.REVEAL_ALL_DESCRIPTION → Enseñar ya todas las pestañas
 TodayCopy.SECTION_CATEGORIES → LO QUE MÁS VES
 TodayCopy.SECTION_CREATORS → QUIÉN TE LO PONE
 TodayCopy.SECTION_HOURS → TU DÍA, HORA A HORA
 TodayCopy.SECTION_PLATFORMS → PLATAFORMAS
 TodayCopy.SERVICE_OFF_DESCRIPTION → Sin señal: el servicio de Reelometer está desconectado.
 TodayCopy.SERVICE_OFF_LABEL → SIN SEÑAL
+TodayCopy.SERVICE_STALLED_ACTION → ARREGLAR
 TodayCopy.SINCE_BAND_ACTION → Ver tus estadísticas
 TodayCopy.comparison.description → 134 veces tu domingo medio a esta hora.
 TodayCopy.comparison.description → 134 veces tu domingo medio.
@@ -25895,6 +26063,15 @@ TodayCopy.headline(99, 60000, 9, 5, false) → 94 vídeos por encima de tu obje
 TodayCopy.headline(99, 60000, 9, 5, true) → Primer día contado: 99 vídeos y un minuto. Mañana ya tendrás con qué compararte.
 TodayCopy.headline(99, 60000, 9, null, false) → Llevas un minuto. El día todavía no ha dicho su última palabra.
 TodayCopy.headline(99, 60000, 9, null, true) → Primer día contado: 99 vídeos y un minuto. Mañana ya tendrás con qué compararte.
+TodayCopy.newsAction(PASSPORT) → VER A FLAP
+TodayCopy.newsAction(STATS) → VER ESTADÍSTICAS
+TodayCopy.newsAction(WRAPPED) → VER EL RESUMEN
+TodayCopy.newsText(PASSPORT) → Flap empieza cada día a tope y cada vídeo que ves le quita vida. A medianoche revive. Si no va contigo, se apaga en Ajustes.
+TodayCopy.newsText(STATS) → Ya tienes varios días contados. En Estadísticas, cada día es una barra: mantén el dedo encima para ver su cifra.
+TodayCopy.newsText(WRAPPED) → Ya tienes un resumen de tu semana: contado como una historia y con ticket para compartir, si te atreves.
+TodayCopy.newsTitle(PASSPORT) → NUEVO · FLAP
+TodayCopy.newsTitle(STATS) → NUEVO · ESTADÍSTICAS
+TodayCopy.newsTitle(WRAPPED) → NUEVO · RESUMEN
 TodayCopy.peakHour → HORA PUNTA 23:00 · 0 VÍDEOS
 TodayCopy.peakHour → HORA PUNTA 23:00 · 1.234 VÍDEOS
 TodayCopy.peakHour → HORA PUNTA 23:00 · 10.000 VÍDEOS
@@ -26003,6 +26180,11 @@ TodayCopy.platformValue → 99 · 3 H
 TodayCopy.platformValue → 99 · 47 MIN
 TodayCopy.platformValue → 99 · 5.000 H
 TodayCopy.platformValue → 99 · 61 H
+TodayCopy.revealHint([PASSPORT]) → Flap aparecerá más adelante.
+TodayCopy.revealHint([STATS, WRAPPED, PASSPORT]) → Estadísticas, Resumen y Flap irán apareciendo según cuentes días.
+TodayCopy.revealHint([STATS, WRAPPED]) → Estadísticas y Resumen irán apareciendo según cuentes días.
+TodayCopy.revealHint([WRAPPED, PASSPORT]) → Resumen y Flap aparecerán en cuanto tengas una semana contada.
+TodayCopy.revealHint([WRAPPED]) → El Resumen aparecerá en cuanto tengas una semana contada.
 TodayCopy.screenTime(0, 0) → 0 MIN DE PANTALLA
 TodayCopy.screenTime(0, 1) → 0 MIN DE PANTALLA · 1 COMPARTIDO
 TodayCopy.screenTime(0, 10) → 0 MIN DE PANTALLA · 10 COMPARTIDOS
@@ -26339,6 +26521,7 @@ TodayCopy.sinceBandDescription → Desde el 3 de marzo de 2025: 9 vídeos y 59�
 TodayCopy.sinceBandDescription → Desde el 3 de marzo de 2025: 9 vídeos y 61 horas.
 TodayCopy.sinceBandDescription → Desde el 3 de marzo de 2025: 9 vídeos y un minuto.
 TodayCopy.sinceBandDescription → Desde el 3 de marzo de 2025: 9 vídeos y una hora y 12 minutos.
+TourCopy.text(SETTINGS, moreToCome) → Objetivo, avisos y tema, aquí arriba. Las demás pantallas irán apareciendo con los días.
 WidgetCopy.DESCRIPTION_OFF → Reelometer, sin señal: el servicio está desconectado.
 WidgetCopy.LABEL → HOY
 WidgetCopy.NO_SIGNAL → SIN SEÑAL

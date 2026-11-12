@@ -7,10 +7,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.reelometro.app.data.settings.DiscoveryFeature
 
 /**
  * Pestaña **Hoy**. [onConnectService] abre la pantalla de conectar el servicio (divulgación
  * destacada + guía): desde aquí nunca se abren directamente los ajustes del sistema.
+ * [onOpenFeature] abre la pestaña que presenta la novedad (descubrimiento progresivo).
  */
 @Composable
 fun TodayRoute(
@@ -18,6 +20,7 @@ fun TodayRoute(
     onOpenStats: () -> Unit,
     onOpenSettings: () -> Unit,
     onConnectService: () -> Unit,
+    onOpenFeature: (DiscoveryFeature) -> Unit = {},
 ) {
     val context = LocalContext.current
     val viewModel: TodayViewModel = viewModel(factory = TodayViewModel.factory(context))
@@ -31,5 +34,11 @@ fun TodayRoute(
         onOpenSettings = onOpenSettings,
         onConnectService = onConnectService,
         onRetry = viewModel::retry,
+        onNewsAction = { feature ->
+            viewModel.openNews(feature)
+            onOpenFeature(feature)
+        },
+        onNewsDismiss = viewModel::dismissNews,
+        onRevealAll = viewModel::showAll,
     )
 }

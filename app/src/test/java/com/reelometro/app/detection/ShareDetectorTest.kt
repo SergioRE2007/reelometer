@@ -22,6 +22,19 @@ class ShareDetectorTest {
     }
 
     @Test
+    fun `el boton compartir cuenta en frances italiano y portugues`() {
+        assertTrue(isShare(desc("Partager", rightColumn)))
+        assertTrue(isShare(desc("Partager la vidéo, 1 234", rightColumn)))
+        assertTrue(isShare(desc("Condividi", rightColumn)))
+        assertTrue(isShare(desc("Compartilhar", rightColumn)))
+        assertTrue(isShare(desc("Envoyer", rightColumn)))
+        assertTrue(isShare(desc("Invia", rightColumn)))
+        assertFalse(isShare(desc("Commentaires, 345", rightColumn)))
+        assertFalse(isShare(desc("Invia messaggio", rightColumn)))
+        assertFalse(isShare(desc("Enviar mensagem", rightColumn)))
+    }
+
+    @Test
     fun `cuenta por id o por la etiqueta de un hijo o un antepasado cercano`() {
         assertTrue(isShare(FakeNode(viewId = "com.instagram.android:id/direct_share_button", bounds = rightColumn)))
         assertTrue(isShare(FakeNode(bounds = rightColumn, children = listOf(desc("Compartir", rightColumn)))))

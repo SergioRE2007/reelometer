@@ -6,7 +6,6 @@ import androidx.room.withTransaction
 import com.reelometro.app.data.export.CsvExporter
 import com.reelometro.app.data.export.CsvImport
 import com.reelometro.app.data.export.CsvParse
-import com.reelometro.app.data.export.CsvReader
 import com.reelometro.app.data.export.ImportError
 import com.reelometro.app.data.export.ImportMode
 import com.reelometro.app.data.export.ImportPreview
@@ -63,8 +62,8 @@ import java.time.ZonedDateTime
  *
  * @param dailyGoal objetivo diario («como mucho N vídeos»; `null` o ≤ 0 = sin objetivo). En la app,
  *   `settings.settings.map { it.dailyGoal }`.
- * @param userData otros datos del usuario que van en el CSV y se borran con BORRAR TODO (el
- *   pasaporte). Es una lambda perezosa para evitar el ciclo repositorio ↔ pasaporte en `ReelometroApp`.
+ * @param userData otros datos del usuario que se borran con BORRAR TODO y con SUSTITUIR TODO (lo
+ *   último visto de Flap). Es una lambda perezosa para evitar el ciclo repositorio ↔ Flap en `ReelometroApp`.
  */
 class ReelRepository(
     private val database: AppDatabase,
@@ -260,15 +259,11 @@ class ReelRepository(
             .flowOn(dispatcher)
 
     /**
-     * Exporta todo a CSV (UTF-8 con BOM, `;`, para Excel en español; ver [CsvExporter]): los vídeos
-     * y, detrás, el bloque de cada parte de [userData] (el pasaporte).
+     * Exporta todo a CSV (UTF-8 con BOM, `;`, para Excel en español; ver [CsvExporter]): los vídeos,
+     * los envíos y los compartidos sin vídeo. Flap no va: se recalcula del historial.
      * No cierra [out]. Devuelve el número de vídeos exportados.
      */
-    suspend fun exportCsv(out: OutputStream): Int {
-        val videos = exporter.export(out)
-        userData().forEach { it.exportCsv(out) }
-        return videos
-    }
+    suspend fun exportCsv(out: OutputStream): Int = exporter.export(out)
 
     /**
      * Lee un CSV de exportación de cualquier versión ([CsvImport]) fuera del hilo principal y cuenta
@@ -282,7 +277,6 @@ class ReelRepository(
             is CsvParse.Ok -> {
                 val csv = parse.csv
                 val present = splitVideos(csv.videos, dao.viewKeys()).second
-                val titles = userData().map { CsvReader.normalize(it.blockTitle) }.toSet()
                 CsvRead.Ready(
                     csv,
                     ImportPreview(
@@ -291,7 +285,6 @@ class ReelRepository(
                         from = csv.from,
                         to = csv.to,
                         badLines = csv.badLines,
-                        hasPassport = csv.blocks.any { CsvReader.normalize(it.title) in titles },
                     ),
                 )
             }
@@ -304,10 +297,11 @@ class ReelRepository(
      * - [ImportMode.ADD]: suma lo nuevo; un vídeo ya guardado (misma plataforma y mismo instante; ver
      *   [CsvImport.splitNew]) no se repite, ni un envío o un compartido sin vídeo igual. Importar dos veces el
      *   mismo fichero no añade nada.
-     * - [ImportMode.REPLACE]: borra antes los datos de uso y los de [userData] (como BORRAR TODO).
+     * - [ImportMode.REPLACE]: borra antes los datos de uso y, después, los de [userData] (como BORRAR TODO).
      * Cada vídeo lleva un `id` como los del detector (`inicio × 1000 + n`, sin chocar con los que hay),
      * su `day`/`minuteOfDay` con la zona de la columna `zona` o la del sistema, y sus `compartido`
-     * como compartidos en su inicio. Después, cada parte de [userData] recibe su bloque.
+     * como compartidos en su inicio. Los bloques que no son de vídeos (el PASAPORTE de los CSV de antes
+     * de la 1.12.0) se ignoran.
      */
     suspend fun importCsv(csv: ParsedCsv, mode: ImportMode): ImportResult {
         val zone = clock.zone
@@ -315,14 +309,13 @@ class ReelRepository(
             if (mode == ImportMode.REPLACE) dao.deleteAll()
             writeImport(csv, zone, mode)
         }
-        val blocks = csv.blocks.associateBy { CsvReader.normalize(it.title) }
-        // Los vídeos ya están guardados: un fallo de una parte (el pasaporte) no puede deshacerlos ni
-        // presentarse como «no ha cambiado nada». Lo suyo se recalcula del historial igualmente.
-        userData().forEach { part ->
-            runCatching {
-                if (mode == ImportMode.REPLACE) part.clearAll()
-                part.importBlock(blocks[CsvReader.normalize(part.blockTitle)])
-            }.onFailure { if (it is kotlinx.coroutines.CancellationException) throw it }
+        // Los vídeos ya están guardados: un fallo de una parte (lo visto de Flap) no puede deshacerlos ni
+        // presentarse como «no ha cambiado nada». Lo demás de Flap se recalcula del historial igualmente.
+        if (mode == ImportMode.REPLACE) {
+            userData().forEach { part ->
+                runCatching { part.clearAll() }
+                    .onFailure { if (it is kotlinx.coroutines.CancellationException) throw it }
+            }
         }
         return ImportResult(mode, imported = counts.first, alreadyPresent = counts.second, badLines = csv.badLines)
     }
@@ -445,7 +438,7 @@ class ReelRepository(
     internal var importFault: (() -> Unit)? = null
 
     /**
-     * Borra todos los datos de uso (vídeos, compartidos y envíos) y los de [userData] (el pasaporte).
+     * Borra todos los datos de uso (vídeos, compartidos y envíos) y los de [userData] (lo visto de Flap).
      * No toca los ajustes.
      */
     suspend fun clearAll() {

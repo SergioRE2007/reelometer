@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.reelometro.app.data.game.GameDao
 
 /**
  * Base de datos local (Room). Esquemas exportados en `app/schemas/`; migraciones en [Migrations].
@@ -16,9 +15,6 @@ import com.reelometro.app.data.game.GameDao
 abstract class AppDatabase : RoomDatabase() {
     abstract fun reelDao(): ReelDao
     abstract fun statsDao(): StatsDao
-
-    /** Consultas del modo Pasaporte (solo lectura; no cambia el esquema). */
-    abstract fun gameDao(): GameDao
 
     companion object {
         const val NAME = "reelometro.db"

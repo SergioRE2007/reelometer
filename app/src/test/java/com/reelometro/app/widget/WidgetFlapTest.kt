@@ -2,6 +2,7 @@ package com.reelometro.app.widget
 
 import androidx.compose.ui.unit.DpSize
 import com.reelometro.app.game.FlapMood
+import com.reelometro.app.game.FlapRules
 import com.reelometro.app.ui.components.flap.FlapGlyphMetrics
 import com.reelometro.app.ui.components.flap.boardWidthEm
 import org.junit.Assert.assertEquals
@@ -84,11 +85,35 @@ class WidgetFlapTest {
     }
 
     @Test
-    fun `sin señal o con el modo pasaporte apagado no hay Flap`() {
+    fun `sin señal o con Flap apagado no hay Flap`() {
         assertNull(WidgetModel.of(data(0, on = false)).flap)
         assertNull(WidgetModel.of(data(212, flap = null)).flap)
         assertNull(WidgetModel.of(null).flap)
         assertEquals(0f, layout(WidgetSizes.LARGE, WidgetModel.of(data(0, on = false))).flapDp)
-        assertEquals(FlapMood.ZOMBI, WidgetModel.of(data(212, flap = FlapMood.ZOMBI)).flap)
+        assertEquals(FlapMood.KO, WidgetModel.of(data(212, flap = FlapMood.KO)).flap)
+    }
+
+    @Test
+    fun `Flap del widget sale de los videos de hoy frente al objetivo, sin historial`() {
+        // Con objetivo 40: a tope por debajo de 20, media vida en 40 (CANSADO), enfermo pasado 40, KO en 80.
+        assertEquals(FlapMood.EN_FORMA, WidgetData.flapFor(true, 0, 40))
+        assertEquals(FlapMood.EN_FORMA, WidgetData.flapFor(true, 19, 40))
+        assertEquals(FlapMood.NORMAL, WidgetData.flapFor(true, 20, 40))
+        assertEquals(FlapMood.CANSADO, WidgetData.flapFor(true, 40, 40))
+        assertEquals(FlapMood.ENFERMO, WidgetData.flapFor(true, 41, 40))
+        assertEquals(FlapMood.KO, WidgetData.flapFor(true, 80, 40))
+        for (count in listOf(0, 7, 41, 79, 80, 1_234)) {
+            assertEquals("$count", FlapRules.moodFor(count, 40), WidgetData.flapFor(true, count, 40))
+        }
+    }
+
+    @Test
+    fun `sin objetivo Flap aguanta el de por defecto y apagado no se calcula`() {
+        val limit = FlapRules.DEFAULT_LIMIT
+        assertEquals(FlapRules.moodFor(212, limit), WidgetData.flapFor(true, 212, null))
+        assertEquals(FlapMood.CANSADO, WidgetData.flapFor(true, limit, null))
+        assertEquals(FlapMood.KO, WidgetData.flapFor(true, 2 * limit, 0))
+        assertNull(WidgetData.flapFor(false, 0, 40))
+        assertNull(WidgetData.flapFor(false, 5_000, null))
     }
 }

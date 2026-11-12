@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Rendimiento del servicio en la pantalla oculta de Calibración y en el registro que se comparte (lo leen testers y
+  desarrollo; copy/CalibrationMetricsCopy.kt). Formato de consola, «clave valor», sin plurales. Las cifras llegan ya
+  formateadas. «onAccessibilityEvent» no se traduce. El interruptor CAPTURAR se cita con el mismo texto que
+  state_calibration_capture (copy_state.xml).
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="es">
+
+    <string name="calibration_metrics_key">RENDIMIENTO</string>
+    <string name="calibration_metrics_summary">%1$s ev/min · %2$s\u00A0ms de media (máx. %3$s) · %4$s nodos por lectura</string>
+    <string name="calibration_metrics_title">Rendimiento del servicio: últimos %1$s, %2$s con actividad (los ritmos por minuto van sobre ese rato) · conexiones del servicio: %3$s</string>
+    <string name="calibration_metrics_events">%1$s · eventos %2$s (%3$s/min) · desplazamiento %4$s · ventana %5$s · clic %6$s · contenido %7$s</string>
+    <string name="calibration_metrics_content">Cambios de contenido fuera de un envío rápido: %1$s (deberían ser 0; los de cada app, arriba)</string>
+    <string name="calibration_metrics_handler">onAccessibilityEvent: eventos %1$s · media %2$s\u00A0ms · máx. %3$s\u00A0ms · más de 16\u00A0ms: %4$s</string>
+    <string name="calibration_metrics_lag">Retraso de entrega de los eventos: máx. %1$s\u00A0ms · de 2\u00A0s o más: %2$s (si hay alguno, el proceso estuvo congelado o sin CPU)</string>
+    <string name="calibration_metrics_reads">Lecturas de pantalla en %1$s: %2$s (sin nada: %3$s) · nodos de media %4$s, máx. %5$s · media %6$s\u00A0ms, máx. %7$s\u00A0ms</string>
+    <string name="calibration_metrics_ipc">Pedidos al sistema: hijos %1$s · padres %2$s · búsquedas %3$s</string>
+    <string name="calibration_metrics_presence">Comprobaciones de presencia (hilo principal): %1$s · media %2$s\u00A0ms · máx. %3$s\u00A0ms</string>
+    <string name="calibration_metrics_unreadable">Lecturas de pantalla sin nada legible (otra ventana encima, sin raíz u otra app): %1$s</string>
+    <string name="calibration_metrics_quick">Envío rápido: pasos %1$s · media %2$s\u00A0ms · máx. %3$s\u00A0ms · hijos pedidos %4$s</string>
+    <string name="calibration_metrics_capturing">%1$s de los eventos llegaron con CAPTURAR encendido: sus tiempos incluyen el propio registro.</string>
+    <string name="calibration_metrics_none">Sin datos del servicio desde que arrancó.</string>
+    <string name="calibration_metrics_rate_unknown">—</string>
+    <string name="calibration_redacted">[contacto %1$s]</string>
+
+    <!-- Cabecera del registro: últimos cierres de la app. Línea: fecha y hora · categoría · enlazado o no · motivo/submotivo (números de Android) · descripción del sistema. Sin líneas, una sola frase: no hay ninguno (none), esta versión de Android no los guarda (unavailable, antes de Android 11) o no se han podido leer (failed). other_app sustituye en la descripción el nombre de paquete de otra app. -->
+    <string name="calibration_exits_key">CIERRES</string>
+    <string name="calibration_exits_title">Últimos cierres de la app (los guarda Android, el más reciente primero):</string>
+    <string name="calibration_exits_none">Android no guarda ningún cierre de la app.</string>
+    <string name="calibration_exits_unavailable">Esta versión de Android no guarda los cierres de la app: hace falta Android 11 o posterior.</string>
+    <string name="calibration_exits_failed">No se han podido leer los cierres de la app que guarda Android.</string>
+    <string name="calibration_exit_line">%1$s · %2$s · %3$s · motivo %4$s/%5$s · %6$s</string>
+    <string name="calibration_exit_when">%1$s %2$s</string>
+    <string name="calibration_exit_bound">enlazado</string>
+    <string name="calibration_exit_unbound">sin enlazar</string>
+    <string name="calibration_exit_no_description">sin descripción</string>
+    <string name="calibration_exit_other_app">[otra app %1$s]</string>
+    <string name="calibration_exit_cat_recents">limpiar recientes</string>
+    <string name="calibration_exit_cat_low_memory">falta de memoria</string>
+    <string name="calibration_exit_cat_system">sistema</string>
+    <string name="calibration_exit_cat_restricted">batería o restricción</string>
+    <string name="calibration_exit_cat_user">detenida o datos borrados</string>
+    <string name="calibration_exit_cat_crash">fallo de la app</string>
+    <string name="calibration_exit_cat_ignored">cierre normal</string>
+
+    <!-- Memoria del proceso al morir, detrás de la línea del cierre: %1$s = la línea, %2$s = PSS en MB, %3$s = RSS en MB (RSS no se traduce). -->
+    <string name="calibration_exit_memory">%1$s · memoria %2$s\u00A0MB (RSS %3$s\u00A0MB)</string>
+
+    <!-- Cabecera del registro: estado del sistema. Lo que Android dice de la app y lo que el servicio apunta de su vida, para saber por qué deja de contar tras un rato sin usar el móvil. Formato «clave: valor». En conexiones y desconexiones, %1$s es la fecha y la hora. «standby bucket» es el nombre de Android. -->
+    <string name="calibration_system_title">Estado del sistema (lo que Android dice de la app):</string>
+    <string name="calibration_system_battery">Batería sin restricciones: %1$s · uso en segundo plano restringido: %2$s · ahorro de batería encendido: %3$s</string>
+    <string name="calibration_system_bucket">Grupo de uso (standby bucket): %1$s</string>
+    <string name="calibration_system_hibernation">Exenta de «Pausar actividad de la app si no se usa»: %1$s</string>
+    <string name="calibration_system_process">Proceso arrancado hace %1$s · avisos permitidos: %2$s</string>
+    <string name="calibration_system_connections">Conexiones del servicio (la más reciente primero): %1$s</string>
+    <string name="calibration_system_disconnections">Desconexiones del servicio de las que se enteró: %1$s</string>
+    <string name="calibration_system_last_video">Último vídeo guardado: %1$s</string>
+    <string name="calibration_system_last_video_none">Último vídeo guardado: ninguno</string>
+    <string name="calibration_system_failures_none">Fallos contenidos del servicio: 0</string>
+    <string name="calibration_system_failures">Fallos contenidos del servicio: %1$s · el último, %2$s · %3$s · en: %4$s</string>
+    <string name="calibration_system_memory_none">Avisos de poca memoria del sistema: 0</string>
+    <string name="calibration_system_memory">Avisos de poca memoria del sistema: %1$s · el último, %2$s (nivel %3$s)</string>
+    <string name="calibration_system_conn_boot">%1$s (al encender el móvil)</string>
+    <string name="calibration_system_conn_cold">%1$s (Android arrancó la app)</string>
+    <string name="calibration_system_conn_warm">%1$s (con la app ya en marcha)</string>
+    <string name="calibration_system_disc_off">%1$s (apagado en Ajustes)</string>
+    <string name="calibration_system_disc_unbound">%1$s (lo soltó Android con el interruptor encendido)</string>
+    <string name="calibration_system_none">ninguna</string>
+    <string name="calibration_yes">sí</string>
+    <string name="calibration_no">no</string>
+    <string name="calibration_unknown">no se sabe</string>
+</resources>

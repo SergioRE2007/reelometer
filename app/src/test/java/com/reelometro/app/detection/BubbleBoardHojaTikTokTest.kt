@@ -92,4 +92,30 @@ class BubbleBoardHojaTikTokTest {
         board.onFeedMoved(2_000)
         assertFalse(board.sheetOpen)
     }
+
+    @Test
+    fun `la X de la hoja de compartir las devuelve aunque el visor parezca tener un panel`() {
+        // 1.10.5 (regresión del 1.10.1): la hoja de compartir nunca mira FeedPanel, así que aunque algo encajara por error en
+        // su regla, al cerrarla con la «X» (sin ventanas encima) vuelven.
+        board.onUserSheetOpened(1_000, BubbleBoard.SheetKind.SHARE)
+        assertFalse("el servicio ni lo lee", SheetWatch.usesPanel(board.sheetKind))
+        val look = SheetWatch.Look(windowAbove = SheetWindows.sheetAbove(listOf(feed), feedWindowId = 10, screenHeight = h), panel = true)
+        assertEquals(SheetWatch.Step.Gone, SheetWatch.next(board.sheetKind, look, waited = 500, panelSeen = false, sinceOpened = 500))
+        assertTrue(board.onSheetGone(openedAt = 1_000, now = 1_650))
+        assertTrue(visible(1_650))
+    }
+
+    @Test
+    fun `con los comentarios en la misma ventana siguen fuera hasta cerrarlos`() {
+        board.onUserSheetOpened(1_000) // «Leer o añadir comentarios»: otra hoja
+        assertEquals(BubbleBoard.SheetKind.OTHER, board.sheetKind)
+        // Sin ventana encima (van en la del feed) pero con el panel: no se da por cerrada.
+        val open = SheetWatch.next(board.sheetKind, SheetWatch.Look(windowAbove = false, panel = true), waited = 1_500, panelSeen = false)
+        assertEquals(SheetWatch.Step.Wait(SheetWatch.PANEL_POLL_MS), open)
+        assertFalse(visible(2_500))
+        // Se cierran: vuelven.
+        assertEquals(SheetWatch.Step.Gone, SheetWatch.next(board.sheetKind, SheetWatch.Look(windowAbove = false, panel = false), waited = 9_500, panelSeen = true))
+        assertTrue(board.onSheetGone(openedAt = 1_000, now = 10_500))
+        assertTrue(visible(10_500))
+    }
 }

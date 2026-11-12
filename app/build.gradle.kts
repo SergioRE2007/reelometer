@@ -17,8 +17,16 @@ android {
         applicationId = "com.reelometro.app"
         minSdk = 26
         targetSdk = 37
-        versionCode = 20
-        versionName = "1.10.3"
+        versionCode = 25
+        versionName = "1.13.0"
+
+        // Distribución: -Pdistribution=github (por defecto, la APK de las Releases) o play (el AAB de Google Play,
+        // con el aviso del proyecto en versión neutra). La app lo lee con AppDistribution. Ver AppDistribution.kt.
+        val distribution = providers.gradleProperty("distribution").orNull?.trim()?.lowercase() ?: "github"
+        require(distribution in setOf("github", "play")) {
+            "Reelometer: -Pdistribution=$distribution no existe; usa github (por defecto) o play"
+        }
+        buildConfigField("String", "DISTRIBUTION", "\"$distribution\"")
     }
 
     androidResources {

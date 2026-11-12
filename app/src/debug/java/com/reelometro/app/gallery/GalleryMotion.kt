@@ -303,7 +303,7 @@ fun ChartsGallerySection() {
 
 /** Subapartado dentro de la sección de la galería (14.1, 15.2…): la galería ya pone el `SectionHeader`. */
 @Composable
-private fun GalleryHeading(index: String, title: String) {
+internal fun GalleryHeading(index: String, title: String) {
     val colors = ReelTheme.colors
     val type = ReelTheme.type
     Spacer(Modifier.height(Space.section))
@@ -319,7 +319,7 @@ private fun GalleryHeading(index: String, title: String) {
 
 /** Botón provisional de la galería (los definitivos son `ReelButton`). */
 @Composable
-private fun GalleryButton(text: String, onClick: () -> Unit) {
+internal fun GalleryButton(text: String, onClick: () -> Unit) {
     val colors = ReelTheme.colors
     val haptics = rememberHaptics()
     val interaction = remember { MutableInteractionSource() }
@@ -357,7 +357,7 @@ private fun GalleryChip(text: String, selected: Boolean, onClick: () -> Unit) {
 }
 
 @Composable
-private fun GalleryToggle(text: String, on: Boolean, onChange: (Boolean) -> Unit) {
+internal fun GalleryToggle(text: String, on: Boolean, onChange: (Boolean) -> Unit) {
     val colors = ReelTheme.colors
     Row(
         Modifier

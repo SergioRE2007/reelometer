@@ -12,11 +12,17 @@ package com.reelometro.app.game
  *  - `m` gris (`textMuted`): párpados, sombras
  *  - `o` acento (`signal`): solo detalles
  *
- * La animación (respirar, saltar, cambiar de estado) se hace con transformaciones sobre el
- * dibujo; el parpadeo cambia de [FlapFrame.OPEN] a [FlapFrame.BLINK]. Cada estado se distingue
- * también sin color: EN FORMA levanta los brazos y tiene mofletes; CANSADO, párpados caídos, boca
- * hacia abajo y una gota; ZOMBI, ojos en acento, boca en zigzag y babilla. Los párpados del
- * parpadeo ocupan las filas 2–5 (ojos), nada más cambia entre fotogramas.
+ * La animación (respirar, saltar, temblar, cambiar de estado) se hace con transformaciones sobre
+ * el dibujo; el parpadeo cambia de [FlapFrame.OPEN] a [FlapFrame.BLINK]. Cada estado se distingue
+ * también sin color (solo con la tinta), del mejor al peor:
+ *  - EN FORMA: brazos arriba, sonrisa ancha y mofletes.
+ *  - NORMAL: ojos y boca rectos, sin nada más.
+ *  - CANSADO: párpados caídos, boca hacia abajo y una gota encima.
+ *  - ENFERMO: ojos entornados (párpado arriba y ojera abajo), termómetro en la boca que sale por
+ *    la derecha con la punta en acento, gota de sudor a la izquierda y bufanda gris.
+ *  - KO: ficha aplastada contra el suelo (más ancha y baja, sin patas), ojos en X y la lengua
+ *    fuera en acento. No parpadea: su [FlapFrame.BLINK] es igual que [FlapFrame.OPEN].
+ * Los párpados del parpadeo ocupan las filas 2–5 (ojos); nada más cambia entre fotogramas.
  *
  * Para pintarlo con los tokens del tema, usa [pixel] (pantalla y widget, el mismo mapeo).
  */
@@ -148,40 +154,77 @@ object FlapSprite {
             "....XX....XX....",
             "................",
         ),
-        (FlapMood.ZOMBI to FlapFrame.OPEN) to listOf(
+        (FlapMood.ENFERMO to FlapFrame.OPEN) to listOf(
             "................",
             "..XXXXXXXXXXXX..",
-            ".XssssssssssssX.",
+            "mXssssssssssssX.",
+            "mXssmmssssmmssX.",
+            ".XssXXssssXXssX.",
             ".XssmmssssmmssX.",
-            ".XssoossssoossX.",
-            ".XssssssssssssX.",
             ".XssssssssssssX.",
             ".XhhhhhhhhhhhhX.",
-            ".XssXsXsXsXsssX.",
-            ".XsssXsXsXsoosX.",
             ".XssssssssssssX.",
-            ".XssssssssssssX.",
+            ".XsssXXXXXXXXXXo",
+            ".XsssXXsssssssX.",
+            ".XmmmmmmmmmmmmX.",
             "..XXXXXXXXXXXX..",
-            "...X........X...",
-            "..XX........XX..",
+            "....X......X....",
+            "...XX......XX...",
             "................",
         ),
-        (FlapMood.ZOMBI to FlapFrame.BLINK) to listOf(
+        (FlapMood.ENFERMO to FlapFrame.BLINK) to listOf(
             "................",
             "..XXXXXXXXXXXX..",
-            ".XssssssssssssX.",
-            ".XssssssssssssX.",
+            "mXssssssssssssX.",
+            "mXssssssssssssX.",
             ".XsXXXssssXXXsX.",
-            ".XssssssssssssX.",
+            ".XssmmssssmmssX.",
             ".XssssssssssssX.",
             ".XhhhhhhhhhhhhX.",
-            ".XssXsXsXsXsssX.",
-            ".XsssXsXsXsoosX.",
             ".XssssssssssssX.",
-            ".XssssssssssssX.",
+            ".XsssXXXXXXXXXXo",
+            ".XsssXXsssssssX.",
+            ".XmmmmmmmmmmmmX.",
             "..XXXXXXXXXXXX..",
-            "...X........X...",
-            "..XX........XX..",
+            "....X......X....",
+            "...XX......XX...",
+            "................",
+        ),
+        // Ojos en X: no parpadea (el fotograma BLINK es el mismo).
+        (FlapMood.KO to FlapFrame.OPEN) to listOf(
+            "................",
+            "................",
+            "................",
+            "................",
+            "................",
+            ".XXXXXXXXXXXXXX.",
+            "XssssssssssssssX",
+            "XsXsXssssssXsXsX",
+            "XssXssssssssXssX",
+            "XsXsXssssssXsXsX",
+            "XhhhhhhhhhhhhhhX",
+            "XssssssssssssssX",
+            "XssssXXXXXXssssX",
+            "XssssssssoossssX",
+            ".XXXXXXXXXXXXXX.",
+            "................",
+        ),
+        (FlapMood.KO to FlapFrame.BLINK) to listOf(
+            "................",
+            "................",
+            "................",
+            "................",
+            "................",
+            ".XXXXXXXXXXXXXX.",
+            "XssssssssssssssX",
+            "XsXsXssssssXsXsX",
+            "XssXssssssssXssX",
+            "XsXsXssssssXsXsX",
+            "XhhhhhhhhhhhhhhX",
+            "XssssssssssssssX",
+            "XssssXXXXXXssssX",
+            "XssssssssoossssX",
+            ".XXXXXXXXXXXXXX.",
             "................",
         ),
     )

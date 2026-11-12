@@ -52,6 +52,7 @@ object Labels {
     val TAB_TODAY: String get() = str(R.string.label_tab_today)
     val TAB_STATS: String get() = str(R.string.label_tab_stats)
     val TAB_WRAPPED: String get() = str(R.string.label_tab_wrapped)
+    /** La pestaña de Flap (antes «Pasaporte»; la clave se queda). */
     val TAB_PASSPORT: String get() = str(R.string.label_tab_passport)
 }
 

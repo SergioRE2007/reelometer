@@ -1,7 +1,6 @@
 package com.reelometro.app.copy
 
 import com.reelometro.app.R
-import com.reelometro.app.game.TravelerLevel
 import com.reelometro.app.stats.Equivalences
 import com.reelometro.app.stats.Format
 import java.time.YearMonth
@@ -111,25 +110,27 @@ object NotificationCopy {
     val goalPassedPublic: TitledText
         get() = TitledText(GOAL_PASSED_TITLE, str(R.string.notif_goal_public_text))
 
-    // ------------------------------------------------------------------ nivel nuevo del Pasaporte
-
-    /** «Nivel nuevo: PLATA». El único aviso del modo pasaporte; abre la pestaña Pasaporte. */
-    fun levelUp(level: TravelerLevel, seed: Long): TitledText = TitledText(
-        str(R.string.notif_level_title, PassportCopy.levelName(level)),
-        pick(seed, "notif.level", R.array.notif_level),
-    )
-
-    /** Versión pública del aviso de nivel. */
-    val levelUpPublic: TitledText
-        get() = TitledText(str(R.string.notif_level_public_title), str(R.string.notif_level_public_text))
-
     /*
-     * Canales nuevos, en el mismo grupo «Resúmenes» que el diario y el mensual (cada uno se puede
+     * Canal nuevo, en el mismo grupo «Resúmenes» que el diario y el mensual (cada uno se puede
      * silenciar por separado en los ajustes del sistema). Sus textos están en
      * `copy_notifications.xml` (`notif_channel_*`).
      */
     val CHANNEL_GOAL_NAME: String get() = str(R.string.notif_channel_goal_name)
     val CHANNEL_GOAL_DESCRIPTION: String get() = str(R.string.notif_channel_goal_description)
-    val CHANNEL_LEVEL_NAME: String get() = str(R.string.notif_channel_level_name)
-    val CHANNEL_LEVEL_DESCRIPTION: String get() = str(R.string.notif_channel_level_description)
+
+    /** Canal y aviso de «el servicio está activado pero no funciona» (work/ServiceHealthWorker). */
+    val CHANNEL_SERVICE_NAME: String get() = str(R.string.notif_channel_service_name)
+    val CHANNEL_SERVICE_DESCRIPTION: String get() = str(R.string.notif_channel_service_description)
+
+    val serviceStalled: TitledText
+        get() = TitledText(str(R.string.notif_service_stalled_title), str(R.string.notif_service_stalled_text))
+
+    /** El mismo aviso con el motivo del último cierre ([ExitCopy.diagnosis]) en vez del texto general. */
+    fun serviceStalled(diagnosis: String?): TitledText = diagnosis
+        ?.let { TitledText(str(R.string.notif_service_stalled_title), str(R.string.notif_service_stalled_reason_text, it)) }
+        ?: serviceStalled
+
+    /** En la pantalla de bloqueo con «ocultar contenido sensible». */
+    val serviceStalledPublic: TitledText
+        get() = TitledText(str(R.string.notif_service_stalled_public_title), str(R.string.notif_service_stalled_public_text))
 }

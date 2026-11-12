@@ -18,7 +18,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.background
-import androidx.compose.material3.Text
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -38,6 +39,7 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.reelometro.app.stats.Format
 import com.reelometro.app.ui.icons.ReelIcon
 import com.reelometro.app.ui.icons.ReelIcons
@@ -74,6 +76,7 @@ fun Stepper(
     format: (Int) -> String = { Format.integer(it) },
     decreaseDescription: String = str(R.string.ui_stepper_decrease, Format.integer(step)),
     increaseDescription: String = str(R.string.ui_stepper_increase, Format.integer(step)),
+    valueDescription: (Int) -> String = format,
     valueContent: (@Composable (value: Int) -> Unit)? = null,
 ) {
     val colors = ReelTheme.colors
@@ -101,21 +104,34 @@ fun Stepper(
         )
         Divider()
         Box(
+            // weight(fill = false): los dos botones de 48 dp se miden primero y siempre caben, aunque la cifra crezca.
             Modifier
+                .weight(1f, fill = false)
                 .widthIn(min = 72.dp)
                 .padding(horizontal = Space.x3)
-                .semantics { liveRegion = LiveRegionMode.Polite },
+                .semantics {
+                    liveRegion = LiveRegionMode.Polite
+                    // TalkBack anuncia la cifra con su unidad («155 vídeos»), no un número suelto.
+                    contentDescription = valueDescription(value)
+                },
             contentAlignment = Alignment.Center,
         ) {
             if (valueContent != null) {
                 valueContent(value)
             } else {
-                Text(
+                val valueStyle = ReelTheme.type.dataL
+                BasicText(
                     text = format(value),
-                    style = ReelTheme.type.dataL,
-                    color = if (enabled) colors.text else colors.textFaint,
-                    textAlign = TextAlign.Center,
+                    style = valueStyle.copy(
+                        color = if (enabled) colors.text else colors.textFaint,
+                        textAlign = TextAlign.Center,
+                    ),
                     maxLines = 1,
+                    autoSize = TextAutoSize.StepBased(
+                        minFontSize = AutoSizeTokens.Min,
+                        maxFontSize = valueStyle.fontSize,
+                        stepSize = AutoSizeTokens.Step,
+                    ),
                 )
             }
         }

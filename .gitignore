@@ -14,5 +14,8 @@ local.properties
 keystore/*.keystore
 keystore/*.bin
 
+# AAB de Google Play (scripts/play.sh): se regenera, nunca en git.
+apk/*.aab
+
 # Web: salida del montaje
 /web/dist/

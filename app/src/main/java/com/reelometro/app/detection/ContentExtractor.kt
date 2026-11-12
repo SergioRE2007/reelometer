@@ -75,14 +75,28 @@ object ContentExtractor {
         "xyzbca", "capcut", "foryourpage",
     )
 
+    /** Contadores de una o varias lecturas (solo diagnóstico: [ServiceMetrics]). */
+    class Stats {
+        /** Nodos visitados (sacados de la cola, visibles o no). */
+        var nodes: Int = 0
+    }
+
     /**
+     * @param stats si no es null, suma ahí los nodos visitados.
      * @param root si [rootIsFeed], el contenedor del feed (se lee solo su página visible); si no, la raíz
      *   de la ventana (se lee todo lo visible salvo comentarios/hojas).
      */
-    fun extract(platform: Platform, root: UiNode, screenWidth: Int, screenHeight: Int, rootIsFeed: Boolean): VideoInfo {
+    fun extract(
+        platform: Platform,
+        root: UiNode,
+        screenWidth: Int,
+        screenHeight: Int,
+        rootIsFeed: Boolean,
+        stats: Stats? = null,
+    ): VideoInfo {
         if (screenWidth <= 0 || screenHeight <= 0) return VideoInfo(null, null, emptyList())
         val scope = if (rootIsFeed) visiblePage(root, screenWidth, screenHeight) else root
-        val items = collect(scope, screenWidth, screenHeight)
+        val items = collect(scope, screenWidth, screenHeight, stats)
         val creator = findCreator(platform, items, screenWidth, screenHeight)
         val caption = findCaption(items, creator)
         val hashtags = findHashtags(items)
@@ -103,7 +117,7 @@ object ContentExtractor {
             ?: pager
     }
 
-    private fun collect(scope: UiNode, screenWidth: Int, screenHeight: Int): List<TextItem> {
+    private fun collect(scope: UiNode, screenWidth: Int, screenHeight: Int, stats: Stats?): List<TextItem> {
         val out = ArrayList<TextItem>()
         val queue = ArrayDeque<Pair<UiNode, Int>>()
         queue.add(scope to 0)
@@ -117,8 +131,12 @@ object ContentExtractor {
             if (node.className?.contains("EditText") == true) continue
             node.text?.let(::clean)?.let { out += TextItem(it, id, fromDescription = false, node.bounds) }
             node.contentDescription?.let(::clean)?.let { out += TextItem(it, id, fromDescription = true, node.bounds) }
-            if (depth < MAX_DEPTH) node.children.forEach { queue.add(it to depth + 1) }
+            // Recorrido en anchura: visited + queue.size son los nodos ya metidos en la cola. Si llegan a MAX_NODES, los
+            // hijos de este nodo nunca saldrían de la cola (solo salen MAX_NODES): no se piden al sistema (cada hijo
+            // puede ser una llamada entre procesos). Los nodos visitados y su orden son los mismos que sin este corte.
+            if (depth < MAX_DEPTH && visited + queue.size < MAX_NODES) node.children.forEach { queue.add(it to depth + 1) }
         }
+        if (stats != null) stats.nodes += visited
         return out
     }
 

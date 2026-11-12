@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Pestaña Flap (copy/FlapCopy.kt): Flap, la mascota, empieza cada día a tope (100 de vida) y cada
+  vídeo que ves le quita un poco. Con el objetivo diario llega a la noche a media vida y, con el
+  doble, cae KO hasta mañana. A medianoche revive.
+  Estados, del mejor al peor: EN FORMA, NORMAL, CANSADO, ENFERMO y KO.
+  Tono: humor seco y cariñoso; Flap se pone malo, pero nadie tiene la culpa ni hay sermones.
+  Nombres propios: «Flap» (la mascota) y «Reelometer» (la app) no se traducen.
+  Cada <string-array> es una situación y cada <item>, una frase alternativa (se elige una por día).
+  Puedes poner las que quieras (mínimo 2). \u00A0 es un espacio duro: la cifra y su palabra no se separan.
+  «Se pasa a mayúsculas sola» quiere decir que el código la convierte en MAYÚSCULAS: escríbela normal.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="es">
+
+    <!-- ============================================================ cabecera -->
+
+    <!-- Titular de la pestaña: el nombre de la mascota (no se traduce). -->
+    <string name="flap_title">Flap</string>
+    <!-- Kicker de la cabecera: «HOY · MARTES 3 NOV». %1$s el día de la semana, %2$s la fecha corta.
+         Se pasa a mayúsculas sola. -->
+    <string name="flap_kicker">Hoy · %1$s %2$s</string>
+
+    <!-- ============================================================ estado de Flap -->
+
+    <!-- Etiqueta encima del nombre del estado, en MAYÚSCULAS: «HOY FLAP ESTÁ / ENFERMO». -->
+    <string name="flap_state_label">HOY FLAP ESTÁ</string>
+
+    <!-- Nombre del estado, en MAYÚSCULAS y corto (va en grande tras «HOY FLAP ESTÁ», en la pestaña Flap). -->
+    <string name="flap_mood_fit">EN FORMA</string>
+    <string name="flap_mood_normal">NORMAL</string>
+    <string name="flap_mood_tired">CANSADO</string>
+    <string name="flap_mood_sick">ENFERMO</string>
+    <string name="flap_mood_ko">KO</string>
+
+    <!-- El estado dentro de una frase hablada (TalkBack y la descripción del widget): en minúsculas y sin siglas («fuera de combate», no «KO»). -->
+    <string name="flap_mood_spoken_fit">en forma</string>
+    <string name="flap_mood_spoken_normal">normal</string>
+    <string name="flap_mood_spoken_tired">cansado</string>
+    <string name="flap_mood_spoken_sick">enfermo</string>
+    <string name="flap_mood_spoken_ko">fuera de combate</string>
+
+    <!-- Frase de Flap en forma (ha visto pocos vídeos hoy). -->
+    <string-array name="flap_phrase_fit">
+        <item>Flap está a tope. Y lo sabe.</item>
+        <item>Flap va sobrado. Hoy aguanta lo que le echen.</item>
+        <item>Flap está como recién salido de la caja.</item>
+        <item>Flap tiene más energía que tu batería por la mañana.</item>
+        <item>Flap salta como si fuera invencible.</item>
+    </string-array>
+    <!-- Frase de Flap normal. -->
+    <string-array name="flap_phrase_normal">
+        <item>Flap va tirando.</item>
+        <item>Flap está bien. Ni fu ni fa.</item>
+        <item>Flap aguanta el tipo.</item>
+        <item>Flap sigue de pie. Sin alardes.</item>
+        <item>Flap está normal. Que no es poco.</item>
+    </string-array>
+    <!-- Frase de Flap cansado (cerca de su aguante). -->
+    <string-array name="flap_phrase_tired">
+        <item>Flap tiene ojeras.</item>
+        <item>Flap bosteza entre vídeo y vídeo.</item>
+        <item>Flap pide un respiro. Con uno corto le vale.</item>
+        <item>Flap va justo de fuerzas.</item>
+        <item>Flap ya no salta. Camina.</item>
+    </string-array>
+    <!-- Frase de Flap enfermo (ha pasado su aguante). Sin culpa: mañana se le pasa. -->
+    <string-array name="flap_phrase_sick">
+        <item>Flap tiene fiebre de scroll.</item>
+        <item>Flap se ha puesto el termómetro. No le gusta lo que ve.</item>
+        <item>Flap tirita. Cada vídeo le sienta peor.</item>
+        <item>Flap está pachucho. Mañana se le pasa.</item>
+        <item>Flap pide caldo y manta.</item>
+    </string-array>
+    <!-- Frase de Flap KO (el doble de su aguante). Sin dramas. Debajo de la barra ya pone «KO hasta mañana. A medianoche revive.»:
+         que la frase no repita cuándo revive ni vuelva a decir «KO». -->
+    <string-array name="flap_phrase_ko">
+        <item>Flap ha caído redondo.</item>
+        <item>Flap está en la lona. Ni con caldo se levanta.</item>
+        <item>Flap se ha desplomado. Ni parpadea.</item>
+        <item>Flap no puede más. Se queda en el suelo.</item>
+    </string-array>
+    <!-- Frase de Flap recién llegado (la app aún no ha contado ningún vídeo). -->
+    <string-array name="flap_phrase_fresh">
+        <item>Flap acaba de llegar y está a tope.</item>
+        <item>Flap empieza con toda la vida por delante.</item>
+        <item>Flap está nuevo. Todavía no ha visto ni un vídeo.</item>
+        <item>Flap te espera en plena forma. A ver cuánto le dura.</item>
+    </string-array>
+    <!-- Frase cuando Flap ha mejorado desde la última vez que lo viste: por un día nuevo o por un objetivo más alto (también
+         a media tarde). Que no hable del día, de ayer ni de que estaba caído. Sale con cualquier mejora, también de KO a
+         ENFERMO o de ENFERMO a CANSADO (al subir el objetivo o en un día nuevo con muchos vídeos ya vistos): que no dé por
+         hecho que ya está bien. -->
+    <string-array name="flap_phrase_recovered">
+        <item>Flap levanta cabeza.</item>
+        <item>Flap está mejor que la última vez que lo viste.</item>
+        <item>Flap respira un poco mejor que antes.</item>
+        <item>Flap ha vuelto y dice que se encuentra mejor.</item>
+    </string-array>
+
+    <!-- TalkBack: Flap. %1$s el estado en minúsculas («enfermo»), %2$s la vida («32») y %3$s el máximo («100»).
+         La frase de Flap se lee aparte. -->
+    <string name="flap_description">Flap: %1$s, vida %2$s de %3$s.</string>
+    <!-- Acción de tocar a Flap (TalkBack: «toca dos veces para saludar a Flap»). -->
+    <string name="flap_tap">saludar a Flap</string>
+
+    <!-- ============================================================ vida -->
+
+    <!-- Etiqueta de la barra de vida, en MAYÚSCULAS. -->
+    <string name="flap_life">VIDA</string>
+    <!-- TalkBack de la barra de vida: «Vida: 62 de 100». -->
+    <string name="flap_life_description">Vida: %1$s de %2$s</string>
+    <!-- «HOY 31 VÍDEOS · AGUANTA 40»: %1$s los vídeos de hoy (la forma va según ellos), %2$s su aguante
+         (el objetivo o, sin objetivo, 150). Se pasa a mayúsculas sola. -->
+    <plurals name="flap_today_line">
+        <item quantity="one">Hoy %1$s\u00A0vídeo · aguanta %2$s</item>
+        <item quantity="many">Hoy %1$s\u00A0vídeos · aguanta %2$s</item>
+        <item quantity="other">Hoy %1$s\u00A0vídeos · aguanta %2$s</item>
+    </plurals>
+    <!-- Lo que falta para el siguiente estado, peor. %1$s los vídeos que faltan (la forma va según ellos). -->
+    <plurals name="flap_next_normal">
+        <item quantity="one">Con %1$s\u00A0vídeo más dejará de estar en forma.</item>
+        <item quantity="many">Con %1$s\u00A0vídeos más dejará de estar en forma.</item>
+        <item quantity="other">Con %1$s\u00A0vídeos más dejará de estar en forma.</item>
+    </plurals>
+    <plurals name="flap_next_tired">
+        <item quantity="one">Con %1$s\u00A0vídeo más se cansará.</item>
+        <item quantity="many">Con %1$s\u00A0vídeos más se cansará.</item>
+        <item quantity="other">Con %1$s\u00A0vídeos más se cansará.</item>
+    </plurals>
+    <plurals name="flap_next_sick">
+        <item quantity="one">Con %1$s\u00A0vídeo más se pondrá enfermo.</item>
+        <item quantity="many">Con %1$s\u00A0vídeos más se pondrá enfermo.</item>
+        <item quantity="other">Con %1$s\u00A0vídeos más se pondrá enfermo.</item>
+    </plurals>
+    <plurals name="flap_next_ko">
+        <item quantity="one">Con %1$s\u00A0vídeo más caerá KO.</item>
+        <item quantity="many">Con %1$s\u00A0vídeos más caerá KO.</item>
+        <item quantity="other">Con %1$s\u00A0vídeos más caerá KO.</item>
+    </plurals>
+    <!-- Ya está KO: no hay nada peor. -->
+    <string name="flap_ko_until_tomorrow">KO hasta mañana. A medianoche revive.</string>
+
+    <!-- ============================================================ cómo funciona -->
+
+    <!-- Cabecera de sección, en MAYÚSCULAS. -->
+    <string name="flap_section_how">CÓMO FUNCIONA</string>
+    <!-- %1$s la vida máxima («100»). -->
+    <string name="flap_how_start">Cada día Flap empieza a tope, con %1$s de vida. A medianoche revive.</string>
+    <string name="flap_how_video">Cada vídeo que ves le quita un poco de vida.</string>
+    <!-- Con objetivo: %1$s el objetivo (la forma va según él), %2$s el doble. -->
+    <plurals name="flap_how_goal">
+        <item quantity="one">Con tu objetivo (%1$s\u00A0vídeo) llega a la noche a media vida; con el doble (%2$s), cae KO.</item>
+        <item quantity="many">Con tu objetivo (%1$s\u00A0vídeos) llega a la noche a media vida; con el doble (%2$s), cae KO.</item>
+        <item quantity="other">Con tu objetivo (%1$s\u00A0vídeos) llega a la noche a media vida; con el doble (%2$s), cae KO.</item>
+    </plurals>
+    <!-- Sin objetivo: %1$s el aguante (150; la forma va según él), %2$s el doble. -->
+    <plurals name="flap_how_default">
+        <item quantity="one">Con %1$s\u00A0vídeo llega a la noche a media vida; con el doble (%2$s), cae KO.</item>
+        <item quantity="many">Con %1$s\u00A0vídeos llega a la noche a media vida; con el doble (%2$s), cae KO.</item>
+        <item quantity="other">Con %1$s\u00A0vídeos llega a la noche a media vida; con el doble (%2$s), cae KO.</item>
+    </plurals>
+    <!-- Sin objetivo, junto al botón PONER OBJETIVO. %1$s el aguante (150; la forma va según él). -->
+    <plurals name="flap_no_goal">
+        <item quantity="one">Sin objetivo, Flap aguanta %1$s\u00A0vídeo al día. Con el tuyo, aguanta lo que tú decidas.</item>
+        <item quantity="many">Sin objetivo, Flap aguanta %1$s\u00A0vídeos al día. Con el tuyo, aguanta lo que tú decidas.</item>
+        <item quantity="other">Sin objetivo, Flap aguanta %1$s\u00A0vídeos al día. Con el tuyo, aguanta lo que tú decidas.</item>
+    </plurals>
+    <!-- TalkBack del botón PONER OBJETIVO. -->
+    <string name="flap_set_goal_description">Poner un objetivo diario en Ajustes</string>
+
+    <!-- ============================================================ la semana -->
+
+    <!-- Cabecera de sección, en MAYÚSCULAS. -->
+    <string name="flap_section_week">LA SEMANA</string>
+    <!-- TalkBack de un día: «Martes 3 de noviembre: 34 vídeos, cansado.». %1$s el día, %2$s los vídeos
+         («34 vídeos»), %3$s el estado en minúsculas. -->
+    <string name="flap_day_description">%1$s: %2$s, %3$s.</string>
+    <!-- TalkBack de un día anterior a los primeros vídeos contados. %1$s el día. -->
+    <string name="flap_day_description_none">%1$s: sin registro.</string>
+    <!-- Etiqueta de la racha, en MAYÚSCULAS. -->
+    <string name="flap_streak_label">RACHA</string>
+    <!-- Días cerrados seguidos sin pasar del aguante. %1$s los días (la forma va según ellos). -->
+    <plurals name="flap_streak">
+        <item quantity="one">%1$s\u00A0día seguido sin que enferme</item>
+        <item quantity="many">%1$s\u00A0días seguidos sin que enferme</item>
+        <item quantity="other">%1$s\u00A0días seguidos sin que enferme</item>
+    </plurals>
+</resources>

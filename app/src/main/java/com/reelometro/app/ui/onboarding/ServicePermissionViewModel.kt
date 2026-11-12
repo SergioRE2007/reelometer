@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.reelometro.app.ReelometroApp
 import com.reelometro.app.data.settings.SettingsRepository
+import com.reelometro.app.detection.ExitCategory
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,6 +25,19 @@ data class ServicePermissionState(
     val disclosureAccepted: Boolean,
     /** Servicio activado en Ajustes › Accesibilidad. */
     val serviceEnabled: Boolean,
+    /** Activado, pero Android no lo ha arrancado (o su arranque ha fallado): enseña los pasos para arreglarlo. */
+    val serviceStalled: Boolean = false,
+    /** Texto del fallo del arranque, si lo hubo. */
+    val startError: String? = null,
+    /** Por qué se cerró la app la última vez (sin funcionar o apagado por el sistema): una línea más con la explicación. */
+    val stallReason: ExitCategory? = null,
+    /** Apagado, pero no por el usuario: lo quitó el sistema al cerrar la app. Se explica encima de los pasos. */
+    val serviceLost: Boolean = false,
+    /**
+     * En esta visita el servicio estaba apagado por el sistema (aunque ya se haya vuelto a activar): la guía para que
+     * no se desconecte sale abierta, también en Android de serie.
+     */
+    val recoveredFromLoss: Boolean = false,
     /** Android 13+ con «Ajuste restringido» detectado. */
     val restricted: Boolean,
     /** Ayuda de «Ajuste restringido» desplegada (siempre, si está detectado). */
@@ -55,6 +69,11 @@ class ServicePermissionViewModel(
 
     private data class Local(
         val enabled: Boolean? = null,
+        val stalled: Boolean = false,
+        val startError: String? = null,
+        val stallReason: ExitCategory? = null,
+        val lost: Boolean = false,
+        val everLost: Boolean = false,
         val restricted: Boolean = false,
         val helpOpen: Boolean = false,
         val openedSettings: Boolean = false,
@@ -71,6 +90,11 @@ class ServicePermissionViewModel(
                 ServicePermissionState(
                     disclosureAccepted = s.disclosureAccepted,
                     serviceEnabled = enabled,
+                    serviceStalled = enabled && l.stalled,
+                    startError = l.startError.takeIf { enabled && l.stalled },
+                    stallReason = l.stallReason.takeIf { (enabled && l.stalled) || (!enabled && l.lost) },
+                    serviceLost = !enabled && l.lost,
+                    recoveredFromLoss = l.everLost,
                     restricted = l.restricted && !enabled,
                     restrictedHelpVisible = !enabled && (l.restricted || l.helpOpen),
                     returnedWithoutService = l.openedSettings && !enabled,
@@ -82,20 +106,37 @@ class ServicePermissionViewModel(
 
     init {
         refresh()
+        viewModelScope.launch { probe.changes().collect { refresh() } }
     }
 
     /** Relee si el servicio está activo y si hay «Ajuste restringido». Llamar en cada `ON_RESUME`. */
     fun refresh() {
         viewModelScope.launch {
-            val (enabled, restricted) = withContext(io) {
+            val probed = withContext(io) {
                 val on = probe.isServiceEnabled()
-                on to (!on && probe.isRestricted())
+                val stalled = on && probe.isServiceStalled()
+                val lost = !on && runCatching { probe.isServiceLost() }.getOrDefault(false)
+                Probed(
+                    enabled = on,
+                    restricted = !on && probe.isRestricted(),
+                    stalled = stalled,
+                    startError = if (stalled) probe.startError() else null,
+                    stallReason = if (stalled || lost) runCatching { probe.stallReason() }.getOrNull() else null,
+                    lost = lost,
+                )
             }
             local.update { l ->
+                val wasWorking = l.enabled?.let { it && !l.stalled }
+                val working = probed.enabled && !probed.stalled
                 l.copy(
-                    enabled = enabled,
-                    restricted = restricted,
-                    connectedHere = l.connectedHere || (l.enabled == false && enabled),
+                    enabled = probed.enabled,
+                    restricted = probed.restricted,
+                    stalled = probed.stalled,
+                    startError = probed.startError,
+                    stallReason = probed.stallReason,
+                    lost = probed.lost,
+                    everLost = l.everLost || probed.lost,
+                    connectedHere = l.connectedHere || (wasWorking == false && working),
                 )
             }
         }
@@ -120,6 +161,15 @@ class ServicePermissionViewModel(
     fun toggleRestrictedHelp() {
         local.update { it.copy(helpOpen = !it.helpOpen) }
     }
+
+    private data class Probed(
+        val enabled: Boolean,
+        val restricted: Boolean,
+        val stalled: Boolean,
+        val startError: String?,
+        val stallReason: ExitCategory?,
+        val lost: Boolean,
+    )
 
     companion object {
         fun create(context: Context): ServicePermissionViewModel {

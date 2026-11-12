@@ -12,12 +12,14 @@ import com.reelometro.app.copy.AppTexts
 import com.reelometro.app.copy.ResourceTexts
 import com.reelometro.app.data.AppDatabase
 import com.reelometro.app.data.ReelRepository
-import com.reelometro.app.data.game.PassportRepository
+import com.reelometro.app.data.game.FlapRepository
 import com.reelometro.app.data.settings.SettingsRepository
+import com.reelometro.app.detection.ServiceStatus
 import com.reelometro.app.widget.WidgetUpdater
 import com.reelometro.app.work.BackupScheduler
 import com.reelometro.app.work.NotificationScheduler
 import com.reelometro.app.work.Notifications
+import com.reelometro.app.work.ServiceHealthScheduler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -37,20 +39,33 @@ class ReelometroApp : Application() {
     val settings: SettingsRepository by lazy { SettingsRepository(this) }
 
     /**
-     * El objetivo diario de los ajustes alimenta rachas y progreso. El pasaporte va en el CSV y se
-     * borra con BORRAR TODO (proveedor perezoso: no se crea hasta que hace falta).
+     * El objetivo diario de los ajustes alimenta rachas y progreso. Lo visto de Flap se borra con
+     * BORRAR TODO (proveedor perezoso: no se crea hasta que hace falta).
      */
     val repository: ReelRepository by lazy {
-        ReelRepository(database, dailyGoal = settings.settings.map { it.dailyGoal }, userData = { listOf(passport) })
+        ReelRepository(database, dailyGoal = settings.settings.map { it.dailyGoal }, userData = { listOf(flap) })
     }
 
-    /** Modo Pasaporte (Flap, niveles, sellos y reto semanal) sobre los datos de uso. */
-    val passport: PassportRepository by lazy { PassportRepository(this, database, settings) }
+    /**
+     * Flap, la mascota que enferma con cada vídeo (pestaña y widget), sobre los datos de uso y el
+     * objetivo. Es un `FlapSource`; además, `clearAll()` para BORRAR TODO y `GAME_RESET`.
+     */
+    val flap: FlapRepository by lazy { FlapRepository(this, database, settings) }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         // Cambió el idioma del sistema (o el de la app desde Android) con el proceso vivo.
         AppLanguage.refresh(this)
+    }
+
+    /**
+     * Aviso de poca memoria del sistema. Solo se apunta (sale en el registro de Calibración, junto a los cierres): en
+     * este proceso no hay cachés grandes que soltar. Las fotos de los fijados son unas pocas miniaturas, la caché de
+     * glifos del widget tiene tope y lo que más pesa (la interfaz) ya lo recorta Android al esconderse.
+     */
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+        ServiceStatus.onTrimMemory(level, System.currentTimeMillis())
     }
 
     override fun onCreate() {
@@ -59,8 +74,11 @@ class ReelometroApp : Application() {
         AppTexts.install(ResourceTexts(this))
         // Todo fuera del hilo principal: el arranque no espera a canales, WorkManager ni widgets.
         appScope.launch { runCatching { Notifications.createChannels(this@ReelometroApp) } }
+        // La memoria del pasaporte de antes de Flap (fechas de sellos) ya no sirve: fuera, si sigue ahí.
+        appScope.launch { runCatching { flap.dropLegacy() } }
         NotificationScheduler.start(this)
         BackupScheduler.start(this)
+        ServiceHealthScheduler.start(this)
         WidgetUpdater.start(this)
         listenToClock()
     }

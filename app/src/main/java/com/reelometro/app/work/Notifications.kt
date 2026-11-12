@@ -34,20 +34,36 @@ object Notifications {
         /** Aviso en directo al pasar el objetivo (una vez al día). */
         GOAL_LIVE("goal_live", 3),
 
-        /** Nivel nuevo del Pasaporte. Su canal solo se crea al primer aviso (sin modo pasaporte, no existe). */
-        LEVEL("passport_level", 4),
+        /**
+         * El servicio está activado pero no funciona ([com.reelometro.app.detection.ServiceHealth.STALLED]). Canal propio,
+         * fuera del grupo «Resúmenes»: no es un resumen y no debería silenciarse con ellos. Se crea al primer aviso.
+         */
+        SERVICE("service_health", 5),
     }
 
     /** Grupo «Resúmenes» (`notification_channel_name`) que reúne los dos canales en los ajustes del sistema. */
     private const val GROUP = "summaries_group"
 
-    /** Canal provisional de una versiÃ³n antigua: se borra al arrancar. */
+    /** Canal provisional de una versión antigua: se borra al arrancar. */
     private const val LEGACY_CHANNEL = "summaries"
 
-    /** Crea (o actualiza) los canales del grupo «Resúmenes» y borra el provisional. Idempotente. */
+    /**
+     * Canal e id del aviso de nivel nuevo del antiguo Pasaporte (hasta 1.11.x; Flap no manda avisos).
+     * El canal se borra al arrancar y, si su aviso seguía en la cortina, se quita. No se reutilizan.
+     */
+    private const val LEGACY_LEVEL_CHANNEL = "passport_level"
+    private const val LEGACY_LEVEL_ID = 4
+
+    /**
+     * Crea (o actualiza) los canales del grupo «Resúmenes» y borra los antiguos (el provisional y el del
+     * aviso de nivel, con su aviso y lo que recordaba). Idempotente.
+     */
     fun createChannels(context: Context) {
         val manager = NotificationManagerCompat.from(context)
         manager.deleteNotificationChannel(LEGACY_CHANNEL)
+        manager.cancel(LEGACY_LEVEL_ID)
+        manager.deleteNotificationChannel(LEGACY_LEVEL_CHANNEL)
+        AlertStore(context).dropLegacyLevel()
         manager.createNotificationChannelGroup(
             NotificationChannelGroupCompat.Builder(GROUP)
                 .setName(context.getString(R.string.notification_channel_name))
@@ -63,14 +79,18 @@ object Notifications {
         )
     }
 
-    /** Canal del aviso de nivel (mismo grupo); solo cuando hace falta. Idempotente. */
-    private fun createLevelChannel(context: Context) {
+    /** Canal del aviso del servicio (sin grupo); solo cuando hace falta. Idempotente. */
+    private fun createServiceChannel(context: Context) {
         NotificationManagerCompat.from(context).createNotificationChannel(
-            channel(Kind.LEVEL, NotificationCopy.CHANNEL_LEVEL_NAME, NotificationCopy.CHANNEL_LEVEL_DESCRIPTION),
+            NotificationChannelCompat.Builder(Kind.SERVICE.channel, NotificationManagerCompat.IMPORTANCE_DEFAULT)
+                .setName(NotificationCopy.CHANNEL_SERVICE_NAME)
+                .setDescription(NotificationCopy.CHANNEL_SERVICE_DESCRIPTION)
+                .setShowBadge(false)
+                .build(),
         )
     }
 
-    /** Quita el aviso [kind] de la cortina si sigue ahí (p. ej. el de nivel al apagar el modo pasaporte). */
+    /** Quita el aviso [kind] de la cortina si sigue ahí. */
     fun cancel(context: Context, kind: Kind) {
         NotificationManagerCompat.from(context).cancel(kind.id)
     }
@@ -99,7 +119,7 @@ object Notifications {
     ): Boolean {
         if (!canNotify(context)) return false
         createChannels(context)
-        if (kind == Kind.LEVEL) createLevelChannel(context)
+        if (kind == Kind.SERVICE) createServiceChannel(context)
         val tap = PendingIntent.getActivity(
             context,
             kind.id,

@@ -13,12 +13,12 @@ on which topics and from whom. Everything stays on your phone.
 
 **[sergiore2007.github.io/reelometer](https://sergiore2007.github.io/reelometer/en/)**
 
-![Version 1.10.3](https://img.shields.io/badge/version-1.10.3-11100E?style=flat-square)
+![Version 1.13.0](https://img.shields.io/badge/version-1.13.0-11100E?style=flat-square)
 ![Android 8.0+](https://img.shields.io/badge/Android-8.0%2B-11100E?style=flat-square&logo=android&logoColor=EDE8DF)
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.4-11100E?style=flat-square&logo=kotlin&logoColor=EDE8DF)
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack_Compose-11100E?style=flat-square&logo=jetpackcompose&logoColor=EDE8DF)
 ![No internet](https://img.shields.io/badge/INTERNET_permission-no-FF5A1F?style=flat-square)
-![Tests](https://img.shields.io/badge/tests-969-11100E?style=flat-square)
+![Tests](https://img.shields.io/badge/tests-1%2C200%2B-11100E?style=flat-square)
 [![Buy me a coffee](https://img.shields.io/badge/Buy_Me_a_Coffee-support_the_project-FF5A1F?style=flat-square&logo=buymeacoffee&logoColor=11100E)](https://www.buymeacoffee.com/Lopuzno)
 
 <br>
@@ -48,10 +48,10 @@ Reelometer doesn't block apps or lecture you. It just puts the scoreboard in fro
 | **Day** (Día) | Tap a bar or a day on the calendar to see that whole day: hour by hour, platforms, topics and creators, and how it ranks among your days. |
 | **Statistics** (Estadísticas) | Week, month, year or all time. Bars with the average, this week versus last week, an activity calendar, your peak hour, your weakest day, streaks, seconds per video and your top 10 creators. |
 | **Recap** (Resumen) | Every month, your full-screen recap in 9 slides, plus a 1080 × 1920 ticket to share, stamped PAID WITH YOUR TIME (PAGADO CON TU TIEMPO). |
-| **Passport** (Pasaporte) | The game in reverse: you win by watching **less**. Flap, a pixel-art mascot that is fit or a scroll zombie depending on your week (it never dies), frequent-flyer levels, 23 stamps and a weekly challenge against your «ghost self» from last week. It can be hidden in Settings. |
+| **Flap** | A pixel-art mascot that starts every day at full health and gets worse with every video you watch: at your goal it ends the day at half health and, if you double it, it is KO until tomorrow (with no goal it holds out 150). Your week as seven Flaps and your streak of days without it getting sick. It can be hidden in Settings. |
 | **Equivalences** | With that time you could read 14 books, walk the Camino de Santiago or make 120 Spanish omelettes. Every equivalence cites its source. |
 | **Topics** | Sorts each video into 16 topics (humour, sport, food, gaming, learning…) from its description and hashtags, without leaving your phone. |
-| **Widget and notifications** | A «Today» widget in 6 sizes (with Flap in the large one), a daily notification at the time you choose, a monthly one with your recap and, if you turn it on, one the moment you go over your goal. |
+| **Widget and notifications** | A «Today» widget in 6 sizes (with Flap in the large one), a daily notification at the time you choose, a monthly one with your recap, another the moment you go over your goal (if you turn it on) and, if the accessibility service is on but not working, one with the reason (when Android records it) and the steps to fix it (at most one a day). |
 | **Goal** | If you want, a daily limit: the scoreboard tells you how much you have left and keeps your streaks. |
 | **Who you send to** (A quién envías) | On Instagram and TikTok, and only if you turn it on (it's off by default): counts which people and groups you send videos to, so you can see who you share with most. |
 | **Quick send** (Envío rápido) | On Instagram and TikTok, also off by default. Pin your usual people or groups (each app has its own) and bubbles with their photo appear over the videos: one tap and the video is sent by itself, in under a second. You can place the bubbles wherever you like, send to two at once by dropping one bubble onto another, and each bubble's photo can be their profile picture or one you choose from your gallery. |
@@ -70,7 +70,7 @@ permission, so the app is built so that it can't abuse it:
 
 - **It has no `INTERNET` permission.** It can't send anything anywhere, even if it wanted to.
 - No accounts, no servers, no ads, no analytics and no cloud backup.
-- The service only listens to TikTok, Instagram and YouTube (`android:packageNames`). It reads nothing in any other app.
+- The service only listens to TikTok, Instagram and YouTube (`android:packageNames`). It reads nothing other apps show.
 - For each video it stores the app, the time, how long it was on screen, the creator and the description. Never what
   you type or your messages. Who you share something with: only on Instagram and TikTok and only if you turn on «Who
   you send to» (it's off by default); then it stores the name of the person or group, on the phone.
@@ -160,15 +160,15 @@ app/src/main/java/com/reelometro/app/
 ├── data/        Room, repository, settings (DataStore), CSV export and import
 ├── stats/       pure calculations, number formatting, sourced equivalences
 ├── copy/        all the app's text (with variants)
-├── game/        pure Passport rules (Flap, levels, stamps, challenge)
-├── work/        daily, monthly, live and level-up notifications
+├── game/        pure Flap rules (health, states, week and streak)
+├── work/        daily, monthly and live notifications
 ├── widget/      «Today» widget with Glance
 └── ui/          theme, components (split-flap scoreboard, ticket…) and screens
 ```
 
 ## Status
 
-Version **1.10.3** (the privacy policy, linked from Settings). Honestly:
+Version **1.13.0** (it tells you when it is the phone, not you, that turned the service off, and a failure in the service no longer closes the app; from 1.12.0, Flap, the mascot that gets sicker with every video, replaces the Passport; from 1.10.4, 1.11.0 and 1.11.1 come a notification when the service is on but not working, step-by-step help for each phone brand and a one-minute check to leave the service working, the actual reason when the phone closes the app, bubbles that step aside for TikTok comments and the notification shade, large text and TalkBack, and tabs that appear gradually over the first days). Honestly:
 
 - **Tested on a real phone** (a Pixel with Android 17): TikTok and Instagram count correctly. Instagram quick send has
   been measured send by send: between 0.5 and 0.93 s to a person and 1.4–1.6 s to a group that has to be searched for
@@ -184,7 +184,7 @@ Version **1.10.3** (the privacy policy, linked from Settings). Honestly:
   Calibration console shows why.
 - **Checked on the emulator**: the main screens in light and dark theme and with the font at 130 %, and the release
   build going through every route without crashes.
-- **Not checked yet**: the Passport and the guided tour haven't had a full visual review on screen; quick send with
+- **Not checked yet**: Flap (1.12.0) now builds, but it hasn't had a thorough on-screen review yet, and the guided tour hasn't had a full visual review on screen; quick send with
   Instagram in another language (the app recognises «Send» by its identifier and by the word in several languages,
   but it has only been tested in Spanish); and other phones and Android versions.
 - **New translations** (English, Brazilian Portuguese, French and Italian): checked on screen in the emulator, but
@@ -195,7 +195,7 @@ Version **1.10.3** (the privacy policy, linked from Settings). Honestly:
   (798 videos: all of them come in, and none is duplicated on a second import).
 - **1.7.0**: charts can be scrubbed by sliding a finger sideways (no long press) and Settings has an index at the
   top that jumps to each section; quick send and the tools are folded. Tested on the emulator.
-- It builds and passes its 969 JVM tests. The screenshots in this README use sample data.
+- 1.13.0 builds and passes the full test run (1,242 JVM tests and Lint with no errors). What is new in 1.12.0 (Flap) and in 1.13.0 (it tells you when it is the phone that turns the service off) has not been tested on a phone yet. The screenshots in this README are from 1.9.0 and use sample data: the tab bar still says PASAPORTE, which is FLAP since 1.12.0.
 
 ## Support the project
 

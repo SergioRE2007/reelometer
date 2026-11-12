@@ -47,8 +47,6 @@ data class ImportPreview(
     val to: LocalDate?,
     /** Líneas que no se entienden y se saltan. */
     val badLines: Int,
-    /** Trae el bloque PASAPORTE. */
-    val hasPassport: Boolean,
 ) {
     /** Vídeos que entrarían con [ImportMode.ADD]. */
     val newVideos: Int get() = videos - alreadyPresent
@@ -104,7 +102,10 @@ class ParsedCsv(
     val videos: List<ImportedVideo>,
     val orphanShares: List<ImportedShare>,
     val recipients: List<ImportedRecipient>,
-    /** Los bloques que no son de vídeos ni de compartidos (PASAPORTE…), con la columna `fecha` ya en ISO. */
+    /**
+     * Los bloques que no son de vídeos, envíos ni compartidos, con la columna `fecha` ya en ISO. Nadie
+     * los lee: el PASAPORTE de los CSV de antes de la 1.12.0 llega aquí y se ignora.
+     */
     val blocks: List<CsvBlock>,
     val badLines: Int,
 ) {
@@ -133,7 +134,9 @@ data class LocalStamp(val time: LocalDateTime, val precisionMs: Long)
  * - 1.0.0: solo los vídeos (`fecha_hora_local;plataforma;duración_s;creador;categoría;descripción;compartido`);
  * - 1.1.0+: detrás, el bloque PASAPORTE; 1.2.0+: el bloque ENVÍOS;
  * - 1.6.0+: las columnas `inicio_ms`, `zona` y `duración_ms` al final, el bloque COMPARTIDOS SIN VÍDEO y la
- *   columna `clave` del PASAPORTE.
+ *   columna `clave` del PASAPORTE;
+ * - 1.12.0+: sin el bloque PASAPORTE. El de los ficheros viejos se lee como un bloque más y se ignora
+ *   (no da error ni aviso; sus fechas solo ayudan a deducir el orden día/mes).
  * Las columnas se buscan por nombre. Si están `inicio_ms`/`duración_ms` y se entienden, mandan; si no (Excel deja
  * `inicio_ms` como `1,76218E+12`), la hora local se pasa a instante con la `zona` de la fila o [zone] (en un
  * cambio de hora, el primer desfase) y la duración sale de `duración_s`.
@@ -174,7 +177,7 @@ object CsvImport {
     const val COL_DURATION_MS = "duración_ms"
     const val COL_RECIPIENT = "destinatario"
 
-    /** Columna de fecha (sin hora) de los bloques extra, como el PASAPORTE. */
+    /** Columna de fecha (sin hora) de los bloques extra, como el PASAPORTE de los CSV viejos. */
     const val COL_DATE = "fecha"
 
     /** Límites de lo que se guarda (los mismos que `ReelRepository`). */
@@ -253,7 +256,7 @@ object CsvImport {
         )
     }
 
-    /** El bloque con su columna `fecha` reescrita en ISO (`2026-11-03`), para que cada `UserDataPart` la lea igual. */
+    /** El bloque con su columna `fecha` reescrita en ISO (`2026-11-03`), igual venga de la hoja de cálculo que venga. */
     private fun isoDates(block: CsvBlock, order: DateOrder): CsvBlock {
         val i = block.column(COL_DATE) ?: return block
         val rows = block.rows.map { row ->

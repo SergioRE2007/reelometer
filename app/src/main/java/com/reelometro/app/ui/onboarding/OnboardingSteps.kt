@@ -26,6 +26,7 @@ import androidx.compose.ui.semantics.semantics
 import com.reelometro.app.copy.Buttons
 import com.reelometro.app.copy.Labels
 import com.reelometro.app.copy.OnboardingCopy
+import com.reelometro.app.copy.Words
 import com.reelometro.app.data.Platform
 import com.reelometro.app.data.settings.AppSettings
 import com.reelometro.app.ui.components.Label
@@ -216,6 +217,7 @@ internal fun FinalStep(
                     step = goalStep(value),
                     decreaseDescription = OnboardingCopy.GOAL_DECREASE,
                     increaseDescription = OnboardingCopy.GOAL_INCREASE,
+                    valueDescription = { Words.videos(it) },
                 )
                 Spacer(Modifier.height(Space.x2))
                 Text(

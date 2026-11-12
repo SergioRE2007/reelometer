@@ -7,12 +7,14 @@ import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.reelometro.app.copy.CalibrationCopy
+import kotlinx.coroutines.launch
 
 /**
  * Calibración (oculta: 7 toques en la versión, en Ajustes). Consola en vivo de lo que recibe el
@@ -24,6 +26,7 @@ fun CalibrationRoute(onBack: () -> Unit) {
     val context = LocalContext.current
     val vm: CalibrationViewModel = viewModel { CalibrationViewModel.create(context) }
     val state by vm.state.collectAsStateWithLifecycle()
+    val scope = rememberCoroutineScope()
 
     DisposableEffect(vm) {
         vm.start()
@@ -37,10 +40,11 @@ fun CalibrationRoute(onBack: () -> Unit) {
         onCapture = vm::setCapturing,
         onPlatform = vm::setPlatform,
         onType = vm::setType,
+        // El texto se monta fuera del hilo principal (lee los nombres que hay que quitar); el portapapeles y el Intent, en él.
         onCopy = {
-            if (copyToClipboard(context, vm.exportText())) vm.onCopied()
+            scope.launch { if (copyToClipboard(context, vm.exportText())) vm.onCopied() }
         },
-        onShare = { shareText(context, vm.exportText()) },
+        onShare = { scope.launch { shareText(context, vm.exportText()) } },
         onClear = vm::clear,
     )
 }

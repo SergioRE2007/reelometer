@@ -131,6 +131,7 @@ fun SettingsRoute(
             },
             onQuickSendClearPhoto = { app, name -> vm.clearQuickSendPhoto(app, name) },
             onReplayTour = { vm.replayTour(onReady = onReplayTour) },
+            onShowAllTabs = vm::showAllTabs,
         ),
     )
 }

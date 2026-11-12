@@ -6,7 +6,7 @@ package com.reelometro.app.ui.tour
  * necesita y cuándo se acaba (terminado o saltado).
  */
 
-/** Pestañas que usa el recorrido; [index] es el de la barra (0 Hoy · 1 Estadísticas · 2 Resumen · 3 Pasaporte). */
+/** Pestañas que usa el recorrido; [index] es el de la barra (0 Hoy · 1 Estadísticas · 2 Resumen · 3 Flap). */
 enum class TourTab(val index: Int) {
     TODAY(0),
     STATS(1),
@@ -16,7 +16,7 @@ enum class TourTab(val index: Int) {
 
 /**
  * Pasos del recorrido, en orden. Cada uno señala un elemento real (su `TourTarget` del mismo nombre)
- * en la pestaña [tab]. [passportOnly]: solo existe con el modo pasaporte encendido.
+ * en la pestaña [tab]. [passportOnly]: solo existe con Flap encendido en Ajustes.
  */
 enum class TourStep(val tab: TourTab, val passportOnly: Boolean = false) {
     /** El marcador de Hoy. */
@@ -31,7 +31,7 @@ enum class TourStep(val tab: TourTab, val passportOnly: Boolean = false) {
     /** El Resumen y sus historias. */
     WRAPPED(TourTab.WRAPPED),
 
-    /** Flap y el Pasaporte. */
+    /** Flap: empieza cada día a tope y cada vídeo le quita vida. */
     PASSPORT(TourTab.PASSPORT, passportOnly = true),
 
     /** Dónde están Ajustes (y, con siete toques en la versión, Calibración). */
@@ -47,6 +47,8 @@ data class TourState(
     val index: Int = 0,
     val finished: Boolean = false,
     val skipped: Boolean = false,
+    /** Quedan pestañas por aparecer (descubrimiento progresivo): el paso de Ajustes lo cuenta. */
+    val moreToCome: Boolean = false,
 ) {
     /** Paso visible; `null` si ya ha terminado (o no hay pasos). */
     val step: TourStep? get() = if (finished) null else steps.getOrNull(index)
@@ -62,19 +64,26 @@ data class TourState(
 
 object TourLogic {
 
-    /** Pasos según el modo pasaporte (sin él, cinco: el del Pasaporte no existe). */
-    fun steps(passportEnabled: Boolean): List<TourStep> =
-        TourStep.entries.filter { passportEnabled || !it.passportOnly }
+    /**
+     * Pasos según Flap (apagado, cinco: el de Flap no existe) y las [visibleTabs]
+     * pestañas a la vista (descubrimiento progresivo: no se presenta una pestaña que aún no ha aparecido).
+     * Los de Hoy y Ajustes siempre quedan.
+     */
+    fun steps(passportEnabled: Boolean, visibleTabs: Int = 4): List<TourStep> =
+        TourStep.entries.filter { (passportEnabled || !it.passportOnly) && it.tab.index < visibleTabs }
 
     /** Recorrido desde el principio. */
-    fun start(passportEnabled: Boolean): TourState = TourState(steps(passportEnabled))
+    fun start(passportEnabled: Boolean, visibleTabs: Int = 4): TourState = TourState(
+        steps = steps(passportEnabled, visibleTabs),
+        moreToCome = visibleTabs < (if (passportEnabled) TourTab.entries.size else TourTab.entries.size - 1),
+    )
 
     /**
      * Retoma el recorrido en el paso guardado [stepName] (rotación, proceso recreado). Si ese paso
-     * ya no existe (han apagado el modo pasaporte justo en él), sigue en el siguiente que quede.
+     * ya no existe (han apagado Flap justo en él), sigue en el siguiente que quede.
      */
-    fun resume(passportEnabled: Boolean, stepName: String?): TourState {
-        val fresh = start(passportEnabled)
+    fun resume(passportEnabled: Boolean, stepName: String?, visibleTabs: Int = 4): TourState {
+        val fresh = start(passportEnabled, visibleTabs)
         val saved = TourStep.entries.firstOrNull { it.name == stepName } ?: return fresh
         val index = fresh.steps.indexOfFirst { it.ordinal >= saved.ordinal }
         return if (index < 0) fresh.copy(index = fresh.steps.lastIndex.coerceAtLeast(0)) else fresh.copy(index = index)

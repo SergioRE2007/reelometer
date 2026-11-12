@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -126,12 +127,14 @@ class SettingsActions(
     val onReplayOnboarding: () -> Unit,
     val onOpenCalibration: () -> Unit,
     val onSeedSampleData: () -> Unit,
-    /** Modo pasaporte (01). */
+    /** Flap, la mascota (01). */
     val onPassport: (Boolean) -> Unit = {},
     /** Aviso en directo al pasar el objetivo (02). */
     val onNotifyGoalLive: (Boolean) -> Unit = {},
     /** VER EL RECORRIDO (08). */
     val onReplayTour: () -> Unit = {},
+    /** ENSEÑAR TODAS LAS PESTAÑAS (08), solo con pestañas aún ocultas. */
+    val onShowAllTabs: () -> Unit = {},
     /** «A quién envías» en Instagram y TikTok (03). */
     val onRecordRecipients: (Boolean) -> Unit = {},
     /** «Envío rápido» en Instagram y TikTok (03). */
@@ -496,6 +499,7 @@ private fun GoalSection(s: SettingsState, actions: SettingsActions) {
                 onValueChange = actions.onGoalChange,
                 range = AppSettings.MIN_GOAL..AppSettings.MAX_GOAL,
                 step = goalStep(goal),
+                valueDescription = { com.reelometro.app.copy.Words.videos(it) },
                 decreaseDescription = SettingsCopy.GOAL_DECREASE,
                 increaseDescription = SettingsCopy.GOAL_INCREASE,
             )
@@ -510,12 +514,12 @@ private fun GoalSection(s: SettingsState, actions: SettingsActions) {
         ReceiptLine(SettingsCopy.GOAL_LINE, SettingsCopy.goalValue(null), valueColor = ReelTheme.colors.textMuted)
         ReelButton(SettingsCopy.GOAL_SET, onClick = actions.onAddGoal, style = ReelButtonStyle.Ghost)
     }
-    PassportLine(s, actions)
+    FlapLine(s, actions)
 }
 
-/** Modo pasaporte: el juego premia quedarse por debajo, así que va con el objetivo. */
+/** Flap: el objetivo decide cuánto aguanta (con el objetivo llega a la noche a media vida), así que va con él. */
 @Composable
-private fun PassportLine(s: SettingsState, actions: SettingsActions) {
+private fun FlapLine(s: SettingsState, actions: SettingsActions) {
     Spacer(Modifier.height(Space.x4))
     TicketDivider(style = TicketDividerStyle.Dashed)
     Spacer(Modifier.height(Space.x2))
@@ -739,6 +743,7 @@ private class RowPhoto(val bitmap: Bitmap?, val chosen: Boolean)
  * `Los del piso ········ FIJADO`: toda la fila fija o quita; con el cupo lleno, las demás quedan apagadas. Fijado,
  * debajo lleva ELEGIR FOTO (de la galería) y, si tiene una elegida, QUITAR FOTO (1.4.3).
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun QuickSendRow(
     line: QuickSendLine,
@@ -764,7 +769,11 @@ private fun QuickSendRow(
         QuickSendPinLine(line, photo.bitmap, enabled, onToggle)
         if (line.pinned) {
             // Alineado con el nombre: debajo de la burbuja no va nada.
-            Row(Modifier.padding(start = Space.x12 + Space.x3), verticalAlignment = Alignment.CenterVertically) {
+            // FlowRow: con letra grande, QUITAR FOTO baja a otra línea en vez de recortarse.
+            FlowRow(
+                Modifier.padding(start = Space.x12 + Space.x3),
+                horizontalArrangement = Arrangement.spacedBy(Space.x5),
+            ) {
                 ReelButton(
                     if (photo.chosen) SettingsCopy.QUICK_SEND_PHOTO_CHANGE else SettingsCopy.QUICK_SEND_PHOTO_PICK,
                     onClick = onPickPhoto,
@@ -773,7 +782,6 @@ private fun QuickSendRow(
                     contentDescription = SettingsCopy.quickSendPhotoPickDescription(line.name, photo.chosen),
                 )
                 if (photo.chosen) {
-                    Spacer(Modifier.width(Space.x5))
                     ReelButton(
                         SettingsCopy.QUICK_SEND_PHOTO_CLEAR,
                         onClick = onClearPhoto,
@@ -1084,6 +1092,7 @@ private fun AboutSection(s: SettingsState, onVersionTap: () -> Unit, actions: Se
     Spacer(Modifier.height(Space.x3))
     ReelButton(SettingsCopy.REPLAY_ONBOARDING, onClick = actions.onReplayOnboarding, style = ReelButtonStyle.Ghost)
     ReelButton(SettingsCopy.REPLAY_TOUR, onClick = actions.onReplayTour, style = ReelButtonStyle.Ghost)
+    if (s.tabsHidden) ReelButton(SettingsCopy.SHOW_ALL_TABS, onClick = actions.onShowAllTabs, style = ReelButtonStyle.Ghost)
     if (AppLinks.PROJECT_URL.isNotBlank()) ProjectBlock(AppLinks.PROJECT_URL)
     Spacer(Modifier.height(Space.x8))
     Text(SettingsCopy.SIGNATURE, style = ReelTheme.type.quoteSmall, color = ReelTheme.colors.textMuted)
@@ -1237,6 +1246,7 @@ private fun NotifyTimeDialog(
             onValueChange = { h = it },
             range = 0..23,
             format = ::twoDigits,
+            valueDescription = SettingsCopy::timeHourValue,
             decreaseDescription = SettingsCopy.TIME_HOUR_DOWN,
             increaseDescription = SettingsCopy.TIME_HOUR_UP,
         )
@@ -1249,6 +1259,7 @@ private fun NotifyTimeDialog(
             range = 0..LAST_MINUTE,
             step = MINUTE_STEP,
             format = ::twoDigits,
+            valueDescription = SettingsCopy::timeMinuteValue,
             decreaseDescription = SettingsCopy.TIME_MINUTE_DOWN,
             increaseDescription = SettingsCopy.TIME_MINUTE_UP,
         )

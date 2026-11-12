@@ -83,8 +83,9 @@ import kotlinx.coroutines.delay
  * - Cada paso pide su pestaña con [onShowTab] (`TodayDest`, `StatsDest`, `WrappedDest`, `PassportDest`).
  *
  * @param pending el recorrido está pendiente (onboarding hecho y recorrido sin ver).
- * @param currentTab índice de la pestaña visible (0 Hoy, 1 Estadísticas, 2 Resumen, 3 Pasaporte) o −1.
- * @param passportEnabled si es `false`, se salta el paso del Pasaporte.
+ * @param currentTab índice de la pestaña visible (0 Hoy, 1 Estadísticas, 2 Resumen, 3 Flap) o −1.
+ * @param passportEnabled Flap encendido en Ajustes; si es `false`, se salta el paso de Flap.
+ * @param visibleTabs pestañas a la vista (descubrimiento progresivo): se saltan los pasos de las que aún no han aparecido.
  * @param targets límites de los elementos marcados con [tourTarget].
  * @param onShowTab cambia a la pestaña de un paso (`TodayDest`, `StatsDest`, `WrappedDest`, `PassportDest`).
  * @param onFinished al terminar o saltar (`skipped = true`); se guarda como visto.
@@ -95,6 +96,7 @@ fun TourHost(
     currentTab: Int,
     passportEnabled: Boolean,
     targets: TourTargets,
+    visibleTabs: Int = 4,
     onShowTab: (Any) -> Unit,
     onFinished: (skipped: Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -112,7 +114,7 @@ fun TourHost(
     }
     if (!pending || closed || currentTab < 0) return
 
-    val state = TourLogic.resume(passportEnabled, savedStep)
+    val state = TourLogic.resume(passportEnabled, savedStep, visibleTabs)
     val step = state.step ?: return
     val showTab by rememberUpdatedState(onShowTab)
     val finish by rememberUpdatedState(onFinished)
@@ -313,7 +315,7 @@ private fun TourPanel(state: TourState, step: TourStep, hole: Rect?, onNext: () 
                         .weight(1f, fill = false)
                         .verticalScroll(rememberScrollState())
                         .clearAndSetSemantics {
-                            contentDescription = TourCopy.announcement(step, state.number, state.total, hasTarget)
+                            contentDescription = TourCopy.announcement(step, state.number, state.total, hasTarget, state.moreToCome)
                             liveRegion = LiveRegionMode.Polite
                         },
                 ) {
@@ -321,7 +323,7 @@ private fun TourPanel(state: TourState, step: TourStep, hole: Rect?, onNext: () 
                     Spacer(Modifier.height(Space.x2))
                     Text(TourCopy.title(step), style = type.title, color = colors.text)
                     Spacer(Modifier.height(Space.x2))
-                    Text(TourCopy.text(step, hasTarget), style = type.body, color = colors.text)
+                    Text(TourCopy.text(step, hasTarget, state.moreToCome), style = type.body, color = colors.text)
                 }
                 Spacer(Modifier.height(Space.x5))
                 Row(

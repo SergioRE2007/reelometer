@@ -137,7 +137,7 @@ internal fun TodayWidgetContent(data: WidgetData?) {
             Arrangement.STACKED, Arrangement.SIDE -> Stacked(model, layout, board, glyphs)
             Arrangement.ROW -> Compact(model, layout, board, glyphs)
         }
-        // Flap (modo pasaporte, solo en el tamaño grande): abajo a la derecha, junto al marcador y
+        // Flap (si está encendido en Ajustes, solo en el tamaño grande): abajo a la derecha, junto al marcador y
         // encima de la barra del objetivo. La maqueta ya ha estrechado el marcador para dejarle sitio;
         // va en una capa aparte para no anidar más el marcador (RemoteViews limita la profundidad).
         val flap = model.flap
@@ -292,7 +292,7 @@ private fun GoalBar(fraction: Float, exceeded: Boolean, width: Float) {
 }
 
 /**
- * Flap en pixel art (el mismo dibujo que en el Pasaporte): una máscara por color apilada en una
+ * Flap en pixel art (el mismo dibujo que en la pestaña FLAP): una máscara por color apilada en una
  * caja y teñida con los colores del widget (ficha `bgSunken`, bisagra `bg`, gris, tinta y acento),
  * así cambia sola entre claro y oscuro. Decorativo para TalkBack (el widget entero ya se lee).
  */

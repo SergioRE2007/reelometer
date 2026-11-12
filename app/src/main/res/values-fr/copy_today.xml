@@ -346,4 +346,45 @@
         <item>Je ne compte aucune appli. Facile, comme ça.</item>
         <item>Aucune appli activée dans les réglages. Le compteur est en vacances.</item>
     </string-array>
+
+    <!-- Servicio activado en Ajustes, pero Android no lo ha arrancado (o su arranque ha fallado). Va con el botón de abajo. -->
+    <string-array name="today_service_stalled">
+        <item>Le service est activé, mais Android ne l’a pas démarré\u00A0: je ne compte rien pour l’instant. Ça se répare.</item>
+        <item>L’interrupteur est allumé, mais le système ne me laisse pas travailler. Ça arrive souvent sur Xiaomi. Ça se règle en une minute.</item>
+        <item>Activé, oui. En marche, non\u00A0: Android n’a pas démarré le service. Ce que tu regardes maintenant ne compte pas.</item>
+    </string-array>
+    <string name="today_service_stalled_action">RÉPARER</string>
+
+    <!-- El servicio funcionaba y ha salido apagado sin que el usuario lo apagara: lo quitó el móvil al cerrar la app. Va con el botón today_service_stalled_action. lost_reason: %1$s = una de today_service_lost, %2$s = una de calibration_exit_cat_* (copy_calibration.xml). -->
+    <string-array name="today_service_lost">
+        <item>Ton téléphone a désactivé le service de lui-même. Ce n’est pas toi. Ce que tu regardes maintenant ne compte pas\u00A0; ça se répare.</item>
+        <item>Le service s’est désactivé tout seul\u00A0: ton téléphone a fermé Reelometer et l’a retiré de l’Accessibilité. Ça se répare en une minute.</item>
+        <item>Ce n’est pas toi qui l’as désactivé\u00A0: c’est ton téléphone, en fermant l’appli. En attendant, le compteur ne compte rien.</item>
+    </string-array>
+    <string name="today_service_lost_reason">%1$s Motif noté par Android\u00A0: %2$s.</string>
+
+    <!-- Descubrimiento progresivo: el primer día solo está Hoy y las demás pestañas aparecen con los días. Novedad: presenta la pestaña recién aparecida (una cada vez); usa el nombre de la pestaña de copy_labels.xml. -->
+    <string name="today_news_stats_title">NOUVEAU · STATISTIQUES</string>
+    <string name="today_news_stats_text">Tu as déjà plusieurs jours comptés. Dans Statistiques, chaque jour est une barre\u00A0: garde le doigt dessus pour voir son chiffre.</string>
+    <string name="today_news_stats_action">VOIR LES STATISTIQUES</string>
+    <string name="today_news_wrapped_title">NOUVEAU · BILAN</string>
+    <string name="today_news_wrapped_text">Tu as maintenant un bilan de ta semaine\u00A0: raconté comme une histoire, avec un ticket à partager, si tu oses.</string>
+    <string name="today_news_wrapped_action">VOIR LE BILAN</string>
+    <string name="today_news_passport_title">NOUVEAU · FLAP</string>
+    <string name="today_news_passport_text">Flap commence chaque jour en pleine forme et chaque vidéo regardée lui retire de la vie. À minuit, il revit. Si ce n’est pas pour toi, ça se coupe dans Réglages.</string>
+    <string name="today_news_passport_action">VOIR FLAP</string>
+    <string name="today_news_dismiss">COMPRIS</string>
+    <string name="today_news_dismiss_description">Fermer cette nouveauté</string>
+
+    <!-- Pista al final de Hoy con lo que aún no ha aparecido y el botón para enseñarlo todo ya. -->
+    <string name="today_reveal_hint_stats_wrapped_passport">Statistiques, Bilan et Flap apparaîtront au fil des jours comptés.</string>
+    <string name="today_reveal_hint_stats_wrapped">Statistiques et Bilan apparaîtront au fil des jours comptés.</string>
+    <string name="today_reveal_hint_wrapped_passport">Bilan et Flap apparaîtront dès que tu auras une semaine comptée.</string>
+    <string name="today_reveal_hint_wrapped">Le Bilan apparaîtra dès que tu auras une semaine comptée.</string>
+    <string name="today_reveal_hint_passport">Flap apparaîtra plus tard.</string>
+    <string name="today_reveal_all">TOUT MONTRER MAINTENANT</string>
+    <string name="today_reveal_all_description">Montrer tous les onglets maintenant</string>
+
+    <!-- Aviso «sin señal» de Hoy con el motivo del cierre: %1$s = la frase de today_service_stalled, %2$s = una de onboarding_exit_*. -->
+    <string name="today_service_stalled_reason">%1$s %2$s</string>
 </resources>

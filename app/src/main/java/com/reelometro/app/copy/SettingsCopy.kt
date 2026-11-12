@@ -146,7 +146,7 @@ object SettingsCopy {
     /** Ayuda del selector: «Entre 5 y 2.000 vídeos al día.». */
     fun goalRange(min: Int, max: Int): String = OnboardingCopy.goalRange(min, max)
 
-    /** Interruptor del modo Pasaporte, bajo el objetivo: el juego premia quedarse por debajo. */
+    /** Interruptor de Flap, bajo el objetivo: el objetivo decide cuánto aguanta Flap. */
     val PASSPORT_LABEL: String get() = str(R.string.settings_passport_label)
 
     val PASSPORT_DESCRIPTION: String get() = str(R.string.settings_passport_description)
@@ -189,6 +189,10 @@ object SettingsCopy {
     val TIME_HOUR_UP: String get() = str(R.string.settings_time_hour_up)
     val TIME_MINUTE_DOWN: String get() = str(R.string.settings_time_minute_down)
     val TIME_MINUTE_UP: String get() = str(R.string.settings_time_minute_up)
+
+    /** TalkBack del selector de hora: «7 horas», «5 minutos» (la cifra con su unidad). */
+    fun timeHourValue(h: Int): String = plural(R.plurals.settings_time_hour_value, h, Format.integer(h))
+    fun timeMinuteValue(m: Int): String = plural(R.plurals.settings_time_minute_value, m, Format.integer(m))
 
     /** Pedir el permiso de avisos (Android 13+), antes de que se haya denegado del todo. */
     val NOTIFICATIONS_ASK: String get() = OnboardingCopy.NOTIFY_RATIONALE
@@ -364,7 +368,8 @@ object SettingsCopy {
 
     /**
      * Vista previa, una frase por línea: «En el archivo hay 1.234 vídeos (3 mar – 4 nov 2026).», «230 ya
-     * estaban guardados: no se repiten.», las líneas rotas, si trae el pasaporte y que los ajustes no viajan.
+     * estaban guardados: no se repiten.», las líneas rotas y que los ajustes no viajan. El bloque PASAPORTE de
+     * los CSV de antes de 1.12.0 se ignora al importar: no se menciona.
      */
     fun importPreview(preview: ImportPreview): String = buildList {
         val from = preview.from
@@ -378,7 +383,6 @@ object SettingsCopy {
         if (preview.badLines > 0) {
             add(plural(R.plurals.settings_import_preview_bad, preview.badLines, Format.integer(preview.badLines)))
         }
-        if (preview.hasPassport) add(str(R.string.settings_import_preview_passport))
         add(str(R.string.settings_import_preview_settings))
     }.joinToString("\n")
 
@@ -517,6 +521,7 @@ object SettingsCopy {
 
     /** Volver a ver el recorrido guiado (empieza en Hoy). */
     val REPLAY_TOUR: String get() = str(R.string.settings_replay_tour)
+    val SHOW_ALL_TABS: String get() = str(R.string.settings_show_all_tabs)
 
     val LICENSES_LABEL: String get() = str(R.string.settings_licenses_label)
     val FONTS_LICENSE: String get() = str(R.string.settings_fonts_license)

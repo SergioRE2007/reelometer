@@ -3,6 +3,7 @@ package com.reelometro.app.widget
 import com.reelometro.app.copy.StateCopy
 import com.reelometro.app.copy.WidgetCopy
 import com.reelometro.app.game.FlapMood
+import com.reelometro.app.game.FlapRules
 import com.reelometro.app.ui.components.flap.FlapCell
 import com.reelometro.app.ui.components.flap.FlapContent
 import com.reelometro.app.ui.components.flap.FlapPad
@@ -18,10 +19,18 @@ internal data class WidgetData(
     val goal: Int?,
     /** El servicio de accesibilidad está activado en los ajustes del sistema. */
     val serviceOn: Boolean,
-    /** Estado de Flap (modo pasaporte); `null` con el modo apagado: no se pinta. */
+    /** Estado de Flap ([flapFor]); `null` con Flap apagado en Ajustes: no se pinta. */
     val flap: FlapMood? = null,
 ) {
     companion object {
+        /**
+         * Flap del widget: el mismo estado que la pestaña FLAP, solo con los vídeos de hoy frente a su
+         * aguante (el objetivo o, sin objetivo, [FlapRules.DEFAULT_LIMIT]); sin historial. `null` con
+         * Flap apagado en Ajustes ([enabled], el ajuste `passportEnabled`).
+         */
+        fun flapFor(enabled: Boolean, count: Int, goal: Int?): FlapMood? =
+            if (enabled) FlapRules.moodFor(count, FlapRules.limitFor(goal)) else null
+
         /** Vista previa del selector de widgets: la cifra de referencia de docs/DESIGN.md §8. */
         val PREVIEW = WidgetData(
             date = LocalDate.of(2026, 3, 10),

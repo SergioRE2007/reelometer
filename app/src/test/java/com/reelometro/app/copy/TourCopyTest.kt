@@ -1,6 +1,5 @@
 package com.reelometro.app.copy
 
-import com.reelometro.app.game.TravelerLevel
 import com.reelometro.app.stats.Format
 import com.reelometro.app.ui.tour.TourStep
 import org.junit.Assert.assertEquals
@@ -9,7 +8,7 @@ import org.junit.Test
 
 /**
  * Textos del recorrido guiado ([TourCopy]), entradas nuevas de
- * Ajustes y avisos en directo y de nivel ([NotificationCopy]). Las reglas de estilo son las de
+ * Ajustes y aviso en directo ([NotificationCopy]). Las reglas de estilo son las de
  * [CopyRules]; `CopyCatalogTest` ya recorre por reflexión las constantes de SettingsCopy y NotificationCopy.
  */
 class TourCopyTest {
@@ -52,9 +51,14 @@ class TourCopyTest {
     }
 
     @Test
-    fun `ajustes menciona la calibracion y el pasaporte habla de ver menos`() {
+    fun `ajustes menciona la calibracion y Flap cuenta que cada video le quita vida`() {
         assertTrue("calibración" in TourCopy.text(TourStep.SETTINGS))
-        assertTrue("viendo menos" in TourCopy.text(TourStep.PASSPORT))
+        assertEquals("Flap", TourCopy.title(TourStep.PASSPORT))
+        val flap = TourCopy.text(TourStep.PASSPORT)
+        assertTrue(flap, "vídeo" in flap && "vida" in flap && "medianoche" in flap)
+        // Nada del juego de antes.
+        val lower = (flap + TourCopy.title(TourStep.PASSPORT)).lowercase(Format.locale)
+        assertTrue(flap, listOf("pasaporte", "sello", "nivel", "experiencia").none { it in lower })
     }
 
     @Test
@@ -121,24 +125,22 @@ class TourCopyTest {
     }
 
     @Test
-    fun `el aviso de nivel dice el nivel nuevo`() {
-        assertEquals("Nivel nuevo: PLATA", NotificationCopy.levelUp(TravelerLevel.PLATA, 3).title)
-        val texts = (0L until 40L).map { NotificationCopy.levelUp(TravelerLevel.ORO, it).text }.toSet()
-        assertEquals(3, texts.size)
-        assertRules(texts + TravelerLevel.entries.map { NotificationCopy.levelUp(it, 1).title })
-        assertRules(listOf(NotificationCopy.levelUpPublic.title, NotificationCopy.levelUpPublic.text))
-    }
-
-    @Test
     fun `los canales nuevos tienen nombre y descripcion`() {
         assertRules(
             listOf(
                 NotificationCopy.CHANNEL_GOAL_NAME,
                 NotificationCopy.CHANNEL_GOAL_DESCRIPTION,
-                NotificationCopy.CHANNEL_LEVEL_NAME,
-                NotificationCopy.CHANNEL_LEVEL_DESCRIPTION,
             ),
         )
+    }
+
+    @Test
+    fun `el interruptor de Ajustes habla de Flap y no del pasaporte`() {
+        assertTrue(SettingsCopy.PASSPORT_LABEL, "Flap" in SettingsCopy.PASSPORT_LABEL)
+        val description = SettingsCopy.PASSPORT_DESCRIPTION
+        assertTrue(description, "Flap" in description && "widget" in description && "medianoche" in description)
+        val lower = (SettingsCopy.PASSPORT_LABEL + " " + description).lowercase(Format.locale)
+        assertTrue(description, listOf("pasaporte", "sello", "nivel", "reto").none { it in lower })
     }
 
     private companion object {

@@ -31,6 +31,12 @@ fun ServiceSetupRoute(onBack: () -> Unit) {
     val vm: ServicePermissionViewModel = viewModel { ServicePermissionViewModel.create(context) }
     val state by vm.state.collectAsStateWithLifecycle()
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { vm.refresh() }
+    val openAccessibility = {
+        vm.onOpenedSettings()
+        SystemScreens.openAccessibility(context)
+        Unit
+    }
+    val help = rememberConnectionHelp(linksToScreens = true, onOpenAccessibility = openAccessibility)
 
     ServiceSetupScreen(
         state = state,
@@ -43,12 +49,10 @@ fun ServiceSetupRoute(onBack: () -> Unit) {
             vm.decline()
             onBack()
         },
-        onOpenAccessibility = {
-            vm.onOpenedSettings()
-            SystemScreens.openAccessibility(context)
-        },
+        onOpenAccessibility = openAccessibility,
         onOpenAppInfo = { SystemScreens.openAppInfo(context) },
         onToggleRestrictedHelp = vm::toggleRestrictedHelp,
+        help = help,
     )
 }
 
@@ -62,6 +66,7 @@ fun ServiceSetupScreen(
     onOpenAppInfo: () -> Unit,
     onToggleRestrictedHelp: () -> Unit,
     modifier: Modifier = Modifier,
+    help: ConnectionHelp? = null,
 ) {
     Column(
         modifier
@@ -88,6 +93,10 @@ fun ServiceSetupScreen(
                 onToggleRestrictedHelp = onToggleRestrictedHelp,
                 onContinue = onBack,
                 modifier = Modifier.weight(1f),
+                oem = help?.oem,
+                onOpenOem = help?.onOpenOem ?: {},
+                check = help?.check,
+                checkActions = help?.checkActions,
             )
         }
     }

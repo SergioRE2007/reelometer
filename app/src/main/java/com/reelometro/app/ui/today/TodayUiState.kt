@@ -6,6 +6,9 @@ import com.reelometro.app.copy.StateCopy
 import com.reelometro.app.copy.TodayCopy
 import com.reelometro.app.copy.Variants
 import com.reelometro.app.data.settings.AppSettings
+import com.reelometro.app.data.settings.Discovery
+import com.reelometro.app.data.settings.DiscoveryFeature
+import com.reelometro.app.detection.ExitCategory
 import com.reelometro.app.stats.AllTime
 import com.reelometro.app.stats.DayStats
 import java.time.LocalDate
@@ -31,6 +34,8 @@ data class TodayHeader(val text: String, val epochDay: Long)
 /**
  * Lo que va arriba: el marcador y, si toca, el aviso integrado. [canOpenDay] = tocar el marcador
  * abre el detalle (no con las fichas en blanco). [band] es la banda «desde que usas Reelometer».
+ * [news] presenta la última pestaña descubierta (nunca junto a un aviso) y [revealHint] cuenta lo que
+ * aún no ha aparecido, con ENSEÑARLO TODO YA (descubrimiento progresivo).
  */
 @Immutable
 data class TodayTop(
@@ -38,7 +43,24 @@ data class TodayTop(
     val notice: TodayNotice?,
     val band: BandModel?,
     val canOpenDay: Boolean,
+    val news: TodayNews? = null,
+    val revealHint: TodayRevealHint? = null,
 )
+
+/** «NUEVO · ESTADÍSTICAS»: una pestaña recién aparecida, con VER… y ENTENDIDO. */
+@Immutable
+data class TodayNews(
+    val feature: DiscoveryFeature,
+    val title: String,
+    val text: String,
+    val action: String,
+    val dismiss: String,
+    val dismissDescription: String,
+)
+
+/** «Estadísticas, Resumen y Flap irán apareciendo…» + ENSEÑARLO TODO YA. */
+@Immutable
+data class TodayRevealHint(val text: String, val action: String, val actionDescription: String)
 
 /** Aviso con acción: conectar el servicio (divulgación + guía) o abrir Ajustes. */
 @Immutable
@@ -73,17 +95,47 @@ object TodayMapper {
 
     /**
      * @param serviceOn el servicio de accesibilidad está activado en los ajustes del sistema.
+     * @param serviceStalled activado, pero el sistema no lo ha conectado (o su arranque ha fallado): no cuenta nada.
+     * @param stallReason por qué se cerró la app la última vez ([com.reelometro.app.detection.ProcessExits.stallReason]),
+     *   si Android lo guarda: añade la explicación concreta al aviso «sin señal».
+     * @param serviceLost apagado, pero no por el usuario: lo quitó el sistema al cerrar la app
+     *   ([com.reelometro.app.detection.ServiceJournalRules.lostBySystem]). El aviso lo dice y lleva a la guía.
      */
-    fun map(day: DayStats, allTime: AllTime, settings: AppSettings, serviceOn: Boolean): TodayUiState {
+    fun map(
+        day: DayStats,
+        allTime: AllTime,
+        settings: AppSettings,
+        serviceOn: Boolean,
+        serviceStalled: Boolean = false,
+        stallReason: ExitCategory? = null,
+        serviceLost: Boolean = false,
+    ): TodayUiState {
         val date = day.date
         val seed = Variants.daySeed(date)
         val header = header(date)
         val epochDay = date.toEpochDay()
         val band = band(allTime)
+        // La pista (y su ENSEÑARLO TODO YA) va al final de Hoy y no tapa ningún aviso: también se ofrece sin
+        // servicio, que es justo el caso de quien aún no lo ha activado y tiene datos de otros días.
+        val hint = Discovery.hidden(settings.discovery, settings.passportEnabled).takeIf { it.isNotEmpty() }?.let(::revealHint)
 
-        if (!serviceOn) {
+        if (!serviceOn || serviceStalled) {
+            // Activado pero sin funcionar: «ARREGLAR» lleva a la pantalla de conectar, que enseña los pasos.
             // Nunca se ha aceptado la divulgación: se ofrece verla (pantalla de conectar), no los ajustes del sistema.
-            val notice = if (settings.disclosureAccepted) {
+            val notice = if (serviceOn) {
+                TodayNotice(
+                    TodayCopy.serviceStalled(seed, stallReason),
+                    TodayCopy.SERVICE_STALLED_ACTION,
+                    NoticeTarget.CONNECT_SERVICE,
+                )
+            } else if (settings.disclosureAccepted && serviceLost) {
+                // No lo ha apagado el usuario: se dice, con el motivo si Android lo apunta, y se lleva a la guía.
+                TodayNotice(
+                    TodayCopy.serviceLost(seed, stallReason),
+                    TodayCopy.SERVICE_STALLED_ACTION,
+                    NoticeTarget.CONNECT_SERVICE,
+                )
+            } else if (settings.disclosureAccepted) {
                 TodayNotice(TodayCopy.serviceOff(seed), Buttons.CONNECT, NoticeTarget.CONNECT_SERVICE)
             } else {
                 TodayNotice(TodayCopy.serviceNeverEnabled(seed), Buttons.SEE_PERMISSION, NoticeTarget.CONNECT_SERVICE)
@@ -95,7 +147,7 @@ object TodayMapper {
                 description = TodayCopy.SERVICE_OFF_DESCRIPTION,
                 alert = true,
             )
-            return TodayUiState.Empty(header, TodayTop(hero, notice, band, canOpenDay = false))
+            return TodayUiState.Empty(header, TodayTop(hero, notice, band, canOpenDay = false, revealHint = hint))
         }
 
         val count = day.totals.count
@@ -116,7 +168,9 @@ object TodayMapper {
         } else {
             null
         }
-        val top = TodayTop(hero, notice, band, canOpenDay = true)
+        // La novedad nunca tapa un aviso (sin servicio, sin señal o sin apps: esos mandan).
+        val news = if (notice == null) Discovery.pendingNews(settings.discovery, settings.passportEnabled)?.let(::news) else null
+        val top = TodayTop(hero, notice, band, canOpenDay = true, news = news, revealHint = hint)
         if (day.isEmpty) return TodayUiState.Empty(header, top)
 
         val sections = TodaySections(
@@ -127,6 +181,21 @@ object TodayMapper {
         )
         return TodayUiState.Content(header, top, sections)
     }
+
+    internal fun news(feature: DiscoveryFeature) = TodayNews(
+        feature = feature,
+        title = TodayCopy.newsTitle(feature),
+        text = TodayCopy.newsText(feature),
+        action = TodayCopy.newsAction(feature),
+        dismiss = TodayCopy.NEWS_DISMISS,
+        dismissDescription = TodayCopy.NEWS_DISMISS_DESCRIPTION,
+    )
+
+    internal fun revealHint(hidden: List<DiscoveryFeature>) = TodayRevealHint(
+        text = TodayCopy.revealHint(hidden),
+        action = TodayCopy.REVEAL_ALL,
+        actionDescription = TodayCopy.REVEAL_ALL_DESCRIPTION,
+    )
 
     /** Sin banda si no hay historial o si empieza hoy (repetiría el marcador). */
     internal fun band(allTime: AllTime): BandModel? {

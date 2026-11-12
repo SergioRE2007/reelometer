@@ -112,7 +112,13 @@ private fun TitleBlock(kicker: String?, title: String?, titleStyle: TextStyle, m
     val colors = ReelTheme.colors
     Column(modifier) {
         if (kicker != null) {
-            Label(kicker, color = if (title != null) colors.textMuted else colors.text, large = title == null)
+            Label(
+                kicker,
+                // Si va solo, es el único rótulo de la pantalla: encabezado para TalkBack.
+                modifier = if (title == null) Modifier.semantics { heading() } else Modifier,
+                color = if (title != null) colors.textMuted else colors.text,
+                large = title == null,
+            )
         }
         if (kicker != null && title != null) Spacer(Modifier.height(Space.x1))
         if (title != null) {

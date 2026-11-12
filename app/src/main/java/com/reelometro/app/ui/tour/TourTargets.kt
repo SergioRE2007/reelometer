@@ -27,7 +27,7 @@ enum class TourTarget {
     /** El Resumen / Wrapped (la primera tira del hub). */
     WRAPPED,
 
-    /** Flap en la pestaña Pasaporte. */
+    /** Flap en su pestaña. */
     PASSPORT,
 
     /** El acceso a Ajustes (y, desde allí, Calibración). */

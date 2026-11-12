@@ -145,15 +145,65 @@ object CalibrationLog {
         }
     }
 
-    /** Texto plano con una línea por evento, del más antiguo al más reciente. */
-    fun exportText(): String {
+    /**
+     * Texto plano con una línea por evento, del más antiguo al más reciente.
+     *
+     * @param fallbackEnvironment móvil y versiones si el servicio no ha llegado a ponerlos (no se ha conectado).
+     * @param service estado del servicio ([ServiceHealth]) para la cabecera: con 0 eventos es lo primero que mirar.
+     * @param performance líneas de rendimiento del servicio ([ServiceMetrics]), ya en texto: van en la cabecera.
+     * @param exits últimos cierres de la app ([ProcessExits.recent]), ya en texto, con su título si se han podido leer:
+     *   van detrás.
+     * @param system estado del sistema, conexiones del servicio y fallos contenidos ([SystemState], [ServiceJournal],
+     *   [ServiceFailures]), ya en texto: va detrás de los cierres.
+     * @param privateNames nombres de contactos y grupos del usuario: se cambian por `redactToken(n)` en la nota y la
+     *   regla de cada evento ([CalibrationRedactor]) para que no salgan del móvil. La cabecera no se toca.
+     *
+     * Las frases fijas de la cabecera («registro de calibración», «Servicio:», «eventos…») van siempre en español
+     * (deuda conocida: es un registro para desarrollo); quien llama pasa [performance] también en español.
+     */
+    fun exportText(
+        fallbackEnvironment: String? = null,
+        service: ServiceHealth? = null,
+        performance: List<String> = emptyList(),
+        exits: List<String> = emptyList(),
+        system: List<String> = emptyList(),
+        privateNames: Collection<String> = emptyList(),
+        redactToken: (Int) -> String = { "[#$it]" },
+    ): String {
         val list = events.value
-        return buildString {
+        val redactor = CalibrationRedactor.compile(privateNames, redactToken)
+        val text = buildString {
             appendLine("Reelometer · registro de calibración")
-            environment?.let { appendLine(it) }
+            (environment ?: fallbackEnvironment)?.let { appendLine(it) }
+            service?.let { appendLine("Servicio: ${it.name}") }
+            ServiceStatus.startError.value?.let { appendLine("Fallo al arrancar el servicio: $it") }
+            ServiceStatus.startIssues.value.forEach { appendLine("Aviso al arrancar el servicio: $it") }
+            if (performance.isNotEmpty()) {
+                appendLine()
+                performance.forEach { appendLine(it) }
+                appendLine()
+            }
+            if (exits.isNotEmpty()) {
+                if (performance.isEmpty()) appendLine()
+                // La descripción viene del sistema: ya va limpia ([ExitReasons.safeDescription]), y por si acaso se
+                // le quitan también los nombres.
+                exits.forEach { appendLine(redactor?.invoke(it) ?: it) }
+                appendLine()
+            }
+            if (system.isNotEmpty()) {
+                if (performance.isEmpty() && exits.isEmpty()) appendLine()
+                // Solo horas, cifras y nombres de clases; por si acaso, también sin nombres.
+                system.forEach { appendLine(redactor?.invoke(it) ?: it) }
+                appendLine()
+            }
             appendLine("${list.size} eventos (del más antiguo al más reciente)")
             appendLine()
-            for (event in list.asReversed()) appendLine(event.toLine())
+            for (event in list.asReversed()) appendLine(redactor?.let { event.redacted(it) }?.toLine() ?: event.toLine())
         }
+        return text
     }
+
+    /** Solo los campos libres (nota y regla) pueden llevar un nombre: las claves fijas y la cabecera no se tocan. */
+    private fun CalibrationEvent.redacted(redact: (String) -> String): CalibrationEvent =
+        copy(note = note?.let(redact), rule = rule?.let(redact))
 }

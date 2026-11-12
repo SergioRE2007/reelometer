@@ -9,7 +9,7 @@ import org.junit.Test
 class TourLogicTest {
 
     @Test
-    fun `con el modo pasaporte son seis pasos en orden`() {
+    fun `con Flap encendido son seis pasos en orden`() {
         assertEquals(
             listOf(
                 TourStep.COUNTER,
@@ -24,7 +24,7 @@ class TourLogicTest {
     }
 
     @Test
-    fun `sin el modo pasaporte se salta el paso del pasaporte`() {
+    fun `con Flap apagado se salta el paso de Flap`() {
         val steps = TourLogic.steps(passportEnabled = false)
         assertEquals(5, steps.size)
         assertFalse(TourStep.PASSPORT in steps)
@@ -76,7 +76,7 @@ class TourLogicTest {
     }
 
     @Test
-    fun `sin pasaporte el ultimo paso es ajustes y son cinco`() {
+    fun `sin Flap el ultimo paso es ajustes y son cinco`() {
         var state = TourLogic.start(passportEnabled = false)
         val seen = mutableListOf<TourStep>()
         while (!state.finished) {
@@ -109,7 +109,7 @@ class TourLogicTest {
         assertEquals(TourStep.WRAPPED, TourLogic.resume(true, "WRAPPED").step)
         assertEquals(4, TourLogic.resume(true, "WRAPPED").number)
 
-        // Apagan el modo pasaporte justo en su paso: se sigue en Ajustes, que pasa a ser el 5 de 5.
+        // Apagan Flap justo en su paso: se sigue en Ajustes, que pasa a ser el 5 de 5.
         val resumed = TourLogic.resume(false, "PASSPORT")
         assertEquals(TourStep.SETTINGS, resumed.step)
         assertEquals(5, resumed.number)
@@ -123,5 +123,42 @@ class TourLogicTest {
         assertFalse(TourLogic.textBelow(1_500f, 1_800f, 2_000f))
         assertTrue("sin hueco", TourLogic.textBelow(null, null, 2_000f))
         assertTrue("sin medir", TourLogic.textBelow(10f, 20f, 0f))
+    }
+
+    // ------------------------------------------------ descubrimiento progresivo
+
+    @Test
+    fun `con solo Hoy a la vista son tres pasos y avisa de que habrá más`() {
+        assertEquals(
+            listOf(TourStep.COUNTER, TourStep.COMPARISON, TourStep.SETTINGS),
+            TourLogic.steps(passportEnabled = true, visibleTabs = 1),
+        )
+        val state = TourLogic.start(passportEnabled = true, visibleTabs = 1)
+        assertEquals(3, state.total)
+        assertTrue(state.moreToCome)
+    }
+
+    @Test
+    fun `sin la pestaña de Flap no hay su paso`() {
+        assertFalse(TourStep.PASSPORT in TourLogic.steps(passportEnabled = true, visibleTabs = 3))
+        assertFalse(TourStep.PASSPORT in TourLogic.steps(passportEnabled = false, visibleTabs = 4))
+        assertTrue(TourStep.WRAPPED in TourLogic.steps(passportEnabled = true, visibleTabs = 3))
+    }
+
+    @Test
+    fun `con todo a la vista no avisa de nada y los pasos son los de siempre`() {
+        assertFalse(TourLogic.start(passportEnabled = true, visibleTabs = 4).moreToCome)
+        assertFalse(TourLogic.start(passportEnabled = false, visibleTabs = 3).moreToCome)
+        assertTrue(TourLogic.start(passportEnabled = true, visibleTabs = 3).moreToCome)
+        assertFalse(TourLogic.start(passportEnabled = true).moreToCome)
+        assertEquals(TourLogic.steps(passportEnabled = true, visibleTabs = 4), TourLogic.steps(passportEnabled = true))
+        assertEquals(TourLogic.steps(passportEnabled = false, visibleTabs = 4), TourLogic.steps(passportEnabled = false))
+    }
+
+    @Test
+    fun `si el paso guardado es de una pestaña oculta sigue en Ajustes`() {
+        val state = TourLogic.resume(passportEnabled = true, stepName = "STATS_BARS", visibleTabs = 1)
+        assertEquals(TourStep.SETTINGS, state.step)
+        assertTrue(state.isLast)
     }
 }

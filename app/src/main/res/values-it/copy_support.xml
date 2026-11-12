@@ -23,4 +23,16 @@
     <string name="support_pane_title">Sostieni Reelometer</string>
     <string name="support_open_description">Vedi il suo GitHub. Si apre nel browser</string>
     <string name="support_never_description">Non mostrare più questo avviso</string>
+
+    <!--
+      Versión de Google Play: el mismo aviso, NEUTRO. La política de pagos de Play no admite pedir apoyo,
+      donaciones ni pagos fuera de Play: aquí nada de «apoyar», «donar», «café» ni parecidos; solo ofrecer
+      ver el código. Antetítulo, título, nota, error y «No volver a mostrar» son los de arriba.
+    -->
+    <string name="support_text_play">Reelometer è gratis, non ha pubblicità e i tuoi dati non escono dal telefono. La fa uno studente nel tempo libero. Vuoi vedere come è fatta? Il codice è su GitHub.</string>
+    <!-- Botón principal en MAYÚSCULAS. -->
+    <string name="support_open_play">VEDI IL CODICE</string>
+    <!-- TalkBack: título del aviso y del botón principal. -->
+    <string name="support_pane_title_play">Informazioni su Reelometer</string>
+    <string name="support_open_description_play">Vedi il codice su GitHub. Si apre nel browser</string>
 </resources>

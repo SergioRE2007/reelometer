@@ -1,13 +1,13 @@
 # Política de privacidad de Reelometer
 
-**Última actualización:** 7 de noviembre de 2026
+**Última actualización:** 12 de noviembre de 2026
 
 ## En resumen
 
 - Reelometer cuenta los vídeos cortos que ves en TikTok, Instagram Reels y YouTube Shorts, usando el servicio de accesibilidad de Android.
 - Todo lo que cuenta se guarda **solo en tu móvil**. No hay cuentas, ni servidores, ni anuncios, ni analítica.
 - La app **no tiene permiso para usar internet**: no puede enviar nada a ningún sitio, ni a nosotros.
-- Tus datos solo salen del móvil si **tú** los sacas: al exportar un CSV o al compartir tu resumen.
+- Tus datos solo salen del móvil si **tú** los sacas: al exportar un CSV, al compartir tu resumen o, si usas la herramienta oculta de calibración, al copiar o compartir su registro.
 - Puedes borrarlo todo cuando quieras desde la propia app, o desinstalándola.
 
 ## 1. Quién está detrás
@@ -42,34 +42,29 @@ De cada vídeo guarda en tu móvil:
 
 La categoría se calcula **en el propio móvil**, comparando la descripción y los hashtags con una lista de palabras clave. No se usa ningún servicio externo ni inteligencia artificial en la nube.
 
-En **las demás apps** el servicio no lee nada: Android le avisa de que has cambiado de app y Reelometer solo usa ese aviso para dejar de contar. No guarda qué otras apps usas.
+En **las demás apps** el servicio no lee nada de lo que muestran: Android no le pasa sus eventos. Mientras cuenta un vídeo (o enseña las burbujas del envío rápido), mira de vez en cuando de qué app son las ventanas que hay en pantalla, solo para saber si has salido y dejar de contar. No guarda qué otras apps usas.
 
 El servicio **no** guarda lo que escribes, no lee tus mensajes ni tus contraseñas, no graba la pantalla y no pulsa nada por ti ni hace capturas de pantalla, salvo con el **envío rápido** (2.6): solo con el envío rápido, recorta de la hoja de compartir la foto de perfil de las personas o grupos que fijas, para enseñarla en su botón; la guarda solo en este móvil y no hace ninguna otra captura.
 
 ### 2.2. Tus ajustes
 
-La app guarda en el móvil tus preferencias: el objetivo diario, si quieres avisos y a qué hora (también el aviso en directo al pasar el objetivo), qué apps cuenta, si «A quién envías» y el envío rápido están encendidos, los nombres de las personas o grupos que fijas para el envío rápido (como mucho 3 en cada app) y dónde dejas sus burbujas, el tema (claro u oscuro), si el modo Pasaporte está encendido, si has completado la presentación inicial y el recorrido guiado, y si has aceptado la explicación del servicio de accesibilidad.
+La app guarda en el móvil tus preferencias: el objetivo diario, si quieres avisos y a qué hora (también el aviso en directo al pasar el objetivo), qué apps cuenta, si «A quién envías» y el envío rápido están encendidos, los nombres de las personas o grupos que fijas para el envío rápido (como mucho 3 en cada app) y dónde dejas sus burbujas, el tema (claro u oscuro), si Flap (la mascota) está encendido, si has completado la presentación inicial y el recorrido guiado, y si has aceptado la explicación del servicio de accesibilidad. También recuerda cuántas pestañas te ha ido enseñando los primeros días, cuáles te ha presentado ya y el día en que apareció la última; cuántos días distintos has abierto la app y el último, cuántas veces te ha salido el aviso de apoyo al proyecto, el día de la última y si ya no tiene que volver a salir; si has desbloqueado la herramienta de calibración; la carpeta que eliges para la copia semanal, cuándo se hizo la última y si falló; y, solo mientras dura la prueba de un minuto, cuándo empezó, con qué app, un identificador técnico del proceso y cuántos eventos y vídeos llevaba contados (se borra al acabarla o cancelarla).
 
-Para no repetir avisos, recuerda además el día del último aviso en directo y el último nivel del Pasaporte del que te avisó. **Borrar todo** también lo olvida.
+Para no repetir avisos, recuerda además el día del último aviso en directo (**Borrar todo** también lo olvida) y, para el aviso del servicio, el día del último aviso, la hora del último cierre de la app que ya ha tenido en cuenta y las horas de las últimas veces que el servicio se conectó y se desconectó (así sabe si lo apagaste tú o lo apagó el móvil, y de cuál de esas veces ya te avisó).
 
-### 2.3. Modo Pasaporte
+### 2.3. Flap, la mascota
 
-El modo Pasaporte (Flap, tu nivel de viajero, los sellos y el reto de la semana) se calcula en el propio móvil a partir del historial del apartado 2.1. Casi todo se recalcula cada vez; aparte, la app guarda en el móvil solo lo que no se puede recalcular:
+Flap se calcula en el propio móvil a partir de los vídeos que has visto hoy (apartado 2.1) y de tu objetivo diario: empieza cada día con toda la vida y la va perdiendo con cada vídeo. No hay sellos, niveles, retos ni eventos. Lo que se ve de los últimos días sale del mismo historial y se recalcula cada vez. Aparte, la app guarda en el móvil solo una cosa: **el último estado de Flap que viste y su fecha**, para animar el cambio la próxima vez que abras la pestaña.
 
-- la fecha en que conseguiste cada sello y qué celebraciones ya has visto;
-- el nivel más alto que has alcanzado y el último estado de Flap que viste;
-- los retos semanales ya cerrados (el tope, los vídeos de esa semana y si se cumplió);
-- la fecha de la primera vez que compartiste un resumen o guardaste un ticket (solo eso: no a quién ni dónde).
-
-Se guarda en el almacenamiento privado de la app, como todo lo demás, va incluido en el CSV que exportes y se borra con **Borrar todo**. Si apagas el modo Pasaporte en Ajustes, deja de verse y de avisar.
+Se guarda en el almacenamiento privado de la app, como todo lo demás, no va en el CSV que exportes (los CSV de versiones anteriores pueden traer un bloque del antiguo Pasaporte: al importarlo se ignora) y se borra con **Borrar todo**. Si apagas Flap en Ajustes, deja de verse en la pestaña y en el widget.
 
 ### 2.4. Herramienta de calibración (oculta)
 
-En Ajustes hay una herramienta técnica escondida, pensada para ajustar la detección. Si la desbloqueas y la abres, muestra un registro de eventos técnicos (qué app, qué tipo de evento, identificadores y tamaños de los elementos de la pantalla) y, de cada vídeo detectado, el creador, la descripción y los hashtags leídos: los mismos datos del apartado 2.1, nada más. Ese registro solo existe en la memoria del móvil (como mucho, los últimos 500 eventos), no se guarda en ningún archivo, desaparece al pulsar LIMPIAR o cuando Android cierra la app, y solo sale del móvil si tú lo copias o lo compartes.
+En Ajustes hay una herramienta técnica escondida, pensada para ajustar la detección. Si la desbloqueas y la abres, muestra un registro de eventos técnicos (qué app, qué tipo de evento, identificadores y tamaños de los elementos de la pantalla) y, de cada vídeo detectado, el creador, la descripción y los hashtags leídos: los mismos datos del apartado 2.1. Arriba añade la marca y el modelo del móvil, las versiones de Android, de Reelometer y de las apps que cuenta, si el servicio está conectado, cifras de rendimiento del servicio (eventos por minuto y tiempos) y los últimos cierres de la app que guarda Android (fecha, motivo, la descripción del sistema, con los nombres de otras apps tapados, y la memoria que ocupaba la app), lo que Android dice de la app (si tiene restricciones de batería o de uso en segundo plano, su grupo de uso, si puede pausarla por no usarla y si los avisos están permitidos), las horas de las últimas conexiones y desconexiones del servicio y la del último vídeo guardado, cuántos fallos internos del servicio se han evitado (con el tipo de fallo y el punto del código, nunca su mensaje), cuántos avisos de poca memoria ha dado el sistema y, si el arranque del servicio ha fallado del todo o en alguna de sus partes (por ejemplo, las burbujas), el error técnico que dio. Nada más. Los cierres no los guarda Reelometer: los lee de Android cada vez que abres la herramienta o copias o compartes el registro. Ese registro solo existe en la memoria del móvil (como mucho, los últimos 500 eventos), no se guarda en ningún archivo, desaparece al pulsar LIMPIAR o cuando Android cierra la app, y solo sale del móvil si tú lo copias o lo compartes.
 
 ### 2.5. Para qué no se usan
 
-Tus datos solo sirven para enseñarte tus estadísticas, tus resúmenes, tu pasaporte, tus avisos y el widget. **No** se usan para publicidad, no se venden, no se ceden y no se usan para hacer perfiles de nadie.
+Tus datos solo sirven para enseñarte tus estadísticas, tus resúmenes, Flap, tus avisos y el widget. **No** se usan para publicidad, no se venden, no se ceden y no se usan para hacer perfiles de nadie.
 
 ### 2.6. Envío rápido (Instagram y TikTok)
 
@@ -93,11 +88,11 @@ En una base de datos dentro del almacenamiento privado de la app, en tu móvil. 
 
 Tus datos solo salen del móvil cuando **tú** lo decides:
 
-- **Exportar CSV** (Ajustes > Tus datos): la app crea un archivo con tu historial (con los envíos de «A quién envías», si lo usas) y tu pasaporte (sellos, retos y nivel) y tú eliges dónde guardarlo o a quién mandarlo.
-- **Importar CSV** (Ajustes > Tus datos) va en sentido contrario y no envía nada: con el selector de archivos de Android eliges un CSV exportado antes y la app lee **solo ese archivo** (sin permiso para ver los demás) para recuperar tu historial y tu pasaporte. Los ajustes no viajan en el archivo.
+- **Exportar CSV** (Ajustes > Tus datos): la app crea un archivo con tu historial (con los envíos de «A quién envías», si lo usas) y tú eliges dónde guardarlo o a quién mandarlo.
+- **Importar CSV** (Ajustes > Tus datos) va en sentido contrario y no envía nada: con el selector de archivos de Android eliges un CSV exportado antes y la app lee **solo ese archivo** (sin permiso para ver los demás) para recuperar tu historial. Si el archivo viene de una versión anterior y trae el bloque del antiguo Pasaporte, se ignora. Los ajustes no viajan en el archivo.
 - **Copia semanal** (Ajustes > Tus datos), apagada de serie: si la enciendes, eliges con el selector de carpetas de Android una carpeta **de tu móvil** y la app guarda en ella, una vez por semana, el mismo CSV que «Exportar CSV» (se queda con las 4 últimas copias y no toca ningún otro archivo). La app solo puede escribir en esa carpeta; no es una copia en la nube y no envía nada. Si esa carpeta la sincroniza otra app, esa copia sale del móvil por tu decisión y con las condiciones de esa app.
 - **Compartir tu resumen**: la app genera una imagen («ticket») en el móvil y Android te deja elegir con qué app o persona compartirla. Incluye las cifras del periodo y, si la hay, el nombre de tu creador más visto.
-- **Compartir tu nivel del Pasaporte**: igual, una imagen hecha en el móvil con tu nivel, la experiencia, los retos cumplidos y los nombres de tus últimos sellos. Sin cifras de vídeos por app ni creadores.
+- **Registro de Calibración** (herramienta oculta, apartado 2.4): solo sale si lo copias o lo compartes, con lo que cuenta ese apartado; antes se tapan los nombres de las personas y grupos que tienes fijados en el envío rápido y de aquellos a los que más envías («A quién envías»).
 
 Una vez que compartes un archivo o una imagen, lo que pase con ellos depende de la app o la persona que los recibe y de sus propias condiciones.
 
@@ -110,9 +105,9 @@ Los datos de Reelometer **no se incluyen en la copia de seguridad en la nube de 
 | Permiso | Para qué |
 |---|---|
 | Servicio de accesibilidad | Contar los vídeos, como se explica en el apartado 2.1. Lo activas tú en Ajustes > Accesibilidad y puedes desactivarlo cuando quieras. |
-| Notificaciones (Android 13 o superior) | Enviarte el resumen diario y el mensual. Es opcional. |
-| Ver si hay ciertas apps instaladas | Saber si tienes TikTok, Instagram o YouTube para mostrarlas en Ajustes. Solo consulta esas tres. |
-| Ejecución en segundo plano, inicio tras reiniciar y estado de la red | Los añade la librería de Android que programa los avisos (WorkManager), para que lleguen a su hora aunque reinicies el móvil. El de estado de la red solo permite saber si hay conexión; no permite usarla. |
+| Notificaciones (Android 13 o superior) | Enviarte el resumen diario y el mensual, el aviso al pasar tu objetivo (si lo enciendes) y un aviso si el servicio de accesibilidad está activado pero no funciona. Es opcional. |
+| Ver si hay ciertas apps instaladas | Saber si tienes TikTok, Instagram o YouTube (para mostrarlas en Ajustes y en la prueba de un minuto) y, en la guía para dejar el servicio funcionando, si existe en tu móvil la pantalla de batería o de inicio automático de tu marca (Xiaomi, Huawei, Honor, OPPO, OnePlus, vivo, Samsung) para abrirla. Solo consulta esas apps: no ve el resto de las que tienes instaladas y no guarda nada. |
+| Ejecución en segundo plano, inicio tras reiniciar y estado de la red | Los añade la librería de Android que programa los avisos (WorkManager), para que lleguen a su hora aunque reinicies el móvil, y para comprobar cada hora que el servicio de accesibilidad sigue funcionando. El de estado de la red solo permite saber si hay conexión; no permite usarla. |
 
 Reelometer **no** pide acceso a tu ubicación, contactos, cámara, micrófono, fotos ni archivos. (Para elegir la foto de un fijado usa el selector de fotos de Android, y para exportar o importar el CSV, el selector de archivos (y el de carpetas para la copia semanal); ninguno necesita permiso: la app solo recibe el archivo o la foto que tú eliges.)
 
@@ -120,7 +115,7 @@ Reelometer **no** pide acceso a tu ubicación, contactos, cámara, micrófono, f
 
 Los datos se guardan en tu móvil hasta que tú los borres. Puedes:
 
-- Borrar todo el historial, pasaporte incluido, en **Ajustes > Tus datos > Borrar todo**. Tus ajustes se mantienen, salvo las personas o grupos fijados para el envío rápido, que también se olvidan.
+- Borrar todo el historial, lo último que viste de Flap incluido, en **Ajustes > Tus datos > Borrar todo**. Tus ajustes se mantienen, salvo las personas o grupos fijados para el envío rápido, que también se olvidan.
 - Borrar también los ajustes desde los ajustes de Android: **Aplicaciones > Reelometer > Almacenamiento y caché > Borrar almacenamiento** (los nombres pueden variar un poco según el fabricante).
 - **Desinstalar** la app: Android borra todos sus datos.
 - Dejar de contar sin borrar nada: desactiva el servicio en **Ajustes > Accesibilidad**.
@@ -131,7 +126,7 @@ Reelometer no está dirigida a menores de 13 años. Como la app no recoge ni env
 
 ## 9. Tus derechos
 
-Según el Reglamento General de Protección de Datos (RGPD) y la normativa española, tienes derecho a acceder a tus datos, rectificarlos, suprimirlos, llevártelos y oponerte a su tratamiento. Como tus datos están solo en tu móvil, puedes ejercer estos derechos directamente desde la app: verlos (Hoy, Estadísticas, Resumen, Pasaporte), llevártelos (Exportar CSV) y borrarlos (Borrar todo). Nosotros no tenemos ninguna copia que consultar, corregir o borrar.
+Según el Reglamento General de Protección de Datos (RGPD) y la normativa española, tienes derecho a acceder a tus datos, rectificarlos, suprimirlos, llevártelos y oponerte a su tratamiento. Como tus datos están solo en tu móvil, puedes ejercer estos derechos directamente desde la app: verlos (Hoy, Estadísticas, Resumen, Flap), llevártelos (Exportar CSV) y borrarlos (Borrar todo). Nosotros no tenemos ninguna copia que consultar, corregir o borrar.
 
 Si tienes cualquier duda, escribe a **sergiore2007@gmail.com** o abre una incidencia en **https://github.com/SergioRE2007/reelometer/issues**. También puedes presentar una reclamación ante la Agencia Española de Protección de Datos (www.aepd.es).
 

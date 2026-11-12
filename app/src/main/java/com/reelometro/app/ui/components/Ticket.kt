@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -31,6 +33,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.reelometro.app.stats.Format
 import com.reelometro.app.ui.theme.ReelTheme
 import com.reelometro.app.ui.theme.Space
@@ -72,11 +75,13 @@ fun ReceiptLine(
         onClick = onClick,
         onClickLabel = onClickLabel,
     ) {
-        Text(
+        // El valor se encoge antes que recortarse a media cifra o palabra («DÉFINIR UN OBJECTIF»).
+        val valueStyle = if (highlight) ReelTheme.type.dataL else ReelTheme.type.data
+        BasicText(
             text = value,
-            style = if (highlight) ReelTheme.type.dataL else ReelTheme.type.data,
-            color = valueColor,
+            style = valueStyle.copy(color = valueColor),
             maxLines = 1,
+            autoSize = TextAutoSize.StepBased(minFontSize = AutoSizeTokens.Min, maxFontSize = valueStyle.fontSize, stepSize = AutoSizeTokens.Step),
         )
     }
 }

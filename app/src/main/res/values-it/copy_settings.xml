@@ -75,9 +75,10 @@
     <string name="settings_goal_value">%1$s AL GIORNO</string>
     <!-- Línea del selector: «Vídeos al día ······ [ − 150 + ]». -->
     <string name="settings_goal_line">Video al giorno</string>
-    <!-- Interruptor del modo Pasaporte (un juego que premia ver menos; «Flap» es su mascota, no se traduce). -->
-    <string name="settings_passport_label">Modalità passaporto</string>
-    <string name="settings_passport_description">Una scheda in più con Flap, livelli e timbri che si guadagnano guardando meno. Se la spegni, sparisce del tutto: la scheda, il suo avviso e Flap nel widget.</string>
+    <!-- Interruptor de Flap, la mascota que empieza cada día a tope y empeora con cada vídeo («Flap» es nombre
+         propio, no se traduce): su pestaña y Flap en el widget grande. -->
+    <string name="settings_passport_label">Flap, la mascotte</string>
+    <string name="settings_passport_description">Una scheda con Flap: ogni giorno parte al massimo e peggiora a ogni video che guardi, e a mezzanotte torna in vita. Compare anche nel widget grande. Se lo spegni, sparisce da entrambi.</string>
 
     <!-- ============================================================ 02 avisos -->
 
@@ -224,7 +225,6 @@
         <item quantity="many">%1$s righe non si leggono e vengono saltate.</item>
         <item quantity="other">%1$s righe non si leggono e vengono saltate.</item>
     </plurals>
-    <string name="settings_import_preview_passport">Porta anche il tuo passaporto: timbri, sfide e livello.</string>
     <string name="settings_import_preview_settings">Le impostazioni non sono nel file: il tuo obiettivo e i tuoi avvisi restano come sono.</string>
     <string name="settings_import_modes">AGGIUNGI somma le novità a quello che hai già. SOSTITUISCI TUTTO cancella quello che c’è ora e tiene solo il file.</string>
     <string name="settings_import_replace_title">Sostituire tutto?</string>
@@ -335,6 +335,7 @@
     <!-- Botones en MAYÚSCULAS: volver a ver la introducción y el recorrido guiado. -->
     <string name="settings_replay_onboarding">RIVEDI L’INTRODUZIONE</string>
     <string name="settings_replay_tour">RIVEDI IL TOUR</string>
+    <string name="settings_show_all_tabs">MOSTRA TUTTE LE SCHEDE</string>
     <string name="settings_licenses_label">LICENZE</string>
     <!-- Los nombres de las tipografías y de la licencia no se traducen. -->
     <string name="settings_fonts_license">Font: Bricolage Grotesque, JetBrains Mono e Instrument Serif, con licenza SIL Open Font License 1.1.</string>
@@ -355,4 +356,15 @@
     <string name="settings_debug_failed">Non è stato possibile generare i dati di esempio.</string>
     <!-- %1$s los vídeos inventados con su palabra («12.408 vídeos»). -->
     <string name="settings_debug_seeded">Fatto: %1$s di esempio.</string>
+    <!-- TalkBack del selector de hora: la cifra con su unidad. %1$s la cifra. -->
+    <plurals name="settings_time_hour_value">
+        <item quantity="one">%1$s ora</item>
+        <item quantity="many">%1$s ore</item>
+        <item quantity="other">%1$s ore</item>
+    </plurals>
+    <plurals name="settings_time_minute_value">
+        <item quantity="one">%1$s minuto</item>
+        <item quantity="many">%1$s minuti</item>
+        <item quantity="other">%1$s minuti</item>
+    </plurals>
 </resources>

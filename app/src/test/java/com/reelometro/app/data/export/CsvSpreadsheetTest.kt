@@ -1,10 +1,6 @@
 package com.reelometro.app.data.export
 
 import com.reelometro.app.data.MADRID
-import com.reelometro.app.game.ChallengeResult
-import com.reelometro.app.game.GameEvent
-import com.reelometro.app.game.StampId
-import com.reelometro.app.game.TravelerLevel
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
@@ -20,6 +16,9 @@ import java.util.Locale
  * El CSV que exporta la app después de pasar por una hoja de cálculo (Excel, LibreOffice o Google Sheets en
  * español, y alguna en inglés): cada variante o se importa igual que el original (con la precisión que le quede)
  * o se rechaza con un error; nunca con horas desplazadas, duraciones ×1000 ni duplicados.
+ *
+ * El original es el de la 1.6.0 a la 1.11.x, con el bloque PASAPORTE detrás: desde la 1.12.0 ya no se exporta y al
+ * importar se aparta sin error (ni cuenta como líneas rotas ni se come nada), venga como venga de la hoja de cálculo.
  *
  * Con `REELOMETRO_CSV_OUT=<carpeta>` escribe además cada variante en esa carpeta (para probarlas en el emulador).
  */
@@ -46,7 +45,7 @@ class CsvSpreadsheetTest {
     private val recipientStart = ms("2026-11-03T14:37:10", 250)
     private val orphanStart = ms("2026-11-07T09:10:00", 600)
 
-    /** El fichero tal y como lo escribe [CsvExporter] y [PassportCsv] (BOM, `;`, CRLF). */
+    /** El fichero tal y como lo escribían [CsvExporter] y el bloque PASAPORTE hasta la 1.11.x (BOM, `;`, CRLF). */
     private val original: String = buildString {
         append(Csv.BOM)
         append(Csv.row(CsvExporter.HEADER))
@@ -67,8 +66,8 @@ class CsvSpreadsheetTest {
         append(Csv.row(CsvExporter.ORPHAN_SHARES_HEADER))
         append(Csv.row(listOf("2026-11-07T09:10:00", "TikTok", orphanStart.toString())))
         append(Csv.LINE_END)
-        append(Csv.row(listOf(PassportCsv.TITLE)))
-        append(Csv.row(PassportCsv.HEADER))
+        append(Csv.row(listOf(OLD_PASSPORT)))
+        append(Csv.row(OLD_PASSPORT_HEADER))
         append(Csv.row(listOf("nivel", "PLATA", "", "", "", "420", "PLATA")))
         append(Csv.row(listOf("sello", "Racha de 3", "2026-11-05", "", "", "30", "RACHA_3")))
         append(Csv.row(listOf("reto", "cumplido", "2026-10-19", "1200", "980", "50", "")))
@@ -79,7 +78,7 @@ class CsvSpreadsheetTest {
 
     // ------------------------------------------------------------------ cómo la hoja de cálculo toca el fichero
 
-    private val titles = setOf(CsvExporter.RECIPIENTS_TITLE, CsvExporter.ORPHAN_SHARES_TITLE, PassportCsv.TITLE)
+    private val titles = setOf(CsvExporter.RECIPIENTS_TITLE, CsvExporter.ORPHAN_SHARES_TITLE, OLD_PASSPORT)
 
     /** Las celdas del original (sin BOM), como las ve la hoja de cálculo. */
     private fun grid(): List<List<String>> = CsvReader.rows(original.removePrefix(Csv.BOM), ';')
@@ -175,7 +174,8 @@ class CsvSpreadsheetTest {
             it.creator, it.caption, it.category.name, it.shares)
     }.sortedBy { it.toString() }
 
-    private fun passport(csv: ParsedCsv) = csv.blocks.firstOrNull { it.title == PassportCsv.TITLE }?.let { PassportCsv.read(it) }
+    /** Los bloques apartados (el PASAPORTE viejo): título y número de filas. */
+    private fun setAside(csv: ParsedCsv) = csv.blocks.map { it.title to it.rows.size }
 
     /**
      * Lo importado es lo del original con la precisión [precision] (al ms, al segundo o al minuto) y las duraciones
@@ -191,7 +191,7 @@ class CsvSpreadsheetTest {
         assertEquals("$name: envíos", base.recipients.map { it.recipient to it.at.floor(precision) },
             csv.recipients.map { it.recipient to it.at.floor(precision) })
         assertEquals("$name: compartidos", base.orphanShares.map { it.at.floor(precision) }, csv.orphanShares.map { it.at.floor(precision) })
-        assertEquals("$name: pasaporte", passport(base), passport(csv))
+        assertEquals("$name: bloque viejo apartado", setAside(base), setAside(csv))
         assertNoDuplicates(name, csv)
     }
 
@@ -241,11 +241,9 @@ class CsvSpreadsheetTest {
         assertTrue(base.videos.all { it.exact })
         assertEquals(listOf("Grupo de ejemplo"), base.recipients.map { it.recipient })
         assertEquals(listOf(orphanStart), base.orphanShares.map { it.at })
-        val p = passport(base)!!
-        assertEquals(TravelerLevel.PLATA, p.highestLevel)
-        assertEquals(mapOf(StampId.RACHA_3 to LocalDate.of(2026, 11, 5)), p.stamps)
-        assertEquals(listOf(ChallengeResult(LocalDate.of(2026, 10, 19), 1200, 980, won = true)), p.challenges)
-        assertEquals(mapOf(GameEvent.TICKET_SAVED to LocalDate.of(2026, 11, 13)), p.events)
+        assertEquals(0, base.badLines)
+        // El PASAPORTE viejo se aparta entero (sus 4 filas) y no se toma por vídeos, envíos ni compartidos.
+        assertEquals(listOf(OLD_PASSPORT to 4), setAside(base))
         assertSame("00_original", original.toByteArray(), CsvImport.MS)
     }
 
@@ -256,7 +254,7 @@ class CsvSpreadsheetTest {
         val g = grid().cells { block, col, v ->
             when {
                 col == "inicio_ms" -> scientific(v)
-                block == PassportCsv.TITLE && col == "fecha" -> reday(v, "dd/MM/yyyy")
+                block == OLD_PASSPORT && col == "fecha" -> reday(v, "dd/MM/yyyy")
                 else -> v
             }
         }
@@ -268,7 +266,7 @@ class CsvSpreadsheetTest {
         val g = grid().cells { block, col, v ->
             when {
                 col == "inicio_ms" -> scientific(v)
-                block == PassportCsv.TITLE && col == "fecha" -> reday(v, "dd/MM/yyyy")
+                block == OLD_PASSPORT && col == "fecha" -> reday(v, "dd/MM/yyyy")
                 else -> v
             }
         }
@@ -282,7 +280,7 @@ class CsvSpreadsheetTest {
             when {
                 col == "inicio_ms" -> scientific(v)
                 col == "fecha_hora_local" -> redate(v, "dd/MM/yyyy H:mm")
-                block == PassportCsv.TITLE && col == "fecha" -> reday(v, "dd/MM/yyyy")
+                block == OLD_PASSPORT && col == "fecha" -> reday(v, "dd/MM/yyyy")
                 else -> v
             }
         }
@@ -309,7 +307,7 @@ class CsvSpreadsheetTest {
         val g = grid().cells { block, col, v ->
             when {
                 col == "fecha_hora_local" -> redate(v, "d/M/yyyy H:mm:ss")
-                block == PassportCsv.TITLE && col == "fecha" -> reday(v, "d/M/yyyy")
+                block == OLD_PASSPORT && col == "fecha" -> reday(v, "d/M/yyyy")
                 else -> v
             }
         }
@@ -343,7 +341,7 @@ class CsvSpreadsheetTest {
                 col == "inicio_ms" -> scientific(v, us)
                 col == "fecha_hora_local" -> redate(v, "M/d/yyyy h:mm:ss a", us)
                 col == "duración_s" -> v.replace(',', '.')
-                block == PassportCsv.TITLE && col == "fecha" -> reday(v, "M/d/yyyy")
+                block == OLD_PASSPORT && col == "fecha" -> reday(v, "M/d/yyyy")
                 else -> v
             }
         }
@@ -470,5 +468,9 @@ class CsvSpreadsheetTest {
 
     private companion object {
         val ES: Locale = Locale.forLanguageTag("es-ES")
+
+        /** El bloque del pasaporte de los CSV de antes de la 1.12.0, tal y como se exportaba en la 1.6.0+. */
+        const val OLD_PASSPORT = "PASAPORTE"
+        val OLD_PASSPORT_HEADER = listOf("tipo", "elemento", "fecha", "tope", "vídeos", "experiencia", "clave")
     }
 }

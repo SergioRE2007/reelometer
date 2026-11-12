@@ -7,6 +7,8 @@ import com.reelometro.app.copy.Labels
 import com.reelometro.app.copy.TodayCopy
 import com.reelometro.app.copy.Variants
 import com.reelometro.app.data.settings.AppSettings
+import com.reelometro.app.data.settings.DiscoveryFeature
+import com.reelometro.app.data.settings.DiscoveryState
 import com.reelometro.app.stats.AllTime
 import com.reelometro.app.stats.DayStats
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -14,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -117,6 +120,132 @@ class TodayViewModelTest {
     }
 
     @Test
+    fun `apagado por el sistema - lo dice, con el motivo que apunta Android, y lleva a ARREGLAR`() = runTest(main.dispatcher) {
+        val vm = TodayViewModel(
+            flowOf(dayStats()), flowOf(allTime()), flowOf(accepted), { false },
+            // Con el servicio apagado, «sin funcionar» no pinta nada aunque algo lo diga.
+            serviceStalled = { true },
+            stallReason = { com.reelometro.app.detection.ExitCategory.USER_STOPPED },
+            serviceLost = { true },
+            clock = { TODAY },
+            dispatcher = main.dispatcher,
+        )
+        backgroundScope.launch { vm.uiState.collect {} }
+        advanceUntilIdle()
+        val state = vm.uiState.value as TodayUiState.Empty
+        assertNull("no hay cifra que creer", state.top.hero.count)
+        val notice = state.top.notice!!
+        assertEquals(TodayCopy.serviceLost(seed, com.reelometro.app.detection.ExitCategory.USER_STOPPED), notice.text)
+        assertTrue(notice.text, "detenida o datos borrados" in CopyRules.plain(notice.text))
+        assertEquals(TodayCopy.SERVICE_STALLED_ACTION, notice.action)
+        assertEquals(NoticeTarget.CONNECT_SERVICE, notice.target)
+    }
+
+    @Test
+    fun `apagado por el sistema sin motivo guardado - el aviso va sin motivo`() = runTest(main.dispatcher) {
+        val vm = TodayViewModel(
+            flowOf(dayStats()), flowOf(allTime()), flowOf(accepted), { false },
+            serviceLost = { true },
+            clock = { TODAY },
+            dispatcher = main.dispatcher,
+        )
+        backgroundScope.launch { vm.uiState.collect {} }
+        advanceUntilIdle()
+        val notice = (vm.uiState.value as TodayUiState.Empty).top.notice!!
+        assertEquals(TodayCopy.serviceLost(seed), notice.text)
+    }
+
+    @Test
+    fun `apagado por el usuario - el aviso de siempre, sin mirar el motivo del cierre`() = runTest(main.dispatcher) {
+        var reasons = 0
+        val vm = TodayViewModel(
+            flowOf(dayStats()), flowOf(allTime()), flowOf(accepted), { false },
+            stallReason = { reasons++; com.reelometro.app.detection.ExitCategory.RECENTS_CLEAN },
+            serviceLost = { false },
+            clock = { TODAY },
+            dispatcher = main.dispatcher,
+        )
+        backgroundScope.launch { vm.uiState.collect {} }
+        advanceUntilIdle()
+        val notice = (vm.uiState.value as TodayUiState.Empty).top.notice!!
+        assertEquals(TodayCopy.serviceOff(seed), notice.text)
+        assertEquals(Buttons.CONNECT, notice.action)
+        assertEquals("el cierre solo se lee si explica algo", 0, reasons)
+    }
+
+    @Test
+    fun `apagado por el sistema sin divulgacion aceptada - se ofrece ver el permiso, como siempre`() {
+        val state = TodayMapper.map(
+            dayStats(), allTime(), AppSettings(onboardingDone = true, disclosureAccepted = false),
+            serviceOn = false, serviceLost = true,
+        ) as TodayUiState.Empty
+        assertEquals(TodayCopy.serviceNeverEnabled(seed), state.top.notice!!.text)
+    }
+
+    @Test
+    fun `al volver a activarlo deja de estar perdido`() = runTest(main.dispatcher) {
+        var on = false
+        val vm = TodayViewModel(
+            flowOf(dayStats()), flowOf(allTime()), flowOf(accepted), { on },
+            serviceLost = { true },
+            clock = { TODAY },
+            dispatcher = main.dispatcher,
+        )
+        backgroundScope.launch { vm.uiState.collect {} }
+        advanceUntilIdle()
+        assertTrue(vm.uiState.value is TodayUiState.Empty)
+        on = true
+        vm.refreshService()
+        advanceUntilIdle()
+        assertFalse("con el servicio en marcha vuelve el contador", vm.uiState.value is TodayUiState.Empty)
+    }
+
+    @Test
+    fun `sin funcionar - el motivo del cierre llega despues de leerlo fuera del hilo principal`() = runTest(main.dispatcher) {
+        var calls = 0
+        val vm = TodayViewModel(
+            flowOf(dayStats()), flowOf(allTime()), flowOf(accepted), { true },
+            serviceStalled = { true },
+            stallReason = { calls++; com.reelometro.app.detection.ExitCategory.APP_CRASH },
+            clock = { TODAY },
+            dispatcher = main.dispatcher,
+        )
+        backgroundScope.launch { vm.uiState.collect {} }
+        advanceUntilIdle()
+        assertTrue(calls >= 1)
+        val notice = (vm.uiState.value as TodayUiState.Empty).top.notice!!
+        assertEquals(TodayCopy.serviceStalled(seed, com.reelometro.app.detection.ExitCategory.APP_CRASH), notice.text)
+    }
+
+    @Test
+    fun `activado pero sin funcionar - sin señal y ARREGLAR, y vuelve solo al conectarse`() = runTest(main.dispatcher) {
+        var stalled = true
+        val changes = MutableStateFlow(0)
+        val vm = TodayViewModel(
+            flowOf(dayStats()), flowOf(allTime()), flowOf(accepted), { true },
+            serviceStalled = { stalled },
+            serviceChanges = changes.map { },
+            clock = { TODAY },
+            dispatcher = main.dispatcher,
+        )
+        backgroundScope.launch { vm.uiState.collect {} }
+        advanceUntilIdle()
+        val state = vm.uiState.value as TodayUiState.Empty
+        assertNull("no hay cifra que creer", state.top.hero.count)
+        assertTrue(state.top.hero.alert)
+        val notice = state.top.notice!!
+        assertEquals(TodayCopy.serviceStalled(seed), notice.text)
+        assertEquals(TodayCopy.SERVICE_STALLED_ACTION, notice.action)
+        assertEquals(NoticeTarget.CONNECT_SERVICE, notice.target)
+
+        // El sistema conecta el servicio: Hoy vuelve sin esperar a ON_RESUME.
+        stalled = false
+        changes.value = 1
+        advanceUntilIdle()
+        assertTrue(vm.uiState.value is TodayUiState.Content)
+    }
+
+    @Test
     fun `sin la divulgación aceptada se ofrece ver el permiso y nunca los ajustes del sistema`() = runTest(main.dispatcher) {
         val vm = viewModel(settings = flowOf(AppSettings(onboardingDone = true, disclosureAccepted = false)), service = { false })
         advanceUntilIdle()
@@ -193,5 +322,156 @@ class TodayViewModelTest {
         vm.retry()
         advanceUntilIdle()
         assertTrue(vm.uiState.value is TodayUiState.Content)
+    }
+
+    // ------------------------------------------------ descubrimiento progresivo
+
+    /** Escritor falso: aplica el cambio al flujo de ajustes y cuenta las llamadas. */
+    private class FakeDiscovery(val settings: MutableStateFlow<AppSettings>) : DiscoveryWriter {
+        var calls = 0
+        override suspend fun update(change: (DiscoveryState) -> DiscoveryState) {
+            calls++
+            val current = settings.value
+            settings.value = current.copy(discovery = change(current.discovery))
+        }
+    }
+
+    private fun TestScope.discoveryViewModel(
+        settings: MutableStateFlow<AppSettings>,
+        writer: DiscoveryWriter,
+        all: Flow<AllTime> = flowOf(allTime(firstDay = TODAY.minusDays(1))),
+        day: Flow<DayStats> = flowOf(dayStats()),
+        service: () -> Boolean = { true },
+        stalled: () -> Boolean = { false },
+    ): TodayViewModel {
+        val vm = TodayViewModel(
+            day, all, settings, service,
+            serviceStalled = stalled,
+            discovery = writer,
+            clock = { TODAY },
+            dispatcher = main.dispatcher,
+        )
+        backgroundScope.launch { vm.uiState.collect {} }
+        return vm
+    }
+
+    private fun TodayUiState.top(): TodayTop = when (this) {
+        is TodayUiState.Content -> top
+        is TodayUiState.Empty -> top
+        else -> throw AssertionError("sin marcador: $this")
+    }
+
+    private val newUser = accepted.copy(discovery = DiscoveryState.FRESH)
+
+    @Test
+    fun `usuario nuevo con dos días - aparece Estadísticas y se presenta`() = runTest(main.dispatcher) {
+        val settings = MutableStateFlow(newUser)
+        val writer = FakeDiscovery(settings)
+        val vm = discoveryViewModel(settings, writer)
+        advanceUntilIdle()
+        assertEquals(2, settings.value.discovery.tabs)
+        assertEquals(TODAY.toEpochDay(), settings.value.discovery.tabsDay)
+        val top = vm.uiState.value.top()
+        assertEquals(DiscoveryFeature.STATS, top.news!!.feature)
+        assertEquals(TodayCopy.newsAction(DiscoveryFeature.STATS), top.news!!.action)
+        assertEquals(TodayCopy.revealHint(listOf(DiscoveryFeature.WRAPPED, DiscoveryFeature.PASSPORT)), top.revealHint!!.text)
+        assertEquals(1, writer.calls)
+    }
+
+    @Test
+    fun `el aviso sin servicio o sin señal manda sobre la novedad`() = runTest(main.dispatcher) {
+        val pending = accepted.copy(discovery = DiscoveryState.FRESH.copy(tabs = 2, tabsDay = TODAY.toEpochDay()))
+        for ((service, stalled) in listOf(false to false, true to true)) {
+            val settings = MutableStateFlow(pending)
+            val vm = discoveryViewModel(settings, FakeDiscovery(settings), service = { service }, stalled = { stalled })
+            advanceUntilIdle()
+            val top = vm.uiState.value.top()
+            assertNotNull(top.notice)
+            assertNull(top.news)
+            // La pista va al final de Hoy: no tapa el aviso y deja llegar a las pestañas sin servicio.
+            assertNotNull(top.revealHint)
+            assertFalse(top.canOpenDay)
+        }
+    }
+
+    @Test
+    fun `sin apps activas hay aviso y no novedad`() = runTest(main.dispatcher) {
+        val settings = MutableStateFlow(
+            accepted.copy(enabledPlatforms = emptySet(), discovery = DiscoveryState.FRESH.copy(tabs = 2, tabsDay = TODAY.toEpochDay())),
+        )
+        val vm = discoveryViewModel(settings, FakeDiscovery(settings))
+        advanceUntilIdle()
+        val top = vm.uiState.value.top()
+        assertEquals(NoticeTarget.SETTINGS, top.notice!!.target)
+        assertNull(top.news)
+    }
+
+    @Test
+    fun `ENTENDIDO pasa a la siguiente novedad`() = runTest(main.dispatcher) {
+        val settings = MutableStateFlow(accepted.copy(discovery = DiscoveryState.FRESH.copy(tabs = 3, tabsDay = TODAY.toEpochDay())))
+        val vm = discoveryViewModel(settings, FakeDiscovery(settings))
+        advanceUntilIdle()
+        assertEquals(DiscoveryFeature.STATS, vm.uiState.value.top().news!!.feature)
+        vm.dismissNews(DiscoveryFeature.STATS)
+        advanceUntilIdle()
+        assertEquals(2, settings.value.discovery.announced)
+        assertEquals(DiscoveryFeature.WRAPPED, vm.uiState.value.top().news!!.feature)
+        vm.openNews(DiscoveryFeature.WRAPPED)
+        advanceUntilIdle()
+        assertNull(vm.uiState.value.top().news)
+    }
+
+    @Test
+    fun `una doble pulsación sobre la misma novedad no se come la siguiente`() = runTest(main.dispatcher) {
+        val settings = MutableStateFlow(accepted.copy(discovery = DiscoveryState.FRESH.copy(tabs = 3, tabsDay = TODAY.toEpochDay())))
+        val vm = discoveryViewModel(settings, FakeDiscovery(settings))
+        advanceUntilIdle()
+        vm.dismissNews(DiscoveryFeature.STATS)
+        vm.dismissNews(DiscoveryFeature.STATS)
+        advanceUntilIdle()
+        assertEquals(2, settings.value.discovery.announced)
+        assertEquals(DiscoveryFeature.WRAPPED, vm.uiState.value.top().news!!.feature)
+    }
+
+    @Test
+    fun `ENSEÑARLO TODO YA quita la pista y la novedad`() = runTest(main.dispatcher) {
+        val settings = MutableStateFlow(newUser)
+        val vm = discoveryViewModel(settings, FakeDiscovery(settings))
+        advanceUntilIdle()
+        assertNotNull(vm.uiState.value.top().revealHint)
+        vm.showAll()
+        advanceUntilIdle()
+        val top = vm.uiState.value.top()
+        assertNull(top.revealHint)
+        assertNull(top.news)
+        assertEquals(4, settings.value.discovery.tabs)
+    }
+
+    @Test
+    fun `un usuario de antes lo ve todo y no se escribe nada`() = runTest(main.dispatcher) {
+        val settings = MutableStateFlow(accepted)
+        val writer = FakeDiscovery(settings)
+        val vm = discoveryViewModel(settings, writer, all = flowOf(allTime()))
+        advanceUntilIdle()
+        val top = vm.uiState.value.top()
+        assertNull(top.news)
+        assertNull(top.revealHint)
+        assertEquals(0, writer.calls)
+    }
+
+    @Test
+    fun `las emisiones repetidas no repiten la escritura`() = runTest(main.dispatcher) {
+        val settings = MutableStateFlow(newUser)
+        var calls = 0
+        // No guarda nada: el estado sigue pidiendo subir en cada emisión.
+        val writer = DiscoveryWriter { calls++ }
+        val day = MutableStateFlow(dayStats())
+        discoveryViewModel(settings, writer, day = day)
+        advanceUntilIdle()
+        day.value = dayStats(count = 213)
+        advanceUntilIdle()
+        day.value = dayStats(count = 214)
+        advanceUntilIdle()
+        assertEquals(1, calls)
     }
 }

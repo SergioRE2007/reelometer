@@ -16,12 +16,21 @@ package com.reelometro.app.detection
  *    al abrirse también puede llegar un movimiento), al enviar desde ella ([onSheetClosed]) o al cambiar de reel.
  *    En TikTok (1.10.1) la hoja es otra ventana y el visor no se mueve al cerrarla («X», atrás, tocar fuera): tras un
  *    cambio de ventana, si ya no queda ninguna ventana de la app encima del feed ([SheetWindows.sheetAbove]), el servicio
- *    llama a [onSheetGone] (con la misma espera [SETTLE_MS]). Los comentarios u otra hoja son otra ventana encima: siguen fuera.
+ *    llama a [onSheetGone] (con la misma espera [SETTLE_MS]). Otra hoja en otra ventana encima: siguen fuera.
+ *  - 1.10.5, TikTok: los comentarios van en la **misma ventana** del feed. Con una hoja que no es la de compartir
+ *    ([SheetKind.OTHER]), el servicio mira además si un panel tapa el visor en esa ventana ([FeedPanel.isOpen],
+ *    [SheetWatch.next]) y no llama a [onSheetGone] mientras siga ahí. La de compartir ([SheetKind.SHARE]) no lo mira:
+ *    al cerrarla con la «X» vuelven como en la 1.10.1.
+ *  - 1.10.5: con la barra de notificaciones o los ajustes rápidos bajados encima de la app ([onSystemCover],
+ *    [SystemShade.covers]) no se ven, ni siquiera enviando (el envío sigue y las marcas se conservan).
  *  - Mientras se envía, siempre se ven (la hoja abierta es la del propio envío).
  */
 class BubbleBoard {
 
     enum class Mark { IDLE, SENDING, SENT, FAILED }
+
+    /** 1.10.5: la hoja abierta es la de compartir ([SHARE]) u otra (comentarios, más opciones…: [OTHER]). */
+    enum class SheetKind { SHARE, OTHER }
 
     private var reel: Long? = null
     private val marks = LinkedHashMap<String, Mark>()
@@ -32,6 +41,8 @@ class BubbleBoard {
     /** Hay una hoja abierta encima del visor desde [sheetSince]; las burbujas se esconden desde [hideFrom]. */
     private var sheetSince: Long? = null
     private var hideFrom: Long? = null
+    private var kind: SheetKind? = null
+    private var covered = false
 
     val isSending: Boolean get() = marks.values.any { it == Mark.SENDING }
 
@@ -40,6 +51,22 @@ class BubbleBoard {
 
     /** Desde cuándo está abierta la hoja ([sheetOpen]), o `null`: sirve para descartar una comprobación que llega tarde. */
     val sheetOpenedAt: Long? get() = sheetSince
+
+    /** Qué hoja está abierta ([sheetOpen]), o `null` si no hay ninguna. */
+    val sheetKind: SheetKind? get() = kind.takeIf { sheetSince != null }
+
+    /** 1.10.5: la barra de notificaciones (o los ajustes rápidos) está bajada encima de la app ([onSystemCover]). */
+    val systemCovered: Boolean get() = covered
+
+    /**
+     * La barra de notificaciones está bajada encima de la app ([covered]) o ya no. No lo borra [onReel] (la barra sigue ahí
+     * aunque detrás cambie el vídeo). Devuelve si ha cambiado.
+     */
+    fun onSystemCover(covered: Boolean): Boolean {
+        if (this.covered == covered) return false
+        this.covered = covered
+        return true
+    }
 
     fun markOf(name: String): Mark = marks[name] ?: Mark.IDLE
 
@@ -55,22 +82,21 @@ class BubbleBoard {
         dismissedReel = null
         sheetSince = null
         hideFrom = null
+        kind = null
         return true
     }
 
-    /** El usuario ha abierto a mano una hoja (compartir, comentarios…) encima del visor: se esconden ya. */
-    fun onUserSheetOpened(now: Long) {
+    /** El usuario ha abierto a mano una hoja ([kind]: compartir, comentarios…) encima del visor: se esconden ya. */
+    fun onUserSheetOpened(now: Long, kind: SheetKind = SheetKind.OTHER) {
         sheetSince = now
         hideFrom = now
+        this.kind = kind
     }
 
     /** El visor se ha movido: la hoja que hubiera se ha cerrado (salvo justo al abrirse). */
     fun onFeedMoved(now: Long) {
         val since = sheetSince ?: return
-        if (now < since || now - since >= SETTLE_MS) {
-            sheetSince = null
-            hideFrom = null
-        }
+        if (now < since || now - since >= SETTLE_MS) onSheetClosed()
     }
 
     /**
@@ -90,6 +116,7 @@ class BubbleBoard {
     fun onSheetClosed() {
         sheetSince = null
         hideFrom = null
+        kind = null
     }
 
     /** Soltadas en la «X» en el reel [videoId]: fuera hasta el siguiente. */
@@ -129,14 +156,16 @@ class BubbleBoard {
         if (sheetLeftOpen && sameReel) {
             sheetSince = now
             hideFrom = now + FAILED_SHOWN_MS
+            kind = SheetKind.SHARE
         }
     }
 
     /**
      * ¿Se ven ahora? [onReel]: envío rápido encendido, con fijados y un reel de Instagram delante; [videoId]: ese reel.
-     * Enviando, siempre.
+     * Enviando, siempre, salvo con la barra de notificaciones bajada encima ([systemCovered]).
      */
     fun visible(onReel: Boolean, videoId: Long?, now: Long): Boolean {
+        if (covered) return false
         if (isSending) return true
         if (!onReel) return false
         if (dismissed && dismissedReel == videoId) return false

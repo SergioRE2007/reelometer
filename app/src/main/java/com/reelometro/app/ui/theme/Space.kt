@@ -29,6 +29,9 @@ object Space {
 
     /** Grosor de los filetes. */
     val hairline = 1.dp
+
+    /** Filete vertical de un aviso integrado (`Notice`, novedad de Hoy). */
+    val rule = 2.dp
 }
 
 /** Formas permitidas: recto, casi recto (2 dp) y círculo para puntos. */

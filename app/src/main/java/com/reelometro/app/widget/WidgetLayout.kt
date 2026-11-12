@@ -154,7 +154,7 @@ internal data class WidgetLayout(
             val bestChoice = choice.maxOf { it.fontDp }
             val chosen = choice.first { it.fontDp >= bestChoice * PREFER }
 
-            // Flap (modo pasaporte): a la derecha del marcador y el tiempo, abajo, solo en el tamaño
+            // Flap (encendido en Ajustes): a la derecha del marcador y el tiempo, abajo, solo en el tamaño
             // grande y apilado, y solo si el marcador no pierde más de un 25 % (con 4–5 cifras, Flap
             // encoge el marcador; con más, no cabe y no sale).
             if (model.flap == null || width < FLAP_MIN_WIDTH || height < FLAP_MIN_HEIGHT || chosen.arrangement != Arrangement.STACKED) {

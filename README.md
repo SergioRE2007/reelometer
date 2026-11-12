@@ -13,12 +13,12 @@ de qué temas y de quién. Todo se queda en tu móvil.
 
 **[sergiore2007.github.io/reelometer](https://sergiore2007.github.io/reelometer/)**
 
-![Versión 1.10.3](https://img.shields.io/badge/versión-1.10.3-11100E?style=flat-square)
+![Versión 1.13.0](https://img.shields.io/badge/versión-1.13.0-11100E?style=flat-square)
 ![Android 8.0+](https://img.shields.io/badge/Android-8.0%2B-11100E?style=flat-square&logo=android&logoColor=EDE8DF)
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.4-11100E?style=flat-square&logo=kotlin&logoColor=EDE8DF)
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack_Compose-11100E?style=flat-square&logo=jetpackcompose&logoColor=EDE8DF)
 ![Sin internet](https://img.shields.io/badge/permiso_INTERNET-no-FF5A1F?style=flat-square)
-![Tests](https://img.shields.io/badge/tests-969-11100E?style=flat-square)
+![Tests](https://img.shields.io/badge/tests-1.200%2B-11100E?style=flat-square)
 [![Invítame a un café](https://img.shields.io/badge/Buy_Me_a_Coffee-invítame_a_un_café-FF5A1F?style=flat-square&logo=buymeacoffee&logoColor=11100E)](https://www.buymeacoffee.com/Lopuzno)
 
 <br>
@@ -44,10 +44,10 @@ Reelometer no bloquea apps ni te echa sermones. Solo te pone el marcador delante
 | **Día** | Toca una barra o un día del calendario y ves ese día entero: hora a hora, plataformas, temas y creadores, y qué puesto ocupa entre tus días. |
 | **Estadísticas** | Semana, mes, año o desde siempre. Barras con la media, la semana frente a la anterior, un calendario de actividad, tu hora punta, tu día débil, rachas, segundos por vídeo y tu top 10 de creadores. |
 | **Resumen** | Cada mes, tu repaso a pantalla completa en 9 diapositivas, y un ticket de 1080 × 1920 para compartir con su sello: PAGADO CON TU TIEMPO. |
-| **Pasaporte** | El juego al revés: se gana viendo **menos**. Flap, una mascota en pixel art que está en forma o zombi del scroll según tu semana (nunca muere), niveles de viajero frecuente, 23 sellos y un reto semanal contra tu «yo fantasma» de la semana pasada. Se puede ocultar en Ajustes. |
+| **Flap** | Una mascota en pixel art que cada día empieza a tope y se pone peor con cada vídeo que ves: con tu objetivo llega a la noche a media vida y, si lo doblas, cae KO hasta mañana (sin objetivo aguanta 150). Con tu semana en siete Flaps y tu racha de días sin que enferme. Se puede ocultar en Ajustes. |
 | **Equivalencias** | Con ese tiempo podrías leer 14 libros, hacer el Camino de Santiago o 120 tortillas de patatas. Cada equivalencia lleva su fuente. |
 | **Temas** | Reparte cada vídeo entre 16 temas (humor, deporte, comida, gaming, aprendizaje…) a partir de su descripción y hashtags, sin salir del móvil. |
-| **Widget y avisos** | Widget «Hoy» en 6 tamaños (con Flap en el grande), un aviso diario a la hora que elijas, uno mensual con tu resumen y, si lo activas, uno en el momento en que pasas tu objetivo. |
+| **Widget y avisos** | Widget «Hoy» en 6 tamaños (con Flap en el grande), un aviso diario a la hora que elijas, uno mensual con tu resumen, otro en el momento en que pasas tu objetivo (si lo activas) y, si el servicio de accesibilidad está activado pero no funciona, uno con el motivo (cuando Android lo guarda) y los pasos para arreglarlo (como mucho, uno al día). |
 | **Objetivo** | Si quieres, un límite diario: el marcador te dice cuánto te queda y lleva tus rachas. |
 | **A quién envías** | En Instagram y TikTok, y solo si lo enciendes (viene apagado): cuenta a qué personas y grupos mandas vídeos, para ver con quién compartes más. |
 | **Envío rápido** | En Instagram y TikTok, también apagado de serie. Fija a tus personas o grupos de siempre (cada app con los suyos) y sobre los vídeos salen unas burbujas con su foto: un toque y el vídeo se envía solo, en menos de un segundo. Las burbujas se colocan donde quieras, puedes mandar a dos a la vez soltando una encima de otra y la foto de cada burbuja puede ser la de su perfil o una que elijas de tu galería. |
@@ -66,7 +66,7 @@ potente, así que la app está hecha para no poder abusar de él:
 
 - **No tiene permiso `INTERNET`.** No puede enviar nada a ningún sitio, ni aunque quisiera.
 - Sin cuentas, sin servidores, sin anuncios, sin analítica y sin copia de seguridad en la nube.
-- El servicio solo escucha a TikTok, Instagram y YouTube (`android:packageNames`). En el resto de apps no lee nada.
+- El servicio solo escucha a TikTok, Instagram y YouTube (`android:packageNames`). En el resto de apps no lee nada de lo que muestran.
 - De cada vídeo guarda la app, la hora, cuánto estuvo en pantalla, el creador y la descripción. Nunca lo que
   escribes ni tus mensajes. A quién compartes algo, solo en Instagram y TikTok y solo si enciendes «A quién envías»
   (viene apagado): entonces guarda el nombre de la persona o el grupo, en el móvil.
@@ -157,15 +157,15 @@ app/src/main/java/com/reelometro/app/
 ├── data/        Room, repositorio, ajustes (DataStore), exportación e importación CSV
 ├── stats/       cálculos puros, formato de cifras, equivalencias con fuente
 ├── copy/        todos los textos de la app (con variantes)
-├── game/        reglas puras del Pasaporte (Flap, niveles, sellos, reto)
-├── work/        avisos diario, mensual, en directo y de nivel
+├── game/        reglas puras de Flap (vida, estados, semana y racha)
+├── work/        avisos diario, mensual y en directo
 ├── widget/      widget «Hoy» con Glance
 └── ui/          tema, componentes (marcador split-flap, ticket…) y pantallas
 ```
 
 ## Estado
 
-Versión **1.10.3** (la política de privacidad, enlazada desde Ajustes). Con honestidad:
+Versión **1.13.0** (avisa cuando es el móvil, y no tú, quien ha apagado el servicio, y ningún fallo del servicio cierra ya la app; de la 1.12.0, Flap, la mascota que enferma con cada vídeo, sustituye al Pasaporte; de la 1.10.4, la 1.11.0 y la 1.11.1 vienen el aviso si el servicio está activado pero no funciona, la guía por marca y prueba de un minuto para dejar el servicio funcionando, el motivo concreto cuando el móvil cierra la app, burbujas que se apartan con los comentarios y la barra de notificaciones, letra grande y TalkBack, y las pestañas que aparecen poco a poco los primeros días). Con honestidad:
 
 - **Probado en un móvil real** (un Pixel con Android 17): TikTok e Instagram cuentan bien. El envío rápido de
   Instagram está medido envío a envío: entre 0,5 y 0,93 s a una persona y 1,4–1,6 s a un grupo que hay que buscar
@@ -181,7 +181,7 @@ Versión **1.10.3** (la política de privacidad, enlazada desde Ajustes). Con ho
   cuadrar, la consola de Calibración dice por qué.
 - **Comprobado en el emulador**: las pantallas principales en tema claro y oscuro y con la fuente al 130 %, y la
   release recorriendo todas las rutas sin cierres.
-- **Sin comprobar todavía**: el Pasaporte y el recorrido guiado no han tenido una revisión visual completa en
+- **Sin comprobar todavía**: Flap (1.12.0) ya compila, pero aún no se ha revisado a fondo en pantalla, y el recorrido guiado no ha tenido una revisión visual completa en
   pantalla; el envío rápido con Instagram en otro idioma (la app reconoce «Enviar» por su identificador y por la
   palabra en varios idiomas, pero solo se ha probado en español); y otros móviles y versiones de Android.
 - **Traducciones nuevas** (inglés, portugués de Brasil, francés e italiano): revisadas en pantalla en el emulador,
@@ -192,7 +192,7 @@ Versión **1.10.3** (la política de privacidad, enlazada desde Ajustes). Con ho
   (798 vídeos: entran todos y, al repetir, ninguno se duplica).
 - **1.7.0**: las gráficas se recorren deslizando el dedo en horizontal (sin mantener pulsado) y Ajustes tiene un
   índice arriba que salta a cada sección; el envío rápido y las herramientas van plegados. Probado en el emulador.
-- Compila y pasa sus 969 tests JVM. Las capturas de este README usan datos de ejemplo.
+- La 1.13.0 compila y pasa la batería entera (1.242 tests JVM y Lint sin errores). Lo nuevo de la 1.12.0 (Flap) y de la 1.13.0 (avisa si es el móvil quien apaga el servicio) todavía no se ha probado en un móvil. Las capturas de este README son de la 1.9.0 y usan datos de ejemplo: en la barra de pestañas aún pone PASAPORTE, que desde la 1.12.0 es FLAP.
 
 ## Apoyar el proyecto
 

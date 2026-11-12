@@ -25,6 +25,7 @@ import com.reelometro.app.copy.A11y
 import com.reelometro.app.copy.Buttons
 import com.reelometro.app.copy.StateCopy
 import com.reelometro.app.copy.TodayCopy
+import com.reelometro.app.data.settings.DiscoveryFeature
 import com.reelometro.app.ui.components.Band
 import com.reelometro.app.ui.components.Label
 import com.reelometro.app.ui.components.Notice
@@ -58,6 +59,9 @@ fun TodayScreen(
     onConnectService: () -> Unit,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
+    onNewsAction: (DiscoveryFeature) -> Unit = {},
+    onNewsDismiss: (DiscoveryFeature) -> Unit = {},
+    onRevealAll: () -> Unit = {},
 ) {
     val colors = ReelTheme.colors
     Column(
@@ -80,16 +84,18 @@ fun TodayScreen(
                 )
             }
             is TodayUiState.Empty -> {
-                TopBlock(state.top, onOpenDay, onOpenSettings, onConnectService)
+                TopBlock(state.top, onOpenDay, onOpenSettings, onConnectService, onNewsAction, onNewsDismiss)
                 BandBlock(state.top.band, onOpenStats)
+                RevealBlock(state.top.revealHint, onRevealAll)
             }
             is TodayUiState.Content -> {
-                TopBlock(state.top, onOpenDay, onOpenSettings, onConnectService)
+                TopBlock(state.top, onOpenDay, onOpenSettings, onConnectService, onNewsAction, onNewsDismiss)
                 Spacer(Modifier.height(Space.x10))
                 TicketDivider(style = TicketDividerStyle.Perforated)
                 Spacer(Modifier.height(Space.x10))
                 SectionsBlock(state.sections)
                 BandBlock(state.top.band, onOpenStats)
+                RevealBlock(state.top.revealHint, onRevealAll)
             }
         }
         Spacer(Modifier.height(Space.section))
@@ -146,6 +152,8 @@ private fun TopBlock(
     onOpenDay: (Long) -> Unit,
     onOpenSettings: () -> Unit,
     onConnectService: () -> Unit,
+    onNewsAction: (DiscoveryFeature) -> Unit,
+    onNewsDismiss: (DiscoveryFeature) -> Unit,
 ) {
     Column(Modifier.padding(horizontal = Space.screen)) {
         Spacer(Modifier.height(Space.x8))
@@ -165,7 +173,19 @@ private fun TopBlock(
                 },
             )
         }
+        // Excluyente con el aviso (lo decide el mapper): el de «sin señal» siempre manda.
+        if (top.news != null) {
+            Spacer(Modifier.height(Space.x8))
+            NewsNotice(top.news, onAction = onNewsAction, onDismiss = onNewsDismiss)
+        }
     }
+}
+
+@Composable
+private fun RevealBlock(hint: TodayRevealHint?, onRevealAll: () -> Unit) {
+    if (hint == null) return
+    Spacer(Modifier.height(Space.section))
+    RevealHint(hint, onRevealAll)
 }
 
 @Composable

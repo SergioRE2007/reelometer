@@ -62,9 +62,13 @@ object WidgetCopy {
 
     val DESCRIPTION_OFF: String get() = str(R.string.state_widget_description_off)
 
-    /** Con Flap a la vista (tamaño grande, modo pasaporte): «Hoy: 12 vídeos, 9 minutos. Flap: en forma.». */
+    /**
+     * Con Flap a la vista (tamaño grande, Flap encendido): «Hoy: 12 vídeos, 9 minutos. Flap: en forma.».
+     * El estado se dice como en la pestaña FLAP ([FlapCopy.moodSpoken]): en minúsculas y sin siglas
+     * («Flap: fuera de combate.», no «Flap: KO.»).
+     */
     fun withFlap(description: String, mood: FlapMood): String =
-        str(R.string.state_widget_with_flap, description, PassportCopy.moodLabel(mood).lowercase())
+        str(R.string.state_widget_with_flap, description, FlapCopy.moodSpoken(mood))
 }
 
 /** Textos mínimos de la pantalla oculta de **Calibración** (consola en mono). */

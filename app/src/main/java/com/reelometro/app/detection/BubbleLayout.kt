@@ -28,8 +28,11 @@ object BubbleLayout {
      * Por defecto, junto al borde derecho y un poco por encima de la mitad: la columna de botones de Instagram (me
      * gusta, comentar, compartir…) empieza hacia el 55 % y la descripción va abajo. Es lo mismo que en la 1.4.1
      * (pegadas al borde derecho con el centro al 40 %).
+     *
+     * 1.10.5: `x = 1` (el borde derecho seguro, que [clamp] corrige con el ancho de la pila) y no 0,92 del ancho: en un
+     * móvil en vertical queda igual (±3 px), pero en horizontal o en una tablet 0,92 dejaba la pila a ~70 dp del borde.
      */
-    val DEFAULT = BubbleSpot(x = 1f - LEGACY_EDGE_X, y = 0.40f)
+    val DEFAULT = BubbleSpot(x = 1f, y = 0.40f)
 
     /**
      * 1.10.0, sobre TikTok: en la columna de la derecha la foto del creador empieza hacia el 46 % de la altura (y los
@@ -52,12 +55,6 @@ object BubbleLayout {
     const val MAX_Y = 0.92f
 
     /**
-     * Posición antigua (1.4.0–1.4.1: «pegadas al borde izquierdo o derecho»): el centro de la pila queda a esta
-     * fracción del ancho desde ese borde (≈ media burbuja y 8 dp en un móvil de 411 dp; [clamp] corrige el resto).
-     */
-    const val LEGACY_EDGE_X = 0.08f
-
-    /**
      * Soltada con el centro en la franja de abajo (de aquí hacia abajo, encima del nombre del vídeo, en Instagram y en
      * TikTok), la pila se pone en **fila**; en el resto, en **columna**.
      */
@@ -78,12 +75,11 @@ object BubbleLayout {
 
     /**
      * La posición guardada de antes (borde + altura del centro) en la posición libre equivalente, siempre en
-     * columna, como era: nadie la ve pasar a fila sin haberla tocado.
+     * columna, como era: nadie la ve pasar a fila sin haberla tocado. Era «pegadas al borde izquierdo o derecho»
+     * (1.4.0–1.4.1): `x` = 0 o 1, que [clamp] deja en el borde seguro en cualquier pantalla.
      */
     fun fromLegacy(left: Boolean, centerY: Float): BubbleSpot =
-        sanitize(BubbleSpot(x = if (left) LEGACY_EDGE_X else 1f - LEGACY_EDGE_X, y = centerY)).let { s ->
-            s.copy(y = s.y.coerceAtMost(LEGACY_MAX_Y))
-        }.let { s ->
+        sanitize(BubbleSpot(x = if (left) 0f else 1f, y = centerY)).let { s ->
             // Era una columna: sigue siéndolo aunque estuviera en la franja de abajo (nadie la ve cambiar sin tocarla).
             s.copy(y = s.y.coerceAtMost(LEGACY_MAX_Y))
         }
@@ -100,13 +96,17 @@ object BubbleLayout {
     /**
      * Lo que la pila no pisa: los márgenes del sistema ([insets], en px) más [edge] px de aire. Sin ellos, la
      * franja [MIN_Y]–[MAX_Y] en vertical y [edge] a los lados.
+     *
+     * 1.10.5: sin márgenes (Android 8–10) y en horizontal, la barra de navegación va en un lado: [landscapeSide] px más a
+     * izquierda y derecha (a los dos, para no tener que saber hacia dónde se ha girado).
      */
-    fun safeArea(screenWidth: Int, screenHeight: Int, insets: SafeArea?, edge: Int): SafeArea {
+    fun safeArea(screenWidth: Int, screenHeight: Int, insets: SafeArea?, edge: Int, landscapeSide: Int = 0): SafeArea {
         if (insets == null) {
+            val side = edge + if (screenWidth > screenHeight) landscapeSide.coerceAtLeast(0) else 0
             return SafeArea(
-                left = edge,
+                left = side,
                 top = (screenHeight * MIN_Y).roundToInt(),
-                right = edge,
+                right = side,
                 bottom = (screenHeight * (1f - MAX_Y)).roundToInt(),
             )
         }
@@ -138,6 +138,10 @@ object BubbleLayout {
      * orientación que toca a esa altura y corregida solo para no salirse de [safe]. [size] da el ancho y el alto
      * de la pila en cada orientación. La posición devuelta, guardada y vuelta a leer, da la misma orientación
      * (y la misma corrección).
+     *
+     * 1.10.5, [edgeSnap] (px): si el centro queda a esa distancia o menos del sitio más a la izquierda o más a la derecha
+     * que cabe, se guarda `x` = 0 o 1 ([snapToEdge]): soltada contra el borde, sigue pegada al girar o en otra pantalla.
+     * Con `null`, la fracción tal cual.
      */
     fun drop(
         centerX: Float,
@@ -146,20 +150,41 @@ object BubbleLayout {
         screenHeight: Int,
         safe: SafeArea,
         dismissRadius: Int = 0,
+        edgeSnap: Int? = null,
         size: (BubbleOrientation) -> Pair<Int, Int>,
     ): BubbleSpot {
         if (screenWidth <= 0 || screenHeight <= 0) return DEFAULT
         var spot = sanitize(BubbleSpot(centerX / screenWidth, centerY / screenHeight))
         var orientation = orientationFor(spot.y)
-        repeat(2) {
+        for (attempt in 0 until 2) {
             val (w, h) = size(orientation)
             spot = clamp(spot, w, h, screenWidth, screenHeight, safe)
             val next = orientationFor(spot.y)
-            if (next == orientation) return awayFromDismiss(spot, w, screenWidth, screenHeight, safe, h, dismissRadius)
+            if (next == orientation) break
             orientation = next
         }
         val (w, h) = size(orientation)
-        return awayFromDismiss(spot, w, screenWidth, screenHeight, safe, h, dismissRadius)
+        val placed = awayFromDismiss(spot, w, screenWidth, screenHeight, safe, h, dismissRadius)
+        return snapToEdge(placed, w, screenWidth, safe, edgeSnap)
+    }
+
+    /**
+     * [spot] con `x` = 0 o 1 si su centro está a [tolerance] px o menos del sitio más a la izquierda o más a la derecha en el
+     * que cabe una pila de [stackWidth] px dentro de [safe] (lo que [clamp] deja con 0 o 1). Sin [tolerance], o si la pila no
+     * cabe, tal cual.
+     */
+    internal fun snapToEdge(spot: BubbleSpot, stackWidth: Int, screenWidth: Int, safe: SafeArea, tolerance: Int?): BubbleSpot {
+        if (tolerance == null || tolerance < 0 || screenWidth <= 0 || !spot.x.isFinite()) return spot
+        val half = stackWidth / 2f
+        val min = safe.left + half
+        val max = screenWidth - safe.right - half
+        if (min > max) return spot
+        val center = spot.x * screenWidth
+        return when {
+            center - min <= tolerance -> spot.copy(x = 0f)
+            max - center <= tolerance -> spot.copy(x = 1f)
+            else -> spot
+        }
     }
 
     /**

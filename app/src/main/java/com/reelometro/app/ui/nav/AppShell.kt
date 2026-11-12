@@ -44,8 +44,7 @@ import com.reelometro.app.ui.calibration.CalibrationRoute
 import com.reelometro.app.ui.day.DayRoute
 import com.reelometro.app.ui.onboarding.OnboardingRoute
 import com.reelometro.app.ui.onboarding.ServiceSetupRoute
-import com.reelometro.app.ui.passport.CelebrationHost
-import com.reelometro.app.ui.passport.PassportRoute
+import com.reelometro.app.ui.passport.FlapRoute
 import com.reelometro.app.ui.settings.SettingsRoute
 import com.reelometro.app.ui.stats.StatsRoute
 import com.reelometro.app.ui.support.SupportPromptHost
@@ -63,17 +62,20 @@ import kotlinx.coroutines.flow.Flow
 val TabBarHeight = 64.dp
 
 /**
- * Armazón de la app: NavHost con las pestañas (Hoy · Estadísticas · Resumen · Pasaporte) y las
+ * Armazón de la app: NavHost con las pestañas (Hoy · Estadísticas · Resumen · Flap) y las
  * pantallas apiladas (detalle del día, Wrapped, Ajustes, Calibración, Onboarding).
  *
  * - Transiciones con springs; el gesto de atrás predictivo anima las de "pop".
  * - `SharedTransitionLayout` envuelve el NavHost: las pantallas usan [reelSharedElement].
- * - Encima de todo: el recorrido guiado ([TourHost]), las celebraciones del Pasaporte ([CelebrationHost]) y
- *   el aviso de apoyo ([SupportPromptHost]).
+ * - Encima de todo: el recorrido guiado ([TourHost]) y el aviso de apoyo ([SupportPromptHost]).
  *
- * @param passportEnabled modo pasaporte: con `false` no hay cuarta pestaña ni celebraciones.
+ * @param passportEnabled Flap encendido en Ajustes: con `false` no hay cuarta pestaña.
  * @param tourPending el recorrido guiado está pendiente (onboarding hecho y recorrido sin ver).
  * @param onTourFinished al terminar o saltar el recorrido (se guarda como visto).
+ * @param visibleTabs pestañas a la vista (descubrimiento progresivo: Hoy, +Estadísticas, +Resumen, +Flap).
+ *   Con una sola no se pinta la barra (Ajustes sigue en la cabecera de Hoy).
+ * @param onRevealTabs han llevado al usuario a una pestaña aún oculta (enlace, banda, novedad): hay que
+ *   descubrir hasta esa cantidad de pestañas.
  */
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -86,17 +88,21 @@ fun AppShell(
     passportEnabled: Boolean = true,
     tourPending: Boolean = false,
     onTourFinished: (skipped: Boolean) -> Unit = {},
+    visibleTabs: Int = if (passportEnabled) 4 else 3,
+    onRevealTabs: (Int) -> Unit = {},
     navController: NavHostController = rememberNavController(),
 ) {
     val entry by navController.currentBackStackEntryAsState()
-    // Con el modo pasaporte apagado, su destino no es una pestaña (no se pinta y se vuelve a Hoy).
+    // Con Flap apagado, su destino no es una pestaña (no se pinta y se vuelve a Hoy).
     val onPassport = entry?.destination?.hasRoute(PassportDest::class) == true
     val tabIndex = if (onPassport && !passportEnabled) -1 else entry?.destination?.tabIndex() ?: -1
+    // Una barra con una sola pestaña no tiene sentido: el primer día solo está Hoy.
+    val barVisible = tabIndex >= 0 && visibleTabs >= 2
     val reduced = LocalReducedMotion.current
     val tourTargets = remember { TourTargets() }
 
     // Mientras no se haya completado el onboarding, los enlaces se ignoran (salvo el propio onboarding).
-    // Con el modo pasaporte apagado, el enlace al Pasaporte tampoco existe.
+    // Con Flap apagado, el enlace a su pestaña tampoco existe.
     val linksEnabled by rememberUpdatedState(deepLinksEnabled)
     val passport by rememberUpdatedState(passportEnabled)
     LaunchedEffect(navController) {
@@ -107,9 +113,16 @@ fun AppShell(
             }
         }
     }
-    // Si se apaga el modo pasaporte con su pestaña abierta, se vuelve a Hoy.
+    // Si se apaga Flap con su pestaña abierta, se vuelve a Hoy.
     LaunchedEffect(passportEnabled, onPassport) {
         if (!passportEnabled && onPassport) navController.navigateTab(TodayDest)
+    }
+
+    // Si se llega a una pestaña aún oculta (enlace, banda de Hoy, novedad), se descubre: nadie se queda
+    // en una pantalla sin su pestaña.
+    val reveal by rememberUpdatedState(onRevealTabs)
+    LaunchedEffect(tabIndex, visibleTabs) {
+        if (tabIndex >= visibleTabs) reveal(tabIndex + 1)
     }
 
     val navInset = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
@@ -121,7 +134,12 @@ fun AppShell(
         SharedTransitionLayout(underTour) {
             CompositionLocalProvider(
                 LocalSharedTransitionScope provides this,
-                LocalBottomBarHeight provides if (tabIndex >= 0) TabBarHeight + navInset else 0.dp,
+                // Sin barra (primer día) las pestañas siguen dejando el hueco de la barra del sistema.
+                LocalBottomBarHeight provides when {
+                    barVisible -> TabBarHeight + navInset
+                    tabIndex >= 0 -> navInset
+                    else -> 0.dp
+                },
                 LocalTourTargets provides tourTargets,
             ) {
                 NavHost(
@@ -139,6 +157,7 @@ fun AppShell(
                                 onOpenStats = { navController.navigateTab(StatsDest) },
                                 onOpenSettings = { navController.navigate(SettingsDest) },
                                 onConnectService = { navController.navigate(ServiceSetupDest) { launchSingleTop = true } },
+                                onOpenFeature = { navController.navigateTab(it.dest()) },
                             )
                         }
                     }
@@ -159,7 +178,7 @@ fun AppShell(
                         }
                     }
                     composable<PassportDest> {
-                        if (passport) Scoped { PassportRoute(onOpenSettings = { navController.navigate(SettingsDest) }) }
+                        if (passport) Scoped { FlapRoute(onOpenSettings = { navController.navigate(SettingsDest) }) }
                     }
                     composable<DayDest> { backStack ->
                         val day = backStack.toRoute<DayDest>()
@@ -226,28 +245,21 @@ fun AppShell(
         }
 
         AnimatedVisibility(
-            visible = tabIndex >= 0,
+            visible = barVisible,
             enter = slideInVertically(spring(dampingRatio = 0.9f, stiffness = 500f)) { it } + fadeIn(),
             exit = slideOutVertically(spring(dampingRatio = 0.9f, stiffness = 500f)) { it } + fadeOut(),
             modifier = Modifier.align(Alignment.BottomCenter).then(underTour),
         ) {
             AppTabBar(
                 selectedIndex = tabIndex.coerceAtLeast(0),
-                onSelect = { index -> navController.navigateTab(tabDests(passportEnabled)[index]) },
-                passportEnabled = passportEnabled,
+                onSelect = { index -> navController.navigateTab(tabDests(visibleTabs)[index]) },
+                count = visibleTabs,
             )
         }
 
-        // Celebraciones del Pasaporte pendientes: solo en las pestañas y nunca durante el recorrido.
-        CelebrationHost(
-            enabled = passportEnabled && tabIndex >= 0 && !tourPending,
-            onOpenPassport = { navController.navigateTab(PassportDest) },
-        )
-
-        // Aviso de apoyo (GitHub del proyecto): mismas condiciones, y nunca en una sesión con celebraciones.
+        // Aviso de apoyo (GitHub del proyecto): solo en las pestañas y nunca durante el recorrido.
         SupportPromptHost(
             enabled = tabIndex >= 0 && !tourPending,
-            passportEnabled = passportEnabled,
             navReady = entry != null,
         )
 
@@ -256,6 +268,7 @@ fun AppShell(
                 pending = tourPending,
                 currentTab = tabIndex,
                 passportEnabled = passportEnabled,
+                visibleTabs = visibleTabs,
                 targets = tourTargets,
                 onShowTab = { dest -> navController.navigateTab(dest) },
                 onFinished = onTourFinished,
@@ -264,7 +277,7 @@ fun AppShell(
     }
 }
 
-/** Índice de la pestaña Pasaporte en la barra. */
+/** Índice de la pestaña Flap en la barra. */
 private const val PASSPORT_TAB = 3
 
 /** Expone el ámbito de animación del destino a [reelSharedElement]/[reelSharedBounds]. */

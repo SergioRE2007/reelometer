@@ -7,7 +7,6 @@ import androidx.core.content.edit
 import com.reelometro.app.ReelometroApp
 import com.reelometro.app.copy.NotificationCopy
 import com.reelometro.app.copy.Variants
-import com.reelometro.app.game.TravelerLevel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -17,10 +16,9 @@ import java.time.ZonedDateTime
 
 /**
  * Avisos que salen del servicio de accesibilidad, sin encuestas periódicas ni trabajos
- * nuevos: tras cada `recordStart`, el servicio llama a [onVideoStarted] y, en el `appScope`:
- * - [GoalAlert]: aviso en directo al pasar el objetivo (una vez al día; reglas en [GoalAlertRules]).
- * - [LevelAlert]: con el primer vídeo del día, si el modo pasaporte está encendido, mira si hay
- *   nivel nuevo (reglas en [LevelAlertRules]). También lo mira el aviso diario.
+ * nuevos: tras cada `recordStart`, el servicio llama a [onVideoStarted] y, en el `appScope`,
+ * [GoalAlert] decide el aviso en directo al pasar el objetivo (una vez al día; reglas en
+ * [GoalAlertRules]). Flap no manda avisos: se ve en su pestaña y en el widget.
  */
 object LiveAlerts {
 
@@ -29,11 +27,10 @@ object LiveAlerts {
         val app = ReelometroApp.from(context)
         app.appScope.launch {
             runCatching { GoalAlert.onVideo(app) }.onFailure { Log.w(LOG, "Aviso en directo fallido", it) }
-            runCatching { LevelAlert.onVideo(app) }.onFailure { Log.w(LOG, "Aviso de nivel fallido", it) }
         }
     }
 
-    /** BORRAR TODO: olvida qué se ha avisado (el día del aviso en directo y el último nivel). */
+    /** BORRAR TODO: olvida qué se ha avisado (el día del aviso en directo). */
     fun clear(context: Context) = AlertStore(context).clear()
 }
 
@@ -96,76 +93,9 @@ object GoalAlert {
     private const val SKIPPED = "omitido"
 }
 
-/** Aviso de nivel nuevo del Pasaporte (el único aviso del modo pasaporte). */
-object LevelAlert {
-
-    /** Ruta que abre la pestaña Pasaporte. */
-    private const val ROUTE_PASSPORT = "passport"
-
-    private val mutex = Mutex()
-
-    /** Con el primer vídeo de cada día (el nivel cambia al cerrarse los días). */
-    internal suspend fun onVideo(context: Context) {
-        val app = ReelometroApp.from(context)
-        val settings = app.settings.current()
-        val today = LocalDate.now()
-        val store = AlertStore(app)
-        if (!LevelAlertRules.shouldCheckOnVideo(settings.passportEnabled, today, store.levelCheckedOn)) return
-        store.levelCheckedOn = today
-        Log.i(LOG, "Aviso de nivel: ${check(app)}")
-    }
-
-    /**
-     * Mira el nivel del pasaporte y avisa si supera al último avisado. Nunca con el modo pasaporte
-     * apagado (ni a la fuerza). [force] (QA, `NOTIFY_LEVEL`) avisa del nivel actual aunque no sea
-     * nuevo, sin guardarlo. Devuelve una línea para Logcat.
-     */
-    suspend fun check(context: Context, now: ZonedDateTime = ZonedDateTime.now(), force: Boolean = false): String =
-        mutex.withLock {
-            val app = ReelometroApp.from(context)
-            if (!app.settings.current().passportEnabled) return@withLock "omitido (modo pasaporte apagado)"
-            val level = app.passport.snapshot().level.level
-            val store = AlertStore(app)
-            if (force) return@withLock publish(app, level, now)
-            when (val outcome = LevelAlertRules.decide(true, level, store.levelNotified)) {
-                is LevelAlertRules.Outcome.Notify -> {
-                    // Se guarda aunque no haya permiso: un «nivel nuevo» que llegara días después ya no sería nuevo.
-                    store.levelNotified = outcome.level
-                    publish(app, outcome.level, now)
-                }
-                is LevelAlertRules.Outcome.Baseline -> {
-                    store.levelNotified = outcome.level
-                    "base: ${outcome.level}"
-                }
-                LevelAlertRules.Outcome.Keep -> "sin cambios (${level.name})"
-            }
-        }
-
-    private fun publish(context: Context, level: TravelerLevel, now: ZonedDateTime): String {
-        val copy = NotificationCopy.levelUp(level, Variants.daySeed(now.toLocalDate()))
-        val shown = Notifications.show(
-            context, Notifications.Kind.LEVEL, copy, NotificationCopy.levelUpPublic, ROUTE_PASSPORT, now,
-            LevelAlertRules.expiry(now),
-        )
-        return if (shown) "publicado «${copy.title}» · ${copy.text} → $ROUTE_PASSPORT" else "omitido (${SummaryRules.Skip.NO_PERMISSION})"
-    }
-
-    /** Al apagar el modo pasaporte: fuera el aviso de nivel si seguía en la cortina. */
-    fun onPassportDisabled(context: Context) = Notifications.cancel(context, Notifications.Kind.LEVEL)
-
-    /**
-     * Al encenderlo otra vez: el próximo chequeo vuelve a tomar la base sin avisar, para no anunciar
-     * un nivel que se subió con el modo oculto.
-     */
-    fun onPassportEnabled(context: Context) {
-        AlertStore(context).levelNotified = null
-    }
-}
-
 /**
- * Lo que recuerdan estos avisos: el día del último aviso en directo, el último nivel avisado y el
- * último día en que se miró el nivel. No es configuración (no va en DataStore con los ajustes) ni
- * sale del móvil (la app no tiene copia de seguridad).
+ * Lo que recuerdan estos avisos: el día del último aviso en directo. No es configuración (no va en
+ * DataStore con los ajustes) ni sale del móvil (la app no tiene copia de seguridad).
  */
 internal class AlertStore(context: Context) {
     private val prefs: SharedPreferences =
@@ -175,18 +105,16 @@ internal class AlertStore(context: Context) {
         get() = day(KEY_GOAL_SENT)
         set(value) = putDay(KEY_GOAL_SENT, value)
 
-    var levelCheckedOn: LocalDate?
-        get() = day(KEY_LEVEL_CHECKED)
-        set(value) = putDay(KEY_LEVEL_CHECKED, value)
-
-    var levelNotified: TravelerLevel?
-        get() = LevelAlertRules.parse(prefs.getString(KEY_LEVEL, null))
-        set(value) {
-            prefs.edit { if (value == null) remove(KEY_LEVEL) else putString(KEY_LEVEL, value.name) }
-        }
-
     fun clear() {
         prefs.edit { this.clear() }
+    }
+
+    /**
+     * Lo que recordaba el aviso de nivel del antiguo Pasaporte (quitado en 1.12.0): el último nivel
+     * avisado y el día en que se miró. Se borra una vez; si ya no está, no escribe nada.
+     */
+    fun dropLegacyLevel() {
+        if (LEGACY_KEYS.any { prefs.contains(it) }) prefs.edit { LEGACY_KEYS.forEach { remove(it) } }
     }
 
     private fun day(key: String): LocalDate? =
@@ -199,8 +127,9 @@ internal class AlertStore(context: Context) {
     private companion object {
         const val FILE = "alerts"
         const val KEY_GOAL_SENT = "goal_live_sent_day"
-        const val KEY_LEVEL = "level_notified"
-        const val KEY_LEVEL_CHECKED = "level_checked_day"
+
+        /** Claves del aviso de nivel (hasta 1.11.x): solo para borrarlas ([dropLegacyLevel]). */
+        val LEGACY_KEYS = listOf("level_notified", "level_checked_day")
     }
 }
 

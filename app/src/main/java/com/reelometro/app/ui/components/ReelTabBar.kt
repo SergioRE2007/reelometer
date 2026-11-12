@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.text.BasicText
-import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,6 +33,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.TextMeasurer
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -80,6 +84,15 @@ fun ReelTabBar(
     val labelWidths = remember(items.size) { mutableStateListOf(*Array(items.size) { 0f }) }
     val x = remember { Animatable(0f) }
     val w = remember { Animatable(0f) }
+    // Un único tamaño para todas las etiquetas: el mayor con el que caben todas en su celda. Antes cada una se
+    // reducía por su cuenta y, con letra grande, «ESTADÍSTICAS» salía más pequeña que «HOY» o «RESUMEN».
+    val labelStyle = ReelTheme.type.labelL
+    val labels = items.map { Format.upper(it.label) }
+    val measurer = rememberTextMeasurer()
+    val labelPadding = with(LocalDensity.current) { (Space.x1 * 2).roundToPx() }
+    val labelSize = remember(labels, barWidth, labelStyle, measurer, labelPadding) {
+        sharedLabelSize(labels, labelStyle, barWidth / items.size.coerceAtLeast(1) - labelPadding, measurer)
+    }
 
     LaunchedEffect(selectedIndex, items.size) {
         var first = w.value == 0f
@@ -148,15 +161,13 @@ fun ReelTabBar(
                 ) {
                     ReelIcon(tab.icon, contentDescription = null, tint = { color })
                     Spacer(Modifier.height(Space.x1))
-                    val labelStyle = ReelTheme.type.labelL
                     BasicText(
-                        text = Format.upper(tab.label),
+                        text = labels[index],
                         modifier = Modifier.padding(horizontal = Space.x1),
-                        style = labelStyle,
+                        style = labelStyle.copy(fontSize = labelSize),
                         color = { color },
                         maxLines = 1,
-                        // Con letra grande, una etiqueta larga («ESTADÍSTICAS») se reduce en vez de cortarse.
-                        autoSize = TextAutoSize.StepBased(minFontSize = 8.sp, maxFontSize = labelStyle.fontSize, stepSize = 0.25.sp),
+                        softWrap = false,
                         onTextLayout = {
                             val width = it.size.width.toFloat()
                             if (labelWidths[index] != width) labelWidths[index] = width
@@ -166,4 +177,24 @@ fun ReelTabBar(
             }
         }
     }
+}
+
+/** Tamaño mínimo y paso con que se reducen las etiquetas de la barra cuando no caben (letra grande). */
+private val TabLabelMin = 8.sp
+private const val TAB_LABEL_STEP_SP = 0.25f
+
+/**
+ * El mayor tamaño, desde el de [style] hacia abajo, con el que todas las [labels] caben en una línea de [cellPx]
+ * píxeles. Sin ancho medido todavía (o con un tamaño que no es sp), el de [style].
+ */
+internal fun sharedLabelSize(labels: List<String>, style: TextStyle, cellPx: Int, measurer: TextMeasurer): TextUnit {
+    val max = style.fontSize
+    if (cellPx <= 0 || !max.isSp) return max
+    var size = max.value
+    while (size > TabLabelMin.value) {
+        val candidate = style.copy(fontSize = size.sp)
+        if (labels.all { measurer.measure(it, candidate, maxLines = 1, softWrap = false).size.width <= cellPx }) return size.sp
+        size -= TAB_LABEL_STEP_SP
+    }
+    return TabLabelMin
 }

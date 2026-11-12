@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
+import com.reelometro.app.copy.Words
 import com.reelometro.app.stats.Format
 import com.reelometro.app.ui.theme.ReelTheme
 import com.reelometro.app.ui.theme.Space
@@ -20,6 +21,7 @@ import com.reelometro.app.ui.theme.Space
  * Estado vacío con el marcador de protagonista (a cero, «000», o en blanco con `value = null`),
  * la frase en serif itálica ([title], p. ej. «De momento, ganas tú.»), una explicación opcional
  * y una acción opcional (un `ReelButton`, por ejemplo). Alineado a la izquierda, sin contenedor.
+ * `value`, si hay, son **vídeos**: TalkBack lo lee como «N vídeos».
  */
 @Composable
 fun EmptyState(
@@ -37,7 +39,7 @@ fun EmptyState(
             value = value,
             style = counterStyle,
             haptic = false,
-            contentDescription = if (value == null) str(R.string.ui_no_data) else Format.integer(value),
+            contentDescription = if (value == null) str(R.string.ui_no_data) else Words.videos(value),
         )
         Spacer(Modifier.height(Space.x6))
         Text(title, style = type.quote, color = colors.text, modifier = Modifier.semantics { heading() })

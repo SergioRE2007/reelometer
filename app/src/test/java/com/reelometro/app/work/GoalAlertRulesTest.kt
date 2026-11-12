@@ -1,12 +1,8 @@
 package com.reelometro.app.work
 
-import com.reelometro.app.game.TravelerLevel
 import com.reelometro.app.work.GoalAlertRules.Skip
-import com.reelometro.app.work.LevelAlertRules.Outcome
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
-import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.time.LocalDate
 import java.time.ZoneId
@@ -80,55 +76,5 @@ class GoalAlertRulesTest {
         val zone = ZoneId.of("Europe/Madrid")
         val now = ZonedDateTime.of(2026, 11, 4, 22, 15, 0, 0, zone)
         assertEquals(ZonedDateTime.of(2026, 11, 5, 0, 0, 0, 0, zone), GoalAlertRules.expiry(now))
-    }
-
-    // ------------------------------------------------------------------ nivel nuevo
-
-    @Test
-    fun `la primera vez el nivel actual es la base y no avisa`() {
-        assertEquals(Outcome.Baseline(TravelerLevel.PLATA), LevelAlertRules.decide(true, TravelerLevel.PLATA, null))
-        assertEquals(Outcome.Baseline(TravelerLevel.PASAJERO), LevelAlertRules.decide(true, TravelerLevel.PASAJERO, null))
-    }
-
-    @Test
-    fun `avisa cuando el nivel supera al ultimo avisado`() {
-        assertEquals(
-            Outcome.Notify(TravelerLevel.PLATA),
-            LevelAlertRules.decide(true, TravelerLevel.PLATA, TravelerLevel.FRECUENTE),
-        )
-        assertEquals(
-            Outcome.Notify(TravelerLevel.ORO),
-            LevelAlertRules.decide(true, TravelerLevel.ORO, TravelerLevel.PASAJERO),
-        )
-        assertEquals(Outcome.Keep, LevelAlertRules.decide(true, TravelerLevel.PLATA, TravelerLevel.PLATA))
-    }
-
-    @Test
-    fun `con el modo pasaporte apagado nunca avisa ni toca la base`() {
-        assertEquals(Outcome.Keep, LevelAlertRules.decide(false, TravelerLevel.PLATINO, TravelerLevel.PASAJERO))
-        assertEquals(Outcome.Keep, LevelAlertRules.decide(false, TravelerLevel.PLATA, null))
-        assertFalse(LevelAlertRules.shouldCheckOnVideo(false, today, null))
-    }
-
-    @Test
-    fun `si el nivel baja la base baja con el`() {
-        assertEquals(
-            Outcome.Baseline(TravelerLevel.PASAJERO),
-            LevelAlertRules.decide(true, TravelerLevel.PASAJERO, TravelerLevel.ORO),
-        )
-    }
-
-    @Test
-    fun `el nivel se mira con el primer video de cada dia`() {
-        assertTrue(LevelAlertRules.shouldCheckOnVideo(true, today, null))
-        assertTrue(LevelAlertRules.shouldCheckOnVideo(true, today, yesterday))
-        assertFalse(LevelAlertRules.shouldCheckOnVideo(true, today, today))
-    }
-
-    @Test
-    fun `el nivel guardado se lee por su nombre`() {
-        assertEquals(TravelerLevel.ORO, LevelAlertRules.parse("ORO"))
-        assertNull(LevelAlertRules.parse(null))
-        assertNull(LevelAlertRules.parse("DIAMANTE"))
     }
 }

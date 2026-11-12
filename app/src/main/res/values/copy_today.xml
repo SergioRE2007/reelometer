@@ -347,4 +347,45 @@
         <item>No estoy contando ninguna app. Así cualquiera.</item>
         <item>Ninguna app activada en Ajustes. El marcador, de vacaciones.</item>
     </string-array>
+
+    <!-- Servicio activado en Ajustes, pero Android no lo ha arrancado (o su arranque ha fallado). Va con el botón de abajo. -->
+    <string-array name="today_service_stalled">
+        <item>El servicio está activado, pero Android no lo ha arrancado: ahora mismo no cuento nada. Tiene arreglo.</item>
+        <item>El interruptor está encendido, pero el sistema no me deja trabajar. Pasa mucho en Xiaomi. Se arregla en un minuto.</item>
+        <item>Activado sí, funcionando no: Android no ha puesto en marcha el servicio. Lo que veas ahora no cuenta.</item>
+    </string-array>
+    <string name="today_service_stalled_action">ARREGLAR</string>
+
+    <!-- El servicio funcionaba y ha salido apagado sin que el usuario lo apagara: lo quitó el móvil al cerrar la app. Va con el botón today_service_stalled_action. lost_reason: %1$s = una de today_service_lost, %2$s = una de calibration_exit_cat_* (copy_calibration.xml). -->
+    <string-array name="today_service_lost">
+        <item>Tu móvil ha apagado el servicio por su cuenta. No has sido tú. Lo que veas ahora no cuenta; tiene arreglo.</item>
+        <item>El servicio se ha apagado solo: tu móvil cerró Reelometer y lo quitó de Accesibilidad. Se arregla en un minuto.</item>
+        <item>No lo has apagado tú: lo ha hecho tu móvil al cerrar la app. Mientras tanto, el marcador no cuenta nada.</item>
+    </string-array>
+    <string name="today_service_lost_reason">%1$s Motivo que apunta Android: %2$s.</string>
+
+    <!-- Descubrimiento progresivo: el primer día solo está Hoy y las demás pestañas aparecen con los días. Novedad: presenta la pestaña recién aparecida (una cada vez); usa el nombre de la pestaña de copy_labels.xml. -->
+    <string name="today_news_stats_title">NUEVO · ESTADÍSTICAS</string>
+    <string name="today_news_stats_text">Ya tienes varios días contados. En Estadísticas, cada día es una barra: mantén el dedo encima para ver su cifra.</string>
+    <string name="today_news_stats_action">VER ESTADÍSTICAS</string>
+    <string name="today_news_wrapped_title">NUEVO · RESUMEN</string>
+    <string name="today_news_wrapped_text">Ya tienes un resumen de tu semana: contado como una historia y con ticket para compartir, si te atreves.</string>
+    <string name="today_news_wrapped_action">VER EL RESUMEN</string>
+    <string name="today_news_passport_title">NUEVO · FLAP</string>
+    <string name="today_news_passport_text">Flap empieza cada día a tope y cada vídeo que ves le quita vida. A medianoche revive. Si no va contigo, se apaga en Ajustes.</string>
+    <string name="today_news_passport_action">VER A FLAP</string>
+    <string name="today_news_dismiss">ENTENDIDO</string>
+    <string name="today_news_dismiss_description">Cerrar esta novedad</string>
+
+    <!-- Pista al final de Hoy con lo que aún no ha aparecido y el botón para enseñarlo todo ya. -->
+    <string name="today_reveal_hint_stats_wrapped_passport">Estadísticas, Resumen y Flap irán apareciendo según cuentes días.</string>
+    <string name="today_reveal_hint_stats_wrapped">Estadísticas y Resumen irán apareciendo según cuentes días.</string>
+    <string name="today_reveal_hint_wrapped_passport">Resumen y Flap aparecerán en cuanto tengas una semana contada.</string>
+    <string name="today_reveal_hint_wrapped">El Resumen aparecerá en cuanto tengas una semana contada.</string>
+    <string name="today_reveal_hint_passport">Flap aparecerá más adelante.</string>
+    <string name="today_reveal_all">ENSEÑARLO TODO YA</string>
+    <string name="today_reveal_all_description">Enseñar ya todas las pestañas</string>
+
+    <!-- Aviso «sin señal» de Hoy con el motivo del cierre: %1$s = la frase de today_service_stalled, %2$s = una de onboarding_exit_*. -->
+    <string name="today_service_stalled_reason">%1$s %2$s</string>
 </resources>

@@ -95,7 +95,8 @@ fun ReelButton(
     Row(
         modifier = modifier
             .pressable(onClick = onClick, haptic = haptic, enabled = enabled)
-            .then(if (contentDescription != null) Modifier.semantics { this.contentDescription = contentDescription } else Modifier)
+            // TalkBack lee el texto natural («Compartir»), no la versión en mayúsculas que se ve.
+            .semantics { this.contentDescription = contentDescription ?: text }
             .defaultMinSize(minHeight = Space.touch)
             .then(box)
             .padding(padding),
@@ -107,12 +108,18 @@ fun ReelButton(
             Spacer(Modifier.width(Space.x2))
         }
         val style = ReelTheme.type.button
+        val lines = if (isLargeFont() && text.trim().contains(' ')) 2 else 1
         BasicText(
             text = Format.upper(text),
             modifier = Modifier.weight(1f, fill = false),
             style = style.copy(color = content, textAlign = TextAlign.Center),
-            maxLines = 1,
-            autoSize = TextAutoSize.StepBased(minFontSize = 10.sp, maxFontSize = style.fontSize, stepSize = 0.5.sp),
+            maxLines = lines,
+            // Con dos líneas, un tamaño solo vale si no parte ninguna palabra («SIGUIEN / TE»).
+            autoSize = if (lines > 1) {
+                WholeWordsAutoSize(min = AutoSizeTokens.Min, max = style.fontSize, step = AutoSizeTokens.Step)
+            } else {
+                TextAutoSize.StepBased(minFontSize = AutoSizeTokens.Min, maxFontSize = style.fontSize, stepSize = AutoSizeTokens.Step)
+            },
         )
         if (trailingIcon != null) {
             Spacer(Modifier.width(Space.x2))

@@ -56,7 +56,7 @@ import kotlin.math.roundToInt
  * adb shell am broadcast -n com.reelometro.app/.debug.DebugReceiver -a com.reelometro.app.debug.DISCLOSURE --ez accepted true
  * # Recorrido guiado: pendiente otra vez (sale al volver a Hoy) o, con --ez done true, marcado como visto.
  * adb shell am broadcast -n com.reelometro.app/.debug.DebugReceiver -a com.reelometro.app.debug.TOUR [--ez done true]
- * # Modo pasaporte encendido o apagado (pestaña, celebraciones, aviso de nivel y Flap en el widget).
+ * # Flap encendido o apagado (su pestaña y Flap en el widget).
  * adb shell am broadcast -n com.reelometro.app/.debug.DebugReceiver -a com.reelometro.app.debug.PASSPORT --ez enabled true
  * # Copia semanal del CSV ya (el BackupWorker del periódico, una vez; resultado en logcat «Copia semanal»).
  * adb shell am broadcast -n com.reelometro.app/.debug.DebugReceiver -a com.reelometro.app.debug.BACKUP
@@ -137,10 +137,7 @@ class DebugReceiver : BroadcastReceiver() {
                 require(file.path.startsWith(base.canonicalPath)) { "la ruta tiene que estar dentro de $base" }
                 val mode = if (intent.getBooleanExtra(EXTRA_REPLACE, false)) ImportMode.REPLACE else ImportMode.ADD
                 val outcome = file.inputStream().use { app.repository.importCsv(it, mode) }
-                if (outcome is CsvImportOutcome.Done) {
-                    com.reelometro.app.work.LevelAlert.onPassportEnabled(context)
-                    WidgetUpdater.requestUpdate(context)
-                }
+                if (outcome is CsvImportOutcome.Done) WidgetUpdater.requestUpdate(context)
                 "IMPORT $mode: $outcome"
             }
             ACTION_ONBOARDING -> {
@@ -213,28 +210,16 @@ class DebugReceiver : BroadcastReceiver() {
             }
             ACTION_WIDGET_SNAPSHOT ->
                 "WIDGET_SNAPSHOT: " + widgetSnapshot(context, intent.getBooleanExtra(EXTRA_PREVIEW, false))
-            // Pasaporte. GAME_RESET borra solo su memoria (sellos guardados, celebraciones,
-            // nivel más alto, retos cerrados, eventos); en el siguiente cálculo vuelve a salir del
-            // historial y lo anterior a ayer se da por celebrado.
+            // Flap. GAME_RESET olvida lo último visto (la próxima vez que se abra la pestaña, sin
+            // animación de cambio); todo lo demás sale del historial y los datos de uso no se tocan.
             //   adb shell am broadcast -n com.reelometro.app/.debug.DebugReceiver -a com.reelometro.app.debug.GAME_RESET
-            // GAME_CELEBRATE deja pendiente una celebración de prueba (sale al abrir la app):
-            //   … -a com.reelometro.app.debug.GAME_CELEBRATE [--es kind stamp|level|challenge] [--es stamp RACHA_7]
             ACTION_GAME_RESET -> {
-                app.passport.clearAll()
-                "GAME_RESET: memoria del pasaporte borrada (los datos de uso no se tocan)"
-            }
-            ACTION_GAME_CELEBRATE -> {
-                val done = app.passport.forceCelebration(
-                    kind = intent.getStringExtra(EXTRA_KIND),
-                    stamp = intent.getStringExtra(EXTRA_STAMP),
-                )
-                "GAME_CELEBRATE: $done pendiente"
+                app.flap.clearAll()
+                "GAME_RESET: lo visto de Flap, borrado (los datos de uso no se tocan)"
             }
             // Aviso en directo ya, con el recuento de hoy: salta el ajuste y el «ya enviado hoy», nunca el
             // objetivo (pásate de él con GOAL --ei goal 5) ni el permiso. No lo marca como enviado.
             ACTION_NOTIFY_GOAL -> "NOTIFY_GOAL: ${com.reelometro.app.work.GoalAlert.check(context, force = true)}"
-            // «Nivel nuevo: <nivel actual>» (abre "passport"), aunque no sea nuevo; nunca con el modo pasaporte apagado.
-            ACTION_NOTIFY_LEVEL -> "NOTIFY_LEVEL: ${com.reelometro.app.work.LevelAlert.check(context, force = true)}"
             ACTION_SUPPORT_PROMPT -> {
                 app.settings.setSupportPrompt(SupportPrompt.readyForQa(LocalDate.now().toEpochDay()))
                 "SUPPORT_PROMPT: listo (${SupportPrompt.FIRST_AFTER_USAGE_DAYS} días de uso, 0 veces enseñado); " +
@@ -369,16 +354,11 @@ class DebugReceiver : BroadcastReceiver() {
         const val EXTRA_REPLACE = "replace"
 
         const val ACTION_GAME_RESET = PREFIX + "GAME_RESET"
-        const val ACTION_GAME_CELEBRATE = PREFIX + "GAME_CELEBRATE"
-        const val EXTRA_KIND = "kind"
-        const val EXTRA_STAMP = "stamp"
         const val ACTION_NOTIFY_GOAL = PREFIX + "NOTIFY_GOAL"
-        const val ACTION_NOTIFY_LEVEL = PREFIX + "NOTIFY_LEVEL"
 
         /**
          * Aviso de apoyo listo para salir (3 días de uso, 0 veces enseñado, no terminado). Sale unos segundos
-         * después de entrar a una pestaña en una sesión nueva de la actividad (y con onboarding y recorrido hechos,
-         * sin celebraciones del Pasaporte pendientes):
+         * después de entrar a una pestaña en una sesión nueva de la actividad (y con onboarding y recorrido hechos):
          * ```
          * adb shell am broadcast -n com.reelometro.app/.debug.DebugReceiver -a com.reelometro.app.debug.SUPPORT_PROMPT
          * adb shell am force-stop com.reelometro.app && adb shell am start -n com.reelometro.app/.MainActivity

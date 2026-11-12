@@ -32,9 +32,6 @@
     <!-- Botones «−» y «+» de un selector numérico (TalkBack): «Restar 10». %1$s el paso. -->
     <string name="ui_stepper_decrease">Decrease by %1$s</string>
     <string name="ui_stepper_increase">Increase by %1$s</string>
-    <!-- Título hablado de la celebración a pantalla completa (sello nuevo, récord…): %1$s la
-         etiqueta («SELLO NUEVO»), %2$s el título. -->
-    <string name="ui_celebration_pane">%1$s. %2$s</string>
 
     <!-- Calibración (pantalla oculta, consola técnica en letra monoespaciada): detalles de cada
          evento capturado. Las abreviaturas técnicas (idx, items) pueden quedarse tal cual.
@@ -55,4 +52,6 @@
     <string name="ui_calibration_screen">screen %1$s×%2$s</string>
     <!-- Identificador corto del vídeo. -->
     <string name="ui_calibration_video">video=%1$s</string>
+    <!-- Cabecera de sección leída por TalkBack: %1$s el título, %2$s el dato final («Plataformas, 3»). -->
+    <string name="ui_section_header_description">%1$s, %2$s</string>
 </resources>

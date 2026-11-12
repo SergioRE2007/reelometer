@@ -157,18 +157,15 @@ fun ReelDialog(
                     notchRim = colors.lineStrong,
                 )
                 Spacer(Modifier.height(Space.x4))
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(start = Space.x6, end = Space.x6, bottom = Space.x6 + JaggedTooth / 2),
-                    horizontalArrangement = Arrangement.spacedBy(Space.x3),
-                ) {
+                ButtonRow(
+                    Modifier.padding(start = Space.x6, end = Space.x6, bottom = Space.x6 + JaggedTooth / 2),
+                ) { slot ->
                     if (dismissLabel != null) {
                         ReelButton(
                             text = dismissLabel,
                             onClick = onDismiss,
                             style = ReelButtonStyle.Secondary,
-                            modifier = Modifier.weight(1f),
+                            modifier = slot,
                         )
                     }
                     ReelButton(
@@ -179,7 +176,7 @@ fun ReelDialog(
                         },
                         icon = confirmIcon,
                         haptic = !destructive,
-                        modifier = Modifier.weight(1f),
+                        modifier = slot,
                     )
                 }
             }

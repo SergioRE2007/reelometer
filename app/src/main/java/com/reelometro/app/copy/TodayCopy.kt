@@ -1,6 +1,8 @@
 package com.reelometro.app.copy
 
 import com.reelometro.app.R
+import com.reelometro.app.data.settings.DiscoveryFeature
+import com.reelometro.app.detection.ExitCategory
 import com.reelometro.app.stats.Equivalences
 import com.reelometro.app.stats.Format
 import java.time.DayOfWeek
@@ -222,6 +224,32 @@ object TodayCopy {
     /** Aviso si el permiso nunca se ha concedido (se dijo «AHORA NO»). Va con «VER EL PERMISO». */
     fun serviceNeverEnabled(seed: Long): String = pick(seed, "today.serviceNever", R.array.today_service_never)
 
+    /**
+     * Aviso si el servicio está activado en Ajustes pero el sistema no lo ha conectado (o su arranque ha fallado).
+     * Va con «ARREGLAR», que abre la pantalla de conectar con los pasos.
+     */
+    fun serviceStalled(seed: Long): String = pick(seed, "today.serviceStalled", R.array.today_service_stalled)
+
+    /**
+     * El mismo aviso con el motivo del último cierre ([ExitCopy.diagnosis]) detrás; sin motivo, el de siempre. Si fue un
+     * fallo de la app, solo esa frase: las variantes generales culpan al sistema o al móvil.
+     */
+    fun serviceStalled(seed: Long, reason: ExitCategory?): String {
+        val diagnosis = reason?.let(ExitCopy::diagnosis) ?: return serviceStalled(seed)
+        return if (reason == ExitCategory.APP_CRASH) diagnosis else str(R.string.today_service_stalled_reason, serviceStalled(seed), diagnosis)
+    }
+
+    val SERVICE_STALLED_ACTION: String get() = str(R.string.today_service_stalled_action)
+
+    /**
+     * Aviso si el servicio funcionaba y ha salido apagado sin que el usuario lo apagara: lo ha quitado el móvil al
+     * cerrar la app. Con el motivo que apunta Android ([ExitCopy.categoryLabel]) detrás, si lo hay. Va con «ARREGLAR».
+     */
+    fun serviceLost(seed: Long, reason: ExitCategory? = null): String {
+        val text = pick(seed, "today.serviceLost", R.array.today_service_lost)
+        return if (reason == null) text else str(R.string.today_service_lost_reason, text, ExitCopy.categoryLabel(reason))
+    }
+
     /** Aviso si se han apagado todas las apps en Ajustes («Qué apps cuento»). */
     fun noPlatforms(seed: Long): String = pick(seed, "today.noPlatforms", R.array.today_no_platforms)
 
@@ -284,6 +312,51 @@ object TodayCopy {
 
     /** Acción de la banda para TalkBack. */
     val SINCE_BAND_ACTION: String get() = str(R.string.today_since_band_action)
+
+    // ---------------------------------------------------- descubrimiento progresivo (novedad y pista)
+
+    /** «NUEVO · ESTADÍSTICAS»: la pestaña que acaba de aparecer. */
+    fun newsTitle(feature: DiscoveryFeature): String = when (feature) {
+        DiscoveryFeature.STATS -> str(R.string.today_news_stats_title)
+        DiscoveryFeature.WRAPPED -> str(R.string.today_news_wrapped_title)
+        DiscoveryFeature.PASSPORT -> str(R.string.today_news_passport_title)
+    }
+
+    fun newsText(feature: DiscoveryFeature): String = when (feature) {
+        DiscoveryFeature.STATS -> str(R.string.today_news_stats_text)
+        DiscoveryFeature.WRAPPED -> str(R.string.today_news_wrapped_text)
+        DiscoveryFeature.PASSPORT -> str(R.string.today_news_passport_text)
+    }
+
+    /** «VER ESTADÍSTICAS». */
+    fun newsAction(feature: DiscoveryFeature): String = when (feature) {
+        DiscoveryFeature.STATS -> str(R.string.today_news_stats_action)
+        DiscoveryFeature.WRAPPED -> str(R.string.today_news_wrapped_action)
+        DiscoveryFeature.PASSPORT -> str(R.string.today_news_passport_action)
+    }
+
+    val NEWS_DISMISS: String get() = str(R.string.today_news_dismiss)
+    val NEWS_DISMISS_DESCRIPTION: String get() = str(R.string.today_news_dismiss_description)
+
+    /**
+     * Línea al final de Hoy con lo que aún no ha aparecido. [hidden] sale de `Discovery.hidden`: siempre
+     * un sufijo de Estadísticas · Resumen · Flap (sin Flap si está apagado en Ajustes).
+     */
+    fun revealHint(hidden: List<DiscoveryFeature>): String {
+        val stats = DiscoveryFeature.STATS in hidden
+        val wrapped = DiscoveryFeature.WRAPPED in hidden
+        val passport = DiscoveryFeature.PASSPORT in hidden
+        return when {
+            stats && passport -> str(R.string.today_reveal_hint_stats_wrapped_passport)
+            stats -> str(R.string.today_reveal_hint_stats_wrapped)
+            wrapped && passport -> str(R.string.today_reveal_hint_wrapped_passport)
+            wrapped -> str(R.string.today_reveal_hint_wrapped)
+            else -> str(R.string.today_reveal_hint_passport)
+        }
+    }
+
+    val REVEAL_ALL: String get() = str(R.string.today_reveal_all)
+    val REVEAL_ALL_DESCRIPTION: String get() = str(R.string.today_reveal_all_description)
 
     /** «4 COMPARTIDOS». */
     private fun sharesLabel(shares: Int): String = Format.upper(plural(R.plurals.today_shares, shares, Format.integer(shares)))

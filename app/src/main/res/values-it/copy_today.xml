@@ -348,4 +348,45 @@
         <item>Non sto contando nessuna app. Così son capaci tutti.</item>
         <item>Nessuna app attiva nelle Impostazioni. Il contatore è in vacanza.</item>
     </string-array>
+
+    <!-- Servicio activado en Ajustes, pero Android no lo ha arrancado (o su arranque ha fallado). Va con el botón de abajo. -->
+    <string-array name="today_service_stalled">
+        <item>Il servizio è attivo, ma Android non l’ha avviato: adesso non conto niente. Si può sistemare.</item>
+        <item>L’interruttore è acceso, ma il sistema non mi fa lavorare. Succede spesso su Xiaomi. Si sistema in un minuto.</item>
+        <item>Attivo sì, funzionante no: Android non ha avviato il servizio. Quello che guardi adesso non conta.</item>
+    </string-array>
+    <string name="today_service_stalled_action">SISTEMA</string>
+
+    <!-- El servicio funcionaba y ha salido apagado sin que el usuario lo apagara: lo quitó el móvil al cerrar la app. Va con el botón today_service_stalled_action. lost_reason: %1$s = una de today_service_lost, %2$s = una de calibration_exit_cat_* (copy_calibration.xml). -->
+    <string-array name="today_service_lost">
+        <item>Il telefono ha disattivato il servizio da solo. Non sei stato tu. Quello che guardi adesso non conta; si può sistemare.</item>
+        <item>Il servizio si è disattivato da solo: il telefono ha chiuso Reelometer e l’ha tolto da Accessibilità. Si sistema in un minuto.</item>
+        <item>Non l’hai disattivato tu: l’ha fatto il telefono chiudendo l’app. Nel frattempo, il contatore non conta niente.</item>
+    </string-array>
+    <string name="today_service_lost_reason">%1$s Motivo annotato da Android: %2$s.</string>
+
+    <!-- Descubrimiento progresivo: el primer día solo está Hoy y las demás pestañas aparecen con los días. Novedad: presenta la pestaña recién aparecida (una cada vez); usa el nombre de la pestaña de copy_labels.xml. -->
+    <string name="today_news_stats_title">NOVITÀ · STATISTICHE</string>
+    <string name="today_news_stats_text">Hai già diversi giorni contati. In Statistiche ogni giorno è una barra: tieni il dito sopra per vedere il suo numero.</string>
+    <string name="today_news_stats_action">VEDI LE STATISTICHE</string>
+    <string name="today_news_wrapped_title">NOVITÀ · RIEPILOGO</string>
+    <string name="today_news_wrapped_text">Hai ora un riepilogo della tua settimana: raccontato come una storia, con uno scontrino da condividere, se hai il coraggio.</string>
+    <string name="today_news_wrapped_action">VEDI IL RIEPILOGO</string>
+    <string name="today_news_passport_title">NOVITÀ · FLAP</string>
+    <string name="today_news_passport_text">Flap parte ogni giorno al massimo e ogni video che guardi gli toglie vita. A mezzanotte torna in vita. Se non fa per te, si spegne in Impostazioni.</string>
+    <string name="today_news_passport_action">VEDI FLAP</string>
+    <string name="today_news_dismiss">HO CAPITO</string>
+    <string name="today_news_dismiss_description">Chiudi questa novità</string>
+
+    <!-- Pista al final de Hoy con lo que aún no ha aparecido y el botón para enseñarlo todo ya. -->
+    <string name="today_reveal_hint_stats_wrapped_passport">Statistiche, Riepilogo e Flap compariranno man mano che conti i giorni.</string>
+    <string name="today_reveal_hint_stats_wrapped">Statistiche e Riepilogo compariranno man mano che conti i giorni.</string>
+    <string name="today_reveal_hint_wrapped_passport">Riepilogo e Flap compariranno appena avrai una settimana contata.</string>
+    <string name="today_reveal_hint_wrapped">Il Riepilogo comparirà appena avrai una settimana contata.</string>
+    <string name="today_reveal_hint_passport">Flap comparirà più avanti.</string>
+    <string name="today_reveal_all">MOSTRA TUTTO ORA</string>
+    <string name="today_reveal_all_description">Mostra subito tutte le schede</string>
+
+    <!-- Aviso «sin señal» de Hoy con el motivo del cierre: %1$s = la frase de today_service_stalled, %2$s = una de onboarding_exit_*. -->
+    <string name="today_service_stalled_reason">%1$s %2$s</string>
 </resources>

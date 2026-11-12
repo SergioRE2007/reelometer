@@ -49,6 +49,10 @@ import com.reelometro.app.detection.FeedRules.Verdict
 import com.reelometro.app.detection.FeedRules.WindowKind
 import com.reelometro.app.widget.WidgetUpdater
 import com.reelometro.app.work.LiveAlerts
+import com.reelometro.app.work.Notifications
+import com.reelometro.app.work.ServiceHealthScheduler
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -86,18 +90,24 @@ import kotlin.math.max
  * - «Se ha ido» sin eventos de otras apps: pantalla apagada, cambio de actividad, una comprobación
  *   ligera cada [PRESENCE_INTERVAL_MS] solo mientras hay un vídeo activo (ventanas visibles y feed
  *   visible) y la duración máxima por vídeo.
- * - Nunca debe tumbarse: cada evento va protegido y los logs solo salen en debug (tag `Reelometro`).
+ * - Nunca debe tumbarse: cada evento, cada `Runnable` del hilo principal y cada corrutina van protegidos
+ *   ([safely], [contain]; lo contenido se cuenta en [ServiceFailures] y sale en el registro de Calibración). Un fallo
+ *   sin capturar cerraría la app, y hay móviles que después no vuelven a enlazar el servicio. Los logs solo salen en
+ *   debug (tag `Reelometro`).
+ * - Apunta cuándo se conecta y cuándo se desconecta ([ServiceJournal]) para que la app sepa si lo ha apagado el
+ *   usuario o el sistema.
  */
 class ReelAccessibilityService : AccessibilityService() {
 
     private val handler = Handler(Looper.getMainLooper())
 
+    // Los cuatro ámbitos llevan red ([contain]): un fallo sin capturar en un `launch` no cierra la app.
     // Un solo hilo para la base de datos: el INSERT de un vídeo siempre va antes que sus UPDATE/DELETE.
-    private val dbScope = CoroutineScope(SupervisorJob() + Dispatchers.IO.limitedParallelism(1))
+    private val dbScope = CoroutineScope(SupervisorJob() + Dispatchers.IO.limitedParallelism(1) + contain("base de datos"))
 
     // Lecturas del árbol fuera del hilo principal, de una en una.
-    private val readScope = CoroutineScope(SupervisorJob() + Dispatchers.Default.limitedParallelism(1))
-    private val mainScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    private val readScope = CoroutineScope(SupervisorJob() + Dispatchers.Default.limitedParallelism(1) + contain("lectura de pantalla"))
+    private val mainScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate + contain("ajustes"))
 
     private var repository: ReelRepository? = null
     private var tracker: ViewTracker? = null
@@ -106,7 +116,7 @@ class ReelAccessibilityService : AccessibilityService() {
     private val quickSender = QuickSender(shareDetector = shareDetector, finder = AccessibilityUiFinder, clock = SystemClock::uptimeMillis)
 
     // Fotos de perfil de los fijados: se leen y guardan en disco aquí, de una en una.
-    private val fileScope = CoroutineScope(SupervisorJob() + Dispatchers.IO.limitedParallelism(1))
+    private val fileScope = CoroutineScope(SupervisorJob() + Dispatchers.IO.limitedParallelism(1) + contain("fotos de los fijados"))
 
     // Todo lo que sigue se usa solo desde el hilo principal.
     private var enabledPlatforms: Set<Platform> = Platform.entries.toSet()
@@ -185,12 +195,12 @@ class ReelAccessibilityService : AccessibilityService() {
 
     private val quickTickRunnable = Runnable {
         quickTickAt = null
-        runQuickTick()
+        safely("paso del envío rápido", onFailure = { failQuickSend() }) { runQuickTick() }
     }
     private val overlayRunnable = Runnable { updateOverlay() }
 
     /** Con las burbujas a la vista: si su app deja de estar delante, se van sin esperar a la comprobación de 4 s. */
-    private val overlayWatchRunnable = Runnable { watchOverlay() }
+    private val overlayWatchRunnable = Runnable { safely("burbujas del envío rápido") { watchOverlay() } }
     private var screenWidth = 0
     private var screenHeight = 0
     private var receiverRegistered = false
@@ -221,7 +231,9 @@ class ReelAccessibilityService : AccessibilityService() {
 
     /** Nota del próximo VIDEO_DISCARD en Calibración (si no es un rebote). */
     private var discardNote: String? = null
-    private val contentCheckRunnable = Runnable { runContentCheck() }
+    private val contentCheckRunnable = Runnable {
+        safely("comprobación de contenido", onFailure = { contentCheckRunning = false }) { runContentCheck() }
+    }
 
     /** Contenedor del feed del último scroll aceptado (para leer su página visible y comprobar que se ve). */
     private var feedNode: AccessibilityNodeInfo? = null
@@ -232,7 +244,7 @@ class ReelAccessibilityService : AccessibilityService() {
     private var presenceScheduled = false
     private val presenceRunnable = Runnable {
         presenceScheduled = false
-        checkPresence()
+        safely("comprobación periódica") { checkPresence() }
     }
 
     private var dumpRegistered = false
@@ -241,7 +253,7 @@ class ReelAccessibilityService : AccessibilityService() {
     private val dumpReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (!BuildConfig.DEBUG) return
-            if (intent.action == ACTION_QUICK_SEND) onDebugQuickSend(intent) else dumpTree(intent)
+            safely("gancho de depuración") { if (intent.action == ACTION_QUICK_SEND) onDebugQuickSend(intent) else dumpTree(intent) }
         }
     }
 
@@ -309,7 +321,7 @@ class ReelAccessibilityService : AccessibilityService() {
 
     private val screenOffReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            leave(System.currentTimeMillis(), "pantalla apagada", tracker?.currentPlatform)
+            safely("pantalla apagada") { leave(System.currentTimeMillis(), "pantalla apagada", tracker?.currentPlatform) }
         }
     }
 
@@ -325,7 +337,7 @@ class ReelAccessibilityService : AccessibilityService() {
                 dbScope.launch {
                     runCatching { repo.recordStart(id, platform, startedAt) }.onFailure { debugError("recordStart", it) }
                     WidgetUpdater.requestUpdate(applicationContext)
-                    LiveAlerts.onVideoStarted(applicationContext) // aviso al pasar el objetivo y de nivel nuevo
+                    LiveAlerts.onVideoStarted(applicationContext) // aviso al pasar el objetivo
                 }
             }
             ServiceStatus.onVideo(now)
@@ -384,17 +396,37 @@ class ReelAccessibilityService : AccessibilityService() {
 
     // ── Ciclo de vida ────────────────────────────────────────────────────────────────────────────
 
+    /**
+     * Arranque en dos partes. Lo imprescindible para contar (repositorio y contador) va primero: si falla, el servicio
+     * queda «activado, sin conectar» ([ServiceStatus.startError]) y la app lo avisa (Hoy, notificación, Calibración).
+     * Cada parte secundaria va en su propio [startStep]: si una falla en un móvil concreto (receptor, burbujas,
+     * fotos…), se anota en [ServiceStatus.startIssues] y se sigue contando. Antes, cualquier fallo aquí se tragaba en
+     * silencio y el servicio se quedaba sin contar nada.
+     */
     override fun onServiceConnected() {
         super.onServiceConnected()
-        try {
-            val app = ReelometroApp.from(this)
-            repository = app.repository
-            tracker = ViewTracker(recorder)
-            updateScreenSize()
+        ServiceStatus.onStarting()
+        // No borra: si el sistema reinicia el servicio, el tester no pierde lo de justo antes (se cuenta la conexión).
+        ServiceMetrics.live.start()
+        val app = try {
+            ReelometroApp.from(this).also {
+                repository = it.repository
+                tracker = ViewTracker(recorder)
+            }
+        } catch (e: Exception) {
+            tracker = null
+            ServiceStatus.onStartFailed(e)
+            debugError("onServiceConnected", e)
+            return
+        }
+        startStep("pantalla") { updateScreenSize() }
+        startStep("receptor de pantalla apagada") {
             ContextCompat.registerReceiver(
                 this, screenOffReceiver, IntentFilter(Intent.ACTION_SCREEN_OFF), ContextCompat.RECEIVER_NOT_EXPORTED,
             )
             receiverRegistered = true
+        }
+        startStep("ajustes") {
             if (BuildConfig.DEBUG) {
                 // Solo debug: `adb shell am broadcast -a com.reelometro.app.debug.DUMP_SHEET` escribe en el log el árbol
                 // de la app que se ve (ids, textos, descripciones). uiautomator no puede leerlo con un vídeo
@@ -424,6 +456,8 @@ class ReelAccessibilityService : AccessibilityService() {
                         if (!on) recipientDetector.stop()
                     }
             }
+        }
+        startStep("envío rápido") {
             quickMemory = QuickSendMemory(this)
             avatarStore = AvatarStore(this)
             mainScope.launch {
@@ -448,17 +482,34 @@ class ReelAccessibilityService : AccessibilityService() {
             }
             // Una foto nueva (recortada aquí) o borrada (al quitar un fijado o con BORRAR TODO).
             mainScope.launch { AvatarStore.changes.collect { reloadAvatars() } }
-            readScope.launch { CalibrationLog.environment = runCatching { describeEnvironment() }.getOrNull() }
-            ServiceStatus.onConnected()
-            debug { "Servicio conectado (pantalla ${screenWidth}×$screenHeight)" }
+        }
+        readScope.launch { CalibrationLog.environment = runCatching { describeEnvironment(this@ReelAccessibilityService) }.getOrNull() }
+        ServiceStatus.onConnected()
+        // La conexión queda apuntada (con su hora y si el proceso venía de un cierre o de un reinicio): así la app
+        // sabe después si el servicio lo apagó el usuario o lo quitó el sistema. Fuera del hilo principal: es disco.
+        val connectedAt = System.currentTimeMillis()
+        val connectionKind = ServiceJournalRules.connectionKind(ServiceHealth.processAgeMs(), ServiceHealth.uptimeAtProcessStartMs())
+        journalOpen = true
+        fileScope.launch { ServiceJournal(this@ReelAccessibilityService).onConnected(connectedAt, connectionKind) }
+        // Conecta: los cierres de hasta ahora ya no explican un fallo posterior (fuera del hilo principal: es IPC).
+        fileScope.launch { runCatching { ProcessExits.markSeen(this@ReelAccessibilityService) } }
+        startStep("aviso del servicio") { Notifications.cancel(this, Notifications.Kind.SERVICE) }
+        debug { "Servicio conectado (pantalla ${screenWidth}×$screenHeight)" }
+    }
+
+    /** Una parte secundaria del arranque: si falla, se anota y se sigue ([onServiceConnected]). */
+    private inline fun startStep(what: String, block: () -> Unit) {
+        try {
+            block()
         } catch (e: Exception) {
-            debugError("onServiceConnected", e)
+            ServiceStatus.onStartIssue(what, e)
+            debugError("onServiceConnected · $what", e)
         }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        updateScreenSize()
+        safely("tamaño de pantalla") { updateScreenSize() }
     }
 
     override fun onInterrupt() = Unit
@@ -479,7 +530,26 @@ class ReelAccessibilityService : AccessibilityService() {
         super.onDestroy()
     }
 
+    /** Hay una conexión apuntada sin su desconexión ([shutdown] llega dos veces: `onUnbind` y `onDestroy`). */
+    private var journalOpen = false
+
+    /**
+     * La desconexión de la que el servicio se entera (si el proceso muere no pasa por aquí). Si el interruptor sigue
+     * encendido, lo ha desenlazado Android por su cuenta: se mira enseguida si vuelve a enlazarlo y, si no, se avisa
+     * sin esperar a la revisión periódica.
+     */
+    private fun noteDisconnected() {
+        if (!journalOpen) return
+        journalOpen = false
+        val stillEnabled = runCatching { isEnabled(this) }.getOrDefault(false)
+        val kind = if (stillEnabled) DisconnectionKind.UNBOUND else DisconnectionKind.TURNED_OFF
+        ServiceJournal(this).onDisconnected(System.currentTimeMillis(), kind)
+        if (stillEnabled) runCatching { ServiceHealthScheduler.checkSoon(ReelometroApp.from(this)) }
+    }
+
     private fun shutdown() {
+        ServiceMetrics.live.stop() // Con el servicio parado, el periodo medido no avanza.
+        safely("diario del servicio") { noteDisconnected() }
         try {
             tracker?.onLeave(System.currentTimeMillis())
             if (receiverRegistered) {
@@ -515,17 +585,32 @@ class ReelAccessibilityService : AccessibilityService() {
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null || tracker == null) return
-        if (event.eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
+        // Rendimiento (ServiceMetrics): dos nanoTime y un contador por evento; no cambia nada de lo que se hace.
+        val start = System.nanoTime()
+        val type = event.eventType
+        val eventPlatform = Platform.fromPackage(event.packageName)
+        val capturing = CalibrationLog.enabled.value
+        // Cuánto ha tardado en llegar (la app pone `eventTime` al mandarlo): segundos o minutos de retraso dicen que el
+        // proceso estaba congelado o sin CPU. 0 si el evento no trae hora.
+        val lagMs = event.eventTime.takeIf { it > 0 }?.let { SystemClock.uptimeMillis() - it } ?: 0L
+        if (type == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
             // Llega a montones: solo sirve para que el envío rápido en curso reaccione antes, y solo los de su app.
-            if (quickBusy && Platform.fromPackage(event.packageName) == quickPlatform) onQuickSendEvent()
+            val forQuick = quickBusy && eventPlatform == quickPlatform
+            if (forQuick) safely("evento $type") { onQuickSendEvent() }
+            serviceMetrics.onEvent(eventPlatform, type, System.nanoTime() - start, forQuickSend = forQuick, capturing = capturing, lagMs = lagMs)
             return
         }
         try {
             handleEvent(event)
-        } catch (e: Exception) {
-            debugError("evento ${event.eventType}", e)
+        } catch (e: Throwable) {
+            // También los `Error`: aquí un fallo sin capturar cierra la app entera.
+            onContained("evento $type", e)
+        } finally {
+            serviceMetrics.onEvent(eventPlatform, type, System.nanoTime() - start, capturing = capturing, lagMs = lagMs)
         }
     }
+
+    private val serviceMetrics: ServiceMetrics get() = ServiceMetrics.live
 
     @SuppressLint("SwitchIntDef") // Solo interesan los tipos que pide accessibility_service_config.xml.
     private fun handleEvent(event: AccessibilityEvent) {
@@ -746,14 +831,29 @@ class ReelAccessibilityService : AccessibilityService() {
         val profile = PlatformProfile.of(platform) ?: return false
         val node = event.source?.let { AccessibilityUiNode(it) } ?: return false
         if (!recipientDetector.insideFeed(node, profile.feedIds)) return false
-        if (!shareDetector.opensSheet(node, screenWidth, screenHeight, platform)) {
-            if (board.sheetOpen) {
-                board.onSheetClosed()
-                CalibrationLog.log { CalibrationEvent(now, INFO, platform = platform, rule = "envío rápido: clic en el visor (burbujas de vuelta)") }
+        val opens = shareDetector.opensSheet(node, screenWidth, screenHeight, platform)
+        when (SheetWatch.onViewerClick(opens, board.sheetOpen, profile.sheetOwnWindow)) {
+            SheetWatch.ClickAction.OPENED -> Unit
+            SheetWatch.ClickAction.CLOSED -> {
+                closedByViewerClick(platform, now)
+                return false
             }
-            return false
+            SheetWatch.ClickAction.VERIFY -> {
+                // 1.10.5: en TikTok un toque dentro de los comentarios (en la misma ventana) también llega aquí: se comprueba
+                // si sigue algo encima en vez de dar la hoja por cerrada. Si no se puede mirar, como antes. (Nunca antes de
+                // SETTLE_MS desde que se abrió: onSheetGone no valdría y nadie más la vigilaría.)
+                val settled = (board.sheetOpenedAt ?: now) + BubbleBoard.SETTLE_MS - now
+                if (!checkSheetGone(platform, firstDelay = maxOf(SheetWatch.VERIFY_CLICK_MS, settled), unknownIsGone = true)) closedByViewerClick(platform, now)
+                return false
+            }
+            SheetWatch.ClickAction.PROBE -> {
+                probeSheetAfterClick(platform, now, node)
+                return false
+            }
+            SheetWatch.ClickAction.NONE -> return false
         }
-        board.onUserSheetOpened(now)
+        val isShare = shareDetector.evaluate(node, screenWidth, screenHeight).isShare
+        board.onUserSheetOpened(now, if (isShare) BubbleBoard.SheetKind.SHARE else BubbleBoard.SheetKind.OTHER)
         CalibrationLog.log { CalibrationEvent(now, INFO, platform = platform, rule = "envío rápido: hoja abierta a mano (burbujas fuera)") }
         // 1.10.2: si la app no llega a abrir la hoja (un toque que ignora, p. ej. justo tras un envío rápido), no hay cambio de
         // ventana que lo diga: se mira igual, con margen para que la hoja tenga tiempo de salir.
@@ -762,13 +862,19 @@ class ReelAccessibilityService : AccessibilityService() {
         // pero lo que se envíe desde la hoja se apunta y, al enviarlo, la hoja se da por cerrada.
         val t = tracker
         if (recordRecipients && !shareDetector.isArmed(platform, now) && !recipientDetector.isOpen(now) &&
-            t?.currentPlatform == platform && shareDetector.evaluate(node, screenWidth, screenHeight).isShare
+            t?.currentPlatform == platform && isShare
         ) {
             recipientDetector.start(now, t.currentVideoId, profile = profile)
             snapshotSentBanners(platform, now)
             return true
         }
         return false
+    }
+
+    /** Un clic en el visor da por cerrada la hoja abierta (Instagram; en TikTok, si no se puede comprobar). */
+    private fun closedByViewerClick(platform: Platform, now: Long) {
+        board.onSheetClosed()
+        CalibrationLog.log { CalibrationEvent(now, INFO, platform = platform, rule = "envío rápido: clic en el visor (burbujas de vuelta)") }
     }
 
     /** ¿Es [event] un clic en el «Compartir» del visor de [platform] (dentro de [PlatformProfile.feedIds])? */
@@ -1048,7 +1154,7 @@ class ReelAccessibilityService : AccessibilityService() {
     private class InfoResult(val info: ContentExtractor.VideoInfo, val category: Category, val fromFeed: Boolean)
 
     private fun scheduleInfo(id: Long, platform: Platform, delayMs: Long, attempt: Int) {
-        handler.postDelayed({ readInfo(id, platform, attempt) }, delayMs)
+        handler.postDelayed({ safely("lectura de pantalla") { readInfo(id, platform, attempt) } }, delayMs)
     }
 
     private fun readInfo(id: Long, platform: Platform, attempt: Int) {
@@ -1061,8 +1167,8 @@ class ReelAccessibilityService : AccessibilityService() {
         readScope.launch {
             val result = try {
                 readVideoInfo(platform, container, width, height)
-            } catch (e: Exception) {
-                debugError("lectura de pantalla", e)
+            } catch (e: Throwable) {
+                onContained("lectura de pantalla", e)
                 null
             }
             withContext(Dispatchers.Main) { onInfoRead(id, platform, version, attempt, result) }
@@ -1073,18 +1179,32 @@ class ReelAccessibilityService : AccessibilityService() {
     private fun readVideoInfo(platform: Platform, container: AccessibilityNodeInfo?, width: Int, height: Int): InfoResult? {
         var info: ContentExtractor.VideoInfo? = null
         var fromFeed = false
-        val containerAlive = container?.refresh() == true
-        if (container != null && containerAlive) {
-            info = ContentExtractor.extract(platform, AccessibilityUiNode(container), width, height, rootIsFeed = true)
-            fromFeed = true
-        }
-        if (info == null || info.isEmpty) {
-            val root = rootInActiveWindow
-            // Solo la ventana del propio feed: si encima hay un diálogo (comentarios…) no se lee.
-            val sameWindow = container == null || (containerAlive && root?.windowId == container.windowId)
-            if (root != null && sameWindow && Platform.fromPackage(root.packageName) == platform) {
-                info = ContentExtractor.extract(platform, AccessibilityUiNode(root), width, height, rootIsFeed = false)
-                fromFeed = false
+        val stats = ContentExtractor.Stats()
+        var extracted = false
+        val t0 = System.nanoTime()
+        try {
+            val containerAlive = container?.refresh() == true
+            if (container != null && containerAlive) {
+                extracted = true
+                info = ContentExtractor.extract(platform, AccessibilityUiNode(container), width, height, rootIsFeed = true, stats = stats)
+                fromFeed = true
+            }
+            if (info == null || info.isEmpty) {
+                val root = rootInActiveWindow
+                // Solo la ventana del propio feed: si encima hay un diálogo (comentarios…) no se lee.
+                val sameWindow = container == null || (containerAlive && root?.windowId == container.windowId)
+                if (root != null && sameWindow && Platform.fromPackage(root.packageName) == platform) {
+                    extracted = true
+                    info = ContentExtractor.extract(platform, AccessibilityUiNode(root), width, height, rootIsFeed = false, stats = stats)
+                    fromFeed = false
+                }
+            }
+        } finally {
+            // Solo cuenta como lectura si se ha recorrido algo: si no, no hay nodos ni tiempo que medir.
+            if (extracted) {
+                serviceMetrics.onTreeRead(platform, stats.nodes, System.nanoTime() - t0, found = info?.isEmpty == false)
+            } else {
+                serviceMetrics.onTreeUnreadable(platform)
             }
         }
         val found = info ?: return null
@@ -1150,11 +1270,11 @@ class ReelAccessibilityService : AccessibilityService() {
         val width = screenWidth
         val height = screenHeight
         contentCheckRunning = true
-        readScope.launch {
+        readScope.launch(CONTENT_CHECK) {
             val result = try {
                 readVideoInfo(platform, container, width, height)
-            } catch (e: Exception) {
-                debugError("comprobación de contenido", e)
+            } catch (e: Throwable) {
+                onContained("comprobación de contenido", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -1307,6 +1427,10 @@ class ReelAccessibilityService : AccessibilityService() {
                 overlay?.hide()
                 if (!onReel) overlay?.hideQuestion()
                 handler.removeCallbacks(overlayWatchRunnable)
+                // 1.10.5: fuera por la barra de notificaciones: se sigue mirando para que vuelvan al subirla.
+                if (board.systemCovered) {
+                    if (onReel || quickBusy) handler.postDelayed(overlayWatchRunnable, OVERLAY_WATCH_MS) else board.onSystemCover(false)
+                }
             }
             // Si algo cambia solo con el tiempo (el «!» de un fallo antes de esconderlas), se vuelve a mirar entonces.
             handler.removeCallbacks(overlayRunnable)
@@ -1326,28 +1450,42 @@ class ReelAccessibilityService : AccessibilityService() {
     private fun quickSendActive(): Boolean = quickSendEnabled && recordRecipients
 
     private val overlayListener = object : QuickSendOverlay.Listener {
-        override fun onTap(name: String) = onQuickSendRequest(listOf(name), gesture = "toque")
-
-        override fun onPair(first: String, second: String) = onQuickSendRequest(listOf(first, second), gesture = "una encima de otra")
-
-        override fun onMoved(spot: BubbleSpot) {
-            // 1.10.0: cada app guarda su posición; estas burbujas son las de la app que se ve.
-            val platform = bubblesPlatform
-            quickSendBubbles = quickSendBubbles + (platform to spot)
-            val settings = ReelometroApp.from(this@ReelAccessibilityService).settings
-            mainScope.launch { runCatching { settings.setQuickSendBubble(platform, spot) }.onFailure { debugError("posición de las burbujas", it) } }
-            CalibrationLog.log {
-                // Sin nombres: solo dónde queda el centro de la pila (en % de la pantalla) y si va en fila o columna.
-                val fmt = com.reelometro.app.stats.Format
-                val shape = if (BubbleLayout.orientationFor(spot.y) == BubbleOrientation.ROW) "fila" else "columna"
-                CalibrationEvent(
-                    System.currentTimeMillis(), INFO, platform = platform, rule = "envío rápido: burbujas movidas",
-                    note = "x ${fmt.percent(spot.x.toDouble())} · y ${fmt.percent(spot.y.toDouble())} · $shape",
-                )
-            }
+        // Los toques llegan por el hilo principal, fuera de cualquier evento: también van protegidos.
+        override fun onTap(name: String) {
+            safely("toque en una burbuja") { onQuickSendRequest(listOf(name), gesture = "toque") }
         }
 
-        override fun onDismissed(): Boolean = onQuickSendDismissed()
+        override fun onPair(first: String, second: String) {
+            safely("toque en una burbuja") { onQuickSendRequest(listOf(first, second), gesture = "una encima de otra") }
+        }
+
+        override fun onMoved(spot: BubbleSpot) {
+            safely("burbujas movidas") { onBubblesMoved(spot) }
+        }
+
+        override fun onDismissed(): Boolean {
+            var hidden = false
+            safely("burbujas escondidas") { hidden = onQuickSendDismissed() }
+            return hidden
+        }
+    }
+
+    /** Las burbujas se han soltado en otro sitio: se guarda para la app que se ve. */
+    private fun onBubblesMoved(spot: BubbleSpot) {
+        // 1.10.0: cada app guarda su posición; estas burbujas son las de la app que se ve.
+        val platform = bubblesPlatform
+        quickSendBubbles = quickSendBubbles + (platform to spot)
+        val settings = ReelometroApp.from(this@ReelAccessibilityService).settings
+        mainScope.launch { runCatching { settings.setQuickSendBubble(platform, spot) }.onFailure { debugError("posición de las burbujas", it) } }
+        CalibrationLog.log {
+            // Sin nombres: solo dónde queda el centro de la pila (en % de la pantalla) y si va en fila o columna.
+            val fmt = com.reelometro.app.stats.Format
+            val shape = if (BubbleLayout.orientationFor(spot.y) == BubbleOrientation.ROW) "fila" else "columna"
+            CalibrationEvent(
+                System.currentTimeMillis(), INFO, platform = platform, rule = "envío rápido: burbujas movidas",
+                note = "x ${fmt.percent(spot.x.toDouble())} · y ${fmt.percent(spot.y.toDouble())} · $shape",
+            )
+        }
     }
 
     /** Soltadas en la «X»: fuera hasta el siguiente reel. A la tercera seguida, pregunta (una vez) si se apaga. */
@@ -1381,7 +1519,7 @@ class ReelAccessibilityService : AccessibilityService() {
 
     /** Burbujas a la vista: ¿sigue delante su app? (otra app, el lanzador…) */
     private fun watchOverlay() {
-        if (overlay?.isShown != true) return
+        if (overlay?.isShown != true && !board.systemCovered) return
         try {
             val platform = if (quickBusy) quickPlatform else bubblesPlatform
             if (isAppOnScreen(platform) == false) {
@@ -1400,6 +1538,15 @@ class ReelAccessibilityService : AccessibilityService() {
                     // Ya hay un vídeo de la otra app delante: ese no se cierra; se pintan sus burbujas.
                     updateOverlay()
                 }
+                return
+            }
+            // 1.10.5: la barra de notificaciones (o los ajustes rápidos) bajada encima de la app: fuera hasta que suba.
+            val covered = screenWindows()?.let { SystemShade.covers(it, screenWidth, screenHeight) } ?: false
+            if (board.onSystemCover(covered)) {
+                val now = System.currentTimeMillis()
+                val note = if (covered) "envío rápido: barra de notificaciones bajada (burbujas fuera)" else "envío rápido: barra de notificaciones subida (burbujas de vuelta)"
+                CalibrationLog.log { CalibrationEvent(now, INFO, platform = platform, rule = note) }
+                updateOverlay()
                 return
             }
         } catch (e: Exception) {
@@ -1471,7 +1618,9 @@ class ReelAccessibilityService : AccessibilityService() {
         val names = targetsOf(platform).filter { wantsAvatar(platform, it, now) }
         if (names.isEmpty()) return
         val run = ++manualAvatarRun
-        MANUAL_AVATAR_DELAYS_MS.forEach { delay -> handler.postDelayed({ captureManualAvatars(run, platform, names) }, delay) }
+        MANUAL_AVATAR_DELAYS_MS.forEach { delay ->
+            handler.postDelayed({ safely("foto de un fijado") { captureManualAvatars(run, platform, names) } }, delay)
+        }
     }
 
     private fun captureManualAvatars(run: Long, platform: Platform, candidates: List<String>) {
@@ -1780,7 +1929,7 @@ class ReelAccessibilityService : AccessibilityService() {
         // Sin vídeo activo (se ha ido del visor) tampoco: «Compartir» podría ser el de otra publicación.
         val reelChanged = quickVideoId != null && tracker?.currentVideoId != quickVideoId
         val tooLong = SystemClock.uptimeMillis() - quickStartedAt > QUICK_MAX_MS
-        readScope.launch {
+        readScope.launch(QUICK_TICK) {
             val now = System.currentTimeMillis()
             var accepted: Boolean? = null
             var avatar: Bitmap? = null
@@ -1791,8 +1940,11 @@ class ReelAccessibilityService : AccessibilityService() {
             } else try {
                 val readStart = SystemClock.uptimeMillis()
                 // Solo las ventanas de la app del envío: nunca se lee ni se pulsa nada de otra.
-                val roots = appRoots(platform)
-                val ticked = quickSender.tick(roots, width, height, now)
+                // Rendimiento: el paso (ventanas + decisión) y los hijos que pide van aparte en ServiceMetrics.
+                val (roots, ticked) = serviceMetrics.quickTick {
+                    val r = appRoots(platform)
+                    r to quickSender.tick(r, width, height, now)
+                }
                 val readMs = SystemClock.uptimeMillis() - readStart
                 quickSender.noteRead(readMs)
                 // Solo en debug y sin nombres: el paso y lo que costó leer, con la hora desde el toque.
@@ -1851,16 +2003,19 @@ class ReelAccessibilityService : AccessibilityService() {
             )
             withContext(Dispatchers.Main) {
                 quickTickInFlight = false
-                result.avatarName?.let { name ->
-                    val bitmap = result.avatar
-                    // Una captura fallida (o una foto que no se encuentra) no se reintenta en cada envío: espera un día.
-                    if (bitmap != null) {
-                        saveAvatar(result.platform, name, bitmap)
-                    } else {
-                        quickMemory?.avatarFailed(name, System.currentTimeMillis(), result.platform)
+                // Si algo falla aquí ya no habría siguiente paso: el envío se da por fallido en vez de quedarse «enviando».
+                safely("paso del envío rápido", onFailure = { if (run == quickRun) failQuickSend() }) {
+                    result.avatarName?.let { name ->
+                        val bitmap = result.avatar
+                        // Una captura fallida (o una foto que no se encuentra) no se reintenta en cada envío: espera un día.
+                        if (bitmap != null) {
+                            saveAvatar(result.platform, name, bitmap)
+                        } else {
+                            quickMemory?.avatarFailed(name, System.currentTimeMillis(), result.platform)
+                        }
                     }
+                    if (run == quickRun && quickBusy) onQuickStep(result) else if (quickBusy) scheduleQuickTick(0)
                 }
-                if (run == quickRun && quickBusy) onQuickStep(result) else if (quickBusy) scheduleQuickTick(0)
             }
         }
     }
@@ -2067,6 +2222,7 @@ class ReelAccessibilityService : AccessibilityService() {
         val t = tracker ?: return
         val platform = t.currentPlatform ?: return
         val now = System.currentTimeMillis()
+        val t0 = System.nanoTime()
         try {
             t.tick(now)
             if (!t.isActive) {
@@ -2096,6 +2252,7 @@ class ReelAccessibilityService : AccessibilityService() {
         } catch (e: Exception) {
             debugError("comprobación periódica", e)
         } finally {
+            serviceMetrics.onPresenceCheck(System.nanoTime() - t0)
             ensurePresenceChecks()
         }
     }
@@ -2104,6 +2261,9 @@ class ReelAccessibilityService : AccessibilityService() {
         val t = tracker ?: return
         val wasActive = t.isActive
         t.onLeave(at)
+        // 1.10.5: fuera de la app (u otra pantalla apagada) deja de vigilarse la hoja; al volver, un cambio de ventana la relanza.
+        sheetGoneRun++
+        probeRun++
         updateOverlay()
         CalibrationLog.log {
             CalibrationEvent(System.currentTimeMillis(), LEAVE, platform = platform, note = reason + if (wasActive) " · vídeo cerrado" else "")
@@ -2199,22 +2359,43 @@ class ReelAccessibilityService : AccessibilityService() {
      * ([BubbleBoard.onSheetGone]). Con los comentarios u otra hoja abierta (otra ventana encima) siguen fuera. Solo en las apps
      * cuya hoja va en su propia ventana: en Instagram, todo como antes.
      */
-    private fun checkSheetGone(platform: Platform, firstDelay: Long = BubbleBoard.SETTLE_MS) {
-        if (PlatformProfile.of(platform)?.sheetOwnWindow != true) return
-        val openedAt = board.sheetOpenedAt ?: return
-        val feedWindow = feedNode?.takeIf { feedPlatform == platform }?.let { runCatching { it.windowId }.getOrNull() } ?: return
+    private fun checkSheetGone(platform: Platform, firstDelay: Long = BubbleBoard.SETTLE_MS, unknownIsGone: Boolean = false): Boolean {
+        val profile = PlatformProfile.of(platform)?.takeIf { it.sheetOwnWindow } ?: return false
+        val openedAt = board.sheetOpenedAt ?: return false
+        val feedWindow = feedNode?.takeIf { feedPlatform == platform }?.let { runCatching { it.windowId }.getOrNull() } ?: return false
+        // 1.10.5: los comentarios de TikTok van en la misma ventana del feed: con una hoja que no es la de compartir, se mira
+        // también si un panel tapa el visor ([FeedPanel]). La de compartir nunca lo mira (al cerrarla vuelven como siempre).
+        val kind = board.sheetKind
+        val usePanel = SheetWatch.usesPanel(kind)
+        val width = screenWidth
+        val height = screenHeight
         val run = ++sheetGoneRun
         readScope.launch {
             delay(firstDelay)
             // 1.10.2: una ventana encima puede irse sin avisar (el aviso «Enviado a …» de TikTok, de pantalla completa, dura ~5 s
-            // y al quitarse no hay cambio de ventana): se sigue mirando cada SHEET_POLL_MS hasta SHEET_WATCH_MS.
+            // y al quitarse no hay cambio de ventana): se sigue mirando (SheetWatch.next) hasta que no quede nada encima.
             var waited = firstDelay
             while (true) {
                 if (run != sheetGoneRun || quickBusy) return@launch
-                if (sheetWindowAbove(feedWindow) == false) break
-                if (waited >= SHEET_WATCH_MS) return@launch
-                delay(SHEET_POLL_MS)
-                waited += SHEET_POLL_MS
+                // Visto ya en esta hoja (también en una vigilancia anterior, que un cambio de ventana ha relanzado).
+                val panelSeen = panelSeenFor == openedAt
+                val above = sheetWindowAbove(feedWindow)
+                val panel = if (usePanel && above != true) feedPanelOpen(feedWindow, profile.feedIds, width, height, relaxed = panelSeen) else false
+                if (panel == true && !panelSeen) {
+                    panelSeenFor = openedAt
+                    CalibrationLog.log {
+                        CalibrationEvent(System.currentTimeMillis(), INFO, platform = platform, rule = "envío rápido: panel encima del visor en su misma ventana (comentarios; burbujas fuera)")
+                    }
+                }
+                val sinceOpened = System.currentTimeMillis() - openedAt
+                when (val step = SheetWatch.next(kind, SheetWatch.Look(above, panel), waited, panelSeenFor == openedAt, unknownIsGone, sinceOpened)) {
+                    SheetWatch.Step.Gone -> break
+                    SheetWatch.Step.GiveUp -> return@launch
+                    is SheetWatch.Step.Wait -> {
+                        delay(step.ms)
+                        waited += step.ms
+                    }
+                }
             }
             withContext(Dispatchers.Main) {
                 if (run != sheetGoneRun || quickBusy) return@withContext
@@ -2223,6 +2404,60 @@ class ReelAccessibilityService : AccessibilityService() {
                     CalibrationLog.log { CalibrationEvent(now, INFO, platform = platform, rule = "envío rápido: hoja cerrada, sin ventanas encima del feed (burbujas de vuelta)") }
                     updateOverlay()
                 }
+            }
+        }
+        return true
+    }
+
+    /** La hoja ([BubbleBoard.sheetOpenedAt]) en la que [checkSheetGone] ya ha visto el panel de [FeedPanel]. */
+    @Volatile
+    private var panelSeenFor: Long? = null
+
+    /** Cada [probeSheetAfterClick]: una nueva deja sin efecto la anterior. Cambia en el hilo principal. */
+    @Volatile
+    private var probeRun = 0
+
+    /** Lo último visto encima del feed sin hoja abierta, y en qué reel ([SheetWatch.probeBefore]). Hilo de lectura. */
+    @Volatile
+    private var probeBaseline: Pair<Long?, SheetWatch.Look>? = null
+
+    /**
+     * 1.10.5, TikTok: un clic en la columna de botones del visor sin etiqueta conocida (los comentarios en un idioma que
+     * [ShareDetector.opensSheet] no reconoce, o el «Compartir» en otro idioma) puede abrir algo encima. Se mira lo de encima
+     * del feed antes y [SheetWatch.PROBE_MS] después ([SheetWatch.probeOpened]): si ha salido una ventana o un panel que
+     * antes no estaba, se da por abierta una hoja (burbujas fuera) y se vigila su cierre. Un toque en el vídeo no gasta nada.
+     */
+    private fun probeSheetAfterClick(platform: Platform, clickAt: Long, node: UiNode) {
+        val profile = PlatformProfile.of(platform)?.takeIf { it.sheetOwnWindow } ?: return
+        if (board.sheetOpen || quickBusy || clickAt < ignoreClicksUntil) return
+        if (!SheetWatch.worthProbing(shareDetector.inActionColumn(node, screenWidth, screenHeight), node.bounds, screenWidth, screenHeight)) return
+        val feedWindow = feedNode?.takeIf { feedPlatform == platform }?.let { runCatching { it.windowId }.getOrNull() } ?: return
+        val width = screenWidth
+        val height = screenHeight
+        val reel = tracker?.currentVideoId
+        val run = ++probeRun
+        readScope.launch {
+            fun look() = SheetWatch.Look(sheetWindowAbove(feedWindow), feedPanelOpen(feedWindow, profile.feedIds, width, height))
+            if (quickBusy) return@launch
+            val late = System.currentTimeMillis() - clickAt
+            val read = look()
+            val before = SheetWatch.probeBefore(read, late, probeBaseline?.takeIf { it.first == reel }?.second)
+            if (late <= SheetWatch.PROBE_FRESH_MS) probeBaseline = reel to read
+            delay(SheetWatch.PROBE_MS)
+            if (run != probeRun || quickBusy) return@launch
+            val after = look()
+            if (!SheetWatch.probeOpened(before, after)) {
+                probeBaseline = reel to after
+                return@launch
+            }
+            withContext(Dispatchers.Main) {
+                if (run != probeRun || quickBusy || board.sheetOpen || tracker?.currentVideoId != reel) return@withContext
+                board.onUserSheetOpened(clickAt, BubbleBoard.SheetKind.OTHER)
+                CalibrationLog.log {
+                    CalibrationEvent(System.currentTimeMillis(), INFO, platform = platform, rule = "envío rápido: algo encima del visor tras un clic sin etiqueta conocida (burbujas fuera)")
+                }
+                updateOverlay()
+                checkSheetGone(platform)
             }
         }
     }
@@ -2352,33 +2587,60 @@ class ReelAccessibilityService : AccessibilityService() {
         }
 
     /** Cabecera del registro de calibración: móvil, Android y versión de cada app instalada. */
-    private fun describeEnvironment(): String {
-        val apps = Platform.entries.flatMap { platform ->
-            platform.packages.mapNotNull { pkg -> versionOf(pkg)?.let { "${platform.shortName} $it" } }
-        }
-        return buildString {
-            append(Build.MANUFACTURER).append(' ').append(Build.MODEL)
-            append(" · Android ").append(Build.VERSION.RELEASE).append(" (API ").append(Build.VERSION.SDK_INT).append(')')
-            append(" · Reelometer ").append(BuildConfig.VERSION_NAME)
-            apps.forEach { append(" · ").append(it) }
-        }
-    }
-
-    private fun versionOf(pkg: String): String? = try {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            packageManager.getPackageInfo(pkg, PackageManager.PackageInfoFlags.of(0)).versionName
-        } else {
-            @Suppress("DEPRECATION")
-            packageManager.getPackageInfo(pkg, 0).versionName
-        }
-    } catch (e: Exception) {
-        null
-    }
 
     private fun calibrationTypeOf(event: AccessibilityEvent): CalibrationEventType = when (event.eventType) {
         AccessibilityEvent.TYPE_VIEW_SCROLLED -> SCROLL
         AccessibilityEvent.TYPE_VIEW_CLICKED -> CLICK
         else -> WINDOW
+    }
+
+    // ── Que nada cierre la app ───────────────────────────────────────────────────────────────────
+
+    /**
+     * Red de un ámbito de corrutinas ([ServiceGuard.handler]): un fallo sin capturar en un `launch` se apunta y no llega
+     * al hilo (allí cerraría la app). Lo que la corrutina dejara a medias se suelta en el hilo principal: sin esto, un
+     * fallo en un paso del envío rápido lo dejaría «enviando» para siempre, y uno en la comprobación de contenido
+     * apagaría la segunda señal de YouTube hasta reiniciar el servicio.
+     */
+    private fun contain(scope: String): CoroutineExceptionHandler = ServiceGuard.handler(scope) { context, error ->
+        debugError(context[CoroutineName]?.name ?: scope, error)
+        when (context[CoroutineName]) {
+            QUICK_TICK -> handler.post {
+                quickTickInFlight = false
+                failQuickSend()
+            }
+            CONTENT_CHECK -> handler.post { contentCheckRunning = false }
+            else -> Unit
+        }
+    }
+
+    /** Lo que corre directamente en el hilo principal (un `Runnable`, un receptor, un toque): si falla, se apunta y sigue. */
+    private inline fun safely(what: String, onFailure: () -> Unit = {}, block: () -> Unit) {
+        ServiceGuard.run(what, onFailure = { debugError(what, it); onFailure() }, block = block)
+    }
+
+    /**
+     * Un fallo ya capturado: se cuenta para el registro de Calibración. Antes, según dónde saltara, cerraba la app o se
+     * tragaba sin dejar rastro fuera de las builds de depuración.
+     */
+    private fun onContained(what: String, error: Throwable) {
+        ServiceFailures.live.record(what, error)
+        debugError(what, error)
+    }
+
+    /** Un fallo inesperado en mitad de un envío rápido: se da por fallido (burbujas con «!») y no se queda a medias. */
+    private fun failQuickSend() {
+        if (!quickBusy) return
+        runCatching { quickSender.cancel() }
+        val done = QuickSender.Step.Done(false, "error interno", sheetOpened = false, targetSelected = false)
+        runCatching { onQuickSendDone(done, report = null, results = emptyList(), now = System.currentTimeMillis()) }
+            .onFailure {
+                // Ni así: al menos se sueltan las marcas de «en curso» para que el siguiente toque empiece de cero.
+                quickNames.clear()
+                quickQueue.clear()
+                cancelQuickTick()
+                runCatching { setContentEvents(false) }
+            }
     }
 
     private inline fun debug(message: () -> String) {
@@ -2390,11 +2652,13 @@ class ReelAccessibilityService : AccessibilityService() {
     }
 
     companion object {
+        /** Corrutinas que dejan algo a medias si fallan: [contain] las reconoce por su nombre y lo suelta. */
+        private val QUICK_TICK = CoroutineName("paso del envío rápido")
+        private val CONTENT_CHECK = CoroutineName("comprobación de contenido")
+
         /** Tras un clic que debería abrir la hoja: lo que se espera antes de mirar si salió (en el móvil sale en ~0,3 s). */
         private const val SHEET_CLICK_CHECK_MS = 1_500L
         /** Cada cuánto se vuelve a mirar si queda una ventana encima del feed, y hasta cuándo (el aviso dura ~5 s). */
-        private const val SHEET_POLL_MS = 500L
-        private const val SHEET_WATCH_MS = 8_000L
         const val TAG = "Reelometro"
 
         /**
@@ -2475,6 +2739,33 @@ class ReelAccessibilityService : AccessibilityService() {
         /** Para unir dos vídeos iguales: el segundo empezó como mucho esto antes o después del primero. */
         private const val MERGE_WINDOW_MS = 20_000L
         private const val UNDEFINED_DELTA = -1
+
+        /**
+         * Cabecera del registro de Calibración: móvil, Android y versiones de las apps. La pone el servicio al
+         * conectarse; si no llega a conectarse, la pantalla la calcula al exportar (para ver el móvil igualmente).
+         */
+        fun describeEnvironment(context: Context): String {
+            val pm = context.packageManager
+            fun versionOf(pkg: String): String? = try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    pm.getPackageInfo(pkg, PackageManager.PackageInfoFlags.of(0)).versionName
+                } else {
+                    @Suppress("DEPRECATION")
+                    pm.getPackageInfo(pkg, 0).versionName
+                }
+            } catch (e: Exception) {
+                null
+            }
+            val apps = Platform.entries.flatMap { platform ->
+                platform.packages.mapNotNull { pkg -> versionOf(pkg)?.let { "${platform.shortName} $it" } }
+            }
+            return buildString {
+                append(Build.MANUFACTURER).append(' ').append(Build.MODEL)
+                append(" · Android ").append(Build.VERSION.RELEASE).append(" (API ").append(Build.VERSION.SDK_INT).append(')')
+                append(" · Reelometer ").append(BuildConfig.VERSION_NAME)
+                apps.forEach { append(" · ").append(it) }
+            }
+        }
 
         fun isEnabled(context: Context): Boolean {
             val enabled = Settings.Secure.getString(

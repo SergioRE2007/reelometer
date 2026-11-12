@@ -65,7 +65,6 @@ import com.reelometro.app.copy.A11y
 import com.reelometro.app.copy.Buttons
 import com.reelometro.app.copy.StateCopy
 import com.reelometro.app.copy.WrappedCopy
-import com.reelometro.app.game.GameEvent
 import com.reelometro.app.stats.PeriodRef
 import com.reelometro.app.ui.components.Label
 import com.reelometro.app.ui.components.ReelButton
@@ -112,12 +111,6 @@ fun StoryRoute(kind: String, offset: Int, onClose: () -> Unit) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val haptics = rememberHaptics()
     val scope = rememberCoroutineScope()
-    // Sellos del Pasaporte «Wrapped compartido» y «ticket guardado» (no hacen nada si ya están). Van en el
-    // appScope (no se pierden si se cierra la historia enseguida) y un fallo no cierra la app.
-    val app = remember(context) { ReelometroApp.from(context) }
-    fun record(event: GameEvent) {
-        app.appScope.launch { runCatching { app.passport.recordEvent(event) } }
-    }
     var notice by remember { mutableStateOf<String?>(null) }
     LaunchedEffect(notice) {
         if (notice != null) {
@@ -131,7 +124,6 @@ fun StoryRoute(kind: String, offset: Int, onClose: () -> Unit) {
                 val ok = viewModel.save(uri)
                 notice = if (ok) WrappedCopy.SAVED else WrappedCopy.SAVE_FAILED
                 if (ok) haptics.confirm() else haptics.reject()
-                if (ok) record(GameEvent.TICKET_SAVED)
             }
         }
     }
@@ -153,7 +145,6 @@ fun StoryRoute(kind: String, offset: Int, onClose: () -> Unit) {
                             context.startActivity(TicketFiles.shareIntent(uri, ready.shareText))
                         }.isSuccess
                         if (started) haptics.confirm() else notice = WrappedCopy.SHARE_FAILED
-                        if (started) record(GameEvent.WRAPPED_SHARED)
                     }
                 }
             },

@@ -151,6 +151,10 @@ Nombres orientativos; la implementación real manda (ver la galería debug).
   spring al asentarse. Separador de millar como punto pequeño entre fichas. Un tic háptico al asentarse.
   Con «reducir animaciones», cambio instantáneo. Semántica: `contentDescription = "212 vídeos"`.
 - **`RollingNumber`** — cifra inline (mono o display) cuyos dígitos ruedan en vertical (odómetro). Para cifras secundarias.
+- **Flap** (1.12.0, `ui/passport/`) — la mascota de la pestaña Flap. Cinco estados (EN_FORMA, NORMAL, CANSADO, ENFERMO, KO) que se
+  distinguen también **sin color** (forma de ojos, boca, postura, termómetro, gota). Barra de vida por segmentos rectos al estilo marcador
+  (`signal` solo cuando la vida está en peligro o en KO), sin tarjetas redondeadas, degradados ni emojis. Cambio de estado con el volteo
+  split-flap; con «reducir animaciones», sin movimiento (Flap quieto).
 - **`SectionHeader`**, **`ReceiptLine`**, **`TicketDivider`**, **`JaggedEdge`**, **`Band`**, **`Stamp`** (sello rotado con borde, p. ej. «100 % LOCAL»).
 - **`ReelButton`** (`Primary`: relleno `signal` + texto `onSignal`; `Secondary`: borde 1 dp `lineStrong`; `Ghost`: texto + flecha →).
   Altura mínima 48 dp. Todos usan **`Modifier.pressable`**: se hunden al pulsar (escala 0,96 y +1 dp hacia abajo, spring `snappy`) + háptico.
@@ -158,7 +162,9 @@ Nombres orientativos; la implementación real manda (ver la galería debug).
 - **`Stepper`** — `−  150  +` con cifra `RollingNumber`; pulsación larga repite.
 - **`SegmentedTabs`** — opciones en mono mayúsculas con subrayado `signal` que **se desliza** (spring) a la opción activa.
 - **`PeriodNavigator`** — `‹  27 OCT – 2 NOV  ›`, chevrons de 48 dp, desactivados en `textFaint`.
-- **`ReelTabBar`** — barra inferior propia: filete superior, 3 destinos con icono propio + etiqueta `labelL`;
+- **`ReelTabBar`** — barra inferior propia: filete superior, hasta 4 destinos (Hoy · Estadísticas · Resumen · Flap;
+  3 con Flap apagado y, con el descubrimiento progresivo, solo los ya descubiertos) con icono propio + etiqueta
+  `labelL`, todas al mismo tamaño (el mayor con el que caben todas);
   el activo en `text` con un indicador `signal` de 2 dp que se desliza; inactivos en `textMuted`.
 - **Gráficas** (`ui/components/charts/`), todas dibujadas en `Canvas`, animadas al aparecer y táctiles:
   - `DailyBars` — barras que **crecen escalonadas** (stagger ~24 ms, spring `gentle`); media como línea discontinua;
@@ -189,7 +195,7 @@ Nombres orientativos; la implementación real manda (ver la galería debug).
   - `snappy` = spring(dampingRatio 0,7, stiffness 900) — pulsaciones, interruptores.
   - `standard` = spring(0,85, 380) — indicadores, cambios de layout, transiciones.
   - `gentle` = spring(0,9, 160) — cifras, gráficas que crecen.
-  - `bouncy` = spring(0,55, 500) — sellos, momentos de recompensa (con moderación).
+  - `bouncy` = spring(0,55, 500) — Flap que revive y otros momentos de recompensa (con moderación).
   - Escalonados: 24 ms por barra, 40 ms por columna de dígitos, 30 ms por línea de lista.
 - **Reducir animaciones**: `LocalReducedMotion` (true si la escala de animación del sistema es 0 o
   el usuario activó «quitar animaciones»). Con true: sin volteos, sin escalonados, gráficas completas al instante, transiciones por fundido corto.

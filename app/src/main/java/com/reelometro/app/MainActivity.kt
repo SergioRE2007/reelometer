@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.reelometro.app.data.settings.Discovery
 import com.reelometro.app.data.settings.ThemeMode
 import com.reelometro.app.ui.nav.AppShell
 import com.reelometro.app.ui.nav.DeepLinks
@@ -37,7 +38,7 @@ import java.time.LocalDate
 /**
  * Única actividad. Mantiene el splash hasta tener los ajustes (tema y si hay que enseñar el
  * onboarding) y abre la pantalla pedida en el extra [EXTRA_ROUTE] (notificaciones, widget, QA):
- * `today | stats | wrapped | passport | settings | calibration | onboarding | setup | day:<epochDay> | story:<KIND>:<offset>`.
+ * `today | stats | wrapped | flap (o passport) | settings | calibration | onboarding | setup | day:<epochDay> | story:<KIND>:<offset>`.
  */
 class MainActivity : ComponentActivity() {
 
@@ -53,6 +54,9 @@ class MainActivity : ComponentActivity() {
         // El idioma de la app puede haberse cambiado desde Android con el proceso vivo.
         AppLanguage.refresh(this)
         val app = ReelometroApp.from(this)
+        // Descubrimiento progresivo: se decide una vez (solo una instalación nueva empieza con Hoy a solas).
+        // Mientras no está decidido se ve todo; en una instalación nueva lo primero es el onboarding, sin barra.
+        app.appScope.launch { runCatching { app.settings.decideDiscovery() } }
         if (savedInstanceState == null) {
             DeepLinks.parse(intent?.getStringExtra(EXTRA_ROUTE))?.let { deepLinks.trySend(it) }
         }
@@ -93,6 +97,14 @@ class MainActivity : ComponentActivity() {
                     passportEnabled = s.passportEnabled,
                     tourPending = s.onboardingDone && !s.tourDone,
                     onTourFinished = { scope.launch { app.settings.setTourDone(true) } },
+                    visibleTabs = Discovery.visibleTabs(s.discovery, s.passportEnabled),
+                    onRevealTabs = { n ->
+                        scope.launch {
+                            runCatching {
+                                app.settings.updateDiscovery { Discovery.revealTo(it, n, LocalDate.now().toEpochDay()) }
+                            }
+                        }
+                    },
                 )
             }
         }

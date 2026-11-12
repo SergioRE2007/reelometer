@@ -180,6 +180,10 @@ private val sections: List<GallerySection> = listOf(
         ChartsGallerySection()
     },
     GallerySection("bubbles") { BubblesSection(16) },
+    GallerySection("flap") {
+        Section(17, "Flap", trailing = "GalleryFlap") {}
+        FlapGallerySection()
+    },
 )
 
 @Composable

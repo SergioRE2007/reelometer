@@ -2,7 +2,7 @@ package com.reelometro.app.data.export
 
 /**
  * Formato CSV para Excel en español: separador `;`, CRLF, comillas solo cuando hacen falta.
- * Puro (sin Android): lo usan [CsvExporter] y los bloques extra del CSV ([PassportCsv]).
+ * Puro (sin Android): lo usa [CsvExporter].
  */
 object Csv {
     const val SEPARATOR = ';'

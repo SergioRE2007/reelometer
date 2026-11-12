@@ -63,8 +63,8 @@
     <string name="label_tab_stats">STATISTICHE</string>
     <!-- Resumen del periodo en diapositivas, tipo «historias». -->
     <string name="label_tab_wrapped">RIEPILOGO</string>
-    <!-- Pasaporte: la mascota Flap y sus sellos. -->
-    <string name="label_tab_passport">PASSAPORTO</string>
+    <!-- Flap: la mascota que empieza cada día a tope y empeora con cada vídeo (nombre propio: no se traduce). -->
+    <string name="label_tab_passport">FLAP</string>
 
     <!-- Botones (MAYÚSCULAS, verbos directos, poco sitio). -->
     <string name="button_connect">CONNETTI</string>
@@ -108,7 +108,7 @@
     <string name="a11y_tab_today">Oggi</string>
     <string name="a11y_tab_stats">Statistiche</string>
     <string name="a11y_tab_wrapped">Riepilogo</string>
-    <string name="a11y_tab_passport">Passaporto</string>
+    <string name="a11y_tab_passport">Flap</string>
     <string name="a11y_share_summary">Condividi riepilogo</string>
     <string name="a11y_save_image">Salva immagine</string>
     <string name="a11y_back">Indietro</string>

@@ -50,8 +50,9 @@ data class AppSettings(
     /** Pantalla de calibración desbloqueada (7 toques en la versión, en Ajustes). */
     val calibrationUnlocked: Boolean = false,
     /**
-     * Modo pasaporte (pestaña PASAPORTE, celebraciones, aviso de nivel nuevo y Flap en el widget).
-     * Apagado, no se ve ni avisa nada.
+     * Flap, la mascota (modo Flap): su pestaña FLAP y Flap en el widget grande. Apagado, no se ve nada.
+     * Se sigue llamando `passportEnabled` (y su clave de DataStore, `passport_enabled`) desde cuando era
+     * el Pasaporte: así se respeta lo que cada uno eligió.
      */
     val passportEnabled: Boolean = true,
     /** Aviso en directo, una vez al día, en el momento en que el recuento pasa del objetivo. */
@@ -97,6 +98,8 @@ data class AppSettings(
     val backupLastMs: Long? = null,
     /** Por qué falló la última copia (se borra con la siguiente que salga bien o al cambiar de carpeta). */
     val backupError: BackupError? = null,
+    // Descubrimiento progresivo (pestañas que aparecen con los días; por defecto, todo a la vista).
+    val discovery: DiscoveryState = DiscoveryState.ALL_VISIBLE,
 ) {
     fun isEnabled(platform: Platform): Boolean = platform in enabledPlatforms
 
@@ -343,6 +346,24 @@ class SettingsRepository internal constructor(private val store: DataStore<Prefe
     /** Vuelve a los valores por defecto (no toca los datos de uso). */
     suspend fun reset() = edit { it.clear() }
 
+    // Descubrimiento progresivo ------------------------------------------------------------
+
+    /**
+     * Decide una sola vez si las pestañas se descubren poco a poco (solo en una instalación nueva).
+     * Idempotente: MainActivity la llama en cada arranque. Tras [reset], se vuelve a decidir.
+     */
+    suspend fun decideDiscovery() = edit {
+        DiscoveryPrefs.decide(
+            it,
+            onboardingDone = it[ONBOARDING_DONE] == true,
+            tourDone = it[TOUR_DONE] == true,
+            disclosureAccepted = it[DISCLOSURE_ACCEPTED] == true,
+        )
+    }
+
+    /** Lee, cambia y guarda el estado del descubrimiento en una sola transacción (no escribe si no cambia). */
+    suspend fun updateDiscovery(change: (DiscoveryState) -> DiscoveryState) = edit { DiscoveryPrefs.update(it, change) }
+
     /**
      * FIJAR / FIJADO de una fila, en una sola transacción de DataStore (dos toques seguidos no se pisan): quita
      * [name] si estaba o lo añade al final si queda sitio. Con el cupo lleno no hace nada. Devuelve los
@@ -402,6 +423,8 @@ class SettingsRepository internal constructor(private val store: DataStore<Prefe
             backupFolderName = p[BACKUP_FOLDER_NAME],
             backupLastMs = p[BACKUP_LAST_MS],
             backupError = p[BACKUP_ERROR]?.let { name -> BackupError.entries.firstOrNull { it.name == name } },
+            // Descubrimiento progresivo
+            discovery = DiscoveryPrefs.read(p),
         )
     }
 

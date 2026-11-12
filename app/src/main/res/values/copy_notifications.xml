@@ -128,7 +128,7 @@
     <string name="notif_monthly_public_title">Resumen del mes</string>
     <string name="notif_monthly_public_text">El resumen del mes está listo.</string>
 
-    <!-- Si Android desconecta el servicio de accesibilidad (aún sin usar). -->
+    <!-- El servicio funcionaba y el sistema lo ha apagado (aviso del trabajo de revisión del servicio; uno por cada vez que pasa). -->
     <string name="notif_service_lost_title">Reelometer ha dejado de contar</string>
     <string name="notif_service_lost_text">Android ha desconectado el servicio de accesibilidad. Toca para volver a conectarlo.</string>
 
@@ -145,26 +145,22 @@
     <!-- Versión pública: sin cifras. -->
     <string name="notif_goal_public_text">Has pasado tu objetivo de hoy.</string>
 
-    <!-- ============================================================ nivel nuevo del pasaporte -->
-
-    <!-- Título (corto): %1$s el nombre del nivel, ya en mayúsculas («PLATA»). -->
-    <string name="notif_level_title">Nivel nuevo: %1$s</string>
-    <!-- Texto. Flap es la mascota del Pasaporte (nombre propio, no se traduce). -->
-    <string-array name="notif_level">
-        <item>Tu pasaporte sube de categoría. Se ha ganado viendo menos, que conste.</item>
-        <item>Flap te espera en el Pasaporte con la tarjeta nueva.</item>
-        <item>Más experiencia por menos vídeos. La tarjeta nueva está en el Pasaporte.</item>
-    </string-array>
-    <!-- Versión pública: sin cifras. «Pasaporte» es el nombre de la pestaña. -->
-    <string name="notif_level_public_title">Pasaporte</string>
-    <string name="notif_level_public_text">Tienes un nivel nuevo en el pasaporte.</string>
-
     <!-- ============================================================ canales (ajustes del sistema) -->
 
     <!-- Nombre y descripción de los canales nuevos, en el grupo «Resúmenes» de los ajustes de
          notificaciones de Android. -->
     <string name="notif_channel_goal_name">Aviso al pasar el objetivo</string>
     <string name="notif_channel_goal_description">Un solo aviso al día, en el momento en que pasas tu objetivo de vídeos.</string>
-    <string name="notif_channel_level_name">Nivel del pasaporte</string>
-    <string name="notif_channel_level_description">Aviso cuando subes de nivel en el modo pasaporte.</string>
+
+    <!-- ============================================================ Servicio activado pero sin funcionar -->
+    <!-- work/ServiceHealthWorker: el interruptor de Accesibilidad está encendido, pero Android no ha arrancado el servicio. -->
+    <string name="notif_channel_service_name">Avisos del servicio</string>
+    <string name="notif_channel_service_description">Si el servicio de Reelometer deja de funcionar o tu móvil lo apaga. Como mucho, uno al día.</string>
+    <string name="notif_service_stalled_title">Reelometer no está contando</string>
+    <string name="notif_service_stalled_text">El servicio está activado, pero Android no lo ha arrancado. Toca para ver cómo arreglarlo.</string>
+    <string name="notif_service_stalled_public_title">Reelometer</string>
+    <string name="notif_service_stalled_public_text">Revisa el servicio de la app.</string>
+
+    <!-- Aviso del servicio con el motivo del cierre: %1$s = una de onboarding_exit_*. -->
+    <string name="notif_service_stalled_reason_text">%1$s Toca para ver los pasos.</string>
 </resources>

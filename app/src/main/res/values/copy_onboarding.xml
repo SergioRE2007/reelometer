@@ -147,4 +147,100 @@
     <!-- Confirmación de la elección. %1$s el objetivo («150»). -->
     <string name="onboarding_goal_chosen">Como mucho, %1$s al día.</string>
     <string name="onboarding_goal_chosen_none">Sin objetivo: solo contar.</string>
+
+    <!-- ============================================================ 3c. Activado, pero sin conectar -->
+    <!-- Los nombres entre «» citan los ajustes de Android y de cada fabricante: en cada idioma, como los muestre el móvil. -->
+    <string name="onboarding_stalled_label">ACTIVADO, SIN CONECTAR</string>
+    <string name="onboarding_stalled_title">Está activado, pero Android no lo ha arrancado</string>
+    <string name="onboarding_stalled_body">El interruptor de Accesibilidad está encendido, pero el sistema no ha puesto en marcha el servicio, así que no cuento nada. Pasa sobre todo en Xiaomi, Redmi y POCO, y en otros móviles que cierran las apps para ahorrar batería. Se arregla así:</string>
+    <string name="onboarding_stalled_error_label">FALLO AL ARRANCAR</string>
+    <!-- ============================================================ 3d. Guía por marca y prueba de un minuto -->
+    <!-- Guía por marca: título encima de los pasos según el fabricante del móvil (marcas: no se traducen). -->
+    <string name="onboarding_oem_title_xiaomi">Pasos para Xiaomi, Redmi y POCO</string>
+    <string name="onboarding_oem_title_samsung">Pasos para Samsung</string>
+    <string name="onboarding_oem_title_huawei">Pasos para Huawei</string>
+    <string name="onboarding_oem_title_honor">Pasos para Honor</string>
+    <string name="onboarding_oem_title_coloros">Pasos para OPPO, realme y OnePlus</string>
+    <string name="onboarding_oem_title_vivo">Pasos para vivo e iQOO</string>
+    <string name="onboarding_oem_title_stock">Pasos para tu móvil</string>
+    <!-- Pasos de cada marca. Los botones en MAYÚSCULAS son los de debajo de cada paso (onboarding_oem_button_*, button_open_*): mismo texto. Los nombres entre comillas citan los ajustes de cada marca en tu idioma (sin verificar en todos los modelos). -->
+    <string name="onboarding_oem_xiaomi_autostart">Pulsa ABRIR INICIO AUTOMÁTICO y activa Reelometer. En HyperOS también está en Ajustes › Apps › Permisos › «Inicio automático».</string>
+    <string name="onboarding_oem_xiaomi_battery">Pulsa ABRIR AHORRO DE BATERÍA y elige «Sin restricciones».</string>
+    <string name="onboarding_oem_xiaomi_recents">En la multitarea, mantén pulsada la tarjeta de Reelometer y toca el candado.</string>
+    <string name="onboarding_oem_app_battery">Pulsa ABRIR INFORMACIÓN DE LA APP, entra en «Batería» y elige «Sin restricciones».</string>
+    <string name="onboarding_oem_samsung_sleep">Pulsa ABRIR BATERÍA, entra en «Límites de uso en segundo plano» › «Aplicaciones que nunca se suspenden» y añade Reelometer.</string>
+    <string name="onboarding_oem_samsung_recents">En Recientes, toca el icono de Reelometer y elige «Mantener abierta».</string>
+    <string name="onboarding_oem_huawei_autostart">Pulsa ABRIR INICIO DE APPS, busca Reelometer, desactiva «Gestionar automáticamente» y deja encendidos los tres interruptores.</string>
+    <string name="onboarding_oem_recents_swipe">En la multitarea, desliza hacia abajo la tarjeta de Reelometer para bloquearla.</string>
+    <string name="onboarding_oem_autostart">Pulsa ABRIR INICIO AUTOMÁTICO y activa Reelometer.</string>
+    <string name="onboarding_oem_coloros_battery">Pulsa ABRIR INFORMACIÓN DE LA APP, entra en «Uso de batería» y activa «Permitir actividad en segundo plano».</string>
+    <string name="onboarding_oem_coloros_recents">En Recientes, abre el menú de la tarjeta de Reelometer y elige «Bloquear».</string>
+    <string name="onboarding_oem_vivo_battery">Pulsa ABRIR BATERÍA, entra en «Consumo alto en segundo plano» y permite Reelometer.</string>
+    <string name="onboarding_oem_stock_other">Si tu móvil tiene «Inicio automático» o «Apps protegidas», activa Reelometer también ahí.</string>
+    <!-- Paso extra de la guía (Android 11 o posterior, y solo si la app no está ya exenta): que Android no la pause por no abrirla. El nombre del ajuste cambia entre versiones de Android; el botón es button_open_app_info. -->
+    <string name="onboarding_oem_unused">Pulsa ABRIR INFORMACIÓN DE LA APP y apaga «Pausar actividad de la app si no se usa» (en móviles más antiguos, «Quitar permisos si no se usa la aplicación»). Reelometer trabaja sin que la abras, y Android puede tomarla por una app sin usar.</string>
+    <string name="onboarding_oem_toggle">Pulsa ABRIR ACCESIBILIDAD, apaga «Usar Reelometer» y vuelve a encenderlo.</string>
+    <!-- Botones de la guía por marca (MAYÚSCULAS). Abren la pantalla de esa marca o, si no existe, «Información de la aplicación». -->
+    <string name="onboarding_oem_button_autostart">ABRIR INICIO AUTOMÁTICO</string>
+    <string name="onboarding_oem_button_startup_huawei">ABRIR INICIO DE APPS</string>
+    <string name="onboarding_oem_button_battery_saver">ABRIR AHORRO DE BATERÍA</string>
+    <string name="onboarding_oem_button_battery">ABRIR BATERÍA</string>
+    <!-- Si no se ha podido abrir ninguna pantalla. -->
+    <string name="onboarding_oem_open_failed">No he podido abrir esa pantalla en tu móvil. Búscala con el buscador de Ajustes.</string>
+    <!-- Enlace plegable con el servicio ya conectado: despliega la guía por marca. -->
+    <string name="onboarding_oem_prevent_link">EVITA QUE SE DESCONECTE</string>
+    <!-- Prueba de un minuto tras conectar el servicio: abrir una app de vídeos, pasar unos vídeos y volver. Etiquetas en MAYÚSCULAS. -->
+    <string name="onboarding_check_label">PRUEBA DE UN MINUTO</string>
+    <string name="onboarding_check_title">Comprueba que cuenta de verdad</string>
+    <!-- %1$s: los vídeos que se piden pasar («3»). -->
+    <plurals name="onboarding_check_body">
+        <item quantity="one">Abre TikTok, Instagram o YouTube, pasa %1$s vídeo corto y vuelve aquí. Te digo si lo he contado.</item>
+        <item quantity="many">Abre TikTok, Instagram o YouTube, pasa %1$s vídeos cortos y vuelve aquí. Te digo si los he contado.</item>
+        <item quantity="other">Abre TikTok, Instagram o YouTube, pasa %1$s vídeos cortos y vuelve aquí. Te digo si los he contado.</item>
+    </plurals>
+    <!-- Botón por app instalada: %1$s es la marca («TikTok», «Instagram», «YouTube»). -->
+    <string name="onboarding_check_open_app">ABRIR %1$s</string>
+    <string name="onboarding_check_none_installed">No encuentro TikTok, Instagram ni YouTube en este móvil. Instala una de ellas para hacer la prueba.</string>
+    <string name="onboarding_check_running_label">PRUEBA EN MARCHA</string>
+    <!-- «2 de 3 vídeos». %1$s los contados, %2$s los pedidos (el plural va por %2$s). -->
+    <plurals name="onboarding_check_progress">
+        <item quantity="one">%1$s de %2$s vídeo</item>
+        <item quantity="many">%1$s de %2$s vídeos</item>
+        <item quantity="other">%1$s de %2$s vídeos</item>
+    </plurals>
+    <string name="onboarding_check_running_body">Pasa unos vídeos en la app y vuelve: lo miro al volver.</string>
+    <string name="onboarding_check_verify">COMPROBAR AHORA</string>
+    <string name="onboarding_check_cancel">CANCELAR LA PRUEBA</string>
+    <string name="onboarding_check_passed_label">PRUEBA SUPERADA</string>
+    <!-- %1$s los vídeos contados durante la prueba. -->
+    <plurals name="onboarding_check_passed">
+        <item quantity="one">He contado %1$s vídeo. Todo funciona.</item>
+        <item quantity="many">He contado %1$s vídeos. Todo funciona.</item>
+        <item quantity="other">He contado %1$s vídeos. Todo funciona.</item>
+    </plurals>
+    <string name="onboarding_check_passed_restarted">Ha contado, pero Android ha cerrado Reelometer durante la prueba. Para que no vuelva a pasar:</string>
+    <!-- Diagnóstico cuando no ha contado nada. Los que acaban en «:» van seguidos de la guía por marca. -->
+    <string name="onboarding_check_failed_label">NO HE CONTADO NADA</string>
+    <string name="onboarding_check_fail_off">El servicio está apagado. Actívalo en Accesibilidad y repite la prueba.</string>
+    <string name="onboarding_check_fail_killed">Android ha cerrado Reelometer mientras hacías la prueba, así que no ha podido contar. Sigue estos pasos:</string>
+    <string name="onboarding_check_fail_not_connected">El interruptor está encendido, pero Android no ha arrancado el servicio. Sigue estos pasos:</string>
+    <string name="onboarding_check_fail_no_events">El servicio está conectado, pero no me ha llegado nada de TikTok, Instagram ni YouTube. Si las has abierto, sigue estos pasos:</string>
+    <string name="onboarding_check_fail_platforms_off">Tienes desactivada esa app en los ajustes de Reelometer, así que no cuenta nada de ella. Actívala y repite la prueba.</string>
+    <string name="onboarding_check_fail_no_videos">Me llegan datos de las apps, pero no he reconocido ningún vídeo. Comprueba que estabas en Para ti, Reels o Shorts. Si lo estabas, Calibración enseña lo que ve el servicio.</string>
+    <string name="onboarding_check_open_calibration">ABRIR CALIBRACIÓN</string>
+    <string name="onboarding_check_open_settings">ABRIR AJUSTES</string>
+    <string name="onboarding_check_retry">REPETIR LA PRUEBA</string>
+
+    <!-- Motivo del último cierre de la app (ApplicationExitInfo): una línea más cuando el servicio está activado y sin conectar. -->
+    <string name="onboarding_exit_recents">Tu móvil cerró Reelometer al limpiar las apps recientes. Ponle el candado en recientes y apaga y enciende el servicio en Accesibilidad.</string>
+    <string name="onboarding_exit_low_memory">Tu móvil cerró Reelometer por falta de memoria. Quítale las restricciones de batería y apaga y enciende el servicio en Accesibilidad.</string>
+    <string name="onboarding_exit_system">Tu móvil cerró Reelometer por su cuenta. Permite el inicio automático, quítale las restricciones de batería y apaga y enciende el servicio en Accesibilidad.</string>
+    <string name="onboarding_exit_restricted">El ahorro de batería de tu móvil congeló o cerró Reelometer. Quítale las restricciones de batería y apaga y enciende el servicio en Accesibilidad.</string>
+    <string name="onboarding_exit_user">Se forzó la detención de Reelometer o se borraron sus datos. Apaga y enciende el servicio en Accesibilidad para que vuelva a contar.</string>
+    <string name="onboarding_exit_crash">Reelometer se cerró por un fallo de la propia app, no por culpa de tu móvil. Apaga y enciende el servicio en Accesibilidad. Si vuelve a pasar, comparte el registro de Calibración.</string>
+
+    <!-- El servicio funcionaba y ha salido apagado sin que el usuario lo apagara: lo quitó el móvil al cerrar la app. Título y explicación de la pantalla de conectar. lost_reason añade el motivo que apunta Android: %1$s = onboarding_lost_body, %2$s = una de calibration_exit_cat_* (copy_calibration.xml). -->
+    <string name="onboarding_lost_title">Tu móvil ha apagado el servicio</string>
+    <string name="onboarding_lost_body">No lo has apagado tú: tu móvil cerró Reelometer por su cuenta y, al hacerlo, quitó el servicio de Accesibilidad. Lo que hayas visto desde entonces no se ha contado. Vuelve a activarlo con estos pasos y después te enseño cómo evitar que se repita.</string>
+    <string name="onboarding_lost_reason">%1$s Motivo que apunta Android: %2$s.</string>
 </resources>

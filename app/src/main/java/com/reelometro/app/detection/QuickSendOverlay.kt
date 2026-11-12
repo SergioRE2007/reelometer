@@ -7,6 +7,7 @@ import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -147,7 +148,8 @@ internal class QuickSendOverlay(
         if (targets.isEmpty() || windowManager == null || screenWidth <= 0 || screenHeight <= 0) return
         screenW = screenWidth
         screenH = screenHeight
-        safe = BubbleLayout.safeArea(screenW, screenH, systemInsets(), px(Space.x1))
+        // Sin márgenes del sistema (Android 8–10), en horizontal se aparta también de la barra de navegación lateral.
+        safe = BubbleLayout.safeArea(screenW, screenH, systemInsets(), px(Space.x1), landscapeSide = sideNavBar())
         val pad = px(Space.x1) // sitio para la sombra (y el ×1,08 de la de debajo) sin que la corte la ventana
         val layout = LinearLayout(service).apply {
             clipChildren = false
@@ -454,7 +456,10 @@ internal class QuickSendOverlay(
      */
     private fun dropStack() {
         val (cx, cy) = stackCenter()
-        val spot = BubbleLayout.drop(cx, cy, screenW, screenH, safe, dismissRadius = px(ZONE_HIT_DP)) { stackSize(shownTargets.size, it) }
+        // Soltada contra un borde (a una unidad de la retícula o menos), se guarda pegada a él: sigue así al girar o en otra pantalla.
+        val spot = BubbleLayout.drop(cx, cy, screenW, screenH, safe, dismissRadius = px(ZONE_HIT_DP), edgeSnap = px(Space.x1)) {
+            stackSize(shownTargets.size, it)
+        }
         shownSpot = spot
         val next = BubbleLayout.orientationFor(spot.y)
         val view = container
@@ -685,6 +690,21 @@ internal class QuickSendOverlay(
      * Las barras del sistema y el recorte de la cámara, en px, aunque ahora estén escondidas (Instagram esconde la
      * de estado en los reels). `null` si no se pueden saber (Android 10 o menos): entonces van márgenes en fracción.
      */
+    /**
+     * Ancho de la barra de navegación lateral en horizontal, para cuando no hay márgenes del sistema (Android 8–10): el
+     * recurso `navigation_bar_width` del sistema y, si no está, [NAV_BAR_DP] (lo que trae Android de serie).
+     */
+    @SuppressLint("DiscouragedApi", "InternalInsetResource")
+    private fun sideNavBar(): Int {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) return 0
+        val fromSystem = runCatching {
+            val res = Resources.getSystem()
+            val id = res.getIdentifier("navigation_bar_width", "dimen", "android")
+            if (id != 0) res.getDimensionPixelSize(id) else 0
+        }.getOrDefault(0)
+        return if (fromSystem > 0) fromSystem else px(NAV_BAR_DP)
+    }
+
     private fun systemInsets(): SafeArea? {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return null
         val wm = windowManager ?: return null
@@ -944,6 +964,9 @@ internal class QuickSendOverlay(
         const val GHOST_DP = 60f
 
         const val ZONE_DP = 72f
+
+        /** Ancho de la barra de navegación lateral en horizontal si el sistema no lo dice ([sideNavBar]; 48 dp en AOSP). */
+        const val NAV_BAR_DP = 48f
         const val ZONE_HIT_DP = 72f
         const val ZONE_HOT_SCALE = 1.18f
         const val QUESTION_BOTTOM_DP = 96f

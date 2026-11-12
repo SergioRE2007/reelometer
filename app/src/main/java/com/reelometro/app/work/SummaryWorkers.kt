@@ -28,12 +28,6 @@ class DailyNotificationWorker(context: Context, params: WorkerParameters) : Coro
                 .onSuccess { Log.i(LOG, "Aviso diario: $it") }
                 .onFailure { Log.w(LOG, "Aviso diario fallido", it) }
         }
-        // El nivel del Pasaporte cambia al cerrarse los días: también se mira aquí, por si hoy no hay vídeos.
-        if (run !is SummaryRules.Run.Early) {
-            runCatching { LevelAlert.check(app, now) }
-                .onSuccess { Log.i(LOG, "Aviso de nivel: $it") }
-                .onFailure { Log.w(LOG, "Aviso de nivel fallido", it) }
-        }
         if (!isStopped && app.settings.current().notifyDaily) {
             NotificationScheduler.scheduleNextDaily(app, time, now, after = if (run is SummaryRules.Run.Early) null else scheduled)
         }

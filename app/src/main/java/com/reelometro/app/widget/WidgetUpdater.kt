@@ -17,7 +17,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.reelometro.app.ReelometroApp
-import com.reelometro.app.detection.ReelAccessibilityService
+import com.reelometro.app.detection.ServiceHealth
 import com.reelometro.app.game.FlapMood
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
@@ -29,7 +29,6 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.time.Duration
-import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -89,7 +88,8 @@ object WidgetUpdater {
 
     /**
      * Desde `ReelometroApp.onCreate`: si hay widgets, repinta (el proceso pudo morir con datos viejos)
-     * y deja programada la medianoche; vigila el interruptor del servicio; publica las vistas previas.
+     * y deja programada la medianoche; vigila el interruptor del servicio, el de Flap y el objetivo;
+     * publica las vistas previas.
      */
     internal fun start(app: ReelometroApp) {
         if (observing.compareAndSet(false, true)) {
@@ -102,10 +102,15 @@ object WidgetUpdater {
                     },
                 )
             }
-            // Al encender o apagar el modo pasaporte, Flap aparece o desaparece del widget.
+            // Al encender o apagar Flap o cambiar el objetivo en Ajustes (decide el aguante de Flap y la
+            // barra), se repinta el widget: así su Flap dice lo mismo que la pestaña FLAP.
             app.appScope.launch {
                 runCatching {
-                    app.settings.settings.map { it.passportEnabled }.distinctUntilChanged().drop(1).collect { requestUpdate(app) }
+                    app.settings.settings
+                        .map { it.passportEnabled to it.dailyGoal }
+                        .distinctUntilChanged()
+                        .drop(1)
+                        .collect { requestUpdate(app) }
                 }
             }
         }
@@ -174,8 +179,9 @@ object WidgetUpdater {
             count = day.totals.count,
             totalMs = day.totals.totalMs,
             goal = day.goal?.goal,
-            serviceOn = ReelAccessibilityService.isEnabled(context),
-            flap = flapMood(app, day.date, day.goal?.goal, day.totals.count),
+            // Activado pero sin funcionar (Xiaomi y otros) también es «sin señal»: no está contando.
+            serviceOn = ServiceHealth.current(context).let { it == ServiceHealth.OK || it == ServiceHealth.STARTING },
+            flap = flapMood(app, day.goal?.goal, day.totals.count),
         )
         loadedAt = SystemClock.elapsedRealtime()
         _data.value = data
@@ -183,51 +189,17 @@ object WidgetUpdater {
     }
 
     /**
-     * Estado de Flap para el tamaño grande: `null` con el modo pasaporte apagado (ni se calcula) o
-     * si el pasaporte falla (el widget sale igual, sin Flap).
-     *
-     * El pasaporte entero solo se recalcula si cambia algo que puede cambiar a Flap: el día, el
-     * objetivo, que hoy cruce su referencia (hoy solo empeora) o que el recuento baje (datos borrados).
-     * Lo demás reutiliza [flapCache].
+     * Estado de Flap para el tamaño grande: `null` con Flap apagado en Ajustes (ni se calcula) o si
+     * no se pueden leer los ajustes (el widget sale igual, sin Flap). Solo depende de los vídeos de
+     * hoy y del objetivo ([WidgetData.flapFor]): no hace falta el historial.
      */
-    private suspend fun flapMood(app: ReelometroApp, date: LocalDate, goal: Int?, count: Int): FlapMood? = try {
-        if (!app.settings.current().passportEnabled) {
-            flapCache = null
-            null
-        } else {
-            val cached = flapCache
-            if (
-                cached != null && cached.date == date && cached.goal == goal &&
-                count >= cached.count && cached.over(count) == cached.wasOver
-            ) {
-                cached.mood
-            } else {
-                val flap = app.passport.snapshot().flap
-                flapCache = FlapCache(date, goal, count, flap.reference, wasOver = flap.reference?.let { count > it }, mood = flap.mood)
-                flap.mood
-            }
-        }
+    private suspend fun flapMood(app: ReelometroApp, goal: Int?, count: Int): FlapMood? = try {
+        WidgetData.flapFor(app.settings.current().passportEnabled, count, goal)
     } catch (e: CancellationException) {
         throw e
     } catch (e: Exception) {
         Log.w(LOG, "Widget: no se ha podido leer el estado de Flap", e)
         null
-    }
-
-    @Volatile
-    private var flapCache: FlapCache? = null
-
-    /** Último Flap calculado para el widget y lo que lo decidía. */
-    private class FlapCache(
-        val date: LocalDate,
-        val goal: Int?,
-        /** Recuento con el que se calculó: si baja (datos borrados o sembrados), se recalcula. */
-        val count: Int,
-        val reference: Int?,
-        val wasOver: Boolean?,
-        val mood: FlapMood,
-    ) {
-        fun over(count: Int): Boolean? = reference?.let { count > it }
     }
 
     private fun hasWidgets(context: Context): Boolean = widgetCount(context) > 0

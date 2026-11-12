@@ -53,8 +53,8 @@ data class GhostBar(
 
 /**
  * Semana día a día contra la semana anterior: barras de esta semana y la **línea fantasma**
- * (discontinua, escalonada por día) de la anterior. La usan el reto semanal del Pasaporte y la
- * comparativa de Estadísticas (SEMANA), para que se lean igual.
+ * (discontinua, escalonada por día) de la anterior. La usa la comparativa de Estadísticas (SEMANA);
+ * hasta la 1.11.x también el reto semanal del Pasaporte.
  *
  * Como `DailyBars` (docs/DESIGN.md §4): las barras **crecen escalonadas** desde la base con muelle
  * `gentle` y la línea fantasma se traza de izquierda a derecha mientras tanto; hoy va en `text` y

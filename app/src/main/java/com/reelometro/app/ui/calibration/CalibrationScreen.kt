@@ -39,6 +39,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.reelometro.app.copy.A11y
 import com.reelometro.app.copy.CalibrationCopy
+import com.reelometro.app.copy.CalibrationMetricsCopy
+import com.reelometro.app.copy.ExitCopy
 import com.reelometro.app.copy.Labels
 import com.reelometro.app.data.Platform
 import com.reelometro.app.detection.CalibrationEventType
@@ -131,6 +133,8 @@ private fun Console(
                 )
                 ConsoleLine(CalibrationCopy.LAST_EVENT, s.lastEvent)
                 ConsoleLine(CalibrationCopy.LAST_VIDEO, s.lastVideo)
+                s.performance?.let { ConsoleBlock(CalibrationMetricsCopy.KEY, it) }
+                if (s.exits.isNotEmpty()) ConsoleBlock(ExitCopy.LOG_KEY, s.exits.joinToString("\n"))
                 Row(
                     Modifier
                         .fillMaxWidth()
@@ -243,6 +247,20 @@ private fun ConsoleLine(key: String, value: String, valueColor: Color = ReelThem
         Label(key, modifier = Modifier.weight(1f))
         Spacer(Modifier.width(Space.x3))
         Text(value, style = ReelTheme.type.data, color = valueColor, maxLines = 1)
+    }
+}
+
+/** Clave y, debajo, un valor largo en mono que puede ocupar varias líneas (el rendimiento del servicio). */
+@Composable
+private fun ConsoleBlock(key: String, value: String) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = Space.x1)
+            .semantics(mergeDescendants = true) {},
+    ) {
+        Label(key)
+        Text(value, style = ReelTheme.type.data, color = ReelTheme.colors.text)
     }
 }
 

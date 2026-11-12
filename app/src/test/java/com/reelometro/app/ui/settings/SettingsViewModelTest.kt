@@ -277,7 +277,7 @@ class SettingsViewModelTest {
         runCurrent()
         assertEquals(listOf<SettingsEffect>(SettingsEffect.PickImportFile), effects)
 
-        val preview = ImportPreview(4, alreadyPresent = 1, from = LocalDate.of(2026, 3, 3), to = LocalDate.of(2026, 11, 3), badLines = 2, hasPassport = true)
+        val preview = ImportPreview(4, alreadyPresent = 1, from = LocalDate.of(2026, 3, 3), to = LocalDate.of(2026, 11, 3), badLines = 2)
         usage.readResult = CsvRead.Ready(parsed(4, bad = 2), preview)
         vm.readImport { ByteArrayInputStream(ByteArray(0)) }
         advanceUntilIdle()
@@ -286,6 +286,7 @@ class SettingsViewModelTest {
         val text = SettingsCopy.importPreview(preview)
         assertTrue(text, text.contains(Words.videos(4)) && text.contains(Format.rangeWithYear(LocalDate.of(2026, 3, 3), LocalDate.of(2026, 11, 3))))
         assertTrue(text, text.contains("1 ya estaba guardado") && text.contains("2 líneas no se entienden"))
+        assertFalse(text, text.contains("pasaporte", ignoreCase = true))
 
         vm.confirmImport(ImportMode.ADD)
         advanceUntilIdle()
@@ -323,7 +324,7 @@ class SettingsViewModelTest {
         val usage = FakeUsage()
         val system = FakeSettingsSystem()
         val vm = viewModel(usage = usage, system = system)
-        usage.readResult = CsvRead.Ready(parsed(2), ImportPreview(2, 0, LocalDate.of(2026, 11, 3), LocalDate.of(2026, 11, 3), 0, false))
+        usage.readResult = CsvRead.Ready(parsed(2), ImportPreview(2, 0, LocalDate.of(2026, 11, 3), LocalDate.of(2026, 11, 3), badLines = 0))
         vm.readImport { ByteArrayInputStream(ByteArray(0)) }
         advanceUntilIdle()
         vm.cancelImport()
@@ -388,10 +389,10 @@ class SettingsViewModelTest {
         assertFalse(vm.content().canRequestNotifications)
     }
 
-    // ------------------------------------------------------------------ pasaporte, aviso en directo y recorrido
+    // ------------------------------------------------------------------ Flap, aviso en directo y recorrido
 
     @Test
-    fun `el modo pasaporte viene encendido, se apaga, se guarda y refresca el widget`() = runTest(dispatcher) {
+    fun `Flap viene encendido, se apaga, se guarda y refresca el widget`() = runTest(dispatcher) {
         val settings = fakeSettings()
         val system = FakeSettingsSystem()
         val vm = viewModel(settings, system = system)
@@ -648,7 +649,7 @@ class SettingsViewModelTest {
         }
         val settings = SettingsRepository(store)
         assertEquals(BubbleLayout.fromLegacy(left = true, centerY = 0.7f), settings.current().quickSendBubble)
-        assertEquals(BubbleSpot(BubbleLayout.LEGACY_EDGE_X, 0.7f), settings.current().quickSendBubble)
+        assertEquals(BubbleSpot(0f, 0.7f), settings.current().quickSendBubble)
 
         // Al guardar la nueva, la de antes se va (y RECOLOCAR quita las dos).
         settings.setQuickSendBubble(BubbleSpot(x = 0.5f, y = 0.85f))

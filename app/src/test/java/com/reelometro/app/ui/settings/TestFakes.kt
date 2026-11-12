@@ -101,7 +101,7 @@ internal class FakeSettingsSystem(
         importedCalls++
     }
 
-    /** Cada cambio del modo pasaporte (el real repinta el widget y quita el aviso de nivel). */
+    /** Cada vez que se enciende o se apaga Flap (el real repinta el widget). */
     val passportChanges = mutableListOf<Boolean>()
 
     override fun onPassportModeChanged(enabled: Boolean) {

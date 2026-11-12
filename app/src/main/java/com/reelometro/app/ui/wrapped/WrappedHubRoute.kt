@@ -34,6 +34,8 @@ import com.reelometro.app.copy.Buttons
 import com.reelometro.app.copy.Labels
 import com.reelometro.app.copy.StateCopy
 import com.reelometro.app.stats.PeriodRef
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.TextAutoSize
 import com.reelometro.app.ui.components.Label
 import com.reelometro.app.ui.components.ReelButton
 import com.reelometro.app.ui.components.ReelIconButton
@@ -192,11 +194,13 @@ private fun HubStripRow(strip: HubStrip, onOpen: () -> Unit) {
         if (strip.hasData) {
             Spacer(Modifier.height(Space.x3))
             Row(verticalAlignment = Alignment.Bottom) {
-                Text(
+                // Se encoge antes que recortarse («123.456» destacado no cabe entero en 360 dp).
+                val countStyle = if (strip.featured) type.displayXL else type.displayL
+                BasicText(
                     text = strip.countText,
-                    style = if (strip.featured) type.displayXL else type.displayL,
-                    color = fg,
+                    style = countStyle.copy(color = fg),
                     maxLines = 1,
+                    autoSize = TextAutoSize.StepBased(minFontSize = type.displayM.fontSize, maxFontSize = countStyle.fontSize),
                     modifier = Modifier.weight(1f),
                 )
                 ReelIcon(ReelIcons.ArrowRight, contentDescription = null, tint = fg, modifier = Modifier.padding(bottom = Space.x2))

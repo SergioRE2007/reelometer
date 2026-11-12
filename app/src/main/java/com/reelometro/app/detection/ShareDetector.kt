@@ -131,6 +131,17 @@ class ShareDetector(private val config: Config = Config()) {
         return labels.any { SHEET_OPENERS.containsMatchIn(it) }
     }
 
+    /**
+     * 1.10.5: ¿[node] es un botón pequeño de la columna de acciones de la derecha (las mismas medidas que [opensSheet])? No
+     * mira ninguna etiqueta: sirve para que el envío rápido mire si un clic sin etiqueta conocida ha abierto algo encima
+     * del visor ([SheetWatch.probeOpened]) sin gastar nada con los toques en el vídeo. No cuenta nada.
+     */
+    fun inActionColumn(node: UiNode, screenWidth: Int, screenHeight: Int): Boolean {
+        if (screenWidth <= 0 || screenHeight <= 0) return false
+        val bounds = node.bounds
+        return !bounds.isEmpty && bounds.width <= screenWidth * config.maxWidth && bounds.centerX >= screenWidth * config.minCenterX
+    }
+
     /** El botón «Enviar» de un comentario o mensaje está al lado de un campo de texto. */
     private fun nextToTextField(node: UiNode): Boolean {
         var ancestor = node.parent
@@ -146,11 +157,14 @@ class ShareDetector(private val config: Config = Config()) {
     private fun no(rule: String) = Result(false, rule)
 
     private companion object {
-        /** Sobre texto normalizado (minúsculas, sin tildes). */
-        val STRONG = Regex("\\b(?:compartir|comparte|compartelo|compartido|share|shares|sharing|reenviar|forward)\\b")
-        val WEAK = Regex("\\b(?:enviar|envia|send)\\b")
+        /** Sobre texto normalizado (minúsculas, sin tildes). Español, inglés, francés, italiano y portugués. */
+        val STRONG = Regex(
+            "\\b(?:compartir|comparte|compartelo|compartido|share|shares|sharing|reenviar|forward|" +
+                "partager|partage|partages|condividi|condividere|condivisione|compartilhar|compartilhe|partilhar)\\b",
+        )
+        val WEAK = Regex("\\b(?:enviar|envia|send|envoyer|invia|inviare)\\b")
         val EXCLUDED = Regex(
-            "\\b(?:coment\\w*|comment\\w*|mensaje\\w*|message\\w*|chat\\w*|respond\\w*|respuesta\\w*|" +
+            "\\b(?:coment\\w*|comment\\w*|mensaje\\w*|message\\w*|messagg\\w*|mensag\\w*|chat\\w*|respond\\w*|respuesta\\w*|" +
                 "repl(?:y|ies)|regalo\\w*|gift\\w*)\\b",
         )
         val SHARE_IDS = listOf("share", "reshare", "forward")
