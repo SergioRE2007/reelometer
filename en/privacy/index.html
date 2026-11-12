@@ -47,7 +47,7 @@
   <div class="wrap header-row">
     <p class="header-id">
       <a class="header-brand" href="/reelometer/en/" aria-label="Reelometer, home">Reelometer</a>
-      <span class="label header-ver">POS 1.10.3</span>
+      <span class="label header-ver">POS 1.13.0</span>
     </p>
     <nav class="header-nav" aria-label="Sections">
       <ul role="list">
@@ -77,7 +77,7 @@
       <h1 class="display-l privacy-title" id="privacy-title">Privacy policy</h1>
       <p class="privacy-lede">The long version of “nothing”. Twelve sections on what the app doesn’t do, and the little it keeps on your phone.</p>
       <dl class="privacy-meta data-s">
-        <div><dt>Last updated</dt><dd>7 November 2026</dd></div>
+        <div><dt>Last updated</dt><dd>12 November 2026</dd></div>
         <div><dt>Data controller</dt><dd>Sergio Rodríguez Espinosa</dd></div>
       </dl>
 
@@ -106,7 +106,7 @@
             <li>Reelometer counts the short videos you watch on TikTok, Instagram Reels and YouTube Shorts, using Android’s accessibility service.</li>
             <li>Everything it counts is stored <strong>only on your phone</strong>. No accounts, no servers, no ads, no analytics.</li>
             <li>The app <strong>has no permission to use the internet</strong>: it can’t send anything anywhere, not even to us.</li>
-            <li>Your data only leaves your phone if <strong>you</strong> take it out: by exporting a CSV or sharing your recap.</li>
+            <li>Your data only leaves your phone if <strong>you</strong> take it out: by exporting a CSV, sharing your recap or, if you use the hidden calibration tool, copying or sharing its log.</li>
             <li>You can delete everything whenever you like from the app itself, or by uninstalling it.</li>
           </ul>
         </div>
@@ -166,28 +166,22 @@
           </table>
         </div>
         <p>The category is worked out <strong>on the phone itself</strong>, by comparing the description and hashtags against a list of keywords. No external service and no cloud AI is involved.</p>
-        <p>In <strong>other apps</strong> the service reads nothing: Android tells it you’ve switched apps and Reelometer only uses that signal to stop counting. It doesn’t record which other apps you use.</p>
+        <p>In <strong>other apps</strong> the service reads nothing they show: Android doesn’t pass it their events. While it’s counting a video (or showing the quick-send bubbles), it checks every so often which app the on-screen windows belong to, only to know whether you’ve left and stop counting. It doesn’t record which other apps you use.</p>
         <p>The service does <strong>not</strong> store what you type, doesn’t read your messages or passwords, doesn’t record the screen, and doesn’t tap anything for you or take screenshots, except with <strong>quick send</strong> (<a href="#privacy-2-6">section 2.6</a>): only with quick send, it crops the profile picture of the people or groups you pin from the share sheet, to show it on their button; it keeps it on this phone only and takes no other screenshot.</p>
 
         <h3 class="title"><span class="privacy-n">2.2</span> Your settings</h3>
-        <p>The app stores your preferences on the phone: the daily goal, whether you want notifications and at what time (including the live alert when you pass your goal), which apps it counts, whether “Who you send to” and quick send are on, the names of the people or groups you pin for quick send (at most 3 per app) and where you leave their bubbles, the theme (light or dark), whether Passport mode is on, whether you’ve finished the intro and the guided tour, and whether you’ve accepted the accessibility service explanation.</p>
-        <p>To avoid repeating notifications, it also remembers the day of the last live alert and the last Passport level it told you about. <strong>Delete all</strong> forgets that too.</p>
+        <p>The app stores your preferences on the phone: the daily goal, whether you want notifications and at what time (including the live alert when you pass your goal), which apps it counts, whether “Who you send to” and quick send are on, the names of the people or groups you pin for quick send (at most 3 per app) and where you leave their bubbles, the theme (light or dark), whether Flap (the mascot) is on, whether you’ve finished the intro and the guided tour, and whether you’ve accepted the accessibility service explanation. It also remembers how many tabs it has shown you over the first days, which ones it has already introduced and the day the last one appeared; how many different days you’ve opened the app and the last one, how many times the support notice has appeared, the day of the last one and whether it should never appear again; whether you’ve unlocked the calibration tool; the folder you choose for the weekly backup, when the last one was made and whether it failed; and, only while the one-minute check is running, when it started, with which app, a technical process ID and how many events and videos had been counted (deleted when it ends or is cancelled).</p>
+        <p>To avoid repeating notifications, it also remembers the day of the last live alert (<strong>Delete all</strong> forgets that too) and, for the service notification, the day of the last one, the time of the last app shutdown it has already taken into account and the times of the last few occasions the service connected and disconnected (so it can tell whether you turned it off or the phone did, and which of those it has already told you about).</p>
 
-        <h3 class="title"><span class="privacy-n">2.3</span> Passport mode</h3>
-        <p>Passport mode (Flap, your traveler level, the stamps and the weekly challenge) is worked out on the phone itself from the history described in section 2.1. Almost everything is recalculated each time; apart from that, the app stores on the phone only what can’t be recalculated:</p>
-        <ul class="privacy-list">
-          <li>the date you earned each stamp and which celebrations you’ve already seen;</li>
-          <li>the highest level you’ve reached and the last state of Flap you saw;</li>
-          <li>weekly challenges already closed (the cap, that week’s videos and whether you met it);</li>
-          <li>the date you first shared a recap or saved a ticket (only that: not who with or where).</li>
-        </ul>
-        <p>It’s stored in the app’s private storage, like everything else, it’s included in the CSV you export, and <strong>Delete all</strong> erases it. If you turn Passport mode off in Settings, it stops showing and stops notifying you.</p>
+        <h3 class="title"><span class="privacy-n">2.3</span> Flap, the mascot</h3>
+        <p>Flap is worked out on the phone itself from the videos you’ve watched today (section 2.1) and your daily goal: every day it starts with full health and loses some with each video. There are no stamps, levels, challenges or events. What you see about the last few days comes from the same history and is recalculated each time. Apart from that, the app stores on the phone only one thing: <strong>the last state of Flap you saw and its date</strong>, to animate the change the next time you open the tab.</p>
+        <p>It’s stored in the app’s private storage, like everything else, it isn’t included in the CSV you export (CSV files from earlier versions may carry a block from the old Passport: it is ignored on import), and <strong>Delete all</strong> erases it. If you turn Flap off in Settings, it stops showing in the tab and in the widget.</p>
 
         <h3 class="title"><span class="privacy-n">2.4</span> Calibration tool (hidden)</h3>
-        <p>Settings has a hidden technical tool, meant for tuning detection. If you unlock it and open it, it shows a log of technical events (which app, what kind of event, IDs and sizes of the on-screen elements) and, for each detected video, the creator, description and hashtags it read: the same data as in section 2.1, nothing more. That log exists only in the phone’s memory (the last 500 events at most), is never written to any file, disappears when you tap CLEAR or when Android closes the app, and only leaves the phone if you copy or share it.</p>
+        <p>Settings has a hidden technical tool, meant for tuning detection. If you unlock it and open it, it shows a log of technical events (which app, what kind of event, IDs and sizes of the on-screen elements) and, for each detected video, the creator, description and hashtags it read: the same data as in section 2.1. At the top it adds the phone’s make and model, the versions of Android, Reelometer and the apps it counts, whether the service is connected, performance figures for the service (events per minute and timings) and the app’s latest closures as recorded by Android (date, reason, the system’s description, with other apps’ names masked, and how much memory the app was using), what Android says about the app (whether it has battery or background restrictions, its usage group, whether it can be paused for not being used and whether notifications are allowed), the times of the service’s latest connections and disconnections and of the last saved video, how many internal service failures were contained (with the kind of failure and the place in the code, never its message), how many low-memory warnings the system has given and, if the service failed to start, fully or in one of its parts (the bubbles, for example), the technical error it gave. Nothing more. Reelometer doesn’t store the closures: it reads them from Android each time you open the tool or copy or share the log. That log exists only in the phone’s memory (the last 500 events at most), is never written to any file, disappears when you tap CLEAR or when Android closes the app, and only leaves the phone if you copy or share it.</p>
 
         <h3 class="title"><span class="privacy-n">2.5</span> What they aren’t used for</h3>
-        <p>Your data is only used to show you your stats, your recaps, your passport, your notifications and the widget. It is <strong>not</strong> used for advertising, not sold, not passed on, and not used to profile anyone.</p>
+        <p>Your data is only used to show you your stats, your recaps, Flap, your notifications and the widget. It is <strong>not</strong> used for advertising, not sold, not passed on, and not used to profile anyone.</p>
 
         <h3 class="title" id="privacy-2-6"><span class="privacy-n">2.6</span> Quick send (Instagram and TikTok)</h3>
         <p>It’s <strong>off</strong> by default and can only be turned on with “Who you send to” on. If you turn it on in Settings and pin up to 3 people or groups from your “Who you send to” history in each app (Instagram and TikTok are kept separate), the app shows a button for each of them on top while you watch videos in that app. When you tap one, the accessibility service taps <strong>only</strong> these for you: “Share” on the video you’re watching, that person or group on the share sheet (if they’re not in view, it looks them up in the sheet’s search box; on TikTok, by tapping its magnifying glass first) and “Send”. It taps nothing else, never does it without you tapping the button, and if something doesn’t add up it stops and leaves the sheet open for you to finish.</p>
@@ -207,11 +201,11 @@
         <p class="privacy-nada"><strong>Nothing.</strong> Reelometer doesn’t declare Android’s permission to use the internet, so it can’t connect to any server. It has no user accounts and includes no third-party analytics, advertising or crash-reporting tools.</p>
         <p>Your data only leaves the phone when <strong>you</strong> decide:</p>
         <ul class="privacy-list">
-          <li><strong>Export CSV</strong> (Settings › Your data): the app creates a file with your history (including your “Who you send to” sends, if you use it) and your passport (stamps, challenges and level), and you choose where to save it or who to send it to.</li>
-          <li><strong>Import CSV</strong> (Settings › Your data) goes the other way and sends nothing: with Android’s file picker you choose a CSV you exported earlier and the app reads <strong>only that file</strong> (with no permission to see any others) to restore your history and your passport. Settings don’t travel in the file.</li>
+          <li><strong>Export CSV</strong> (Settings › Your data): the app creates a file with your history (including your “Who you send to” sends, if you use it) and you choose where to save it or who to send it to.</li>
+          <li><strong>Import CSV</strong> (Settings › Your data) goes the other way and sends nothing: with Android’s file picker you choose a CSV you exported earlier and the app reads <strong>only that file</strong> (with no permission to see any others) to restore your history. If the file comes from an earlier version and carries the old Passport block, it is ignored. Settings don’t travel in the file.</li>
           <li><strong>Weekly backup</strong> (Settings › Your data), off by default: if you turn it on, you pick a folder <strong>on your phone</strong> with Android’s folder picker, and once a week the app saves the same CSV as “Export CSV” there (it keeps the last 4 copies and touches no other file). The app can only write to that folder; it isn’t a cloud backup and it sends nothing. If another app syncs that folder, that copy leaves the phone by your choice and under that app’s terms.</li>
           <li><strong>Sharing your recap</strong>: the app makes an image (a “ticket”) on the phone and Android lets you choose which app or person to share it with. It includes the figures for the period and, if there is one, the name of your most-watched creator.</li>
-          <li><strong>Sharing your Passport level</strong>: same idea, an image made on the phone with your level, experience, completed challenges and the names of your latest stamps. No per-app video figures and no creators.</li>
+          <li><strong>Calibration log</strong> (hidden tool, section 2.4): it only leaves if you copy or share it, with what that section describes; the names of the people and groups you’ve pinned for quick send and of those you send to most (“Who you send to”) are masked first.</li>
         </ul>
         <p>Once you share a file or an image, what happens to it depends on the app or person receiving it and on their own terms.</p>
       </section>
@@ -228,9 +222,9 @@
             <thead><tr><th scope="col">Permission</th><th scope="col">What for</th></tr></thead>
             <tbody>
               <tr><td>Accessibility service</td><td>Counting videos, as explained in section 2.1. You turn it on yourself in Settings › Accessibility and can turn it off whenever you like.</td></tr>
-              <tr><td>Notifications (Android 13 or later)</td><td>Sending you the daily and monthly summaries. Optional.</td></tr>
-              <tr><td>Seeing whether certain apps are installed</td><td>Knowing whether you have TikTok, Instagram or YouTube, to show them in Settings. It only checks those three.</td></tr>
-              <tr><td>Running in the background, starting after a reboot and network state</td><td>Added by the Android library that schedules the notifications (WorkManager), so they arrive on time even if you restart the phone. The network state permission only lets it know whether there’s a connection; it doesn’t let it use one.</td></tr>
+              <tr><td>Notifications (Android 13 or later)</td><td>Sending you the daily and monthly summaries, the alert when you pass your goal (if you turn it on) and a notification if the accessibility service is on but not working. Optional.</td></tr>
+              <tr><td>Seeing whether certain apps are installed</td><td>Knowing whether you have TikTok, Instagram or YouTube (to show them in Settings and in the one-minute check) and, in the guide to keep the service working, whether your phone brand’s battery or autostart screen exists (Xiaomi, Huawei, Honor, OPPO, OnePlus, vivo, Samsung) so it can open it. It only checks those apps: it can’t see anything else you have installed and stores nothing.</td></tr>
+              <tr><td>Running in the background, starting after a reboot and network state</td><td>Added by the Android library that schedules the notifications (WorkManager), so they arrive on time even if you restart the phone, and to check every hour that the accessibility service is still working. The network state permission only lets it know whether there’s a connection; it doesn’t let it use one.</td></tr>
             </tbody>
           </table>
         </div>
@@ -241,7 +235,7 @@
         <h2 class="sec-head" id="privacy-7"><span class="sec-head-index">07</span> How long it’s kept and how to delete it</h2>
         <p>The data stays on your phone until you delete it. You can:</p>
         <ul class="privacy-list">
-          <li>Delete your whole history, passport included, in <strong>Settings › Your data › Delete all</strong>. Your settings stay, except the people or groups pinned for quick send, which are forgotten too.</li>
+          <li>Delete your whole history, the last thing you saw of Flap included, in <strong>Settings › Your data › Delete all</strong>. Your settings stay, except the people or groups pinned for quick send, which are forgotten too.</li>
           <li>Delete the settings as well from Android’s settings: <strong>Apps › Reelometer › Storage &amp; cache › Clear storage</strong> (the names may vary a little by manufacturer).</li>
           <li><strong>Uninstall</strong> the app: Android deletes all its data.</li>
           <li>Stop counting without deleting anything: turn the service off in <strong>Settings › Accessibility</strong>.</li>
@@ -255,7 +249,7 @@
 
       <section aria-labelledby="privacy-9">
         <h2 class="sec-head" id="privacy-9"><span class="sec-head-index">09</span> Your rights</h2>
-        <p>Under the General Data Protection Regulation (GDPR) and Spanish law, you have the right to access your data, rectify it, erase it, take it with you and object to its processing. Since your data is only on your phone, you can exercise these rights directly from the app: see it (Today, Stats, Recap, Passport), take it with you (Export CSV) and delete it (Delete all). The developer has no copy to look up, correct or delete.</p>
+        <p>Under the General Data Protection Regulation (GDPR) and Spanish law, you have the right to access your data, rectify it, erase it, take it with you and object to its processing. Since your data is only on your phone, you can exercise these rights directly from the app: see it (Today, Stats, Recap, Flap), take it with you (Export CSV) and delete it (Delete all). The developer has no copy to look up, correct or delete.</p>
         <p>If you have any questions, write to <strong>sergiore2007&#64;gmail.com</strong> or open an issue at <a href="https://github.com/SergioRE2007/reelometer/issues">github.com/SergioRE2007/reelometer/issues<span aria-hidden="true"> ↗</span></a>. You can also file a complaint with the Spanish Data Protection Agency (<a href="https://www.aepd.es">www.aepd.es<span aria-hidden="true"> ↗</span></a>).</p>
       </section>
 
@@ -307,10 +301,10 @@
       <p class="data-s footer-fonts" data-k="footer.js.fonts">Type: <a href="/reelometer/assets/fonts/BricolageGrotesque-OFL.txt">Bricolage Grotesque</a>, <a href="/reelometer/assets/fonts/JetBrainsMono-OFL.txt">JetBrains Mono</a> and <a href="/reelometer/assets/fonts/InstrumentSerif-OFL.txt">Instrument Serif</a>, under the SIL Open Font License 1.1, served from here.</p>
     </div>
     <hr class="divider-perforated footer-cut">
-    <p class="label footer-end" data-k="footer.js.end">Reelometer 1.10.3 · End of the roll</p>
+    <p class="label footer-end" data-k="footer.js.end">Reelometer 1.13.0 · End of the roll</p>
   </div>
 </footer>
 
-<script type="application/json" id="i18n">{"header.js.theme.system":"system","header.js.theme.dark":"dark","header.js.theme.light":"light","header.js.theme.aria":"Theme: {cur}. Switch to {next}.","footer.js.claim":"This page has no cookies, no analytics and nothing to report. Neither does the app.","footer.js.videos":"Videos you’d have watched here","footer.js.requests":"Third-party requests","footer.js.cookies":"Cookies","footer.js.storage":"The only thing your browser keeps is the theme, and only if you change it with the button.","footer.js.nav":"Footer","footer.js.code":"Source code","footer.js.privacy":"Privacy","footer.js.fonts":"Type: \u003ca href=\"/reelometer/assets/fonts/BricolageGrotesque-OFL.txt\">Bricolage Grotesque\u003c/a>, \u003ca href=\"/reelometer/assets/fonts/JetBrainsMono-OFL.txt\">JetBrains Mono\u003c/a> and \u003ca href=\"/reelometer/assets/fonts/InstrumentSerif-OFL.txt\">Instrument Serif\u003c/a>, under the SIL Open Font License 1.1, served from here.","footer.js.end":"Reelometer 1.10.3 · End of the roll"}</script>
+<script type="application/json" id="i18n">{"header.js.theme.system":"system","header.js.theme.dark":"dark","header.js.theme.light":"light","header.js.theme.aria":"Theme: {cur}. Switch to {next}.","footer.js.claim":"This page has no cookies, no analytics and nothing to report. Neither does the app.","footer.js.videos":"Videos you’d have watched here","footer.js.requests":"Third-party requests","footer.js.cookies":"Cookies","footer.js.storage":"The only thing your browser keeps is the theme, and only if you change it with the button.","footer.js.nav":"Footer","footer.js.code":"Source code","footer.js.privacy":"Privacy","footer.js.fonts":"Type: \u003ca href=\"/reelometer/assets/fonts/BricolageGrotesque-OFL.txt\">Bricolage Grotesque\u003c/a>, \u003ca href=\"/reelometer/assets/fonts/JetBrainsMono-OFL.txt\">JetBrains Mono\u003c/a> and \u003ca href=\"/reelometer/assets/fonts/InstrumentSerif-OFL.txt\">Instrument Serif\u003c/a>, under the SIL Open Font License 1.1, served from here.","footer.js.end":"Reelometer 1.13.0 · End of the roll"}</script>
 </body>
 </html>
